@@ -17,13 +17,15 @@
 */
 
 #include <vector>
-
 #include "PimVec2.h"
 
 namespace Pim
 {
 	// Forward declarations
+	class Vec2;
 	class Input;
+	class MouseEvent;
+	class KeyEvent;
 
 	class GameNode
 	{
@@ -40,15 +42,24 @@ namespace Pim
 
 		void listenInput();
 		void unlistenInput();
+
+		void listenKeys();
+		void unlistenKeys();
+
+		void listenMouse();
+		void unlistenMouse();
+
 		void listenFrame();
 		void unlistenFrame();
 
-		virtual void mouseEvent(Input *in)	{}
-		virtual void keyEvent(Input *in)	{}
-		virtual void update(float dt)		{}
+		// OLD
+		virtual void mouseEvent(MouseEvent &)	{}
+		virtual void keyEvent(KeyEvent &)		{}
+		virtual void update(float dt)			{}
 
 		// Virtual for the sake of Layers. Override at your own risk.
 		virtual Vec2 getWorldPosition();
+		virtual float getWorldRotation();
 
 		// Render self, call render on all children
 		virtual void draw();
@@ -63,6 +74,13 @@ namespace Pim
 		// a giant moron to do so. Leave this alone.
 		// No matter what.
 		GameNode	*parent;
+
+		// Again - it is possible to change this value manually.
+		// However, it's intension is to provide UI layers and similar
+		// layers the gift of not being forced to move along with it's parent.
+		// For good PimPractice, ONLY use this flag on layers, and ONLY
+		// via "layer->immovableLayer(true)". 
+		bool		immovable;
 	};
 
 }

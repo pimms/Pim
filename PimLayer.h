@@ -1,6 +1,4 @@
 #pragma once
-#include "PimGameNode.h"
-
 /*
 	The Layer is the "top level" controller of your game, which is customizeable
 	by you. It acts like a regular GameNode in terms of children and parent relationship,
@@ -27,6 +25,9 @@
 	when you attach a new Layer to it.
 */
 
+#include "PimVec2.h"
+#include "PimGameNode.h"
+
 namespace Pim
 {
 	// Forward declarations
@@ -41,6 +42,7 @@ namespace Pim
 		static Layer* getTopLayer();
 
 		Vec2 getWorldPosition();
+		float getWorldRotation();
 
 		void immovableLayer(bool immov);
 
@@ -54,7 +56,6 @@ namespace Pim
 		void _topLevelNode();
 
 		bool			isTopLayer;
-		bool			immovable;
 
 		static Layer* topLayer;
 	};

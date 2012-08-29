@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "PimLayer.h"
 
+#include "Pim.h"
+#include "PimVec2.h"
 #include "PimGameControl.h"
 #include "PimException.h"
 
@@ -33,10 +35,16 @@ namespace Pim
 
 		return position;
 	}
+	float Layer::getWorldRotation()
+	{
+		if (parent)
+			return rotation + parent->getWorldRotation();
+
+		return rotation;
+	}
 
 	void Layer::immovableLayer(bool immov)
 	{
-		PimAssert(parent != NULL && !isTopLayer, "Error: cannot set orphan layer as immovable.");
 		immovable = immov; 
 	}
 

@@ -1,20 +1,28 @@
 #include "StdAfx.h"
 
 #include "Pim.h"
+#include "PimVec2.h"
 #include "PimGameNode.h"
 #include "PimException.h"
 #include "PimInput.h"
+
+#include <iostream>
 
 namespace Pim
 {
 
 	GameNode::GameNode()
 	{
-		parent = NULL;
+		parent		= NULL;
+		rotation	= 0.f;
+		immovable	= false;
 	}
 	GameNode::~GameNode()
 	{
 		removeAllChildren(true);
+		
+		unlistenFrame();
+		unlistenInput();
 	}
 
 	void GameNode::addChild(GameNode *ch)
@@ -56,12 +64,33 @@ namespace Pim
 	
 	void GameNode::listenInput()
 	{
-		GameControl::getSingleton()->addInputListener(this);
+		GameControl::getSingleton()->addKeyListener(this);
+		GameControl::getSingleton()->addMouseListener(this);
 	}
 	void GameNode::unlistenInput()
 	{
-		GameControl::getSingleton()->removeInputListener(this);
+		GameControl::getSingleton()->removeKeyListener(this);
+		GameControl::getSingleton()->removeMouseListener(this);
 	}
+
+	void GameNode::listenKeys()
+	{
+		GameControl::getSingleton()->addKeyListener(this);
+	}
+	void GameNode::unlistenKeys()
+	{
+		GameControl::getSingleton()->removeKeyListener(this);
+	}
+
+	void GameNode::listenMouse()
+	{
+		GameControl::getSingleton()->addMouseListener(this);
+	}
+	void GameNode::unlistenMouse()
+	{
+		GameControl::getSingleton()->removeMouseListener(this);
+	}
+
 	void GameNode::listenFrame()
 	{
 		GameControl::getSingleton()->addFrameListener(this);
@@ -75,14 +104,38 @@ namespace Pim
 	{
 		return position + parent->getWorldPosition();
 	}
+	float GameNode::getWorldRotation()
+	{
+		return rotation + parent->getWorldRotation();
+	}
 
 	void GameNode::draw()
 	{
+		glPushMatrix();
+
+		if (immovable)
+		{
+			glLoadIdentity();	
+		}
+
+		// Update position
+		glTranslatef(position.x, position.y, 0.f);
+		//glTranslatef(getWorldPosition().x, getWorldPosition().y, 0.f);
+		glRotatef(rotation, 0.f, 0.f, 1.f);
+
 		// render self
+		glBegin(GL_QUADS);
+			glVertex2f(-5.f, 5.f);
+			glVertex2f(-5.f,-5.f);
+			glVertex2f(5.f, -5.f);
+			glVertex2f(5.f,  5.f);
+		glEnd();
 
 		for (unsigned int i=0; i<children.size(); i++)
 		{
 			children[i]->draw();
 		}
+
+		glPopMatrix();
 	}
 }

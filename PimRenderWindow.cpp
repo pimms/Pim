@@ -1,9 +1,10 @@
 #include "StdAfx.h"
 #include "PimRenderWindow.h"
 
+#include "pim.h"
 #include "PimGameControl.h"
 #include "PimException.h"
-#include "pim.h"
+#include "PimLayer.h"
 
 #include <stdlib.h>
 
@@ -44,11 +45,10 @@ namespace Pim
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-
-		gluPerspective(45.f, (GLfloat)wnew/(GLfloat)hnew, 0.1f, 100.f);
+		glOrtho(0, wnew, 0, hnew, 0, 1);
 
 		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
+		glDisable(GL_DEPTH_TEST);
 	}
 
 	bool RenderWindow::createWindow(std::string &title, int w, int h, int bits)
@@ -73,7 +73,7 @@ namespace Pim
 		wc.hCursor			= LoadCursor(NULL, IDC_ARROW);			// Default cursor
 		wc.hbrBackground	= NULL;									// No GL background
 		wc.lpszMenuName		= NULL;									// No menu please
-		wc.lpszClassName	= L"pim";	// Set the class name
+		wc.lpszClassName	= "pim";								// Set the class name
 
 		if (!RegisterClass(&wc))
 		{
@@ -90,8 +90,8 @@ namespace Pim
 		AdjustWindowRectEx(&winRect, dwStyle, false, dwExStyle);
 
 		if (!(hWnd = CreateWindowEx(dwExStyle,
-									L"pim",
-									L"Pim test window",//strToLPCWSTR(title),
+									"pim",
+									title.c_str(),
 									dwStyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
 									0, 0,
 									winRect.right-winRect.left,
@@ -182,10 +182,6 @@ namespace Pim
 	{
 		glEnable(GL_TEXTURE_2D);
 		glClearColor(0.f, 0.f, 0.f, 1.f);
-		glClearDepth(1.f);
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		return true;
 	}
 
@@ -208,50 +204,16 @@ namespace Pim
 			hWnd = NULL;
 		}
 
-		UnregisterClass(L"pim", hInstance);
+		UnregisterClass("pim", hInstance);
 		hInstance = NULL;
 	}
 
 	void RenderWindow::renderFrame()
 	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
-		glLoadIdentity();									// Reset The Current Modelview Matrix
+		glClear(GL_COLOR_BUFFER_BIT);	// Clear Screen
+		glLoadIdentity();				// Reset The Current Modelview Matrix
 
-		glTranslatef(0.0f, 0.f, -5.f);
-
-		glBegin(GL_QUADS);
-			// Front Face
-			glColor3f(1.0f, 0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);  // Bottom Left Of The Texture and Quad
-			glColor3f(1.0f, 0.0f, 1.0f); glVertex3f( 1.0f, -1.0f,  1.0f);  // Bottom Right Of The Texture and Quad
-			glColor3f(0.0f, 1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);  // Top Right Of The Texture and Quad
-			glColor3f(1.0f, 1.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);  // Top Left Of The Texture and Quad
-			// Back Face
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);  // Bottom Right Of The Texture and Quad
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);  // Top Right Of The Texture and Quad
-			glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);  // Top Left Of The Texture and Quad
-			glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);  // Bottom Left Of The Texture and Quad
-			// Top Face
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);  // Top Left Of The Texture and Quad
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);  // Bottom Left Of The Texture and Quad
-			glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);  // Bottom Right Of The Texture and Quad
-			glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);  // Top Right Of The Texture and Quad
-			// Bottom Face
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);  // Top Right Of The Texture and Quad
-			glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);  // Top Left Of The Texture and Quad
-			glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);  // Bottom Left Of The Texture and Quad
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);  // Bottom Right Of The Texture and Quad
-			// Right face
-			glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);  // Bottom Right Of The Texture and Quad
-			glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);  // Top Right Of The Texture and Quad
-			glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);  // Top Left Of The Texture and Quad
-			glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);  // Bottom Left Of The Texture and Quad
-			// Left Face
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);  // Bottom Left Of The Texture and Quad
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);  // Bottom Right Of The Texture and Quad
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);  // Top Right Of The Texture and Quad
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);  // Top Left Of The Texture and Quad
-
-		glEnd();
+		Layer::getTopLayer()->draw();
 
 		SwapBuffers(hDC);
 	}

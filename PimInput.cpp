@@ -1,10 +1,11 @@
 #include "Stdafx.h"
 
 #include "Pim.h"
-
 #include "PimInput.h"
 #include "PimVec2.h"
 #include "PimException.h"
+
+#include <iostream>
 
 namespace Pim
 {
@@ -13,11 +14,6 @@ namespace Pim
 	Input::Input()
 	{
 		PimAssert(singleton == NULL, "Input singleton is already initialized");
-
-		for (int i=0; i<256; i++) keys[i] = false;
-		mouse[0] = false; mouse[1] = false;
-		mouseDirty	= false;
-		keyDirty	= false; 
 	}
 	void Input::instantiateSingleton()
 	{
@@ -34,68 +30,99 @@ namespace Pim
 
 	void Input::bindKey(std::string id, Key::KeyCode key)
 	{
-		PimAssert(key >= 1 && key < 256, id.append(": Key out of range."));
-		boundKeys[id] = key;
+		PimAssert(key >= 0 && key < 256, "Key out of range.");
+		keyEvent.bindKey(id, key);
+
+		std::cout<<id <<"\n";
+		std::cout<<"Bound key - " <<id <<": " <<keyEvent.binds[id] <<"\n";
 	}
 	void Input::unbindKey(std::string id)
 	{
-		boundKeys.erase(id);
+		keyEvent.unbindKey(id);
 	}
-	
-	bool Input::keyStatus(Key::KeyCode key)
+
+	// Called by GameControl upon registration. Use GameControl::add__listener.
+	void Input::addKeyListener(GameNode *node)
 	{
-		return keys[key];
+		kl.push_back(node);
 	}
-	bool Input::keyStatus(std::string id)
+	void Input::removeKeyListener(GameNode *node)
 	{
-		return keys[boundKeys[id]];
+		for (unsigned int i=0; i<kl.size(); i++)
+			if (kl[i] == node)
+				kl.erase(kl.begin() + i);
 	}
-	bool Input::mouseStatus(Mouse::MouseButton key)
+
+	void Input::addMouseListener(GameNode *node)
 	{
-		return mouse[key];
+		ml.push_back(node);
 	}
-	Vec2 Input::mousePosition()
+	void Input::removeMouseListener(GameNode *node)
 	{
-		return mousePos;
-	}
-	Vec2 Input::mouseRelPosition()
-	{
-		return mousePos - mousePosLastFrame;
+		for (unsigned int i=0; i<ml.size(); i++)
+			if (ml[i] == node)
+				ml.erase(ml.begin() + i);
 	}
 	
 	// DO NOT CALL THESE METHODS MANUALLY
-	void Input::lostFocus()
+	void Input::_lostFocus()
 	{
 		// TODO: Dispatch a NULL message to all
+		keyEvent._reset();
+		mouseEvent._reset();
+		_dispatch();
 	}
-	void Input::gainedFocus()
+	void Input::_gainedFocus()
 	{
 
 	}
-	void Input::keyPressed(int key)
+	void Input::_keyPressed(int key)
 	{
-		keyDirty = true;
-		keys[key] = true;
+		if (!keyEvent.keys[key])
+		{
+			keyEvent.keys[key] = true;
+			keyEvent.fresh[key] = true;
+			keyEvent.count++;
+		}
 	}
-	void Input::keyReleased(int key)
+	void Input::_keyReleased(int key)
 	{
-		keyDirty = true;
-		keys[key] = false;
+		keyEvent.keys[key] = false;
+		keyEvent.count--;
 	}
-	void Input::mouseMoved(int x, int y)
+	void Input::_mouseMoved(int x, int y)
 	{
-		mouseDirty = true;
-		mousePos.x = x;
-		mousePos.y = y;
+		mouseEvent._mouseMoved(Vec2((float)x, (float)y));
+		mouseEvent.dirty = true;
 	}
-	void Input::mousePressed(int id)
+	void Input::_mousePressed(int id)
 	{
-		mouseDirty = true;
-		mouse[id] = true;
+		mouseEvent.keys[id] = true;
+		mouseEvent.fresh[id] = true;
+		mouseEvent.dirty = true;
 	}
-	void Input::mouseReleased(int id)
+	void Input::_mouseReleased(int id)
 	{
-		mouseDirty = true;
-		mouse[id] = false;
+		mouseEvent.keys[id] = false;
+		mouseEvent.dirty = true;
+	}
+
+	void Input::_dispatch()
+	{
+		// dispatch keys..
+		if (keyEvent.count)
+		{
+			for (unsigned int i=0; i<kl.size(); i++)
+				kl[i]->keyEvent(keyEvent);
+		}
+		keyEvent._unfresh();
+
+		// dispatch mouse..
+		if (mouseEvent.dirty)
+		{
+			for (unsigned int i=0; i<ml.size(); i++)
+				ml[i]->mouseEvent(mouseEvent);
+		}
+		mouseEvent._unfresh();
 	}
 }

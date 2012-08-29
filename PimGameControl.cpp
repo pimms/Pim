@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "PimGameControl.h"
 
+#include "Pim.h"
+
 #include "PimException.h"
 #include "PimRenderWindow.h"
 #include "PimInput.h"
@@ -26,12 +28,12 @@ namespace Pim
 				if (!HIWORD(wParam))
 				{
 					hasFocus = true;
-					Input::getSingleton()->gainedFocus();
+					Input::getSingleton()->_gainedFocus();
 				}
 				else
 				{
 					hasFocus = false;
-					Input::getSingleton()->lostFocus();
+					Input::getSingleton()->_lostFocus();
 				}
 				return 0;
 
@@ -49,34 +51,34 @@ namespace Pim
 				return 0;
 
 			case WM_KEYDOWN:
-				std::cout<<"Key: " <<wParam <<"\n";
-				Input::getSingleton()->keyPressed(wParam);
+				//std::cout<<"Key: " <<wParam <<"\n";
+				Input::getSingleton()->_keyPressed(wParam);
 				return 0;
 
 			case WM_KEYUP:
-				Input::getSingleton()->keyReleased(wParam);
+				Input::getSingleton()->_keyReleased(wParam);
 				return 0;
 
 			// MOUSE MOVE
 			case WM_MOUSEMOVE:
 				//std::cout<<"Move: " <<LOWORD(lParam) <<", " <<HIWORD(lParam) <<"\n";
-				Input::getSingleton()->mouseMoved(LOWORD(lParam),HIWORD(lParam));
+				Input::getSingleton()->_mouseMoved(LOWORD(lParam),HIWORD(lParam));
 				return 0;
 
 			// LEFT MOUSE
 			case WM_LBUTTONDOWN:
-				Input::getSingleton()->mousePressed(0);
+				Input::getSingleton()->_mousePressed(0);
 				return 0;
 			case WM_LBUTTONUP:
-				Input::getSingleton()->mouseReleased(0);
+				Input::getSingleton()->_mouseReleased(0);
 				return 0;
 
 			// RIGHT MOUSE
 			case WM_RBUTTONDOWN:
-				Input::getSingleton()->mousePressed(1);
+				Input::getSingleton()->_mousePressed(1);
 				return 0;
 			case WM_RBUTTONUP:
-				Input::getSingleton()->mouseReleased(1);
+				Input::getSingleton()->_mouseReleased(1);
 				return 0;
 
 			case WM_SIZE:
@@ -94,20 +96,19 @@ namespace Pim
 
 	GameControl::GameControl(std::string title, int w, int h)
 	{
-		if (singleton)
-			throw new Exception("Only one GameControl instance can exist at a time.");
-		singleton = this;
+		PimAssert(singleton == NULL, "Only one GameControl instance can exist at a time.");
 
+		singleton		= this;
 		mWindowTitle	= title;
 		mWindowWidth	= w;
 		mWindowHeight	= h;
-
 		layer			= NULL;
 	}
 	GameControl::~GameControl()
 	{
 		singleton = NULL;
-		if (mWindow) delete mWindow;
+
+		if (mWindow)	delete mWindow;
 	}
 
 	void GameControl::go(Layer *l)
@@ -117,35 +118,43 @@ namespace Pim
 			Input::instantiateSingleton();
 			mWindow = new RenderWindow(mWindowTitle,mWindowWidth,mWindowHeight);
 
+			setNewLayer(l);
+
 			gameLoop();
 		} 
 		catch (Exception &e) 
 		{
-			MessageBox(NULL,e.getDescription(),L"Exception thrown", MB_OK | MB_ICONEXCLAMATION);
+			MessageBox(NULL,e.getDescription().c_str(),"Exception thrown", MB_OK | MB_ICONEXCLAMATION);
 		}
 		catch (std::exception &e)
 		{
-			MessageBox(NULL,strToLPCWSTR(e.what()),L"Exception thrown", MB_OK | MB_ICONEXCLAMATION);
+			MessageBox(NULL,e.what(),"Exception thrown", MB_OK | MB_ICONEXCLAMATION);
 		}
 		catch (...)
 		{
-			MessageBox(NULL,L"Anonymous exception caught.\nNo information available.",
-				L"Exception thrown", MB_OK | MB_ICONEXCLAMATION);
+			MessageBox(NULL,"Anonymous exception caught.\nNo information available.",
+				"Exception thrown", MB_OK | MB_ICONEXCLAMATION);
 		}
 	}
 
-	void GameControl::addInputListener(GameNode *node)
+	void GameControl::addKeyListener(GameNode *node)
 	{
-		inputListeners.push_back(node);
+		Input::getSingleton()->addKeyListener(node);
 	}
-	void GameControl::removeInputListener(GameNode *node)
+	void GameControl::removeKeyListener(GameNode *node)
 	{
-		for (unsigned int i=0; i<inputListeners.size(); i++)
-		{
-			if (inputListeners[i] == node)
-				inputListeners.erase(inputListeners.begin() + i);
-		}
+		Input::getSingleton()->removeKeyListener(node);
 	}
+
+	void GameControl::addMouseListener(GameNode *node)
+	{
+		Input::getSingleton()->addMouseListener(node);
+	}
+	void GameControl::removeMouseListener(GameNode *node)
+	{
+		Input::getSingleton()->removeMouseListener(node);
+	}
+
 	void GameControl::addFrameListener(GameNode *node)
 	{
 		frameListeners.push_back(node);
@@ -161,6 +170,8 @@ namespace Pim
 
 	void GameControl::setNewLayer(Layer *l)
 	{
+		PimAssert(l != NULL, "Error: Cannot set layer: NULL.");
+
 		if (layer)
 			delete layer;
 
@@ -191,35 +202,24 @@ namespace Pim
 		
 			if (hasFocus)
 			{	
-				if (Input::getSingleton()->isKeyDirty())
-					dispatchKeyInput();
-				if (Input::getSingleton()->isMouseDirty())
-					dispatchMouseInput();
+				// Dispatch key and mouse events if required
+				Input::getSingleton()->_dispatch();
 
+				// Dispatch update calls
 				dispatchUpdate();
 
+				// Render dat frame
 				mWindow->renderFrame();
 			}
 		}
 
+		// Clean up the layer
+		if (layer) delete layer;
+
 		Input::clearSingleton();
 		mWindow->killWindow();
-	}
-	void GameControl::dispatchKeyInput()
-	{
-		for (unsigned int i=0; i<inputListeners.size(); i++)
-		{
-			inputListeners[i]->keyEvent(Input::getSingleton());
-		}
-	}
-	void GameControl::dispatchMouseInput()
-	{
-		for (unsigned int i=0; i<inputListeners.size(); i++)
-		{
-			inputListeners[i]->mouseEvent(Input::getSingleton());
-		}
 
-		Input::getSingleton()->mouseRelUpdate();
+		delete this;
 	}
 	void GameControl::dispatchUpdate()
 	{

@@ -45,8 +45,86 @@ namespace Pim
 	}
 
 	// Forward declarations
+	class Input;
 	class Vec2;
 	class GameControl;
+
+	// Class containing all key event data.
+	// One instance is kept by Input, and is passed to listeners as const.
+	class KeyEvent
+	{
+	public:
+		inline bool isKeyDown(Key::KeyCode k)
+			{ return keys[k]; }
+		inline bool isKeyFresh(Key::KeyCode k)
+			{ return keys[k] && fresh[k]; }
+			
+		inline bool isKeyDown(std::string str)
+			{ return keys[binds[str]]; }
+		inline bool isKeyFresh(std::string str)
+			{ return keys[binds[str]] && fresh[binds[str]]; }
+
+		inline int keyCount()
+			{ return count; }
+
+	private:
+		friend class Input;
+
+		int count;
+		bool keys[256];
+		bool fresh[256];
+		std::map<std::string,Key::KeyCode>	binds;
+
+		KeyEvent()
+			{ _reset(); }
+		KeyEvent(const KeyEvent&)
+			{ _reset(); }
+		inline void _reset()
+			{ count=0; for (int i=0; i<256; i++) { keys[i]=false; fresh[i]=false; } }
+		inline void _unfresh()
+			{ for (int i=0; i<256; i++) { fresh[i]=false; } }
+
+		// Binding keys by string
+		void bindKey(std::string &str, Key::KeyCode k)
+			{ binds[str] = k; }
+		void unbindKey(std::string &str)
+			{ binds.erase(str); }
+	};
+
+	// Class containing all mouse event data.
+	// One instance is kept by Input, and is passed to listeners as const.
+	class MouseEvent
+	{
+	public:
+		inline bool isKeyDown(Mouse::MouseButton mb)
+			{ return keys[mb]; }
+		inline bool isKeyFresh(Mouse::MouseButton mb)
+			{ return keys[mb] && fresh[mb]; }
+		inline Vec2 getPosition()
+			{ return position; }
+		inline Vec2 getRelative()
+			{ return relPosition; }
+
+	private:
+		friend class Input;
+
+		bool dirty;
+		bool keys[2];
+		bool fresh[2];
+		Vec2 position;
+		Vec2 relPosition;
+
+		MouseEvent()
+			{ _reset(); }
+		MouseEvent(const MouseEvent&)
+			{ _reset(); }
+		inline void _reset()
+			{ dirty=false; keys[0]=false;keys[1]=false; fresh[0]=false;fresh[0]=false; }
+		inline void _unfresh()
+			{ dirty=false; relPosition=Vec2(0.f, 0.f); fresh[0]=false;fresh[1]=false; }
+		inline void _mouseMoved(Vec2 rel)
+			{ relPosition += rel; position += rel; }
+	};
 
 	class Input
 	{
@@ -56,23 +134,17 @@ namespace Pim
 		void bindKey(std::string id, Key::KeyCode key);
 		void unbindKey(std::string id);
 
-		bool keyStatus(Key::KeyCode key);
-		bool keyStatus(std::string id);
-		bool mouseStatus(Mouse::MouseButton key);
-		Vec2 mousePosition();
-		Vec2 mouseRelPosition();
-
 		// Methods have to be manual in order for the WINAPI callback
 		// function to reach them. ight make these inaccessible at a
 		// future date.
 		// Manual use of these methods will cause bugs. ///////////////////
-		void lostFocus();							    // DON'T USE >:( //
-		void gainedFocus();							    // DON'T USE >:( //
-		void keyPressed(int);						    // DON'T USE >:( //
-		void keyReleased(int);						    // DON'T USE >:( //
-		void mouseMoved(int,int);					    // DON'T USE >:( //
-		void mousePressed(int);							// DON'T USE >:( //
-		void mouseReleased(int);						// DON'T USE >:( //
+		void _lostFocus();							    // DON'T USE >:( //
+		void _gainedFocus();							    // DON'T USE >:( //
+		void _keyPressed(int);						    // DON'T USE >:( //
+		void _keyReleased(int);						    // DON'T USE >:( //
+		void _mouseMoved(int,int);					    // DON'T USE >:( //
+		void _mousePressed(int);							// DON'T USE >:( //
+		void _mouseReleased(int);						// DON'T USE >:( //
 		///////////////////////////////////////////////////////////////////
 
 	private:
@@ -83,17 +155,22 @@ namespace Pim
 		static void instantiateSingleton();
 		static void clearSingleton();
 
-		void mouseRelUpdate() { mousePosLastFrame = mousePos; } // Called post-dispatch
-		bool isMouseDirty() { return mouseDirty; }
-		bool isKeyDirty()   { return keyDirty;   }
+		void addKeyListener(GameNode* n);
+		void removeKeyListener(GameNode* n);
 
-		std::map<std::string,Key::KeyCode>	boundKeys;
+		void addMouseListener(GameNode* n);
+		void removeMouseListener(GameNode* n);
+
+		// Dispatches all events to listeners
+		void _dispatch();
+
 		static Input						*singleton;
-		bool								keys[256];
-		bool								mouse[2];
-		Vec2								mousePos;
-		Vec2								mousePosLastFrame;
-		bool								keyDirty;
-		bool								mouseDirty;
+		std::vector<GameNode*>				kl;				// key listeners
+		std::vector<GameNode*>				ml;				// mouse listeners
+
+		// The events containing input data
+		KeyEvent keyEvent;
+		MouseEvent mouseEvent;
 	};
+
 }

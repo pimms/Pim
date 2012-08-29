@@ -1,7 +1,7 @@
 #pragma once
 
-#include "pim.h"
 #include <vector>
+#include "PimVec2.h"
 
 namespace Pim
 {
@@ -32,8 +32,12 @@ namespace Pim
 
 		void go(Layer *l);
 
-		void addInputListener(GameNode* n);
-		void removeInputListener(GameNode* n);
+		void addKeyListener(GameNode* n);
+		void removeKeyListener(GameNode* n);
+
+		void addMouseListener(GameNode* n);
+		void removeMouseListener(GameNode* n);
+
 		void addFrameListener(GameNode* n);
 		void removeFrameListener(GameNode* n);
 
@@ -44,8 +48,6 @@ namespace Pim
 		static GameControl* singleton;
 
 		void gameLoop();
-		void dispatchKeyInput();
-		void dispatchMouseInput();
 		void dispatchUpdate();
 
 		RenderWindow	*mWindow;
@@ -55,7 +57,6 @@ namespace Pim
 
 		Layer			*layer;
 
-		std::vector<GameNode*>		inputListeners;
 		std::vector<GameNode*>		frameListeners;
 
 		// Used to calculate delta time

@@ -6,20 +6,14 @@
 
 namespace Pim
 {
-	// Forward declarations
-	LPCWSTR strToLPCWSTR(const std::string& s);
-
-	// Assertion
-	#define PimAssert(_s,_dsc)						\
-		if (!_s) throw new Exception(_dsc); 
-
 	class Exception : public std::exception
 	{
 	public:
 		Exception(std::string desc) : _desc(desc) {}
-		LPCWSTR getDescription() 
+
+		std::string getDescription() 
 		{
-			return strToLPCWSTR(_desc);
+			return _desc;
 		}
 
 	private:
@@ -28,4 +22,8 @@ namespace Pim
 
 		std::string _desc;
 	};
+
+
+	// Assertion
+	void PimAssert(bool statement, std::string desc);
 }
