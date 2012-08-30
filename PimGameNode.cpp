@@ -15,7 +15,6 @@ namespace Pim
 	{
 		parent		= NULL;
 		rotation	= 0.f;
-		immovable	= false;
 	}
 	GameNode::~GameNode()
 	{
@@ -113,23 +112,10 @@ namespace Pim
 	{
 		glPushMatrix();
 
-		if (immovable)
-		{
-			glLoadIdentity();	
-		}
-
 		// Update position
 		glTranslatef(position.x, position.y, 0.f);
 		//glTranslatef(getWorldPosition().x, getWorldPosition().y, 0.f);
 		glRotatef(rotation, 0.f, 0.f, 1.f);
-
-		// render self
-		glBegin(GL_QUADS);
-			glVertex2f(-5.f, 5.f);
-			glVertex2f(-5.f,-5.f);
-			glVertex2f(5.f, -5.f);
-			glVertex2f(5.f,  5.f);
-		glEnd();
 
 		for (unsigned int i=0; i<children.size(); i++)
 		{

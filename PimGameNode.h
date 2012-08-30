@@ -16,7 +16,8 @@
 	or by passing "true" to removeAllChildren(bool), or upon the parent's deletion.
 */
 
-#include <vector>
+#include "Stdafx.h"
+
 #include "PimVec2.h"
 
 namespace Pim
@@ -31,7 +32,7 @@ namespace Pim
 	{
 	public:
 		GameNode();
-		~GameNode();
+		virtual ~GameNode();
 		
 		// For comparison only. 
 		const GameNode* getParent() { return parent; }
@@ -61,26 +62,27 @@ namespace Pim
 		virtual Vec2 getWorldPosition();
 		virtual float getWorldRotation();
 
+		/*
+			TO DO:
+			1. Create a Pim::Sprite class
+			2. Move all render functionality to that class.
+			3. Remove said functionality from this class.
+			   This is not a renderable node.
+		*/
+
 		// Render self, call render on all children
 		virtual void draw();
 
-		float					rotation;
-		Vec2					position;
-		std::vector<GameNode*>	children;
+		float					rotation;		// Rotation - relative to parent
+		Vec2					position;		// Position - relative to parent
+		std::vector<GameNode*>	children;		// Children
 
 	protected:
 		// While it is possible to set the parent variable
 		// to some obscure value by yourself, you would be 
 		// a giant moron to do so. Leave this alone.
-		// No matter what.
+		// No matter what. You do now know what you are doing.
 		GameNode	*parent;
-
-		// Again - it is possible to change this value manually.
-		// However, it's intension is to provide UI layers and similar
-		// layers the gift of not being forced to move along with it's parent.
-		// For good PimPractice, ONLY use this flag on layers, and ONLY
-		// via "layer->immovableLayer(true)". 
-		bool		immovable;
 	};
 
 }

@@ -2,11 +2,8 @@
 
 #pragma once
 
-#include <string>
-
-#include <Windows.h>
-#include <GL\GL.H>
-#include <GL\GLU.H>
+// Standard headers (Windows, OpenGL, std...)
+#include "Stdafx.h"
 
 // Engine headers
 #include "PimGameControl.h"
@@ -14,3 +11,5 @@
 #include "PimLayer.h"
 #include "PimException.h"
 #include "PimInput.h"
+#include "PimSprite.h"
+#include "PimAnimation.h"

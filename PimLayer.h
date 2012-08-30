@@ -37,7 +37,7 @@ namespace Pim
 	{
 	public:
 		Layer(void);
-		~Layer(void);
+		virtual ~Layer(void);				// Virtual for the sake of subclassing
 
 		static Layer* getTopLayer();
 
@@ -45,6 +45,8 @@ namespace Pim
 		float getWorldRotation();
 
 		void immovableLayer(bool immov);
+
+		void draw();
 
 		// USE loadResources TO INSTANTIATE YOUR LAYER - DO NOT USE Layer()!
 		virtual void loadResources() {}
@@ -56,6 +58,7 @@ namespace Pim
 		void _topLevelNode();
 
 		bool			isTopLayer;
+		bool			immovable;
 
 		static Layer* topLayer;
 	};

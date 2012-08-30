@@ -181,7 +181,12 @@ namespace Pim
 	bool RenderWindow::initOpenGL()
 	{
 		glEnable(GL_TEXTURE_2D);
+		glShadeModel(GL_FLAT);
 		glClearColor(0.f, 0.f, 0.f, 1.f);
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		return true;
 	}
 

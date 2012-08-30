@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Stdafx.h"
+
 namespace Pim
 {
 	class Vec2
@@ -32,10 +34,13 @@ namespace Pim
 
 	struct Rect
 	{
-		Rect(float xx, float yy, float w, float h) : x(xx), y(yy), width(w), height(h){}
-		Rect() : x(0.f), y(0.f), width(0.f), height(0.f){}
+		Rect(png_uint_32 xx, png_uint_32 yy, png_uint_32 w, png_uint_32 h) 
+			: x(xx), y(yy), width(w), height(h){}
 
-		float x, y, width, height;
+		Rect() 
+			: x(0), y(0), width(0), height(0){}
+
+		png_int_32 x, y, width, height;
 	};
 
 	struct Color

@@ -48,6 +48,27 @@ namespace Pim
 		immovable = immov; 
 	}
 
+	void Layer::draw()
+	{
+		glPushMatrix();
+
+		if (immovable)
+		{
+			glLoadIdentity();
+		}
+
+		// Update position
+		glTranslatef(position.x, position.y, 0.f);
+		glRotatef(rotation, 0.f, 0.f, 1.f);
+
+		for (unsigned int i=0; i<children.size(); i++)
+		{
+			children[i]->draw();
+		}
+
+		glPopMatrix();
+	}
+
 	void Layer::_topLevelNode()
 	{
 		PimAssert(!topLayer, "Error: another top layer already exist!");

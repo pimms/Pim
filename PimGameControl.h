@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include "Stdafx.h"
 #include "PimVec2.h"
 
 namespace Pim
