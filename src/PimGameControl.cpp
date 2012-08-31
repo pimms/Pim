@@ -25,7 +25,7 @@ namespace Pim
 		switch (msg)
 		{
 			case WM_ACTIVATE:
-				if (!HIWORD(wParam))
+				if (wParam)
 				{
 					hasFocus = true;
 					Input::getSingleton()->_gainedFocus();

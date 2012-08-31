@@ -10,6 +10,7 @@ namespace Pim
 		Vec2(float px, float py);
 		Vec2(void);
 
+		/*
 		float angleBetween(Vec2 &other)
 		{
 			Vec2 diff = Vec2(x,y) - other;
@@ -31,6 +32,7 @@ namespace Pim
 		{
 			return sqrt(x*x + y*y);
 		}
+		*/
 
 		float x, y;
 	
