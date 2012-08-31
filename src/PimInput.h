@@ -101,7 +101,7 @@ namespace Pim
 		inline bool isKeyFresh(Mouse::MouseButton mb)
 			{ return keys[mb] && fresh[mb]; }
 		inline Vec2 getPosition()
-			{ return position; }
+			{ return Vec2(position.x, GameControl::getSingleton()->getWindowHeight() - position.y); }
 		inline Vec2 getRelative()
 			{ return relPosition; }
 

@@ -11,7 +11,7 @@
 int _tmain(int argc, _TCHAR* argv[])
 {
 	// Game Control is the boss. It's a singleton object, and is in charge of your game.
-	Pim::GameControl *gc = new Pim::GameControl("Test window",640,480);
+	Pim::GameControl *gc = new Pim::GameControl("Pim demo",640,480);
 
 	// Go initiates the main game loop, and instantiates objects before creating a window.
 	// It must be passed a Pim::Layer.

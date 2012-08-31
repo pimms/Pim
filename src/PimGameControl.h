@@ -45,6 +45,8 @@ namespace Pim
 		void setNewLayer(Layer *l);
 
 	protected:
+		friend class RenderWindow;
+
 		static GameControl* singleton;
 
 		void gameLoop();

@@ -9,18 +9,27 @@ namespace Pim
 	public:
 		Vec2(float px, float py);
 		Vec2(void);
-
-		/*
+		
 		float angleBetween(Vec2 &other)
 		{
+			float dot = normalize().dot(other.normalize());
+			float angle = acosf(dot) * (180.f / 3.14f);
+
 			Vec2 diff = Vec2(x,y) - other;
-			return atan2f(diff.y, diff.x) * (180.f / 3.14f);
+			if (diff.normalize().dot(Vec2(0.f,1.f)) < 0.f)
+				angle = -angle;
+
+			return angle;
 		}
 
 		float dot(const Vec2 &other)
 		{
-			std::cout<<"DOT: " <<x*other.x + y*other.y <<"\n";
 			return x * other.x + y * other.y;
+		}
+
+		Vec2 cross(const Vec2 &other)
+		{
+
 		}
 
 		Vec2 normalize()
@@ -32,7 +41,6 @@ namespace Pim
 		{
 			return sqrt(x*x + y*y);
 		}
-		*/
 
 		float x, y;
 	

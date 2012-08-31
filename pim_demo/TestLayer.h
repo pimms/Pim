@@ -20,6 +20,9 @@ public:
 	// Record movement in keyEvent, move player in update.
 	Pim::Vec2 playerVelocity;
 
+	// Save mouse position in mouseEvent, rotate gun in update
+	Pim::Vec2 mousePos;
+
 	float animTimer;
 	int animFrame;
 };

@@ -65,11 +65,17 @@ void TestLayer::keyEvent(Pim::KeyEvent &evt)
 }
 void TestLayer::mouseEvent(Pim::MouseEvent &evt)
 {
-	
+	mousePos = evt.getPosition();
 }
 void TestLayer::update(float dt)
 {
 	// Handle game logic here //
+
+	// Rotate dat gun
+	gun->rotation = (mousePos-gun->getWorldPosition()).angleBetween(Pim::Vec2(1,0));
+	if (gun->scale.x < 0)
+		gun->rotation += 180.f;
+
 
 	// Handle the animation
 	if (playerVelocity.x != 0.f)

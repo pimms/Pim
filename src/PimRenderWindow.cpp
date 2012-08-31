@@ -49,6 +49,9 @@ namespace Pim
 
 		glMatrixMode(GL_MODELVIEW);
 		glDisable(GL_DEPTH_TEST);
+
+		GameControl::getSingleton()->mWindowWidth  = wnew;
+		GameControl::getSingleton()->mWindowHeight = hnew;
 	}
 
 	bool RenderWindow::createWindow(std::string &title, int w, int h, int bits)
