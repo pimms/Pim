@@ -59,8 +59,8 @@ namespace Pim
 		virtual void update(float dt)			{}
 
 		// Virtual for the sake of Layers. Override at your own risk.
-		virtual Vec2 getWorldPosition();
-		virtual float getWorldRotation();
+		virtual Vec2 getWorldPosition();		// DEPRECATED
+		virtual float getWorldRotation();		// DEPRECATED
 
 		/*
 			TO DO:

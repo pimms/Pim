@@ -44,7 +44,7 @@ namespace Pim
 		// Deletes the old layer, replaces it with the passed.
 		void setNewLayer(Layer *l);
 
-	private:
+	protected:
 		static GameControl* singleton;
 
 		void gameLoop();

@@ -13,6 +13,7 @@ namespace Pim
 	Layer::Layer(void)
 	{
 		isTopLayer = false;
+		color = Color(1.f, 1.f, 1.f, 1.f);
 	}
 	Layer::~Layer(void)
 	{

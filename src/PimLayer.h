@@ -32,6 +32,7 @@ namespace Pim
 {
 	// Forward declarations
 	class GameControl;
+	struct Color;
 
 	class Layer : public GameNode
 	{
@@ -41,17 +42,19 @@ namespace Pim
 
 		static Layer* getTopLayer();
 
-		Vec2 getWorldPosition();
-		float getWorldRotation();
+		Vec2 getWorldPosition();			
+		float getWorldRotation();			
 
 		void immovableLayer(bool immov);
 
 		void draw();
 
+		const Color getColor() { return color; }
+
 		// USE loadResources TO INSTANTIATE YOUR LAYER - DO NOT USE Layer()!
 		virtual void loadResources() {}
 
-	private:
+	protected:
 		friend class GameControl;
 
 		// Called when attached to the GameControl as the top level node
@@ -59,6 +62,8 @@ namespace Pim
 
 		bool			isTopLayer;
 		bool			immovable;
+
+		Color			color;
 
 		static Layer* topLayer;
 	};

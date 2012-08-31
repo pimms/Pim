@@ -22,7 +22,7 @@ namespace Pim
 		Color					color;			// Color overlay
 		Rect					rect;			// Used for clipping in sprite sheets
 
-	private:
+	protected:
 		GLubyte					*texture;		// The texture data
 		GLboolean				_a;				// Has the texture alpha?
 		png_uint_32				_tw;			// Texture width

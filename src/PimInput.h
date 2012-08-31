@@ -67,7 +67,7 @@ namespace Pim
 		inline int keyCount()
 			{ return count; }
 
-	private:
+	protected:
 		friend class Input;
 
 		int count;
@@ -119,11 +119,11 @@ namespace Pim
 		MouseEvent(const MouseEvent&)
 			{ _reset(); }
 		inline void _reset()
-			{ dirty=false; keys[0]=false;keys[1]=false; fresh[0]=false;fresh[0]=false; }
+			{ position = Vec2(0.f,0.f); relPosition = Vec2(0.f,0.f); dirty=false; keys[0]=false;keys[1]=false; fresh[0]=false;fresh[0]=false; }
 		inline void _unfresh()
 			{ dirty=false; relPosition=Vec2(0.f, 0.f); fresh[0]=false;fresh[1]=false; }
-		inline void _mouseMoved(Vec2 rel)
-			{ relPosition += rel; position += rel; }
+		inline void _mouseMoved(Vec2 pos)
+			{ relPosition = pos; position = pos; }
 	};
 
 	class Input

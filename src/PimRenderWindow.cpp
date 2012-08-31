@@ -215,12 +215,16 @@ namespace Pim
 
 	void RenderWindow::renderFrame()
 	{
-		glClear(GL_COLOR_BUFFER_BIT);	// Clear Screen
-		glLoadIdentity();				// Reset The Current Modelview Matrix
+		// Clear screen with the top layer's color
+		Color c = Layer::getTopLayer()->getColor();
+		glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor(c.r, c.g, c.b, c.a);
 
-		Layer::getTopLayer()->draw();
+		glLoadIdentity();				// Reset The Current view Matrix
 
-		SwapBuffers(hDC);
+		Layer::getTopLayer()->draw();	// Draw the top level layer first
+
+		SwapBuffers(hDC);				// Swap the buffers to draw to screen
 	}
 
 }

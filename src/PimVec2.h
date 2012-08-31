@@ -10,6 +10,28 @@ namespace Pim
 		Vec2(float px, float py);
 		Vec2(void);
 
+		float angleBetween(Vec2 &other)
+		{
+			Vec2 diff = Vec2(x,y) - other;
+			return atan2f(diff.y, diff.x) * (180.f / 3.14f);
+		}
+
+		float dot(const Vec2 &other)
+		{
+			std::cout<<"DOT: " <<x*other.x + y*other.y <<"\n";
+			return x * other.x + y * other.y;
+		}
+
+		Vec2 normalize()
+		{
+			return Vec2(x,y) / length();
+		}
+
+		float length()
+		{
+			return sqrt(x*x + y*y);
+		}
+
 		float x, y;
 	
 		// Operator overloading
