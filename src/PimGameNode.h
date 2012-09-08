@@ -53,29 +53,40 @@ namespace Pim
 		void listenFrame();
 		void unlistenFrame();
 
-		// OLD
 		virtual void mouseEvent(MouseEvent &)	{}
 		virtual void keyEvent(KeyEvent &)		{}
 		virtual void update(float dt)			{}
 
 		// Virtual for the sake of Layers. Override at your own risk.
-		virtual Vec2 getWorldPosition();		// DEPRECATED
-		virtual float getWorldRotation();		// DEPRECATED
+		virtual Vec2 getWorldPosition();	// OUTDATED
+		virtual float getWorldRotation();	// OUTDATED
 
-		/*
-			TO DO:
-			1. Create a Pim::Sprite class
-			2. Move all render functionality to that class.
-			3. Remove said functionality from this class.
-			   This is not a renderable node.
-		*/
+		// Sorts children based on their zOrder
+		void orderChildren();
 
-		// Render self, call render on all children
+		// Render self, call draw on all children
 		virtual void draw();
 
+		// Render self, call batchDraw on all children.
+		// The only difference is that the texture has already been loaded into
+		// openGL, as the node (sprite) has no texture of it's own.
+		virtual void batchDraw();
+
+		// Change the ZOrder (0 is drawn first)
+		void setZOrder(int z);
+
+
 		float					rotation;		// Rotation - relative to parent
-		Vec2					position;		// Position - relative to parent
+		Vec2					position;		// Position - CCW degrees - relative to parent
 		std::vector<GameNode*>	children;		// Children
+
+		// If this is false, nodes will be placed at the integer equivalent of their position.
+		// For instance, if the renderResolution of the window is 10x10, and the nodes position
+		// is [3.4,2.1], the ACTUAL position of the node will be [3,2]. 
+		// It is adviced to leave this off for layers, as the scrolling will be VERY jagged,
+		// even if you try to simulate that fancy retro 8-bit style.
+		// Best practice: true for sprites, false for layers.
+		bool					allowMidPixelPosition;
 
 	protected:
 		// While it is possible to set the parent variable
@@ -83,6 +94,17 @@ namespace Pim
 		// a giant moron to do so. Leave this alone.
 		// No matter what. You do now know what you are doing.
 		GameNode	*parent;
+
+		// zOrder is handled in an ascending fashion: 0 is drawn first, then 1, etc.
+		// The ordering only occurs with siblings of the same parent. 
+		// If two sprites with ZO 0 and 1 are drawn, ZO1 will overlap ZO0, as ZO0 is drawn first.
+		// Use setZOrder(int) to change the order - this will dirtien the parent.
+		int						zOrder;
+
+		// If dirtyZOrder is false, orderChildren() will do nothing.
+		// The z-order is dirty when a new child has been added, and is 
+		// clean when the children are ordered.
+		bool		dirtyZOrder;
 	};
 
 }

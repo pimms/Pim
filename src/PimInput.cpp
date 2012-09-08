@@ -33,8 +33,9 @@ namespace Pim
 		PimAssert(key >= 0 && key < 256, "Key out of range.");
 		keyEvent.bindKey(id, key);
 
-		std::cout<<id <<"\n";
+#ifdef _DEBUG
 		std::cout<<"Bound key - " <<id <<": " <<keyEvent.binds[id] <<"\n";
+#endif
 	}
 	void Input::unbindKey(std::string id)
 	{

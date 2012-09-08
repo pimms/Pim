@@ -12,8 +12,10 @@ namespace Pim
 
 	Layer::Layer(void)
 	{
-		isTopLayer = false;
-		color = Color(1.f, 1.f, 1.f, 1.f);
+		isTopLayer	= false;
+		color		= Color(1.f, 1.f, 1.f, 1.f);
+		immovable	= false;
+		scale		= Vec2(1.f, 1.f);
 	}
 	Layer::~Layer(void)
 	{
@@ -59,8 +61,16 @@ namespace Pim
 		}
 
 		// Update position
-		glTranslatef(position.x, position.y, 0.f);
+		Vec2 fac = GameControl::getSingleton()->forcedCoordinateFactor();
+
+		if (allowMidPixelPosition)
+			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
+		else
+			glTranslatef(floor(position.x) / fac.x, position.y / fac.y, 0.f);
+
 		glRotatef(rotation, 0.f, 0.f, 1.f);
+
+		orderChildren();
 
 		for (unsigned int i=0; i<children.size(); i++)
 		{

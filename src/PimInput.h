@@ -55,17 +55,27 @@ namespace Pim
 	{
 	public:
 		inline bool isKeyDown(Key::KeyCode k)
-			{ return keys[k]; }
+		{ 
+			return keys[k]; 
+		}
 		inline bool isKeyFresh(Key::KeyCode k)
-			{ return keys[k] && fresh[k]; }
+		{ 
+			return keys[k] && fresh[k]; 
+		}
 			
 		inline bool isKeyDown(std::string str)
-			{ return keys[binds[str]]; }
+		{ 
+			return keys[binds[str]]; 
+		}
 		inline bool isKeyFresh(std::string str)
-			{ return keys[binds[str]] && fresh[binds[str]]; }
+		{ 
+			return keys[binds[str]] && fresh[binds[str]]; 
+		}
 
 		inline int keyCount()
-			{ return count; }
+		{ 
+			return count; 
+		}
 
 	protected:
 		friend class Input;
@@ -76,19 +86,36 @@ namespace Pim
 		std::map<std::string,Key::KeyCode>	binds;
 
 		KeyEvent()
-			{ _reset(); }
+		{ 
+			_reset(); 
+		}
 		KeyEvent(const KeyEvent&)
-			{ _reset(); }
+		{ 
+			_reset(); 
+		}
 		inline void _reset()
-			{ count=0; for (int i=0; i<256; i++) { keys[i]=false; fresh[i]=false; } }
+		{ 
+			count=0; 
+			for (int i=0; i<256; i++) 
+			{
+				keys[i]=false; fresh[i]=false; 
+			}
+		}
 		inline void _unfresh()
-			{ for (int i=0; i<256; i++) { fresh[i]=false; } }
+		{ 
+			for (int i=0; i<256; i++) 
+				fresh[i]=false; 
+		}
 
 		// Binding keys by string
 		void bindKey(std::string &str, Key::KeyCode k)
-			{ binds[str] = k; }
+		{ 
+			binds[str] = k; 
+		}
 		void unbindKey(std::string &str)
-			{ binds.erase(str); }
+		{
+			binds.erase(str); 
+		}
 	};
 
 	// Class containing all mouse event data.
@@ -97,13 +124,23 @@ namespace Pim
 	{
 	public:
 		inline bool isKeyDown(Mouse::MouseButton mb)
-			{ return keys[mb]; }
+		{ 
+			return keys[mb]; 
+		}
 		inline bool isKeyFresh(Mouse::MouseButton mb)
-			{ return keys[mb] && fresh[mb]; }
+		{
+			return keys[mb] && fresh[mb]; 
+		}
 		inline Vec2 getPosition()
-			{ return Vec2(position.x, GameControl::getSingleton()->getWindowHeight() - position.y); }
+		{ 
+			return (Vec2(position.x, GameControl::getWindowHeight()-position.y)
+				- GameControl::getSingleton()->lowerLeftCorner())
+				* GameControl::getSingleton()->forcedCoordinateFactor(); 
+		}
 		inline Vec2 getRelative()
-			{ return relPosition; }
+		{ 
+			return relPosition; 
+		}
 
 	private:
 		friend class Input;
@@ -115,15 +152,35 @@ namespace Pim
 		Vec2 relPosition;
 
 		MouseEvent()
-			{ _reset(); }
+		{ 
+			_reset(); 
+		}
 		MouseEvent(const MouseEvent&)
-			{ _reset(); }
+		{ 
+			_reset(); 
+		}
 		inline void _reset()
-			{ position = Vec2(0.f,0.f); relPosition = Vec2(0.f,0.f); dirty=false; keys[0]=false;keys[1]=false; fresh[0]=false;fresh[0]=false; }
+		{ 
+			position = Vec2(0.f,0.f); 
+			relPosition = Vec2(0.f,0.f); 
+			dirty=false; 
+			keys[0]=false;
+			keys[1]=false; 
+			fresh[0]=false;
+			fresh[0]=false; 
+		}
 		inline void _unfresh()
-			{ dirty=false; relPosition=Vec2(0.f, 0.f); fresh[0]=false;fresh[1]=false; }
+		{ 
+			dirty=false; 
+			relPosition=Vec2(0.f, 0.f); 
+			fresh[0]=false;
+			fresh[1]=false;
+		}
 		inline void _mouseMoved(Vec2 pos)
-			{ relPosition = pos; position = pos; }
+		{ 
+			relPosition = pos; 
+			position = pos; 
+		}
 	};
 
 	class Input
@@ -135,17 +192,17 @@ namespace Pim
 		void unbindKey(std::string id);
 
 		// Methods have to be manual in order for the WINAPI callback
-		// function to reach them. ight make these inaccessible at a
+		// function to reach them. Might make these inaccessible at a
 		// future date.
-		// Manual use of these methods will cause bugs. ///////////////////
-		void _lostFocus();							    // DON'T USE >:( //
+		// Manual use of these methods WILL cause bugs. ///////////////////////
+		void _lostFocus();									// DON'T USE >:( //
 		void _gainedFocus();							    // DON'T USE >:( //
-		void _keyPressed(int);						    // DON'T USE >:( //
-		void _keyReleased(int);						    // DON'T USE >:( //
-		void _mouseMoved(int,int);					    // DON'T USE >:( //
+		void _keyPressed(int);								// DON'T USE >:( //
+		void _keyReleased(int);								// DON'T USE >:( //
+		void _mouseMoved(int,int);							// DON'T USE >:( //
 		void _mousePressed(int);							// DON'T USE >:( //
-		void _mouseReleased(int);						// DON'T USE >:( //
-		///////////////////////////////////////////////////////////////////
+		void _mouseReleased(int);							// DON'T USE >:( //
+		///////////////////////////////////////////////////////////////////////
 
 	private:
 		friend class GameControl;

@@ -4,13 +4,32 @@
 
 #pragma once
 
+#ifdef _DEBUG
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#endif
+
 #include <string>
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <map>
 
 #include <Windows.h>
-#include <GL\GL.H>
-#include <GL\GLU.H>
+#include <GL\glew.h>
 
 #include "png.h"
+
+namespace Pim
+{
+	namespace Quality
+	{
+		typedef enum Quality
+		{
+			LOW,
+			MED,
+			HIGH,
+		};
+	}
+}

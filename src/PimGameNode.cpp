@@ -13,8 +13,11 @@ namespace Pim
 
 	GameNode::GameNode()
 	{
-		parent		= NULL;
-		rotation	= 0.f;
+		parent					= NULL;
+		rotation				= 0.f;
+		allowMidPixelPosition	= true;
+		zOrder					= 0;
+		dirtyZOrder				= false;
 	}
 	GameNode::~GameNode()
 	{
@@ -30,6 +33,8 @@ namespace Pim
 
 		ch->parent = this;
 		children.push_back(ch);
+
+		dirtyZOrder = true;
 	}
 	void GameNode::removeChild(GameNode *ch, bool cleanup)
 	{
@@ -108,20 +113,81 @@ namespace Pim
 		return rotation + parent->getWorldRotation();
 	}
 
+	void GameNode::orderChildren()
+	{
+		if (!dirtyZOrder || children.size() < 2)
+			return;
+		
+		// Insertion sorting - the children should be somewhat sorted already.
+		int i;
+		GameNode *key;
+		for (unsigned int j=1; j<children.size(); j++)
+		{
+			key = children[j];
+			i = j - 1;
+			std::cout<<i <<"\n";
+			while (i >= 0 && children[i]->zOrder > key->zOrder)
+			{
+				children[i+1] = children[i];
+				i--;
+			}
+			children[i+1] = key;
+		}
+
+		std::cout<<"\n";
+
+		dirtyZOrder = false;
+	}
+
 	void GameNode::draw()
 	{
 		glPushMatrix();
 
 		// Update position
-		glTranslatef(position.x, position.y, 0.f);
-		//glTranslatef(getWorldPosition().x, getWorldPosition().y, 0.f);
+		Vec2 fac = GameControl::getSingleton()->windowScale();
+
+		if (allowMidPixelPosition)
+			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
+		else
+			glTranslatef(floor(position.x) / fac.x, position.y / fac.y, 0.f);
+
 		glRotatef(rotation, 0.f, 0.f, 1.f);
 
+		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)
 		{
 			children[i]->draw();
 		}
 
 		glPopMatrix();
+	}
+	void GameNode::batchDraw()
+	{
+		glPushMatrix();
+
+		// Update position
+		Vec2 fac = GameControl::getSingleton()->windowScale();
+
+		if (allowMidPixelPosition)
+			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
+		else
+			glTranslatef(floor(position.x) / fac.x, position.y / fac.y, 0.f);
+
+		glRotatef(rotation, 0.f, 0.f, 1.f);
+
+		orderChildren();
+		for (unsigned int i=0; i<children.size(); i++)
+		{
+			children[i]->batchDraw();
+		}
+
+		glPopMatrix();
+	}
+
+	void GameNode::setZOrder(int z)
+	{
+		if (parent)
+			parent->dirtyZOrder = true;
+		zOrder = z;
 	}
 }

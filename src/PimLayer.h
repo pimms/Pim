@@ -54,6 +54,9 @@ namespace Pim
 		// USE loadResources TO INSTANTIATE YOUR LAYER - DO NOT USE Layer()!
 		virtual void loadResources() {}
 
+		// Layers scale their children.
+		Vec2			scale;
+
 	protected:
 		friend class GameControl;
 

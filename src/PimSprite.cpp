@@ -9,7 +9,8 @@ namespace Pim
 		anchor		= Vec2(0.5f, 0.5f);
 		scale		= Vec2(1.f, 1.f);
 		color		= Color(1.f, 1.f, 1.f, 1.f);
-		texture		= NULL;
+		texID		= -1;
+		shader		= NULL;
 
 		loadSprite(file);
 	}
@@ -18,12 +19,12 @@ namespace Pim
 		anchor		= Vec2(0.5f, 0.5f);
 		scale		= Vec2(1.f, 1.f);
 		color		= Color(1.f, 1.f, 1.f, 1.f);
-		texture		= NULL;
+		texID		= -1;
+		shader		= NULL;
 	}
 	Sprite::~Sprite()
 	{
-		if (texture)
-			free(texture);
+		glDeleteTextures(1, &texID);
 	}
 
 	void Sprite::loadSprite(std::string file)
@@ -82,13 +83,9 @@ namespace Pim
 				PimAssert(false,"Image format not supported");
 		}
 
-		// Release old texture
-		if (texture)
-			free(texture);
-
 		// Allocate the texture
 		unsigned int row_bytes = png_get_rowbytes(png_ptr, info_ptr);
-		texture = (GLubyte*)malloc(_th * row_bytes);
+		GLubyte *texture = (GLubyte*)malloc(_th * row_bytes);
 
 		// Read the image into the texture
 		png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
@@ -105,6 +102,22 @@ namespace Pim
 		// Default rect is the texture size. Crop at free!
 		rect.width = _tw;
 		rect.height = _th;
+
+		// Create the texture
+		glGenTextures(1, &texID);
+		glBindTexture(GL_TEXTURE_2D, texID);
+
+		// The loading is complete, now let's bind some textures!
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexImage2D(GL_TEXTURE_2D, 0, _a?4:3, _tw, _th, 0, _a?GL_RGBA:GL_RGB, 
+					 GL_UNSIGNED_BYTE, texture);
+
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+		free(texture);
 	}
 
 	void Sprite::draw()
@@ -112,22 +125,29 @@ namespace Pim
 		glPushMatrix();
 
 		// Update view matrix
-		glTranslatef(position.x, position.y, 0.f);
+		Vec2 fac = GameControl::getSingleton()->forcedCoordinateFactor();
+
+		if (allowMidPixelPosition)
+			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
+		else
+			glTranslatef(floor(position.x) / fac.x, position.y / fac.y, 0.f);
+
 		glRotatef(rotation, 0.f, 0.f, 1.f);
 
-		// Push matrix before scaling
+		// Push matrix before scaling and overlaying color
 		glPushMatrix();
-		glScalef(scale.x, scale.y, 1.f);
 
-		
-		// The loading is complete, now let's bind some textures!
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, _a?4:3, _tw, _th, 0, _a?GL_RGBA:GL_RGB, GL_UNSIGNED_BYTE, texture);
+		fac = GameControl::getSingleton()->windowScale();
+		glScalef(scale.x * fac.x, scale.y * fac.y, 1.f);
+		glColor4f(color.r, color.g, color.b, color.a);
 
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glBindTexture(GL_TEXTURE_2D, texID);
+
+		if (shader)
+		{
+			shader->setUniform1i("texture", 0);
+			glUseProgram(shader->getProgram());
+		}
 
 		// Counter clockwise 
 		glBegin(GL_QUADS);
@@ -144,10 +164,12 @@ namespace Pim
 			glVertex2f(-anchor.x * rect.width, (1.f-anchor.y) * rect.height);
 		glEnd();
 		
+		glUseProgram(0);
 
 		// Children are unaffected by their parent's scale. Restore.
 		glPopMatrix();
 
+		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)
 		{
 			children[i]->draw();
@@ -155,5 +177,75 @@ namespace Pim
 
 		// Restore this parent's view matrix
 		glPopMatrix();
+	}
+	void Sprite::batchDraw()
+	{
+		glPushMatrix();
+
+		// Update view matrix
+		Vec2 fac = GameControl::getSingleton()->forcedCoordinateFactor();
+
+		if (allowMidPixelPosition)
+			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
+		else
+			glTranslatef(floor(position.x) / fac.x, position.y / fac.y, 0.f);
+
+		glRotatef(rotation, 0.f, 0.f, 1.f);
+
+		// Push matrix before scaling
+		glPushMatrix();
+
+		fac = GameControl::getSingleton()->windowScale();
+		glScalef(scale.x * fac.x, scale.y * fac.y, 1.f);
+		glColor4f(color.r, color.g, color.b, color.a);
+
+		if (shader)
+		{
+			shader->setUniform1i("texture", 0);
+			glUseProgram(shader->getProgram());
+		}
+
+		glBegin(GL_QUADS);
+			// Counter clockwise winding, beginning in bottom left corner //
+			glTexCoord2f((float)rect.x / (float)_tw, (float)rect.y / (float)_th);
+			glVertex2f(-anchor.x * rect.width, -anchor.y * rect.height);
+
+			glTexCoord2f((float)rect.x/(float)_tw + (float)rect.width/(float)_tw, (float)rect.y / (float)_th);
+			glVertex2f((1.f-anchor.x) * rect.width, -anchor.y * rect.height);
+
+			glTexCoord2f((float)rect.x/(float)_tw + (float)rect.width/(float)_tw, (float)rect.y/(float)_th + (float)rect.height/(float)_th);
+			glVertex2f((1.f-anchor.x) * rect.width, (1.f-anchor.y) * rect.height);
+
+			glTexCoord2f((float)rect.x/(float)_tw, (float)rect.y/(float)_th + (float)rect.height/(float)_th);
+			glVertex2f(-anchor.x * rect.width, (1.f-anchor.y) * rect.height);
+		glEnd();
+
+		glUseProgram(0);
+
+		// Children are unaffected by their parent's scale. Restore.
+		glPopMatrix();
+
+		orderChildren();
+		for (unsigned int i=0; i<children.size(); i++)
+		{
+			children[i]->batchDraw();
+		}
+
+		// Restore this parent's view matrix
+		glPopMatrix();
+	}
+
+	void Sprite::useBatchNode(SpriteBatchNode *batch)
+	{
+		// Assign alpha and texture dimensions
+		_a    = batch->_a;
+		_tw   = batch->_tw;
+		_th	  = batch->_th;
+		texID = batch->texID;
+	}
+
+	void Sprite::setShader(Shader *s)
+	{
+		shader = s;
 	}
 }

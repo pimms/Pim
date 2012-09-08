@@ -14,7 +14,6 @@
 
 namespace Pim
 {
-
 	// Global variables only accessible from this file. Used to
 	// to store values from the callback function.
 	bool hasFocus = false;
@@ -82,7 +81,7 @@ namespace Pim
 				return 0;
 
 			case WM_SIZE:
-				GameControl::getRenderWindow()->resizeWindow(LOWORD(lParam), HIWORD(lParam));
+				GameControl::getSingleton()->setWindowResolution(LOWORD(lParam),HIWORD(lParam));
 				return 0;
 		}
 
@@ -94,31 +93,33 @@ namespace Pim
 	GameControl* GameControl::singleton = NULL;
 
 
-	GameControl::GameControl(std::string title, int w, int h)
+	GameControl::GameControl()
 	{
 		PimAssert(singleton == NULL, "Only one GameControl instance can exist at a time.");
 
 		singleton		= this;
-		mWindowTitle	= title;
-		mWindowWidth	= w;
-		mWindowHeight	= h;
 		layer			= NULL;
 	}
 	GameControl::~GameControl()
 	{
 		singleton = NULL;
 
-		if (mWindow)	delete mWindow;
+		if (renderWindow)	delete renderWindow;
 	}
 
-	void GameControl::go(Layer *l)
+	void GameControl::go(Layer *l, WinStyle::CreationData data)
 	{
 		try 
 		{
-			Input::instantiateSingleton();
-			mWindow = new RenderWindow(mWindowTitle,mWindowWidth,mWindowHeight);
+			winData = data;
+			winData.prepare();
 
-			setNewLayer(l);
+			Input::instantiateSingleton();
+			ShaderManager::instantiateSingleton();
+
+			renderWindow = new RenderWindow(data);
+
+			setLayer(l);
 
 			gameLoop();
 		} 
@@ -168,7 +169,73 @@ namespace Pim
 		}
 	}
 
-	void GameControl::setNewLayer(Layer *l)
+	void GameControl::setWindowCreationData(WinStyle::CreationData data)
+	{
+		winData = data;
+		winData.prepare();
+
+		renderWindow->killWindow();
+		renderWindow->createWindow(winData);
+	}
+	void GameControl::setWindowStyle(WinStyle::WinStyle style)
+	{
+		if (style != winData.winStyle)
+		{
+			winData.winStyle = style;
+
+			renderWindow->killWindow();
+			renderWindow->createWindow(winData);
+		}
+	}
+	void GameControl::setWindowResolution(int w, int h)
+	{
+		if (winData.winStyle != WinStyle::BORDERLESS_FULLSCREEN 
+			&& (winData.width  != w || winData.height != h))
+		{
+			winData.width = w;
+			winData.height = h;
+
+			renderWindow->resizeWindow(w, h);
+		}
+	}
+	void GameControl::setWindowBits(int bits)
+	{
+		if (bits != winData.bits)
+		{
+			winData.bits = bits;
+
+			renderWindow->killWindow();
+			renderWindow->createWindow(winData);
+		}
+	}
+
+	Vec2 GameControl::lowerLeftCorner()
+	{
+		switch (renderWindow->bpos)
+		{
+		case 1:	// VER
+			return Vec2(renderWindow->bdim, 0.f);
+
+		case 2: // HOR
+			return Vec2(0.f, renderWindow->bdim);
+
+		case 0: default:
+			return Vec2(0.f, 0.f);
+		}
+	}
+	Vec2 GameControl::windowScale()
+	{
+		return renderWindow->scale;
+	}
+	Vec2 GameControl::forcedCoordinateFactor()
+	{
+		if (winData.forcedCoordinateSystem)
+			return winData.coordinateSystem / renderWindow->ortho;
+		
+		return Vec2(1.f, 1.f);
+	}
+
+	void GameControl::setLayer(Layer *l)
 	{
 		PimAssert(l != NULL, "Error: Cannot set layer: NULL.");
 
@@ -201,15 +268,15 @@ namespace Pim
 			}
 		
 			if (hasFocus)
-			{	
-				// Dispatch key and mouse events if required
+			{
+				// Dispatch key and mouse events 
 				Input::getSingleton()->_dispatch();
 
 				// Dispatch update calls
 				dispatchUpdate();
 
 				// Render dat frame
-				mWindow->renderFrame();
+				renderWindow->renderFrame();
 			}
 		}
 
@@ -217,8 +284,10 @@ namespace Pim
 		if (layer) delete layer;
 
 		Input::clearSingleton();
-		mWindow->killWindow();
+		ShaderManager::clearSingleton();
 
+		renderWindow->killWindow();
+		
 		delete this;
 	}
 	void GameControl::dispatchUpdate()

@@ -14,57 +14,34 @@ namespace Pim
 	// Function is defined in GameControl.cpp
 	LRESULT	CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);
 
-	// Singleton nullification
-	RenderWindow* RenderWindow::singleton = NULL;
-
-
-	RenderWindow::RenderWindow(std::string title, int w, int h)
+	RenderWindow::RenderWindow(WinStyle::CreationData &data)
 	{
-		if (singleton)
-			throw new Exception("Unable to instantiate more than one RenderWindow at a time.");
-		singleton = this;
-
 		hDC			= NULL;
 		hRC			= NULL;
 		hWnd		= NULL;
 		hInstance	= NULL;
+		winData		= NULL;
 
-		createWindow(title, w, h, 32);
+		createWindow(data);
 	}
 	RenderWindow::~RenderWindow()
 	{
-		singleton = NULL;
+		killWindow();
 	}
 
-	void RenderWindow::resizeWindow(int wnew, int hnew)
+	bool RenderWindow::createWindow(WinStyle::CreationData &data)
 	{
-		if (hnew == 0)
-			hnew = 1;
+		winData = &data;
 
-		glViewport(0,0,wnew,hnew);
-
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, wnew, 0, hnew, 0, 1);
-
-		glMatrixMode(GL_MODELVIEW);
-		glDisable(GL_DEPTH_TEST);
-
-		GameControl::getSingleton()->mWindowWidth  = wnew;
-		GameControl::getSingleton()->mWindowHeight = hnew;
-	}
-
-	bool RenderWindow::createWindow(std::string &title, int w, int h, int bits)
-	{
 		GLuint		pixelFormat;
 		WNDCLASS	wc;
 		DWORD		dwExStyle;
 		DWORD		dwStyle;
 		RECT		winRect;
 		winRect.left   = (long)0;
-		winRect.right  = (long)w;
+		winRect.right  = (long)data.width;
 		winRect.top	   = (long)0;
-		winRect.bottom = (long)h;
+		winRect.bottom = (long)data.height;
 
 		hInstance			= GetModuleHandle(NULL);				// Window instance
 		wc.style			= CS_HREDRAW | CS_VREDRAW | CS_OWNDC;	// Redraw on resize
@@ -84,21 +61,56 @@ namespace Pim
 			return false;
 		}
 
-		// if fullscreen... Nope!
+		if (data.winStyle == WinStyle::FULLSCREEN)
+		{
+			const HWND hDesktop = GetDesktopWindow();
+			GetWindowRect(hDesktop, &winRect);
+
+			DEVMODE dmScreenSettings;
+			memset(&dmScreenSettings,0,sizeof(dmScreenSettings));
+			dmScreenSettings.dmSize			= sizeof(dmScreenSettings);
+			dmScreenSettings.dmPelsWidth	= winRect.right;
+			dmScreenSettings.dmPelsHeight	= winRect.bottom;
+			dmScreenSettings.dmBitsPerPel	= data.bits;
+			dmScreenSettings.dmFields		= DM_BITSPERPEL|DM_PELSWIDTH|DM_PELSHEIGHT;
+
+			if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL)
+			{
+				dwExStyle	= WS_EX_APPWINDOW;
+				dwStyle		= WS_POPUP;	
+			}
+			else
+			{
+				MessageBox(NULL,"Fullscreen is not supported.\nChanging to windowed mode.","Fullscreen not supported",MB_OK | MB_ICONEXCLAMATION);
+				data.winStyle = WinStyle::WINDOWED;
+			}
+		}
+		else if (data.winStyle == WinStyle::BORDERLESS_FULLSCREEN)
+		{
+			dwExStyle = WS_EX_APPWINDOW;
+			dwStyle = WS_POPUP;
+
+			// Get the screen's resolution.
+			const HWND hDesktop = GetDesktopWindow();
+			GetWindowRect(hDesktop, &winRect);
+		}
+
+		// No else, any fault in previous settings will set winstyle to windowed.
+		if (data.winStyle == WinStyle::WINDOWED)
 		{
 			dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
 			dwStyle	  = WS_OVERLAPPEDWINDOW;
 		}
 
-		AdjustWindowRectEx(&winRect, dwStyle, false, dwExStyle);
+		//AdjustWindowRectEx(&winRect, dwStyle, false, dwExStyle);
 
 		if (!(hWnd = CreateWindowEx(dwExStyle,
 									"pim",
-									title.c_str(),
+									data.winTitle.c_str(),
 									dwStyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
 									0, 0,
-									winRect.right-winRect.left,
-									winRect.bottom-winRect.top,
+									winRect.right,
+									winRect.bottom,
 									NULL, 
 									NULL,
 									hInstance,
@@ -117,7 +129,7 @@ namespace Pim
 			PFD_SUPPORT_OPENGL |						// Format Must Support OpenGL
 			PFD_DOUBLEBUFFER,							// Must Support Double Buffering
 			PFD_TYPE_RGBA,								// Request An RGBA Format
-			bits,										// Select Our Color Depth
+			data.bits,									// Select Our Color Depth
 			0, 0, 0, 0, 0, 0,							// Color Bits Ignored
 			0,											// No Alpha Buffer
 			0,											// Shift Bit Ignored
@@ -166,12 +178,6 @@ namespace Pim
 			return false;
 		}
 
-		ShowWindow(hWnd,SW_SHOW);
-		SetForegroundWindow(hWnd);
-		SetFocus(hWnd);
-
-		resizeWindow(w,h);
-
 		if (!initOpenGL())
 		{
 			killWindow();
@@ -179,7 +185,100 @@ namespace Pim
 			return false;
 		}
 
+		ShowWindow(hWnd,SW_SHOW);
+		SetForegroundWindow(hWnd);
+		SetFocus(GetDesktopWindow());
+		SetFocus(hWnd);
+
+		RECT rcClient, rcWind;
+		POINT ptDiff;
+		GetClientRect(hWnd, &rcClient);
+		GetWindowRect(hWnd, &rcWind);
+		ptDiff.x = (rcWind.right - rcWind.left) - rcClient.right;
+		ptDiff.y = (rcWind.bottom - rcWind.top) - rcClient.bottom;
+		MoveWindow(hWnd,rcWind.left, rcWind.top, winRect.right + ptDiff.x, winRect.bottom + ptDiff.y, TRUE);
+
+		// FIX THIS SHIT. BOOKMARKED SO POST
+		if (data.winStyle == WinStyle::WINDOWED)
+			resizeWindow(winRect.right, winRect.bottom);
+		else
+			resizeWindow(winRect.right, winRect.bottom);
+
+		// Initate GLEW
+		GLenum res = glewInit();
+		if (res != GLEW_OK)
+		{
+			std::cout<<"ERROR INITATING GLEW:\n" <<glewGetErrorString(res) <<"\n";
+			system("PAUSE");
+			return false;
+		}
+
 		return true;
+	}
+	void RenderWindow::resizeWindow(int nw, int nh)
+	{
+		if (nh == 0)
+			nh = 1;
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+
+		glViewport(0,0,nw,nh);
+
+		if (winData->forcedAspectRatio)
+		{
+			float rap = (float)nw/(float)nh;		// real aspect ratio
+
+			float rw = nw, rh = nh;
+
+			if (abs(rap - winData->aspectRatio) < 0.02f) // 0.02
+			{
+				bpos = NONE;
+				bdim = 0;
+			}
+			else if (rap > winData->aspectRatio)			// Too wide
+			{
+				rw = nh * winData->aspectRatio;
+
+				bpos = VER;
+				bdim = ceil((nw-rw)/2.f);
+			}
+			else if (rap < winData->aspectRatio)	// Too tall
+			{
+				rh = nw / winData->aspectRatio;
+
+				bpos = HOR;
+				bdim = ceil((nh-rh)/2.f);
+			}
+
+			glOrtho((nw-rw)/-2.f, rw+(nw-rw)/2.f, (nh-rh)/-2.f, rh+(nh-rh)/2.f, 0, 1);
+			ortho = Vec2(rw,rh);
+
+			std::cout<<"RENDER: " <<rw <<", " <<rh <<" - ";
+			std::cout<<"WINDIM: " <<nw <<", " <<nh <<" - ";
+			std::cout<<"BORDER: " <<bdim <<"\n";
+		}
+		else
+		{
+			glOrtho(0, nw, 0, nh, 0, 1);
+			ortho = Vec2(nw,nh);
+			bpos = NONE;
+		}
+		
+		glMatrixMode(GL_MODELVIEW);
+		glDisable(GL_DEPTH_TEST);
+
+		GameControl::getSingleton()->actualWinWidth  = nw;
+		GameControl::getSingleton()->actualWinHeight = nh;
+
+		if (winData->forcedRenderResolution)
+		{
+			scale = ortho / winData->renderResolution;
+		}
+		else
+		{
+			scale = ortho / winData->defaultResolution;
+		}
 	}
 	bool RenderWindow::initOpenGL()
 	{
@@ -192,7 +291,6 @@ namespace Pim
 
 		return true;
 	}
-
 	void RenderWindow::killWindow()
 	{
 		if (hRC)
@@ -220,14 +318,106 @@ namespace Pim
 	{
 		// Clear screen with the top layer's color
 		Color c = Layer::getTopLayer()->getColor();
-		glClear(GL_COLOR_BUFFER_BIT);
+		
+		glClear(GL_COLOR_BUFFER_BIT);		// Clear the screen
 		glClearColor(c.r, c.g, c.b, c.a);
+		glColor3ub(255,255,255);			// Default overlay color (white)
 
-		glLoadIdentity();				// Reset The Current view Matrix
+		glLoadIdentity();					// Reset The Current view Matrix
 
-		Layer::getTopLayer()->draw();	// Draw the top level layer first
+		Layer::getTopLayer()->draw();		// Draw the top level layer first
+
+		glLoadIdentity();					// Reload the identity matrix
+
+		switch (bpos)
+		{
+			case VER:
+			{
+				glColor4ub(0,0,0,255);
+				int ww = GameControl::getSingleton()->actualWinWidth;
+				int wh = GameControl::getSingleton()->actualWinHeight;
+
+				glDisable(GL_TEXTURE_2D);
+				glBegin(GL_QUADS);
+					// Left
+					glVertex2i(-bdim-5, 0);
+					glVertex2i(0, 0);
+					glVertex2i(0, wh);
+					glVertex2i(-bdim-5, wh);
+
+					// Right
+					glVertex2i(ww-bdim+5, 0);
+					glVertex2i(ww-bdim-bdim, 0);
+					glVertex2i(ww-bdim-bdim, wh);
+					glVertex2i(ww-bdim+5, wh);
+				glEnd();
+				glEnable(GL_TEXTURE_2D);
+				break;
+			}
+
+			case HOR:
+			{
+				glColor4ub(0,0,0,255);
+				int ww = GameControl::getSingleton()->actualWinWidth;
+				int wh = GameControl::getSingleton()->actualWinHeight;
+
+				glDisable(GL_TEXTURE_2D);
+				glBegin(GL_QUADS);
+					// Top
+					glVertex2i(0,wh-bdim+5);
+					glVertex2i(ww,wh-bdim+5);
+					glVertex2i(ww,wh-bdim-bdim);
+					glVertex2i(0,wh-bdim-bdim);
+
+					// Bottom
+					glVertex2i(0,-bdim-5);
+					glVertex2i(ww,-bdim-5);
+					glVertex2i(ww,0);
+					glVertex2i(0,0);
+				glEnd();
+				glEnable(GL_TEXTURE_2D);
+				break;
+			}
+
+			case NONE: default:
+				break;
+		}
 
 		SwapBuffers(hDC);				// Swap the buffers to draw to screen
+
+#ifdef _DEBUG
+		GLenum en = glGetError();
+		if (en != GL_NO_ERROR)
+		{
+			std::cout<<"OpenGL error: ";
+
+			switch (en)
+			{
+				case GL_INVALID_ENUM:
+					std::cout<<"GL_INVALUD_ENUM";
+					break;
+				case GL_INVALID_VALUE:
+					std::cout<<"GL_INVALID_VALUE";
+					break;
+				case GL_INVALID_OPERATION:
+					std::cout<<"GL_INVALID_OPERATION";
+					break;
+				case GL_OUT_OF_MEMORY:
+					std::cout<<"GL_OUT_OF_MEMORY";
+					break;
+				case GL_STACK_UNDERFLOW:
+					std::cout<<"GL_STACK_UNDERFLOW";
+					break;
+				case GL_STACK_OVERFLOW:
+					std::cout<<"GL_STACK_OVERFLOW";
+					break;
+				default:
+					std::cout<<"UNDEFINED GL ERROR";
+			}
+
+			std::cout<<"\n";
+		}
+#endif
 	}
 
 }

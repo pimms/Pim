@@ -1,8 +1,27 @@
 #Pim v0.1 readme
 
-Pim is a lightweight 2D game engine. There are many like it, etc..
+This document works as a development guideline AND a readme. Because most of the 
+functionalities described in this document aren't implemented yet.
 
-PLEASE NOTE: Pim will only compile in debug mode currently.
+Pim is a 2D game engine aimed to further improve development for the Windows platform
+by providing a simple, yet comprehensive interface that is tailored to accommodate
+existing issues within the PC gaming scene.
+
+While most ideas are still notes written on a piece of paper rather than sexy bytes
+in a binary, the core principles of Pim are set in stone: Pim doesn't care what 
+hardware it runs on. 60x43 resolution screen? No problem. Ancient 4:3 monitor?
+Not even a slight challenge. The CPU is powered by a potato? Probably an issue,
+but we'll see.
+
+Pim will - semi automatically - handle resolutions, aspect ratios, shader qualities,
+particle counts and in general make development for the hardware varying platform
+a lot easier. Pim is not a media layer applicable for game development. It is a
+game engine.
+
+Pim is 99% standalone (bar some OpenGL addons), and probably always will be.
+
+PLEASE NOTE: Pim will only compile in debug mode currently. Also, it's virtually
+uselses. Fonts are not supported, sound is unimplemented, and there are bugs. Many.
 
 #Setup
 
