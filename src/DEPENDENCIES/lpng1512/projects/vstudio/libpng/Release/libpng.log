@@ -1,0 +1,57 @@
+﻿Build started 30.08.2012 13:25:57.
+Project "C:\lib\lpng1512\projects\vstudio\libpng\libpng.vcxproj" on node 2 (build target(s)).
+InitializeBuildStatus:
+  Creating "Release\libpng.unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"..\..\..\..\zlib-1.2.5" /Zi /nologo /W4 /WX /Ox /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D _WINDLL /D _MBCS /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /fp:except- /Zc:wchar_t- /Zc:forScope /Yc"pngpriv.h" /Fp"Release\libpng15.pch" /Fo"Release\\" /Fd"Release\vc100.pdb" /FR"Release\\" /Gd /TC /wd4996 /wd4127 /analyze- /errorReport:prompt ..\..\..\png.c
+  png.c
+  c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"..\..\..\..\zlib-1.2.5" /Zi /nologo /W4 /WX /Ox /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D _WINDLL /D _MBCS /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /fp:except- /Zc:wchar_t- /Zc:forScope /Yu"pngpriv.h" /Fp"Release\libpng15.pch" /Fo"Release\\" /Fd"Release\vc100.pdb" /FR"Release\\" /Gd /TC /wd4996 /wd4127 /analyze- /errorReport:prompt ..\..\..\pngerror.c ..\..\..\pngget.c ..\..\..\pngmem.c ..\..\..\pngpread.c ..\..\..\pngread.c ..\..\..\pngrio.c ..\..\..\pngrtran.c ..\..\..\pngrutil.c ..\..\..\pngset.c ..\..\..\pngtrans.c ..\..\..\pngwio.c ..\..\..\pngwrite.c ..\..\..\pngwtran.c ..\..\..\pngwutil.c
+  pngerror.c
+  pngget.c
+  pngmem.c
+  pngpread.c
+  pngread.c
+  pngrio.c
+  pngrtran.c
+  pngrutil.c
+  pngset.c
+  pngtrans.c
+  pngwio.c
+  pngwrite.c
+  pngwtran.c
+  pngwutil.c
+ResourceCompile:
+  C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /l"0x0409" /nologo /fo"Release\pngwin.res" ..\..\..\scripts\pngwin.rc 
+Link:
+  c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\lib\lpng1512\projects\vstudio\Release\libpng15.dll" /VERSION:"15" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\lib\lpng1512\projects\vstudio\Release\ zlib.lib /MANIFEST /ManifestFile:"Release\libpng15.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\lib\lpng1512\projects\vstudio\Release\libpng15.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\lib\lpng1512\projects\vstudio\Release\libpng15.lib" /MACHINE:X86 /DLL Release\pngwin.res
+  Release\png.obj
+  Release\pngerror.obj
+  Release\pngget.obj
+  Release\pngmem.obj
+  Release\pngpread.obj
+  Release\pngread.obj
+  Release\pngrio.obj
+  Release\pngrtran.obj
+  Release\pngrutil.obj
+  Release\pngset.obj
+  Release\pngtrans.obj
+  Release\pngwio.obj
+  Release\pngwrite.obj
+  Release\pngwtran.obj
+  Release\pngwutil.obj
+     Creating library C:\lib\lpng1512\projects\vstudio\Release\libpng15.lib and object C:\lib\lpng1512\projects\vstudio\Release\libpng15.exp
+  Generating code
+  Finished generating code
+  libpng.vcxproj -> C:\lib\lpng1512\projects\vstudio\Release\libpng15.dll
+Manifest:
+  C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\lib\lpng1512\projects\vstudio\Release\libpng15.dll;#2" /manifest Release\libpng15.dll.intermediate.manifest
+BscMake:
+  c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\bscmake.exe /nologo /o"C:\lib\lpng1512\projects\vstudio\Release\libpng15.bsc" Release\png.sbr Release\pngerror.sbr Release\pngget.sbr Release\pngmem.sbr Release\pngpread.sbr Release\pngread.sbr Release\pngrio.sbr Release\pngrtran.sbr Release\pngrutil.sbr Release\pngset.sbr Release\pngtrans.sbr Release\pngwio.sbr Release\pngwrite.sbr Release\pngwtran.sbr Release\pngwutil.sbr
+FinalizeBuildStatus:
+  Deleting file "Release\libpng.unsuccessfulbuild".
+  Touching "Release\libpng.lastbuildstate".
+Done Building Project "C:\lib\lpng1512\projects\vstudio\libpng\libpng.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:04.66

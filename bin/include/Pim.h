@@ -6,6 +6,8 @@
 #include "Stdafx.h"
 
 // Engine headers
+#include "PimVec2.h"
+#include "PimPolygonShape.h"
 #include "PimWinStyle.h"
 #include "PimGameControl.h"
 #include "PimGameNode.h"
@@ -16,3 +18,4 @@
 #include "PimAnimation.h"
 #include "PimSpriteBatchNode.h"
 #include "PimShaderManager.h"
+#include "PimLightingSystem.h"

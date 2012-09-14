@@ -13,6 +13,23 @@ namespace Pim
 		x=0; y=0;
 	}
 
+	Vec2 Vec2::rotateAroundPoint(Vec2 &pt, float a)
+	{
+		return rotateDegrees(a) + pt;
+
+		float r = a * (M_PI / 180.f);
+		return Vec2(((x-pt.x) * cosf(r) - (y-pt.y) * sinf(r)),
+				    ((y-pt.y) * cosf(r) + (x-pt.x) * sinf(r))
+					);
+	}
+	Vec2 Vec2::rotateDegrees(float a)
+	{
+		float r = a * (M_PI / 180.f);
+		return Vec2( x*cosf(r) - y*sinf(r),
+					 y*cosf(r) + x*sinf(r)
+					 );
+	}
+
 	// Operator overloading
 	bool Vec2::operator==(const Vec2 &other)
 	{

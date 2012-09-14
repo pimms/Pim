@@ -54,28 +54,13 @@ namespace Pim
 	class KeyEvent
 	{
 	public:
-		inline bool isKeyDown(Key::KeyCode k)
-		{ 
-			return keys[k]; 
-		}
-		inline bool isKeyFresh(Key::KeyCode k)
-		{ 
-			return keys[k] && fresh[k]; 
-		}
+		bool isKeyDown(Key::KeyCode k);
+		bool isKeyFresh(Key::KeyCode k);
 			
-		inline bool isKeyDown(std::string str)
-		{ 
-			return keys[binds[str]]; 
-		}
-		inline bool isKeyFresh(std::string str)
-		{ 
-			return keys[binds[str]] && fresh[binds[str]]; 
-		}
+		bool isKeyDown(std::string str);
+		bool isKeyFresh(std::string str);
 
-		inline int keyCount()
-		{ 
-			return count; 
-		}
+		inline int keyCount();
 
 	protected:
 		friend class Input;
@@ -85,37 +70,14 @@ namespace Pim
 		bool fresh[256];
 		std::map<std::string,Key::KeyCode>	binds;
 
-		KeyEvent()
-		{ 
-			_reset(); 
-		}
-		KeyEvent(const KeyEvent&)
-		{ 
-			_reset(); 
-		}
-		inline void _reset()
-		{ 
-			count=0; 
-			for (int i=0; i<256; i++) 
-			{
-				keys[i]=false; fresh[i]=false; 
-			}
-		}
-		inline void _unfresh()
-		{ 
-			for (int i=0; i<256; i++) 
-				fresh[i]=false; 
-		}
+		KeyEvent();
+		KeyEvent(const KeyEvent&);
+		inline void _reset();
+		inline void _unfresh();
 
 		// Binding keys by string
-		void bindKey(std::string &str, Key::KeyCode k)
-		{ 
-			binds[str] = k; 
-		}
-		void unbindKey(std::string &str)
-		{
-			binds.erase(str); 
-		}
+		void bindKey(std::string &str, Key::KeyCode k);
+		void unbindKey(std::string &str);
 	};
 
 	// Class containing all mouse event data.
@@ -123,24 +85,10 @@ namespace Pim
 	class MouseEvent
 	{
 	public:
-		inline bool isKeyDown(Mouse::MouseButton mb)
-		{ 
-			return keys[mb]; 
-		}
-		inline bool isKeyFresh(Mouse::MouseButton mb)
-		{
-			return keys[mb] && fresh[mb]; 
-		}
-		inline Vec2 getPosition()
-		{ 
-			return (Vec2(position.x, GameControl::getWindowHeight()-position.y)
-				- GameControl::getSingleton()->lowerLeftCorner())
-				* GameControl::getSingleton()->forcedCoordinateFactor(); 
-		}
-		inline Vec2 getRelative()
-		{ 
-			return relPosition; 
-		}
+		bool isKeyDown(Mouse::MouseButton mb);
+		bool isKeyFresh(Mouse::MouseButton mb);
+		Vec2 getPosition();
+		Vec2 getRelative();
 
 	private:
 		friend class Input;
@@ -151,36 +99,11 @@ namespace Pim
 		Vec2 position;
 		Vec2 relPosition;
 
-		MouseEvent()
-		{ 
-			_reset(); 
-		}
-		MouseEvent(const MouseEvent&)
-		{ 
-			_reset(); 
-		}
-		inline void _reset()
-		{ 
-			position = Vec2(0.f,0.f); 
-			relPosition = Vec2(0.f,0.f); 
-			dirty=false; 
-			keys[0]=false;
-			keys[1]=false; 
-			fresh[0]=false;
-			fresh[0]=false; 
-		}
-		inline void _unfresh()
-		{ 
-			dirty=false; 
-			relPosition=Vec2(0.f, 0.f); 
-			fresh[0]=false;
-			fresh[1]=false;
-		}
-		inline void _mouseMoved(Vec2 pos)
-		{ 
-			relPosition = pos; 
-			position = pos; 
-		}
+		MouseEvent();
+		MouseEvent(const MouseEvent&);
+		void _reset();
+		void _unfresh();
+		void _mouseMoved(Vec2 pos);
 	};
 
 	class Input

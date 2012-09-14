@@ -15,6 +15,7 @@ namespace Pim
 {
 	
 	class GameControl;
+	class LightingSystem;
 
 	class RenderWindow
 	{
@@ -22,8 +23,15 @@ namespace Pim
 		RenderWindow(WinStyle::CreationData &data);
 		~RenderWindow();
 
+		// Print OpenGL errors. Useful if you're drawing stuff manually.
+		// Pass by a an identifier, for instance "PRE-RENDER".
+		// The output will be: "OpenGL error (PRE-RENDER): <gl_error>" if an error
+		// has occured.
+		void printOpenGLErrors(std::string identifier);
+
 	private:
 		friend class GameControl;
+		friend class LightingSystem;
 
 		bool createWindow(WinStyle::CreationData &data);
 		void resizeWindow(int wnew, int hnew);
@@ -60,7 +68,7 @@ namespace Pim
 		BORDERPOS	bpos;	
 
 		// The border dimensions (height or width, depending on bpos)
-		float		bdim;	
+		int			bdim;	
 	};
 
 }

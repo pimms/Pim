@@ -57,9 +57,13 @@ namespace Pim
 		virtual void keyEvent(KeyEvent &)		{}
 		virtual void update(float dt)			{}
 
-		// Virtual for the sake of Layers. Override at your own risk.
-		virtual Vec2 getWorldPosition();	// OUTDATED
-		virtual float getWorldRotation();	// OUTDATED
+		// Virtual for the sake of Layers.
+		virtual Vec2 getWorldPosition();	
+		virtual float getWorldRotation();	
+
+		// Returns the position of this node relative to the first layer-parent.
+		// Returns (0,0) from ALL layers.
+		virtual Vec2 getLayerPosition();
 
 		// Sorts children based on their zOrder
 		void orderChildren();

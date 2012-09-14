@@ -1,7 +1,7 @@
 #include "Stdafx.h"
 
-#include "Pim.h"
 #include "PimSpriteBatchNode.h"
+#include "PimGameNode.h"
 
 #include <functional>
 

@@ -30,6 +30,9 @@ namespace Pim
 
 		void draw();
 		void batchDraw();
+
+	private:
+		SpriteBatchNode() {}
 	};
 
 }

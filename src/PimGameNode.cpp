@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 
-#include "Pim.h"
 #include "PimVec2.h"
 #include "PimGameNode.h"
 #include "PimException.h"
 #include "PimInput.h"
+#include "PimGameControl.h"
 
 #include <iostream>
 
@@ -113,6 +113,11 @@ namespace Pim
 		return rotation + parent->getWorldRotation();
 	}
 
+	Vec2 GameNode::getLayerPosition()
+	{
+		return position + parent->getLayerPosition();
+	}
+
 	void GameNode::orderChildren()
 	{
 		if (!dirtyZOrder || children.size() < 2)
@@ -125,7 +130,6 @@ namespace Pim
 		{
 			key = children[j];
 			i = j - 1;
-			std::cout<<i <<"\n";
 			while (i >= 0 && children[i]->zOrder > key->zOrder)
 			{
 				children[i+1] = children[i];
@@ -133,8 +137,6 @@ namespace Pim
 			}
 			children[i+1] = key;
 		}
-
-		std::cout<<"\n";
 
 		dirtyZOrder = false;
 	}

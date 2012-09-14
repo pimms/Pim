@@ -7,6 +7,9 @@ namespace Pim
 {
 	// Forward declarations
 	class SpriteBatchNode;
+	class LightingSystem;
+	class PolygonShape;
+	class Shader;
 
 	class Sprite : public GameNode
 	{
@@ -22,16 +25,32 @@ namespace Pim
 
 		void useBatchNode(SpriteBatchNode* batch);
 
+		// To set the shader, call getShader from ShaderManager and pass it here.
+		// The quality is not automatically updated.
+		void setShader(Shader *s);
+		Shader* getShader() { return shader; }
+
+		// Set the shadow shape. The vertices __MUST__ be wound counter clockwise,
+		// and the shape must be concave.
+		void setShadowShape(Vec2 vertices[], int vertexCount);
+
 		Vec2					anchor;			// (0.5,0.5) puts the sprites anchor in the center
 		Vec2					scale;			// Scale in X and Y directions. 100% independent.
 		Color					color;			// Color overlay
 		Rect					rect;			// Used for clipping in sprite sheets
 
 	protected:
-		GLubyte					*texture;		// The texture data
+		friend class LightingSystem;
+
+		GLuint					texID;			// The texture ID
+
 		GLboolean				_a;				// Has the texture alpha?
 		png_uint_32				_tw;			// Texture width
 		png_uint_32				_th;			// Texture height
+
+		Shader					*shader;		// The shader
+
+		PolygonShape			*shadowShape;	// The shadow casting shape
 	};
 
 }

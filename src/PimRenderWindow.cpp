@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 #include "PimRenderWindow.h"
 
-#include "pim.h"
 #include "PimGameControl.h"
 #include "PimException.h"
 #include "PimLayer.h"
@@ -63,6 +62,7 @@ namespace Pim
 
 		if (data.winStyle == WinStyle::FULLSCREEN)
 		{
+			// Get the screen's resolution.
 			const HWND hDesktop = GetDesktopWindow();
 			GetWindowRect(hDesktop, &winRect);
 
@@ -101,8 +101,6 @@ namespace Pim
 			dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
 			dwStyle	  = WS_OVERLAPPEDWINDOW;
 		}
-
-		//AdjustWindowRectEx(&winRect, dwStyle, false, dwExStyle);
 
 		if (!(hWnd = CreateWindowEx(dwExStyle,
 									"pim",
@@ -229,7 +227,7 @@ namespace Pim
 		{
 			float rap = (float)nw/(float)nh;		// real aspect ratio
 
-			float rw = nw, rh = nh;
+			float rw = (float)nw, rh = (float)nh;
 
 			if (abs(rap - winData->aspectRatio) < 0.02f) // 0.02
 			{
@@ -241,14 +239,14 @@ namespace Pim
 				rw = nh * winData->aspectRatio;
 
 				bpos = VER;
-				bdim = ceil((nw-rw)/2.f);
+				bdim = (int)ceil((nw-rw)/2.f);
 			}
 			else if (rap < winData->aspectRatio)	// Too tall
 			{
 				rh = nw / winData->aspectRatio;
 
 				bpos = HOR;
-				bdim = ceil((nh-rh)/2.f);
+				bdim = (int)ceil((nh-rh)/2.f);
 			}
 
 			glOrtho((nw-rw)/-2.f, rw+(nw-rw)/2.f, (nh-rh)/-2.f, rh+(nh-rh)/2.f, 0, 1);
@@ -261,7 +259,7 @@ namespace Pim
 		else
 		{
 			glOrtho(0, nw, 0, nh, 0, 1);
-			ortho = Vec2(nw,nh);
+			ortho = Vec2((float)nw,(float)nh);
 			bpos = NONE;
 		}
 		
@@ -283,11 +281,12 @@ namespace Pim
 	bool RenderWindow::initOpenGL()
 	{
 		glEnable(GL_TEXTURE_2D);
-		glShadeModel(GL_FLAT);
+		glShadeModel(GL_SMOOTH);
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_DEPTH_TEST);
 
 		return true;
 	}
@@ -316,6 +315,9 @@ namespace Pim
 
 	void RenderWindow::renderFrame()
 	{
+#ifdef _DEBUG
+		printOpenGLErrors("PRERENDER FRAME");
+#endif
 		// Clear screen with the top layer's color
 		Color c = Layer::getTopLayer()->getColor();
 		
@@ -386,15 +388,21 @@ namespace Pim
 		SwapBuffers(hDC);				// Swap the buffers to draw to screen
 
 #ifdef _DEBUG
+		printOpenGLErrors("POSTRENDER FRAME");
+#endif
+	}
+
+	void RenderWindow::printOpenGLErrors(std::string identifier)
+	{
 		GLenum en = glGetError();
 		if (en != GL_NO_ERROR)
 		{
-			std::cout<<"OpenGL error: ";
+			std::cout<<"OpenGL error (" <<identifier <<"): ";
 
 			switch (en)
 			{
 				case GL_INVALID_ENUM:
-					std::cout<<"GL_INVALUD_ENUM";
+					std::cout<<"GL_INVALID_ENUM";
 					break;
 				case GL_INVALID_VALUE:
 					std::cout<<"GL_INVALID_VALUE";
@@ -417,7 +425,6 @@ namespace Pim
 
 			std::cout<<"\n";
 		}
-#endif
 	}
 
 }

@@ -1,7 +1,7 @@
 #include "Stdafx.h"
 
 #include "PimShaderManager.h"
-#include "Pim.h"
+#include "PimException.h"
 
 namespace Pim
 {
@@ -151,11 +151,10 @@ namespace Pim
 		std::string vertString;
 
 		std::ifstream file;
-		int len;
 
 		// Load the fragment shader
 		file.open(fragFile, std::ios::in);
-		PimAssert(file, "Error: could not load fragment shader.");
+		PimAssert(file.is_open(), "Error: could not load fragment shader.");
 
 		while (file.good())
 		{
@@ -168,7 +167,7 @@ namespace Pim
 
 		// Load the vertex shader
 		file.open(vertFile, std::ios::in);
-		PimAssert(file, "Error: could not load vertex shader.");
+		PimAssert(file.is_open(), "Error: could not load vertex shader.");
 
 		while (file.good())
 		{
@@ -236,8 +235,8 @@ namespace Pim
 			}
 		};
 
-		delete ftmp;
-		delete vtmp;
+		delete[] ftmp;
+		delete[] vtmp;
 
 		if (!compile(shader->frag, "Fragment shader"))
 		{

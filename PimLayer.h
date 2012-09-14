@@ -27,6 +27,7 @@
 
 #include "PimVec2.h"
 #include "PimGameNode.h"
+#include "PimLightingSystem.h"
 
 namespace Pim
 {
@@ -54,6 +55,40 @@ namespace Pim
 		// USE loadResources TO INSTANTIATE YOUR LAYER - DO NOT USE Layer()!
 		virtual void loadResources() {}
 
+
+
+		// Create a lighting system.
+		void createLightingSystem();
+
+		// Destroy the lighting system
+		void destroyLightingSystem();
+
+		// Adds a light - can be any game node
+		void addLight(GameNode *node, LightDef *lDef);
+
+		// Removes a light
+		void removeLight(GameNode *node);
+
+		// Adds a shadowcaster - must be a sprite
+		void addShadowCaster(Sprite *caster);
+
+		// Removes a shadow caster
+		void removeShadowCaster(Sprite *caster);
+
+		// Sets wether or not shadows are enabled
+		void setCastShadows(bool shadows);
+
+		// Set the current shadow technique (hard, soft, blur)
+		void setShadowTechnique(ShadowTechnique::ShadowTechnique tech);
+
+		// Set wether or not to multiply the lights upon rendering
+		void setLightMultiplicationShaderActive(bool);
+
+		// Return the lighting system
+		LightingSystem* getLightingSystem();
+
+
+
 		// Layers scale their children.
 		Vec2			scale;
 
@@ -67,6 +102,8 @@ namespace Pim
 		bool			immovable;
 
 		Color			color;
+
+		LightingSystem	*lightSys;
 
 		static Layer* topLayer;
 	};

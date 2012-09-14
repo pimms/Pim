@@ -1,14 +1,123 @@
 #include "Stdafx.h"
 
-#include "Pim.h"
-#include "PimInput.h"
 #include "PimVec2.h"
+#include "PimGameNode.h"
 #include "PimException.h"
+#include "PimGameControl.h"
+
+#include "PimInput.h"
 
 #include <iostream>
 
 namespace Pim
 {
+	// --- KeyEvent ---
+
+	KeyEvent::KeyEvent()
+	{ 
+		_reset(); 
+	}
+	KeyEvent::KeyEvent(const KeyEvent&)
+	{ 
+		_reset(); 
+	}
+	void KeyEvent::_reset()
+	{ 
+		count=0; 
+		for (int i=0; i<256; i++) 
+		{
+			keys[i]=false; fresh[i]=false; 
+		}
+	}
+	void KeyEvent::_unfresh()
+	{ 
+		for (int i=0; i<256; i++) 
+			fresh[i]=false; 
+	}
+
+	bool KeyEvent::isKeyDown(Key::KeyCode k)
+	{ 
+		return keys[k]; 
+	}
+	bool KeyEvent::isKeyFresh(Key::KeyCode k)
+	{ 
+		return keys[k] && fresh[k]; 
+	}
+	bool KeyEvent::isKeyDown(std::string str)
+	{ 
+		return keys[binds[str]]; 
+	}
+	bool KeyEvent::isKeyFresh(std::string str)
+	{ 
+		return keys[binds[str]] && fresh[binds[str]]; 
+	}
+	int KeyEvent::keyCount()
+	{ 
+		return count; 
+	}
+	void KeyEvent::bindKey(std::string &str, Key::KeyCode k)
+	{ 
+		binds[str] = k; 
+	}
+	void KeyEvent::unbindKey(std::string &str)
+	{
+		binds.erase(str); 
+	}
+
+	// --- MouseEvent ---
+
+	MouseEvent::MouseEvent()
+	{ 
+		_reset(); 
+	}
+	MouseEvent::MouseEvent(const MouseEvent&)
+	{ 
+		_reset(); 
+	}
+	void MouseEvent::_reset()
+	{ 
+		position = Vec2(0.f,0.f); 
+		relPosition = Vec2(0.f,0.f); 
+		dirty=false; 
+		keys[0]=false;
+		keys[1]=false; 
+		fresh[0]=false;
+		fresh[0]=false; 
+	}
+	void MouseEvent::_unfresh()
+	{ 
+		dirty=false; 
+		relPosition=Vec2(0.f, 0.f); 
+		fresh[0]=false;
+		fresh[1]=false;
+	}
+	void MouseEvent::_mouseMoved(Vec2 pos)
+	{ 
+		relPosition = pos; 
+		position = pos; 
+	}
+
+	bool MouseEvent::isKeyDown(Mouse::MouseButton mb)
+	{ 
+		return keys[mb]; 
+	}
+	bool MouseEvent::isKeyFresh(Mouse::MouseButton mb)
+	{
+		return keys[mb] && fresh[mb]; 
+	}
+	Vec2 MouseEvent::getPosition()
+	{
+		return (Vec2(position.x, GameControl::getWindowHeight()-position.y)
+				- GameControl::getSingleton()->lowerLeftCorner())
+				* GameControl::getSingleton()->forcedCoordinateFactor(); 
+	}
+	Vec2 MouseEvent::getRelative()
+	{
+		return relPosition;
+	}
+
+	// --- Input ---
+
 	Input* Input::singleton = NULL;
 	
 	Input::Input()

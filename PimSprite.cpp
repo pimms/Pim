@@ -1,5 +1,12 @@
 #include "Stdafx.h"
-#include "Pim.h"
+
+#include "PimVec2.h"
+#include "PimSprite.h"
+#include "PimException.h"
+#include "PimShaderManager.h"
+#include "PimPolygonShape.h"
+#include "PimGameControl.h"
+#include "PimSpriteBatchNode.h"
 
 namespace Pim
 {
@@ -9,7 +16,9 @@ namespace Pim
 		anchor		= Vec2(0.5f, 0.5f);
 		scale		= Vec2(1.f, 1.f);
 		color		= Color(1.f, 1.f, 1.f, 1.f);
-		texture		= NULL;
+		texID		= -1;
+		shader		= NULL;
+		shadowShape = NULL;
 
 		loadSprite(file);
 	}
@@ -18,12 +27,14 @@ namespace Pim
 		anchor		= Vec2(0.5f, 0.5f);
 		scale		= Vec2(1.f, 1.f);
 		color		= Color(1.f, 1.f, 1.f, 1.f);
-		texture		= NULL;
+		texID		= -1;
+		shader		= NULL;
+		shadowShape = NULL;
 	}
 	Sprite::~Sprite()
 	{
-		if (texture)
-			free(texture);
+		glDeleteTextures(1, &texID);
+		delete shadowShape;
 	}
 
 	void Sprite::loadSprite(std::string file)
@@ -33,7 +44,8 @@ namespace Pim
 		unsigned int	sig_read = 0;
 		FILE *fp;
 
-		PimAssert((fp = fopen(file.c_str(), "rb")), file.append(": Does not exist!"));
+		fopen_s(&fp, file.c_str(), "rb");
+		PimAssert(fp != NULL, file.append(": Does not exist!"));
 		
 		png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
@@ -82,18 +94,14 @@ namespace Pim
 				PimAssert(false,"Image format not supported");
 		}
 
-		// Release old texture
-		if (texture)
-			free(texture);
-
 		// Allocate the texture
 		unsigned int row_bytes = png_get_rowbytes(png_ptr, info_ptr);
-		texture = (GLubyte*)malloc(_th * row_bytes);
+		GLubyte *texture = (GLubyte*)malloc(_th * row_bytes);
 
 		// Read the image into the texture
 		png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
 
-		for (int i=0; i<_th; i++)
+		for (unsigned int i=0; i<_th; i++)
 		{
 			memcpy(texture+(row_bytes * (_th-1-i)), row_pointers[i], row_bytes);
 		}
@@ -105,6 +113,22 @@ namespace Pim
 		// Default rect is the texture size. Crop at free!
 		rect.width = _tw;
 		rect.height = _th;
+
+		// Create the texture
+		glGenTextures(1, &texID);
+		glBindTexture(GL_TEXTURE_2D, texID);
+
+		// The loading is complete, now let's bind some textures!
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexImage2D(GL_TEXTURE_2D, 0, _a?4:3, _tw, _th, 0, _a?GL_RGBA:GL_RGB, 
+					 GL_UNSIGNED_BYTE, texture);
+
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+		free(texture);
 	}
 
 	void Sprite::draw()
@@ -127,15 +151,14 @@ namespace Pim
 		fac = GameControl::getSingleton()->windowScale();
 		glScalef(scale.x * fac.x, scale.y * fac.y, 1.f);
 		glColor4f(color.r, color.g, color.b, color.a);
-		
-		// The loading is complete, now let's bind some textures!
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexImage2D(GL_TEXTURE_2D, 0, _a?4:3, _tw, _th, 0, _a?GL_RGBA:GL_RGB, GL_UNSIGNED_BYTE, texture);
 
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glBindTexture(GL_TEXTURE_2D, texID);
+
+		if (shader)
+		{
+			shader->setUniform1i("texture", 0);
+			glUseProgram(shader->getProgram());
+		}
 
 		// Counter clockwise 
 		glBegin(GL_QUADS);
@@ -152,6 +175,7 @@ namespace Pim
 			glVertex2f(-anchor.x * rect.width, (1.f-anchor.y) * rect.height);
 		glEnd();
 		
+		glUseProgram(0);
 
 		// Children are unaffected by their parent's scale. Restore.
 		glPopMatrix();
@@ -186,6 +210,12 @@ namespace Pim
 		glScalef(scale.x * fac.x, scale.y * fac.y, 1.f);
 		glColor4f(color.r, color.g, color.b, color.a);
 
+		if (shader)
+		{
+			shader->setUniform1i("texture", 0);
+			glUseProgram(shader->getProgram());
+		}
+
 		glBegin(GL_QUADS);
 			// Counter clockwise winding, beginning in bottom left corner //
 			glTexCoord2f((float)rect.x / (float)_tw, (float)rect.y / (float)_th);
@@ -200,6 +230,8 @@ namespace Pim
 			glTexCoord2f((float)rect.x/(float)_tw, (float)rect.y/(float)_th + (float)rect.height/(float)_th);
 			glVertex2f(-anchor.x * rect.width, (1.f-anchor.y) * rect.height);
 		glEnd();
+
+		glUseProgram(0);
 
 		// Children are unaffected by their parent's scale. Restore.
 		glPopMatrix();
@@ -217,8 +249,22 @@ namespace Pim
 	void Sprite::useBatchNode(SpriteBatchNode *batch)
 	{
 		// Assign alpha and texture dimensions
-		_a  = batch->_a;
-		_tw = batch->_tw;
-		_th = batch->_th;
+		_a    = batch->_a;
+		_tw   = batch->_tw;
+		_th	  = batch->_th;
+		texID = batch->texID;
+	}
+
+	void Sprite::setShader(Shader *s)
+	{
+		shader = s;
+	}
+
+	void Sprite::setShadowShape(Vec2 vertices[], int vertexCount)
+	{
+		if (shadowShape)
+			delete shadowShape;
+
+		shadowShape = new PolygonShape(vertices, vertexCount);
 	}
 }

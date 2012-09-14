@@ -1,30 +1,42 @@
 #include "Stdafx.h"
-#include "Pim.h"
+
+#include "PimVec2.h"
+#include "PimSprite.h"
+#include "PimException.h"
+#include "PimShaderManager.h"
+#include "PimPolygonShape.h"
+#include "PimGameControl.h"
+#include "PimSpriteBatchNode.h"
 
 namespace Pim
 {
 
 	Sprite::Sprite(std::string file)
 	{
-		anchor		= Vec2(0.5f, 0.5f);
-		scale		= Vec2(1.f, 1.f);
-		color		= Color(1.f, 1.f, 1.f, 1.f);
-		texID		= -1;
-		shader		= NULL;
+		anchor			= Vec2(0.5f, 0.5f);
+		scale			= Vec2(1.f, 1.f);
+		color			= Color(1.f, 1.f, 1.f, 1.f);
+		texID			= -1;
+		shader			= NULL;
+		shadowShape		= NULL;
+		dbgShadowShape	= false;
 
 		loadSprite(file);
 	}
 	Sprite::Sprite()
 	{
-		anchor		= Vec2(0.5f, 0.5f);
-		scale		= Vec2(1.f, 1.f);
-		color		= Color(1.f, 1.f, 1.f, 1.f);
-		texID		= -1;
-		shader		= NULL;
+		anchor			= Vec2(0.5f, 0.5f);
+		scale			= Vec2(1.f, 1.f);
+		color			= Color(1.f, 1.f, 1.f, 1.f);
+		texID			= -1;
+		shader			= NULL;
+		shadowShape		= NULL;
+		dbgShadowShape	= false;
 	}
 	Sprite::~Sprite()
 	{
 		glDeleteTextures(1, &texID);
+		delete shadowShape;
 	}
 
 	void Sprite::loadSprite(std::string file)
@@ -34,7 +46,8 @@ namespace Pim
 		unsigned int	sig_read = 0;
 		FILE *fp;
 
-		PimAssert((fp = fopen(file.c_str(), "rb")), file.append(": Does not exist!"));
+		fopen_s(&fp, file.c_str(), "rb");
+		PimAssert(fp != NULL, file.append(": Does not exist!"));
 		
 		png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
@@ -90,7 +103,7 @@ namespace Pim
 		// Read the image into the texture
 		png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
 
-		for (int i=0; i<_th; i++)
+		for (unsigned int i=0; i<_th; i++)
 		{
 			memcpy(texture+(row_bytes * (_th-1-i)), row_pointers[i], row_bytes);
 		}
@@ -169,6 +182,10 @@ namespace Pim
 		// Children are unaffected by their parent's scale. Restore.
 		glPopMatrix();
 
+		// Debug draw shadow shape if flagged to do so
+		if (shadowShape && dbgShadowShape)
+			shadowShape->debugDraw();
+
 		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)
 		{
@@ -225,6 +242,10 @@ namespace Pim
 		// Children are unaffected by their parent's scale. Restore.
 		glPopMatrix();
 
+		// Debug draw shadow shape if flagged to do so
+		if (shadowShape && dbgShadowShape)
+			shadowShape->debugDraw();
+
 		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)
 		{
@@ -247,5 +268,17 @@ namespace Pim
 	void Sprite::setShader(Shader *s)
 	{
 		shader = s;
+	}
+
+	void Sprite::setShadowShape(Vec2 vertices[], int vertexCount)
+	{
+		if (shadowShape)
+			delete shadowShape;
+
+		shadowShape = new PolygonShape(vertices, vertexCount, this);
+	}
+	void Sprite::setShadowShapeDebugDraw(bool flag)
+	{
+		dbgShadowShape = flag;
 	}
 }

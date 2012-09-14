@@ -1,13 +1,12 @@
 #include "StdAfx.h"
 #include "PimGameControl.h"
 
-#include "Pim.h"
-
 #include "PimException.h"
 #include "PimRenderWindow.h"
 #include "PimInput.h"
 #include "PimGameNode.h"
 #include "PimLayer.h"
+#include "PimShaderManager.h"
 
 #include <iostream>
 #include <ctime>
@@ -214,10 +213,10 @@ namespace Pim
 		switch (renderWindow->bpos)
 		{
 		case 1:	// VER
-			return Vec2(renderWindow->bdim, 0.f);
+			return Vec2((float)renderWindow->bdim, 0.f);
 
 		case 2: // HOR
-			return Vec2(0.f, renderWindow->bdim);
+			return Vec2(0.f, (float)renderWindow->bdim);
 
 		case 0: default:
 			return Vec2(0.f, 0.f);
@@ -247,14 +246,14 @@ namespace Pim
 		layer->loadResources();
 	}
 
-	void GameControl::gameLoop()
+	void GameControl::gameLoop() 
 	{
 		MSG  msg;
 		bool quit = false;
 
 		while (!quit)
 		{
-			if (PeekMessage(&msg,NULL,0,0,PM_REMOVE))
+			while (PeekMessage(&msg,NULL,0,0,PM_REMOVE))
 			{
 				if (msg.message == WM_QUIT)
 				{

@@ -10,7 +10,7 @@ namespace Pim
 		Vec2(float px, float py);
 		Vec2(void);
 		
-		float angleBetween(Vec2 &other)
+		inline float angleBetween(Vec2 &other)
 		{
 			float dot = normalize().dot(other.normalize());
 			float angle = acosf(dot) * (180.f / 3.14f);
@@ -22,22 +22,22 @@ namespace Pim
 			return angle;
 		}
 
-		float dot(const Vec2 &other)
+		inline float dot(const Vec2 &other)
 		{
 			return x * other.x + y * other.y;
 		}
 
-		Vec2 cross(const Vec2 &other)
+		inline Vec2 cross(const Vec2 &other)
 		{
 
 		}
 
-		Vec2 normalize()
+		inline Vec2 normalize()
 		{
 			return Vec2(x,y) / length();
 		}
 
-		float length()
+		inline float length()
 		{
 			return sqrt(x*x + y*y);
 		}

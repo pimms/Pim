@@ -9,6 +9,14 @@ namespace Pim
 	public:
 		Vec2(float px, float py);
 		Vec2(void);
+
+		// [DOES NOT MODIFY THIS VECTOR]
+		// Returns this vector, rotated around pt, a degrees
+		Vec2 rotateAroundPoint(Vec2 &pt, float a);	
+
+		// [DOES NOT MODIFY THIS VECTOR]
+		// Same as rotateAroundPoint, but defaults to (0,0)
+		Vec2 rotateDegrees(float a);				
 		
 		float angleBetween(Vec2 &other)
 		{
@@ -16,7 +24,7 @@ namespace Pim
 			float angle = acosf(dot) * (180.f / 3.14f);
 
 			Vec2 diff = Vec2(x,y) - other;
-			if (diff.normalize().dot(Vec2(0.f,1.f)) < 0.f)
+			if (diff.dot(Vec2(0.f,1.f)) < 0.f)
 				angle = -angle;
 
 			return angle;
@@ -44,6 +52,7 @@ namespace Pim
 
 		float x, y;
 	
+
 		// Operator overloading
 		bool operator==(const Vec2 &other);
 		bool operator!=(const Vec2 &other);
