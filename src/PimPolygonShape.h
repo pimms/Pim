@@ -10,6 +10,7 @@ namespace Pim
 	class PolygonShape;
 	class Vec2;
 	class LightingSystem;
+	class CollisionManager;
 
 	class Line
 	{
@@ -43,23 +44,28 @@ namespace Pim
 	class PolygonShape
 	{
 	public:
-		// THE VERTICES MUST BE WOUND COUNTER CLOCKWISE, AND THE SHAPE MUST BE CONCAVE.
+		// THE VERTICES MUST BE WOUND COUNTER CLOCKWISE, AND THE SHAPE MUST BE CONVEX.
 		PolygonShape(Vec2 vertices[], int vertexCount, GameNode *par);
 		~PolygonShape();
 
 		// Returns true if the provided point is contained by the  shape
 		bool shapeContains(Vec2 &vec);
 
+		Vec2 center();
+
 	private:
 		friend class Line;
 		friend class GameNode;
 		friend class Sprite;
 		friend class LightingSystem;
+		friend class CollisionManager;
 
 		PolygonShape()						{parent=NULL;}
 		PolygonShape(const PolygonShape&)	{parent=NULL;}
 
 		void debugDraw();
+
+		void projectPolygon(Vec2 axis, float &min, float &max, Vec2 offset=Vec2(0.f,0.f));
 
 		GameNode *parent;
 		std::vector<Line*>	lines;

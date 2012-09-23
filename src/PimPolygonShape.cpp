@@ -6,6 +6,7 @@
 #include "PimGameNode.h"
 #include "PimException.h"
 #include "PimLightingSystem.h"
+#include "PimCollisionManager.h"
 
 namespace Pim
 {
@@ -103,6 +104,21 @@ namespace Pim
 		return true;
 	}
 
+	Vec2 PolygonShape::center()
+	{
+		Vec2 c(0.f, 0.f);
+
+		int i=0;
+		for each (Line *line in lines)
+		{
+			c += line->getP1();
+			c += line->getP2();
+			i += 2;
+		}
+
+		return c / i;
+	}
+
 	void PolygonShape::debugDraw()
 	{
 		/*
@@ -113,23 +129,62 @@ namespace Pim
 		*/
 		glDisable(GL_TEXTURE_2D);
 
-		glLineWidth(2.f);
+
+		// Render the fill 
+		glColor4ub(255,0,0,100);
+		glBegin(GL_TRIANGLE_FAN);
+		for (unsigned int i=0; i<lines.size(); i++)
+		{
+			glVertex2f(lines[i]->p1.x, lines[i]->p1.y);
+			glVertex2f(lines[i]->p2.x, lines[i]->p2.y);
+		}
+		glEnd();
+
+		// Render the outline
+		glLineWidth(1.f);
+		glColor4ub(255,0,0,255);
 		glBegin(GL_LINES);
 		for (unsigned int i=0; i<lines.size(); i++)
 		{
 			// The line itself
-			glColor4ub(0,0,0,255);
 			glVertex2f(lines[i]->p1.x, lines[i]->p1.y);
 			glVertex2f(lines[i]->p2.x, lines[i]->p2.y);
 
+			/*
 			// The normal
 			glColor4ub(255,0,0,255);
 			Vec2 p = lines[i]->mid + lines[i]->normal*10.f;
 			glVertex2f(lines[i]->mid.x, lines[i]->mid.y);
 			glVertex2f(p.x, p.y);
+			*/
 		}
 		glEnd();
 
+
+
+
 		glEnable(GL_TEXTURE_2D);
+	}
+
+	void PolygonShape::projectPolygon(Vec2 axis, float &min, float &max, Vec2 offset)
+	{
+		float dotProduct = axis.dot(lines[0]->getP1()+offset);
+		min = dotProduct;
+		max = dotProduct;
+
+		for each (Line *line in lines)
+		{
+			dotProduct = (line->getP1()+offset).dot(axis);
+			if (dotProduct < min)
+				min = dotProduct;
+			else if (dotProduct > max)
+				max = dotProduct;
+
+			dotProduct = (line->getP2()+offset).dot(axis);
+			if (dotProduct < min)
+				min = dotProduct;
+			else if (dotProduct > max)
+				max = dotProduct;
+		}
 	}
 }

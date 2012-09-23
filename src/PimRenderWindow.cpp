@@ -19,9 +19,7 @@ namespace Pim
 		hRC			= NULL;
 		hWnd		= NULL;
 		hInstance	= NULL;
-		winData		= NULL;
-
-		createWindow(data);
+		winData		= &data;
 	}
 	RenderWindow::~RenderWindow()
 	{
@@ -240,6 +238,7 @@ namespace Pim
 
 				bpos = VER;
 				bdim = (int)ceil((nw-rw)/2.f);
+				orthoOff = Vec2((float)bdim, 0.f);
 			}
 			else if (rap < winData->aspectRatio)	// Too tall
 			{
@@ -247,6 +246,7 @@ namespace Pim
 
 				bpos = HOR;
 				bdim = (int)ceil((nh-rh)/2.f);
+				orthoOff = Vec2(0.f, (float)bdim);
 			}
 
 			glOrtho((nw-rw)/-2.f, rw+(nw-rw)/2.f, (nh-rh)/-2.f, rh+(nh-rh)/2.f, 0, 1);
@@ -260,6 +260,7 @@ namespace Pim
 		{
 			glOrtho(0, nw, 0, nh, 0, 1);
 			ortho = Vec2((float)nw,(float)nh);
+			orthoOff = Vec2(0.f, 0.f);
 			bpos = NONE;
 		}
 		
@@ -384,6 +385,9 @@ namespace Pim
 			case NONE: default:
 				break;
 		}
+
+		// Dispatch post render messages
+		GameControl::getSingleton()->dispatchPostrender();
 
 		SwapBuffers(hDC);				// Swap the buffers to draw to screen
 

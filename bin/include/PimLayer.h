@@ -28,10 +28,12 @@
 #include "PimVec2.h"
 #include "PimGameNode.h"
 #include "PimLightingSystem.h"
+#include "PimCollisionFilter.h"
 
 namespace Pim
 {
 	// Forward declarations
+	class CollisionManager;
 	class GameControl;
 	struct Color;
 
@@ -43,12 +45,14 @@ namespace Pim
 
 		static Layer* getTopLayer();
 
+		Layer* getParentLayer();
+
 		Vec2 getWorldPosition();			
 		float getWorldRotation();	
 
 		Vec2 getLayerPosition();
 
-		void immovableLayer(bool immov);
+		void setImmovableLayer(bool immov);
 
 		void draw();
 
@@ -58,37 +62,39 @@ namespace Pim
 		virtual void loadResources() {}
 
 
-
 		// Create a lighting system.
-		void createLightingSystem();
-
+		void createLightingSystem(Vec2 resolution);
 		// Destroy the lighting system
 		void destroyLightingSystem();
-
 		// Adds a light - can be any game node
 		void addLight(GameNode *node, LightDef *lDef);
-
 		// Removes a light
 		void removeLight(GameNode *node);
-
 		// Adds a shadowcaster - must be a sprite
 		void addShadowCaster(Sprite *caster);
-
 		// Removes a shadow caster
 		void removeShadowCaster(Sprite *caster);
-
 		// Sets wether or not shadows are enabled
 		void setCastShadows(bool shadows);
-
+		// Set the color of the darkest areas (unlit areas)
+		void setLightingUnlitColor(Color color);
 		// Set the current shadow technique (hard, soft, blur)
 		void setShadowTechnique(ShadowTechnique::ShadowTechnique tech);
-
 		// Set wether or not to multiply the lights upon rendering
 		void setLightMultiplicationShaderActive(bool);
-
 		// Return the lighting system
 		LightingSystem* getLightingSystem();
 
+
+		// Add a game node to the collision world - you will then be able to retrieve
+		// collision detection data from calling "Vec2 p = node->validateMove(old,new)".
+		// Wether or not you choose to do something with the new position is up to you.
+		// This is not a physics implementation - PIM simply tells you whether or not 
+		// your node is intersecting another node.
+		void addCollisionNode(GameNode *node);
+		// The node will no longer be collided with.
+		// Called automatically upon node delete.
+		void removeCollisionNode(GameNode*);
 
 
 		// Layers scale their children.
@@ -96,6 +102,10 @@ namespace Pim
 
 	protected:
 		friend class GameControl;
+		friend class CollisionManager;
+
+		static Layer*	topLayer;
+
 
 		// Called when attached to the GameControl as the top level node
 		void _topLevelNode();
@@ -107,7 +117,7 @@ namespace Pim
 
 		LightingSystem	*lightSys;
 
-		static Layer* topLayer;
+		std::vector<GameNode*> collisionNodes;
 	};
 
 }

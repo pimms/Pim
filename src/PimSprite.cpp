@@ -20,6 +20,7 @@ namespace Pim
 		shader			= NULL;
 		shadowShape		= NULL;
 		dbgShadowShape	= false;
+		hidden			= false;
 
 		loadSprite(file);
 	}
@@ -32,11 +33,14 @@ namespace Pim
 		shader			= NULL;
 		shadowShape		= NULL;
 		dbgShadowShape	= false;
+		hidden			= false;
 	}
 	Sprite::~Sprite()
 	{
 		glDeleteTextures(1, &texID);
-		delete shadowShape;
+
+		if (shadowShape)
+			delete shadowShape;
 	}
 
 	void Sprite::loadSprite(std::string file)
@@ -162,29 +166,36 @@ namespace Pim
 			glUseProgram(shader->getProgram());
 		}
 
-		// Counter clockwise 
-		glBegin(GL_QUADS);
-			glTexCoord2f((float)rect.x / (float)_tw, (float)rect.y / (float)_th);
-			glVertex2f(-anchor.x * rect.width, -anchor.y * rect.height);
+		if (!hidden)
+		{
+			// Counter clockwise 
+			glBegin(GL_QUADS);
+				glTexCoord2f((float)rect.x / (float)_tw, (float)rect.y / (float)_th);
+				glVertex2f(-anchor.x * rect.width, -anchor.y * rect.height);
 
-			glTexCoord2f((float)rect.x/(float)_tw + (float)rect.width/(float)_tw, (float)rect.y / (float)_th);
-			glVertex2f((1.f-anchor.x) * rect.width, -anchor.y * rect.height);
+				glTexCoord2f((float)rect.x/(float)_tw + (float)rect.width/(float)_tw, (float)rect.y / (float)_th);
+				glVertex2f((1.f-anchor.x) * rect.width, -anchor.y * rect.height);
 
-			glTexCoord2f((float)rect.x/(float)_tw + (float)rect.width/(float)_tw, (float)rect.y/(float)_th + (float)rect.height/(float)_th);
-			glVertex2f((1.f-anchor.x) * rect.width, (1.f-anchor.y) * rect.height);
+				glTexCoord2f((float)rect.x/(float)_tw + (float)rect.width/(float)_tw, (float)rect.y/(float)_th + (float)rect.height/(float)_th);
+				glVertex2f((1.f-anchor.x) * rect.width, (1.f-anchor.y) * rect.height);
 
-			glTexCoord2f((float)rect.x/(float)_tw, (float)rect.y/(float)_th + (float)rect.height/(float)_th);
-			glVertex2f(-anchor.x * rect.width, (1.f-anchor.y) * rect.height);
-		glEnd();
+				glTexCoord2f((float)rect.x/(float)_tw, (float)rect.y/(float)_th + (float)rect.height/(float)_th);
+				glVertex2f(-anchor.x * rect.width, (1.f-anchor.y) * rect.height);
+			glEnd();
+		}
 		
 		glUseProgram(0);
-
-		// Children are unaffected by their parent's scale. Restore.
-		glPopMatrix();
 
 		// Debug draw shadow shape if flagged to do so
 		if (shadowShape && dbgShadowShape)
 			shadowShape->debugDraw();
+
+		// Debug draw the collison shape if required
+		if (colShape && dbgColShape)
+			colShape->debugDraw();
+
+		// Children are unaffected by their parent's scale. Restore.
+		glPopMatrix();
 
 		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)
@@ -222,29 +233,36 @@ namespace Pim
 			glUseProgram(shader->getProgram());
 		}
 
-		glBegin(GL_QUADS);
-			// Counter clockwise winding, beginning in bottom left corner //
-			glTexCoord2f((float)rect.x / (float)_tw, (float)rect.y / (float)_th);
-			glVertex2f(-anchor.x * rect.width, -anchor.y * rect.height);
+		if (!hidden)
+		{
+			glBegin(GL_QUADS);
+				// Counter clockwise winding, beginning in bottom left corner //
+				glTexCoord2f((float)rect.x / (float)_tw, (float)rect.y / (float)_th);
+				glVertex2f(-anchor.x * rect.width, -anchor.y * rect.height);
 
-			glTexCoord2f((float)rect.x/(float)_tw + (float)rect.width/(float)_tw, (float)rect.y / (float)_th);
-			glVertex2f((1.f-anchor.x) * rect.width, -anchor.y * rect.height);
+				glTexCoord2f((float)rect.x/(float)_tw + (float)rect.width/(float)_tw, (float)rect.y / (float)_th);
+				glVertex2f((1.f-anchor.x) * rect.width, -anchor.y * rect.height);
 
-			glTexCoord2f((float)rect.x/(float)_tw + (float)rect.width/(float)_tw, (float)rect.y/(float)_th + (float)rect.height/(float)_th);
-			glVertex2f((1.f-anchor.x) * rect.width, (1.f-anchor.y) * rect.height);
+				glTexCoord2f((float)rect.x/(float)_tw + (float)rect.width/(float)_tw, (float)rect.y/(float)_th + (float)rect.height/(float)_th);
+				glVertex2f((1.f-anchor.x) * rect.width, (1.f-anchor.y) * rect.height);
 
-			glTexCoord2f((float)rect.x/(float)_tw, (float)rect.y/(float)_th + (float)rect.height/(float)_th);
-			glVertex2f(-anchor.x * rect.width, (1.f-anchor.y) * rect.height);
-		glEnd();
+				glTexCoord2f((float)rect.x/(float)_tw, (float)rect.y/(float)_th + (float)rect.height/(float)_th);
+				glVertex2f(-anchor.x * rect.width, (1.f-anchor.y) * rect.height);
+			glEnd();
+		}
 
 		glUseProgram(0);
-
-		// Children are unaffected by their parent's scale. Restore.
-		glPopMatrix();
 
 		// Debug draw shadow shape if flagged to do so
 		if (shadowShape && dbgShadowShape)
 			shadowShape->debugDraw();
+
+		// Debug draw the collison shape if required
+		if (colShape && dbgColShape)
+			colShape->debugDraw();
+
+		// Children are unaffected by their parent's scale. Restore.
+		glPopMatrix();
 
 		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)

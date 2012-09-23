@@ -11,12 +11,5 @@
 #include <tchar.h>
 
 
-#ifdef _DEBUG
-	#define _CRTDBG_MAP_ALLOC
-	#define _INC_MALLOC
-	#include <stdlib.h>
-	#include <crtdbg.h>
-#endif
-
 
 // TODO: reference additional headers your program requires here

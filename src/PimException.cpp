@@ -4,6 +4,7 @@
 
 namespace Pim
 {
+#ifdef _DEBUG
 	void PimAssert(bool statement, std::string desc)		
 	{
 		if (!statement) 
@@ -13,4 +14,7 @@ namespace Pim
 			exit(-1);
 		}
 	}
+#else
+#define PimAssert(_NULL_,_VOID_) ;
+#endif
 }

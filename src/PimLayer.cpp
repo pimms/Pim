@@ -5,6 +5,7 @@
 #include "PimVec2.h"
 #include "PimGameControl.h"
 #include "PimException.h"
+#include "PimCollisionManager.h"
 
 namespace Pim
 {
@@ -31,6 +32,11 @@ namespace Pim
 		return topLayer;
 	}
 
+	Layer* Layer::getParentLayer()
+	{
+		return this;
+	}
+
 	Vec2 Layer::getWorldPosition()
 	{
 		if (immovable)
@@ -54,7 +60,7 @@ namespace Pim
 		return Vec2(0.f, 0.f);
 	}
 
-	void Layer::immovableLayer(bool immov)
+	void Layer::setImmovableLayer(bool immov)
 	{
 		immovable = immov; 
 	}
@@ -85,32 +91,16 @@ namespace Pim
 			children[i]->draw();
 		}
 
-		glTranslatef(200.f, 200.f, 0.f);
-
-		/*
-		glDisable(GL_TEXTURE_2D);
-		glBegin(GL_QUADS);
-			glColor3f(0.f,1.f,0.f);			// Green
-			glVertex2f(-50.f, -50.f);
-			glVertex2f(50.f, -50.f);
-			glVertex2f(50.f, 50.f);
-
-			glColor3f(1.f, 0.f, 0.f);		// Red
-			glVertex2f(-50.f, 50.f);
-		glEnd();
-		glEnable(GL_TEXTURE_2D);
-		*/
-
 		if (lightSys)
 			lightSys->renderLightTexture();
 
 		glPopMatrix();
 	}
 
-	void Layer::createLightingSystem()
+	void Layer::createLightingSystem(Vec2 resolution)
 	{
 		destroyLightingSystem();
-		lightSys = new LightingSystem(this);
+		lightSys = new LightingSystem(this, resolution);
 	}
 	void Layer::destroyLightingSystem()
 	{
@@ -130,7 +120,6 @@ namespace Pim
 	{
 		if (lightSys)
 			lightSys->addLight(node, lDef);
-		addChild(node);
 	}
 	void Layer::removeLight(GameNode *node)
 	{
@@ -155,7 +144,12 @@ namespace Pim
 	void Layer::setCastShadows(bool shadows)
 	{
 		if (lightSys)
-			lightSys->castShadow = true;
+			lightSys->castShadow = shadows;
+	}
+	void Layer::setLightingUnlitColor(Color color)
+	{
+		if (lightSys)
+			lightSys->color = color;
 	}
 	void Layer::setShadowTechnique(ShadowTechnique::ShadowTechnique tech)
 	{
@@ -170,6 +164,20 @@ namespace Pim
 	LightingSystem* Layer::getLightingSystem()
 	{
 		return lightSys;
+	}
+	
+	void Layer::addCollisionNode(GameNode *node)
+	{
+		PimAssert(node->colShape, "Error: collision node has no collision shape!");
+		collisionNodes.push_back(node);
+	}
+	void Layer::removeCollisionNode(GameNode *node)
+	{
+		for (unsigned int i=0; i<collisionNodes.size(); i++)
+		{
+			if (collisionNodes[i] == node)
+				collisionNodes.erase(collisionNodes.begin() + i);
+		}
 	}
 
 	void Layer::_topLevelNode()

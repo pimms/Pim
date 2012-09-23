@@ -73,7 +73,8 @@ namespace Pim
 		static GameControl* singleton;
 
 		void gameLoop();
-		void dispatchUpdate();
+		void dispatchPrerender();
+		void dispatchPostrender();
 
 		WinStyle::CreationData	winData;
 		int						actualWinWidth;		// The values in winData does NOT apply if

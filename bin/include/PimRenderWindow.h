@@ -64,6 +64,10 @@ namespace Pim
 		// THIS VECTOR IS IN SCREEN PIXEL SIZE - NOT FORCED RENDER RESOLUTION
 		Vec2		ortho;	
 
+		// This vector contains the border dimension data. 
+		// The total screen size is (ortho + orthoOff*2)
+		Vec2		orthoOff;
+
 		// The border placement (NONE, HOR, VER)
 		BORDERPOS	bpos;	
 

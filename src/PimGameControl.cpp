@@ -7,6 +7,8 @@
 #include "PimGameNode.h"
 #include "PimLayer.h"
 #include "PimShaderManager.h"
+#include "PimCollisionManager.h"
+#include "PimFontManager.h"
 
 #include <iostream>
 #include <ctime>
@@ -26,12 +28,14 @@ namespace Pim
 				if (wParam)
 				{
 					hasFocus = true;
-					Input::getSingleton()->_gainedFocus();
+					if (Input::getSingleton())
+						Input::getSingleton()->_gainedFocus();
 				}
 				else
 				{
 					hasFocus = false;
-					Input::getSingleton()->_lostFocus();
+					if (Input::getSingleton())
+						Input::getSingleton()->_lostFocus();
 				}
 				return 0;
 
@@ -115,8 +119,11 @@ namespace Pim
 
 			Input::instantiateSingleton();
 			ShaderManager::instantiateSingleton();
+			CollisionManager::instantiateSingleton();
+			FontManager::instantiateSingleton();
 
 			renderWindow = new RenderWindow(data);
+			renderWindow->createWindow(data);
 
 			setLayer(l);
 
@@ -272,30 +279,40 @@ namespace Pim
 				Input::getSingleton()->_dispatch();
 
 				// Dispatch update calls
-				dispatchUpdate();
+				dispatchPrerender();
 
-				// Render dat frame
+				// Render the frame - post render calls are made by renderWindow
 				renderWindow->renderFrame();
 			}
 		}
+
 
 		// Clean up the layer
 		if (layer) delete layer;
 
 		Input::clearSingleton();
 		ShaderManager::clearSingleton();
+		CollisionManager::clearSingleton();
+		FontManager::clearSingleton();
 
 		renderWindow->killWindow();
 		
 		delete this;
 	}
-	void GameControl::dispatchUpdate()
+	void GameControl::dispatchPrerender()
 	{
 		float dt = calculateDeltaTime();
 
 		for (unsigned int i=0; i<frameListeners.size(); i++)
 		{
 			frameListeners[i]->update(dt);
+		}
+	}
+	void GameControl::dispatchPostrender()
+	{
+		for (unsigned int i=0; i<frameListeners.size(); i++)
+		{
+			frameListeners[i]->postFrame();
 		}
 	}
 

@@ -19,3 +19,4 @@
 #include "PimSpriteBatchNode.h"
 #include "PimShaderManager.h"
 #include "PimLightingSystem.h"
+#include "PimCollisionManager.h"

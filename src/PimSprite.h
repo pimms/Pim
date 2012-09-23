@@ -31,10 +31,11 @@ namespace Pim
 		Shader* getShader() { return shader; }
 
 		// Set the shadow shape. The vertices __MUST__ be wound counter clockwise,
-		// and the shape must be concave.
+		// and the shape must be convex.
 		void setShadowShape(Vec2 vertices[], int vertexCount);
 		void setShadowShapeDebugDraw(bool flag);
 
+		bool					hidden;			// Hidden?
 		Vec2					anchor;			// (0.5,0.5) puts the sprites anchor in the center
 		Vec2					scale;			// Scale in X and Y directions. 100% independent.
 		Color					color;			// Color overlay
@@ -44,14 +45,14 @@ namespace Pim
 	protected:
 		friend class LightingSystem;
 
+		
 		GLuint					texID;			// The texture ID
-
 		GLboolean				_a;				// Has the texture alpha?
 		png_uint_32				_tw;			// Texture width
 		png_uint_32				_th;			// Texture height
 
 		Shader					*shader;		// The shader
-
+		
 		PolygonShape			*shadowShape;	// The shadow casting shape
 	};
 

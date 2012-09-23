@@ -20,13 +20,18 @@
 
 #include "PimVec2.h"
 
+#include "PimCollisionFilter.h"
+
 namespace Pim
 {
 	// Forward declarations
+	class CollisionManager;
+	class PolygonShape;
 	class Vec2;
 	class Input;
 	class MouseEvent;
 	class KeyEvent;
+	class Layer;
 
 	class GameNode
 	{
@@ -34,8 +39,8 @@ namespace Pim
 		GameNode();
 		virtual ~GameNode();
 		
-		// For comparison only. 
-		const GameNode* getParent() { return parent; }
+		const GameNode* getParent();		// returns this node's parent
+		virtual Layer* getParentLayer();			// returns the closest layer in the hierarchy
 
 		void addChild(GameNode *ch);
 		void removeChild(GameNode *ch, bool cleanup=false);
@@ -53,9 +58,10 @@ namespace Pim
 		void listenFrame();
 		void unlistenFrame();
 
-		virtual void mouseEvent(MouseEvent &)	{}
-		virtual void keyEvent(KeyEvent &)		{}
-		virtual void update(float dt)			{}
+		virtual void mouseEvent(MouseEvent &)	{}	// called on mouselisteners on event
+		virtual void keyEvent(KeyEvent &)		{}	// called on keylisteners on event
+		virtual void update(float dt)			{}	// called on framelisteners pre-render
+		virtual void postFrame()				{}	// called on framelisteners post-render
 
 		// Virtual for the sake of Layers.
 		virtual Vec2 getWorldPosition();	
@@ -64,6 +70,8 @@ namespace Pim
 		// Returns the position of this node relative to the first layer-parent.
 		// Returns (0,0) from ALL layers.
 		virtual Vec2 getLayerPosition();
+		// Returns the position of the light (getLayerPosition() + lightPosition)
+		Vec2 getLightPosition();
 
 		// Sorts children based on their zOrder
 		void orderChildren();
@@ -80,8 +88,16 @@ namespace Pim
 		void setZOrder(int z);
 
 
+		// Set the collision shape
+		void setCollisionShape(Vec2 vertices[], int vertexCount);
+		void setCollisionShapeDebugDraw(bool flag);
+
+		Vec2 validateMovement(Vec2 &oldPos, Vec2 &newPos);
+
+
 		float					rotation;		// Rotation - relative to parent
 		Vec2					position;		// Position - CCW degrees - relative to parent
+		Vec2					lightPosition;	// Relative to position
 		std::vector<GameNode*>	children;		// Children
 
 		// If this is false, nodes will be placed at the integer equivalent of their position.
@@ -92,7 +108,14 @@ namespace Pim
 		// Best practice: true for sprites, false for layers.
 		bool					allowMidPixelPosition;
 
+		bool					dbgColShape;	// Debug draw the collision shape?
+		unsigned short			colGroup;		// The group of THIS node
+		unsigned short			colFilter;		// The groups this node can collide with
+
 	protected:
+		friend class CollisionManager;
+		friend class Layer;
+
 		// While it is possible to set the parent variable
 		// to some obscure value by yourself, you would be 
 		// a giant moron to do so. Leave this alone.
@@ -108,7 +131,9 @@ namespace Pim
 		// If dirtyZOrder is false, orderChildren() will do nothing.
 		// The z-order is dirty when a new child has been added, and is 
 		// clean when the children are ordered.
-		bool		dirtyZOrder;
+		bool					dirtyZOrder;
+
+		PolygonShape			*colShape;		// The collision shape
 	};
 
 }

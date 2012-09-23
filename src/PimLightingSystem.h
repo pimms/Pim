@@ -48,10 +48,19 @@ namespace Pim
 	class Shader;
 	struct Color;
 
-	// The light def is holding values defining how the light should be rendered.
+	// Superclass for definement of lights
 	struct LightDef
 	{
-		LightDef();
+		LightDef()
+		{
+			innerColor		= Color(1.f, 1.f, 1.f, 1.f);
+			outerColor		= Color(0.2f, 0.2f, 0.2f, 0.0f);
+			castShadow		= true;
+			radius			= 128;
+			lTex			= NULL;
+			falloff			= 0.2f;
+			lightType		= -1;
+		}
 		~LightDef()
 		{
 			if (lTex)
@@ -63,13 +72,38 @@ namespace Pim
 		int		radius;			// The radius, and width&height of the light texture. Def=128
 		bool	castShadow;		// Should this light cast shadows?	Def=true
 
-		float innerFalloff;		// How fast the inner (brightest) area should fall. (0.0-1.0)
-								// Default is 0.2. 
+		float	falloff;
 
-	private:
+	protected:
 		friend class LightingSystem;
 
+		short	lightType;		// 0=flat, 1=smooth
+
 		GLuint lTex;
+	};
+
+	// Flat lights have the same color in the radius area, and a "falloff" zone
+	// in a percentage of the radius, defined in "falloff" (0.0 - 1.0).
+	struct FlatLightDef : public LightDef
+	{
+		FlatLightDef()
+		{
+			lightType = 0;
+		}
+	};
+
+	// More  customizeable than the flat lighting def
+	struct SmoothLightDef : public LightDef
+	{
+		SmoothLightDef()
+		{
+			lightType = 1;
+			innerPasses = 3;
+		}
+
+		// How many times the center should be rendered - the inner circle
+		// is the area with the radius (radius*falloff).
+		int innerPasses;
 	};
 
 	namespace ShadowTechnique
@@ -90,7 +124,7 @@ namespace Pim
 		// Only layers can instantiate lighting systems. Call layer->createLightingSystem().
 		friend class Layer;
 
-		LightingSystem(Layer*);
+		LightingSystem(Layer*, Vec2 resolution);
 		LightingSystem(const LightingSystem &o) {}
 		~LightingSystem();
 
@@ -100,7 +134,8 @@ namespace Pim
 		void addLight(GameNode *node, LightDef *lDef);
 
 		// Render the light texture.
-		void createLightTexture(LightDef *lDef);
+		void createSmoothLightTexture(LightDef *lDef);
+		void createFlatLightTexture(LightDef *lDef);
 
 		void renderLightTexture();		// The main rendering called every frame
 		void _renderLights();			// Merely a subroutine
@@ -114,13 +149,13 @@ namespace Pim
 		bool									castShadow;
 		bool									useMultShader;
 
+		Vec2									resolution;		// Shadowtex resolution
+
+		Color									color;			// Color of the unlit areas
+
 		// OpenGL
 		GLuint			frameBuffer;
 		GLuint			texID;
 		Shader			*shader;
-
-		// The framebuffer and texture containing the shadows
-		GLuint			shadowFBO;
-		GLuint			shadowTex;
 	};
 }

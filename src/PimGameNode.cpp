@@ -5,6 +5,9 @@
 #include "PimException.h"
 #include "PimInput.h"
 #include "PimGameControl.h"
+#include "PimLayer.h"
+#include "PimPolygonShape.h"
+#include "PimCollisionManager.h"
 
 #include <iostream>
 
@@ -18,9 +21,24 @@ namespace Pim
 		allowMidPixelPosition	= true;
 		zOrder					= 0;
 		dirtyZOrder				= false;
+
+		colShape				= NULL;
+		dbgColShape				= false;
+
+		colGroup				= 1|2|4|8;
+		colFilter				= 1|2|4|8;
 	}
 	GameNode::~GameNode()
 	{
+		if (getParentLayer())
+		{
+			getParentLayer()->removeCollisionNode(this);
+			getParentLayer()->removeLight(this);
+		}
+
+		if (colShape)
+			delete colShape;
+
 		removeAllChildren(true);
 		
 		unlistenFrame();
@@ -56,14 +74,25 @@ namespace Pim
 		// Delete all if required
 		if (cleanup)
 		{
-			for (unsigned int i=0; i<children.size(); i++)
+			for each (GameNode *child in children)
 			{
-				delete children[i];
+				delete child;
 			}
 		}
 
 		// THEN clear the array
 		children.clear();
+	}
+
+	const GameNode* GameNode::getParent()
+	{
+		return parent;
+	}
+	Layer* GameNode::getParentLayer()
+	{
+		if (parent)
+			return parent->getParentLayer();
+		return NULL;
 	}
 	
 	void GameNode::listenInput()
@@ -117,6 +146,10 @@ namespace Pim
 	{
 		return position + parent->getLayerPosition();
 	}
+	Vec2 GameNode::getLightPosition()
+	{
+		return getLayerPosition() + lightPosition;
+	}
 
 	void GameNode::orderChildren()
 	{
@@ -149,11 +182,20 @@ namespace Pim
 		Vec2 fac = GameControl::getSingleton()->windowScale();
 
 		if (allowMidPixelPosition)
-			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
+			glTranslatef(position.x * fac.x, position.y * fac.y, 0.f);
 		else
 			glTranslatef(floor(position.x) / fac.x, position.y / fac.y, 0.f);
 
 		glRotatef(rotation, 0.f, 0.f, 1.f);
+
+		// Debug draw the collison shape if required
+		if (colShape && dbgColShape)
+		{
+			glPushMatrix();
+			glScalef(fac.x, fac.y, 1.f);
+			colShape->debugDraw();
+			glPopMatrix();
+		}
 
 		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)
@@ -177,6 +219,15 @@ namespace Pim
 
 		glRotatef(rotation, 0.f, 0.f, 1.f);
 
+		// Debug draw the collison shape if required
+		if (colShape && dbgColShape)
+		{
+			glPushMatrix();
+			glScalef(fac.x, fac.y, 1.f);
+			colShape->debugDraw();
+			glPopMatrix();
+		}
+			
 		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)
 		{
@@ -191,5 +242,22 @@ namespace Pim
 		if (parent)
 			parent->dirtyZOrder = true;
 		zOrder = z;
+	}
+
+	void GameNode::setCollisionShape(Vec2 vertices[], int vertexCount)
+	{
+		if (colShape)
+			delete colShape;
+
+		colShape = new PolygonShape(vertices, vertexCount, this);
+	}
+	void GameNode::setCollisionShapeDebugDraw(bool flag)
+	{
+		dbgColShape = flag;
+	}
+
+	Vec2 GameNode::validateMovement(Vec2 &o, Vec2 &n)
+	{
+		return CollisionManager::validateMovement(this, o, n);
 	}
 }

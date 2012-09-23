@@ -25,5 +25,10 @@ namespace Pim
 
 
 	// Assertion
+
+#ifdef _DEBUG
 	void PimAssert(bool statement, std::string desc);
+#else
+#define PimAssert(_X_, _Y_) ;
+#endif
 }
