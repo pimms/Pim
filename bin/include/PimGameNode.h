@@ -91,7 +91,6 @@ namespace Pim
 		// Set the collision shape
 		void setCollisionShape(Vec2 vertices[], int vertexCount);
 		void setCollisionShapeDebugDraw(bool flag);
-
 		Vec2 validateMovement(Vec2 &oldPos, Vec2 &newPos);
 
 
@@ -105,7 +104,7 @@ namespace Pim
 		// is [3.4,2.1], the ACTUAL position of the node will be [3,2]. 
 		// It is adviced to leave this off for layers, as the scrolling will be VERY jagged,
 		// even if you try to simulate that fancy retro 8-bit style.
-		// Best practice: true for sprites, false for layers.
+		// Best practice: equal for layers and sprites.
 		bool					allowMidPixelPosition;
 
 		bool					dbgColShape;	// Debug draw the collision shape?
@@ -126,6 +125,7 @@ namespace Pim
 		// The ordering only occurs with siblings of the same parent. 
 		// If two sprites with ZO 0 and 1 are drawn, ZO1 will overlap ZO0, as ZO0 is drawn first.
 		// Use setZOrder(int) to change the order - this will dirtien the parent.
+		// The zOrder variable is the index relative to it's siblings.
 		int						zOrder;
 
 		// If dirtyZOrder is false, orderChildren() will do nothing.
@@ -133,7 +133,8 @@ namespace Pim
 		// clean when the children are ordered.
 		bool					dirtyZOrder;
 
-		PolygonShape			*colShape;		// The collision shape
+		// The collision shape. Likely to be removed.
+		PolygonShape			*colShape;		
 	};
 
 }

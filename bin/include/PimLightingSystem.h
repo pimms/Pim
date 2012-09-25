@@ -38,6 +38,12 @@
 	the outer edge, where "oc" is the outerColor variable.
 */
 
+// For the sake of the LightDef hierarchy, these definitions are required.
+// The superclass, "LightDef" needs to be abstract, in order to separate
+// wether the LightDef is "Smooth" or "Flat".
+#define ABSTRACT_SUPERCLASS virtual void ____abstract____() = 0;
+#define NONABSTRACT_SUBCLASS void ____abstract____(){}
+
 namespace Pim
 {
 	// Forward declarations
@@ -51,6 +57,8 @@ namespace Pim
 	// Superclass for definement of lights
 	struct LightDef
 	{
+		ABSTRACT_SUPERCLASS
+
 		LightDef()
 		{
 			innerColor		= Color(1.f, 1.f, 1.f, 1.f);
@@ -66,6 +74,7 @@ namespace Pim
 			if (lTex)
 				glDeleteTextures(1, &lTex);
 		}
+
 		
 		Color	innerColor;		// The inner color - Def=(1,1,1,1)
 		Color	outerColor;		// The outer color, the alpha SHOULD be 0 - Def=(0.2,0.2,0.2,0.0)
@@ -86,6 +95,8 @@ namespace Pim
 	// in a percentage of the radius, defined in "falloff" (0.0 - 1.0).
 	struct FlatLightDef : public LightDef
 	{
+		NONABSTRACT_SUBCLASS
+
 		FlatLightDef()
 		{
 			lightType = 0;
@@ -95,6 +106,8 @@ namespace Pim
 	// More  customizeable than the flat lighting def
 	struct SmoothLightDef : public LightDef
 	{
+		NONABSTRACT_SUBCLASS
+
 		SmoothLightDef()
 		{
 			lightType = 1;

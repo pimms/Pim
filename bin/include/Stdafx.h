@@ -22,6 +22,9 @@
 #include <Windows.h>
 #include <GL\glew.h>
 
+#include "ft2build.h"
+#include FT_FREETYPE_H
+
 #include "png.h"
 
 namespace Pim
