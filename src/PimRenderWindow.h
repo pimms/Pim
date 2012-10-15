@@ -29,6 +29,9 @@ namespace Pim
 		// has occured.
 		void printOpenGLErrors(std::string identifier);
 
+		Vec2 getOrtho();		// Get the render dimensions in pixels
+		Vec2 getOrthoOffset();	// Get the offset of the ortho projection (black borders)
+
 	private:
 		friend class GameControl;
 		friend class LightingSystem;
@@ -37,6 +40,9 @@ namespace Pim
 		void resizeWindow(int wnew, int hnew);
 		bool initOpenGL();
 		void killWindow();
+
+		void setCreationData(WinStyle::CreationData &data);
+		void setWindowStyle(WinStyle::WinStyle style);
 
 		// Call render on the top level layer
 		void renderFrame();
@@ -47,7 +53,7 @@ namespace Pim
 		HWND		hWnd;		// Window handle
 		HINSTANCE	hInstance;	// Application instance
 
-		WinStyle::CreationData	*winData;
+		WinStyle::CreationData	winData;
 		
 		typedef enum BORDERPOS
 		{

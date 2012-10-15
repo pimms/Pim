@@ -109,7 +109,7 @@ namespace Pim
 	{
 		return (Vec2(position.x, GameControl::getWindowHeight()-position.y)
 				- GameControl::getSingleton()->lowerLeftCorner())
-				* GameControl::getSingleton()->forcedCoordinateFactor(); 
+				* GameControl::getSingleton()->coordinateFactor(); 
 	}
 	Vec2 MouseEvent::getRelative()
 	{

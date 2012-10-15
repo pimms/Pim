@@ -75,7 +75,7 @@ namespace Pim
 		}
 
 		// Update position
-		Vec2 fac = GameControl::getSingleton()->forcedCoordinateFactor();
+		Vec2 fac = GameControl::getSingleton()->coordinateFactor();
 
 		if (allowMidPixelPosition)
 			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
@@ -143,17 +143,17 @@ namespace Pim
 	void Layer::setLightingUnlitColor(Color color)
 	{
 		if (lightSys)
-			lightSys->color = color;
+			lightSys->setUnlitColor(color);
 	}
-	void Layer::setShadowTechnique(ShadowTechnique::ShadowTechnique tech)
+	void Layer::setLightAlpha(float a)
 	{
 		if (lightSys)
-			lightSys->tech = tech;
+			lightSys->setLightAlpha(a);
 	}
-	void Layer::setLightMultiplicationShaderActive(bool flag)
+	void Layer::setShadowcasterDebugDraw(bool flag)
 	{
 		if (lightSys)
-			lightSys->useMultShader = flag;
+			lightSys->dbgDrawNormal = flag;
 	}
 	LightingSystem* Layer::getLightingSystem()
 	{

@@ -49,7 +49,6 @@ namespace Pim
 		void setWindowCreationData(WinStyle::CreationData data);
 		void setWindowStyle(WinStyle::WinStyle style);
 		void setWindowResolution(int w, int h);
-		void setWindowBits(int bits);
 
 		// Returns the position of GLPoint (0,0) - adjusted by the black borders
 		Vec2 lowerLeftCorner();
@@ -62,7 +61,7 @@ namespace Pim
 		// The method's main application is converting mouse screen coordinates to fit the 
 		// forced coordinate system.
 		// Returns [1,1] if forcedCoordinateSystem is false.
-		Vec2 forcedCoordinateFactor();
+		Vec2 coordinateFactor();
 
 		// Deletes the old layer, replaces it with the passed.
 		void setLayer(Layer *l);

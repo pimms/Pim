@@ -132,8 +132,10 @@ namespace Pim
 
 	bool CollisionManager::intersect(GameNode *na, GameNode *nb)
 	{
+#ifdef _DEBUG
 		PimAssert(na->getParentLayer() == nb->getParentLayer(), 
 			"Error: only siblings can intersect.");
+#endif
 
 		PolygonShape *shA = na->colShape;
 		PolygonShape *shB = nb->colShape;

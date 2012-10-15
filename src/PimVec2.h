@@ -10,6 +10,12 @@ namespace Pim
 		Vec2(float px, float py);
 		Vec2(void);
 
+		// Create a unit vector pointing in degree-angle 'a'
+		static Vec2 unitD(float a);
+
+		// Create a unit vector pointing in radian-angle 'a'
+		static Vec2 unitR(float a);
+
 		// [DOES NOT MODIFY THIS VECTOR]
 		// Returns this vector, rotated around pt, a degrees
 		Vec2 rotateAroundPoint(Vec2 &pt, float a);	
@@ -18,37 +24,20 @@ namespace Pim
 		// Same as rotateAroundPoint, but defaults to (0,0)
 		Vec2 rotateDegrees(float a);				
 		
-		float angleBetween(Vec2 &other)
-		{
-			float dot = normalize().dot(other.normalize());
-			float angle = acosf(dot) * (180.f / 3.14f);
+		// Returns the difference in the range 0.0 to 360.0
+		float angleBetween360(const Vec2 &other);
 
-			Vec2 diff = Vec2(x,y) - other;
-			if (diff.dot(Vec2(0.f,1.f)) < 0.f)
-				angle = -angle;
+		// Returns the difference in the range -180.0 to 180.0
+		float angleBetween(Vec2 &other);
 
-			return angle;
-		}
+		// Returns the dot product between this vector and the passed vector
+		float dot(const Vec2 &other);
 
-		float dot(const Vec2 &other)
-		{
-			return x * other.x + y * other.y;
-		}
+		// Returns the unit length vector without altering any current values.
+		Vec2 normalize();
 
-		Vec2 cross(const Vec2 &other)
-		{
-
-		}
-
-		Vec2 normalize()
-		{
-			return Vec2(x,y) / length();
-		}
-
-		float length()
-		{
-			return sqrt(x*x + y*y);
-		}
+		// Returns the length of this vector
+		float length();
 
 		float x, y;
 	

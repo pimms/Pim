@@ -96,15 +96,10 @@ namespace Pim
 		static ShaderManager* getSingleton()
 				{ return singleton; }
 
-		static bool addShaderFromFile(std::string fragFile, std::string vertFile,
-			std::string name, Quality::Quality quality);
-		static bool addShader(std::string fragString, std::string vertString, 
-			std::string name, Quality::Quality quality);
-
-		static void setDefaultQuality(Quality::Quality q);
+		static Shader* addShaderFromFile(std::string fragFile,std::string vertFile,std::string name);
+		static Shader* addShader(std::string fragString,std::string vertString,std::string name);
 		
 		static Shader* getShader(std::string name);
-		static Shader* getShader(std::string name, Quality::Quality q);
 
 	private:
 		friend class GameControl;
@@ -115,9 +110,7 @@ namespace Pim
 		ShaderManager();
 		~ShaderManager();
 
-		std::map<std::string, std::map<Quality::Quality, Shader*>> shaders;
-
-		Quality::Quality		defaultQuality;
+		std::map<std::string, Shader*> shaders;
 
 		static ShaderManager *singleton;
 	};

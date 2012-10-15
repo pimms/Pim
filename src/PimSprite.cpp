@@ -84,7 +84,6 @@ namespace Pim
 		// Get the size
 		_tw = png_get_image_width(png_ptr, info_ptr);
 		_th = png_get_image_height(png_ptr, info_ptr);
-		std::cout<<"Image dimensions: " <<_tw <<" x " <<_th <<"\n";
 
 		// Get the color format
 		png_byte byte = png_get_color_type(png_ptr, info_ptr);
@@ -142,7 +141,7 @@ namespace Pim
 		glPushMatrix();
 
 		// Update view matrix
-		Vec2 fac = GameControl::getSingleton()->forcedCoordinateFactor();
+		Vec2 fac = GameControl::getSingleton()->coordinateFactor();
 
 		if (allowMidPixelPosition)
 			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
@@ -211,7 +210,7 @@ namespace Pim
 		glPushMatrix();
 
 		// Update view matrix
-		Vec2 fac = GameControl::getSingleton()->forcedCoordinateFactor();
+		Vec2 fac = GameControl::getSingleton()->coordinateFactor();
 
 		if (allowMidPixelPosition)
 			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
@@ -298,5 +297,9 @@ namespace Pim
 	void Sprite::setShadowShapeDebugDraw(bool flag)
 	{
 		dbgShadowShape = flag;
+	}
+	PolygonShape* Sprite::getShadowShape()
+	{
+		return shadowShape;
 	}
 }

@@ -123,6 +123,10 @@ namespace Pim
 			renderWindow = new RenderWindow(data);
 			renderWindow->createWindow(data);
 
+#ifdef _DEBUG
+		std::cout<<"\n[OpenGL version " <<glGetString(GL_VERSION) <<"]\n\n"; 
+#endif
+
 			setLayer(l);
 
 			gameLoop();
@@ -140,6 +144,15 @@ namespace Pim
 			MessageBox(NULL,"Anonymous exception caught.\nNo information available.",
 				"Exception thrown", MB_OK | MB_ICONEXCLAMATION);
 		}
+
+		// Clean up the layer
+		if (layer) delete layer;
+
+		Input::clearSingleton();
+		ShaderManager::clearSingleton();
+		CollisionManager::clearSingleton();
+
+		renderWindow->killWindow();
 	}
 
 	void GameControl::addKeyListener(GameNode *node)
@@ -178,8 +191,7 @@ namespace Pim
 		winData = data;
 		winData.prepare();
 
-		renderWindow->killWindow();
-		renderWindow->createWindow(winData);
+		renderWindow->setCreationData(winData);
 	}
 	void GameControl::setWindowStyle(WinStyle::WinStyle style)
 	{
@@ -187,29 +199,17 @@ namespace Pim
 		{
 			winData.winStyle = style;
 
-			renderWindow->killWindow();
-			renderWindow->createWindow(winData);
+			renderWindow->setCreationData(winData);
 		}
 	}
 	void GameControl::setWindowResolution(int w, int h)
 	{
-		if (winData.winStyle != WinStyle::BORDERLESS_FULLSCREEN 
-			&& (winData.width  != w || winData.height != h))
+		if (winData.resolution.x  != w || winData.resolution.y != h)
 		{
-			winData.width = w;
-			winData.height = h;
+			winData.resolution.x = w;
+			winData.resolution.y = h;
 
 			renderWindow->resizeWindow(w, h);
-		}
-	}
-	void GameControl::setWindowBits(int bits)
-	{
-		if (bits != winData.bits)
-		{
-			winData.bits = bits;
-
-			renderWindow->killWindow();
-			renderWindow->createWindow(winData);
 		}
 	}
 
@@ -231,12 +231,9 @@ namespace Pim
 	{
 		return renderWindow->scale;
 	}
-	Vec2 GameControl::forcedCoordinateFactor()
+	Vec2 GameControl::coordinateFactor()
 	{
-		if (winData.forcedCoordinateSystem)
-			return winData.coordinateSystem / renderWindow->ortho;
-		
-		return Vec2(1.f, 1.f);
+		return winData.coordinateSystem / renderWindow->ortho;
 	}
 
 	void GameControl::setLayer(Layer *l)
@@ -255,6 +252,7 @@ namespace Pim
 	{
 		MSG  msg;
 		bool quit = false;
+		ticks = clock();
 
 		while (!quit)
 		{
@@ -281,20 +279,11 @@ namespace Pim
 
 				// Render the frame - post render calls are made by renderWindow
 				renderWindow->renderFrame();
+
+				// Dispatch postrender calls
+				dispatchPostrender();
 			}
 		}
-
-
-		// Clean up the layer
-		if (layer) delete layer;
-
-		Input::clearSingleton();
-		ShaderManager::clearSingleton();
-		CollisionManager::clearSingleton();
-
-		renderWindow->killWindow();
-		
-		delete this;
 	}
 	void GameControl::dispatchPrerender()
 	{

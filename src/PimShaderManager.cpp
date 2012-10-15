@@ -130,22 +130,26 @@ namespace Pim
 
 	ShaderManager::ShaderManager()
 	{
-		defaultQuality = Quality::MED;
+		
 	}
 	ShaderManager::~ShaderManager()
 	{
 		for (auto o_it=shaders.begin(); o_it!=shaders.end(); o_it++)
 		{
+			delete o_it->second;
+
+			/*
 			auto sub = o_it->second;
 			for (auto i_it=sub.begin(); i_it!=sub.end(); i_it++)
 			{
 				delete i_it->second;
 			}
+			*/
 		}
 	}
 
-	bool ShaderManager::addShaderFromFile(std::string fragFile, std::string vertFile, 
-		std::string nm, Quality::Quality q)
+	Shader* ShaderManager::addShaderFromFile(std::string fragFile, std::string vertFile, 
+		std::string nm)
 	{
 		std::string fragString;
 		std::string vertString;
@@ -178,10 +182,10 @@ namespace Pim
 
 		file.close();
 
-		return addShader(fragString, vertString, nm, q);
+		return addShader(fragString, vertString, nm);
 	}
-	bool ShaderManager::addShader(std::string fragString, std::string vertString, 
-		std::string nm, Quality::Quality q)
+	Shader* ShaderManager::addShader(std::string fragString, std::string vertString, 
+		std::string nm)
 	{
 		std::cout<<"Loading shader " <<nm <<"...\n";
 
@@ -203,8 +207,8 @@ namespace Pim
 		const GLcharARB *fstr = ftmp;
 		const GLcharARB *vstr = vtmp;
 
-		glShaderSourceARB(shader->frag, 1, &fstr, &flen);
-		glShaderSourceARB(shader->vert, 1, &vstr, &vlen);
+		glShaderSource(shader->frag, 1, &fstr, &flen);
+		glShaderSource(shader->vert, 1, &vstr, &vlen);
 
 		// Compile the shaders (lambdas ftw)
 		auto compile =  [](GLuint shader, std::string str) -> bool
@@ -241,12 +245,12 @@ namespace Pim
 		if (!compile(shader->frag, "Fragment shader"))
 		{
 			delete shader;
-			return false;
+			return NULL;
 		}
 		if (!compile(shader->vert, "Vertex shader"))
 		{
 			delete shader;
-			return false;
+			return NULL;
 		}
 
 		// Create the program and link that fucka'
@@ -267,47 +271,16 @@ namespace Pim
 		{
 			std::cout<<"Failed to link shaders.\n";
 			delete shader;
-			return false;
+			return NULL;
 		}
 
-		singleton->shaders[nm][q] = shader;
-
-		return true;
-	}
-
-	void ShaderManager::setDefaultQuality(Quality::Quality q)
-	{
-		PimAssert(q >= 0 && q >= 2, "Error: bad quality parameter");
-		singleton->defaultQuality = q;
+		singleton->shaders[nm] = shader;
+		return shader;
 	}
 
 	Shader* ShaderManager::getShader(std::string name)
 	{
-		return getShader(name, singleton->defaultQuality);
-	}
-	Shader* ShaderManager::getShader(std::string name, Quality::Quality q)
-	{
 		if (singleton->shaders.count(name))
-		{
-			if (singleton->shaders[name].count(q))
-			{
-				return singleton->shaders[name][q];
-			}
-			
-			for (int i=0; i<3; i++)
-			{
-				if (i == q) continue;
-				
-				if (singleton->shaders[name].count((Quality::Quality)i))
-				{
-					std::cout<<"WARNING: Quality " <<q <<" for shader \""
-							 <<name <<"\" not found. Using quality " <<i <<"\n";
-					return singleton->shaders[name][(Quality::Quality)i];
-				}
-			}
-		}
-
-		std::cout<<"ERROR: Shader \"" <<name <<"\" not found for any qualities.\n";
-		return NULL;
+			return singleton->shaders[name];
 	}
 }

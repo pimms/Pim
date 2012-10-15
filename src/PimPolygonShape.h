@@ -17,17 +17,21 @@ namespace Pim
 	public:
 		Line(Vec2 &v1, Vec2 &v2, PolygonShape *p);
 
-		Vec2 getP1();			// Returns the first point
-		Vec2 getP2();			// Returns the second point
-		Vec2 getNormal();		// Returns the normal
-		Vec2 getNormalEnd();	// Returns mid+normal transformed
-		Vec2 getMid();			// Returns the center of the line
+		/* 
+			THE SC PARAMETER IS THE SCALE OF THE LINE COORDINATES ITSELF.
+			THE ROTATION IN WORLD SPACE IS PERFORMED WITHOUT THIS SCALE.
+		*/
+		Vec2 getP1(Vec2 &sc = Vec2(1,1));			// Returns the first point
+		Vec2 getP2(Vec2 &sc = Vec2(1,1));			// Returns the second point
+		Vec2 getNormal(Vec2 &sc = Vec2(1,1));		// Returns the normal
+		Vec2 getNormalEnd(Vec2 &sc = Vec2(1,1));	// Returns mid+normal transformed
+		Vec2 getMid(Vec2 &sc = Vec2(1,1));			// Returns the center of the line
 
 		// Returns the relative dot product between the normal and the provided vector.
-		float relativeDot(Vec2 &vec);
+		float relativeDot(Vec2 &vec, Vec2 &sc = Vec2(1,1));
 
 		// return relativeDot(vec) >= 0.f;
-		bool isFacing(Vec2 &vec);
+		bool isFacing(Vec2 &vec, Vec2 &sc = Vec2(1,1));
 
 	private:
 		friend class PolygonShape;
@@ -53,6 +57,9 @@ namespace Pim
 
 		Vec2 center();
 
+		// Public for the sake of publicness. Don't edit manually, you beast!
+		std::vector<Line*>	lines;
+
 	private:
 		friend class Line;
 		friend class GameNode;
@@ -68,6 +75,5 @@ namespace Pim
 		void projectPolygon(Vec2 axis, float &min, float &max, Vec2 offset=Vec2(0.f,0.f));
 
 		GameNode *parent;
-		std::vector<Line*>	lines;
 	};
 }

@@ -19,7 +19,7 @@ namespace Pim
 	{
 		parent			= par;
 		castShadow		= true;
-		useMultShader	= true;
+		dbgDrawNormal   = false;
 		resolution		= pResolution;
 
 		// Create the texture
@@ -29,21 +29,32 @@ namespace Pim
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, resolution.x, resolution.y, 
-						0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-		
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, (GLsizei)resolution.x, (GLsizei)resolution.y, 
+						0, GL_RGBA, GL_FLOAT, NULL);
+
+		// Create the renderbuffer
+		glGenRenderbuffersEXT(1, &renderBuffer);
+		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, renderBuffer);
+
 		// Create the main framebuffer
 		glGenFramebuffersEXT(1, &frameBuffer);
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
+
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8,
+						(GLsizei)resolution.x, (GLsizei)resolution.y);
+		glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_STENCIL_ATTACHMENT,
+						GL_RENDERBUFFER_EXT, renderBuffer);
 
 		// Attach the texture
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, 
 										GL_TEXTURE_2D, texID, 0);
 
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		loadShaders();
+		setUnlitColor(Color(0.f, 0.f, 0.f, 1.f));
 	}
 	LightingSystem::~LightingSystem()
 	{
@@ -54,31 +65,48 @@ namespace Pim
 
 		glDeleteTextures(1, &texID);
 		glDeleteFramebuffersEXT(1, &frameBuffer);
+		glDeleteRenderbuffersEXT(1, &renderBuffer);
 	}
 
 	void LightingSystem::loadShaders()
 	{
-		ShaderManager::addShader(
-			"uniform sampler2D texSrc;				\n\
-			uniform sampler2D texDst;				\n\
-			void main()								\n\
-			{										\n\
-				vec4 src = texture2D(texSrc, gl_TexCoord[0]);	\n\
-				vec4 dst = texture2D(texDst, gl_TexCoord[1]);	\n\
-				gl_FragColor = src + src;		\n\
+		shader = ShaderManager::addShader(
+			"uniform sampler2D tex;									\n\
+			uniform float lalpha;									\n\
+			uniform vec4 ulcolor;									\n\
+			float length(vec4 v)									\n\
+			{														\n\
+				return sqrt(v.x*v.x + v.y*v.y + v.z*v.z);	\n\
+			}														\n\
+			void main()												\n\
+			{														\n\
+				vec4 src = texture2D(tex, gl_TexCoord[0].xy);		\n\
+				src.a -= (length(src) - length(ulcolor)) * lalpha * 3.0;	\n\
+				gl_FragColor = src;									\n\
 			}",
-			"void main()							\n\
-			{										\n\
-				gl_Position = ftransform();			\n\
-				gl_TexCoord[0] = gl_MultiTexCoord0;	\n\
-				gl_TexCoord[1] = gl_MultiTexCoord0; \n\
+			"void main()											\n\
+			{														\n\
+				gl_Position = ftransform();							\n\
+				gl_TexCoord[0] = gl_MultiTexCoord0;					\n\
 			}",
-			"_ltMgr_", Quality::MED);
-
-		shader = ShaderManager::getShader("_ltMgr_", Quality::MED);
+			"_ltMgr_");
 
 		shader->setUniform1i("texSrc", 0);
-		shader->setUniform1i("texDst", 1);
+		shader->setUniform1f("lalpha", 1.f);
+	}
+
+	void LightingSystem::setUnlitColor(Color c)
+	{
+		color = c;
+		shader->setUniform4f("ulcolor", c.r, c.g, c.b, c.a);
+	}
+	void LightingSystem::setLightAlpha(float a)
+	{
+		if (a > 1.f ) a = 1.f;
+		if (a < 0.f) a = 0.f;
+
+		a = 1.f - a;
+		shader->setUniform1f("lalpha", a);
 	}
 
 	void LightingSystem::addLight(GameNode *node, LightDef *lDef)
@@ -106,9 +134,9 @@ namespace Pim
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, lDef->radius*2, lDef->radius*2, 
-			0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, lDef->radius*2, lDef->radius*2, 
+			0, GL_RGBA, GL_FLOAT, NULL);
+		
 		// Create a new framebuffer to avoid complications
 		GLuint fbo;
 		glGenFramebuffersEXT(1, &fbo);
@@ -140,33 +168,21 @@ namespace Pim
 
 		// The outer circle
 		const float step = 6.283f/100.f;
-		glBegin(GL_TRIANGLE_FAN);
-			glColor4f(oc.r, oc.g, oc.b, oc.a);
-			glVertex2f(0.f, 0.f);
-			//glColor4f(oc.r, oc.g, oc.b, oc.a);
-			for (float a=0.f; a+step<6.283f; a+=step)
-			{
-				glVertex2f(cosf(a)*lDef->radius, sinf(a)*lDef->radius);
-			}
-			glVertex2f(cosf(0.f)*lDef->radius, sinf(0.f)*lDef->radius);
-		glEnd();
-
 		for (int i=0; i<lDef->innerPasses; i++)
 		{
-			float fac = 1.f;// (i+1)/lDef->innerPasses;
 			glBegin(GL_TRIANGLE_FAN);
-				glColor4f(ic.r, ic.g, ic.b, ic.a);
+				glColor4d(ic.r, ic.g, ic.b, ic.a);
 				glVertex2f(0.f, 0.f);
-				glColor4f(ic.r, ic.g, ic.b, 0.f);
+				glColor4f(oc.r, oc.g, oc.b, oc.a);
 				for (float a=0.f; a+step<6.283f; a+=step)
 				{
-					glVertex2f(	cosf(a)*lDef->radius*lDef->falloff * fac, 
-								sinf(a)*lDef->radius*lDef->falloff * fac);
+					glVertex2f(	cosf(a)*lDef->radius, 
+								sinf(a)*lDef->radius);
 				}
-				glVertex2f(	cosf(0.f)*lDef->radius*lDef->falloff * fac, 
-							sinf(0.f)*lDef->radius*lDef->falloff * fac);
+				glVertex2f(	cosf(0.f)*lDef->radius, 
+							sinf(0.f)*lDef->radius);
 			glEnd();
-		}                         
+		}
 
 		glEnable(GL_TEXTURE_2D);
 		
@@ -182,6 +198,9 @@ namespace Pim
 
 		glMatrixMode(GL_MODELVIEW);
 		glPopMatrix();
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	}
 	void LightingSystem::createFlatLightTexture(LightDef *lightDef)
 	{
@@ -202,7 +221,7 @@ namespace Pim
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, totalRadius*2, totalRadius*2, 
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)totalRadius*2, (GLsizei)totalRadius*2, 
 			0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
 		// Create a new framebuffer to avoid complications
@@ -223,7 +242,7 @@ namespace Pim
 		glLoadIdentity();
 
 		glPushAttrib(GL_VIEWPORT_BIT);
-		glViewport(0,0,totalRadius*2, totalRadius*2);
+		glViewport(0,0, (GLsizei)totalRadius*2, (GLsizei)totalRadius*2);
 		glOrtho(0, totalRadius*2, 0, totalRadius*2, 0, 1);
 
 		glDisable(GL_TEXTURE_2D);
@@ -253,16 +272,16 @@ namespace Pim
 			glBegin(GL_TRIANGLE_STRIP);
 				for (float a=0.f; a+step<6.283f; a+=step)
 				{
-					// Use the inner color alpha 
-					glColor4f(oc.r, oc.g, oc.b, ic.a);
+					// Use the inner color.. 
+					glColor4f(ic.r, ic.g, ic.b, ic.a);
 					glVertex2f(cosf(a)*lDef->radius, sinf(a)*lDef->radius);
 
-					// Then zero alpha to fade out.
-					glColor4f(oc.r, oc.g, oc.b, 0.f);
+					// Then the outer color
+					glColor4f(oc.r, oc.g, oc.b, oc.a);
 					glVertex2f(cosf(a)*totalRadius, sinf(a)*totalRadius);
 				}
 
-			glColor4f(oc.r, oc.g, oc.b, ic.a);
+			glColor4f(ic.r, ic.g, ic.b, ic.a);
 			glVertex2f(cosf(0.f)*lDef->radius, sinf(0.f)*lDef->radius);
 
 			glColor4f(oc.r, oc.g, oc.b, 0.f);
@@ -285,6 +304,12 @@ namespace Pim
 
 		glMatrixMode(GL_MODELVIEW);
 		glPopMatrix();
+
+		// Update the radius value
+		lDef->radius = (int)totalRadius;
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	}
 
 	void LightingSystem::renderLightTexture()
@@ -304,13 +329,17 @@ namespace Pim
 
 		// Set the ortho and viewport to match the texture's size
 		glPushAttrib(GL_VIEWPORT_BIT);
-		glViewport(0,0,resolution.x, resolution.y);
+		glViewport(0,0, (GLsizei)resolution.x, (GLsizei)resolution.y);
 		glOrtho(0, resolution.x, 0, resolution.y, 0, 1);
 
 		glTranslatef(0.f, 0.f, 0.f);
 
-		glClear(GL_COLOR_BUFFER_BIT);
-		
+		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);     
+
+		_renderLights();
+
+		glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
+
 		glDisable(GL_TEXTURE_2D);
 		glColor4f(color.r, color.g, color.b, color.a);
 		glBegin(GL_QUADS);
@@ -319,12 +348,10 @@ namespace Pim
 			glVertex2f(resolution.x, resolution.y);
 			glVertex2f(0.f, resolution.y);
 		glEnd();
-		glEnable(GL_TEXTURE_2D);                     
+		glEnable(GL_TEXTURE_2D);  
 
-		glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_ALPHA);
-		_renderLights();
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+	
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 		glBindTexture(GL_TEXTURE_2D, texID);
 
@@ -336,7 +363,9 @@ namespace Pim
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		glColor4ub(255,255,255,255);
+		glUseProgram(shader->getProgram());
+
+		glColor4f(1.f,1.f,1.f, color.a);
 		glBegin(GL_QUADS);
 			glTexCoord2i(0,0);
 			glVertex2f(0.f, 0.f);
@@ -351,230 +380,158 @@ namespace Pim
 			glVertex2f(0.f, wd.y);
 		glEnd();
 
+		glUseProgram(0);
+
 		glPopMatrix();
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	
 	void LightingSystem::_renderLights()
 	{
-		glColor4ub(255,255,255,255);
+		Vec2 renres = GameControl::getSingleton()->getCreationData().renderResolution;
+		Vec2 coord = GameControl::getSingleton()->getCreationData().coordinateSystem;
+		Vec2 posScale		= resolution / coord;		// The position (coord) scale
+		Vec2 lineScale		= coord / renres;			// The shadow line initial position scale
+		Vec2 renderScale	= renres / resolution;		// The final scale
 
-		Vec2 sc = resolution / GameControl::getSingleton()->getCreationData().coordinateSystem;
-		
-		//if (useMultShader)
-		//{
-		//	glActiveTexture(GL_TEXTURE1);
-		//	glBindTexture(GL_TEXTURE_2D, texID);
-		//	glUseProgram(shader->getProgram());
-		//	glActiveTexture(GL_TEXTURE0);
-		//}
-		
+		glEnable(GL_STENCIL_TEST);    
 
+		glPushMatrix();						// Layer position & scale
+		glScalef(posScale.x, posScale.y, 1.f);
+		glTranslatef(parent->position.x, parent->position.y, 0.f);
+		
 		for (auto it=lights.begin(); it!=lights.end(); it++)
 		{
-			float r = it->second->radius;
-			Vec2 p = it->first->getLightPosition() + parent->position;
-			p *= sc;
+			int r = it->second->radius;
+			Vec2 p = it->first->getLightPosition();
 
-			glPushMatrix();
-			//glLoadIdentity();
-			glTranslatef(floor(p.x), floor(p.y), 0.f);
+			if (castShadow && it->second->castShadow)
+				_renderShadows(it->second, it->first, p, lineScale);
 
 			glBindTexture(GL_TEXTURE_2D, it->second->lTex);
+			glPushMatrix();					// Light texture
+			glTranslatef(p.x, p.y, 0.f);
 
+			glStencilFunc(GL_NOTEQUAL, 0x1, 0x1);
+			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+			glColor4f(1.f, 1.f, 1.f, 0.2f);
+
+			glPushMatrix();
+			//glScalef(renderScale.x, renderScale.y, 1.f);
+
+			//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 			glBegin(GL_QUADS);
-				glTexCoord2i(0,0);
-				glVertex2f(-r,-r);
-
-				glTexCoord2i(1,0);
-				glVertex2f(r,-r);
-				
-				glTexCoord2i(1,1);
-				glVertex2f(r,r);
-
-				glTexCoord2i(0,1);
-				glVertex2f(-r,r);
+				glTexCoord2i(0,0);glVertex2i(-r,-r);
+				glTexCoord2i(1,0);glVertex2i(r,-r);
+				glTexCoord2i(1,1);glVertex2i(r,r);
+				glTexCoord2i(0,1);glVertex2i(-r,r);
 			glEnd();
+			//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			glPopMatrix();
+			glPopMatrix();					// Light texture
 		}
-	}
-	
 
-	/* // OLD IMPLEMENTATION
-	void LightingSystem::_renderLights()
-	{
-		for (auto it=lights.begin(); it!=lights.end(); it++)
-		{
-			glPushMatrix();
-
-			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
-
-			Vec2 lpos = it->first->getLayerPosition();
-			glTranslatef(	lpos.x+parent->position.x, 
-							lpos.y+parent->position.y, 0.f);
+		glPopMatrix();						// Layer position & scale
 			
-			int r = it->second->radius;
+		glDisable(GL_STENCIL_TEST);
+	}
+	void LightingSystem::_renderShadows(LightDef *ld, GameNode *light, Vec2 &pos, Vec2 &sc)
+	{
+		// PARAMETERS:
+		//	ld:			The light definition struct
+		//	light:		The game node, acting as a light
+		//	pos:		The position of the light relative to it's parent
+		//	sc:			The scale (lightingSys.resolution / renderResolution)
 
-			glPointSize(5.f);
-			glColor4ub(0,255,150,255);
-			glDisable(GL_TEXTURE_2D);
+		int r = ld->radius;
+		std::vector<Line*> castLines;
 
 
-			glLineWidth(4.f);
+		glPushMatrix();				// Shadows
+		glTranslatef(pos.x, pos.y, 0.f);
+
+		glClear(GL_STENCIL_BUFFER_BIT);
+
+		glStencilFunc(GL_NEVER, 0x1, 0x0);
+		glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);	
+
+		glDisable(GL_TEXTURE_2D);
+		glColor4f(color.r, color.g, color.b, 1.f);
+
+#ifdef _DEBUG					// IFDEF DEBUG
+		if (dbgDrawNormal)		
+		{
+			glColor4f(0.f, 1.f, 0.f, 1.f);
+			glDisable(GL_STENCIL_TEST);
 			glBegin(GL_LINES);
+		}						
+#endif							// ENDIF
 
-			// The vector containg lines that should cast shadow
-			std::vector<Line*> castLines;
-
-			for (unsigned int i=0; i<casters.size(); i++)
+		for (unsigned int i=0; i<casters.size(); i++)
+		{
+			auto lines = casters[i]->shadowShape->lines;
 			{
-				auto lines = casters[i]->shadowShape->lines;
+				for (unsigned int i=0; i<lines.size(); i++)
 				{
-					for (unsigned int i=0; i<lines.size(); i++)
+					if ((pos-lines[i]->getMid(sc)).length() <= r)
 					{
-						if ((lpos-lines[i]->getMid()).length() <= r)
+						if (lines[i]->isFacing(pos, sc))
 						{
-							if (lines[i]->isFacing(lpos))
+							castLines.push_back(lines[i]);
+
+#ifdef _DEBUG									// IFDEF DEBUG
+							if (dbgDrawNormal)	
 							{
-								castLines.push_back(lines[i]);
+								glVertex2f(lines[i]->getP1(sc).x-pos.x, lines[i]->getP1(sc).y-pos.y);
+								glVertex2f(lines[i]->getP2(sc).x-pos.x, lines[i]->getP2(sc).y-pos.y);
 
-								glVertex2f(lines[i]->getP1().x-lpos.x, lines[i]->getP1().y-lpos.y);
-								glVertex2f(lines[i]->getP2().x-lpos.x, lines[i]->getP2().y-lpos.y);
-
-								glVertex2f(lines[i]->getMid().x-lpos.x, lines[i]->getMid().y-lpos.y);
-								glVertex2f(lines[i]->getNormalEnd().x-lpos.x, 
-										   lines[i]->getNormalEnd().y-lpos.y);
-							}
+								glVertex2f(lines[i]->getMid(sc).x-pos.x, lines[i]->getMid(sc).y-pos.y);
+								glVertex2f(lines[i]->getNormalEnd(sc).x-pos.x, 
+											lines[i]->getNormalEnd(sc).y-pos.y);
+							}					
+#endif											// ENDIF
 						}
 					}
 				}
 			}
-
-			glEnd();
-			
-
-			
-			// Now we need to render the light.
-			
-			glColor4ub(255,255,255,255);
-			glEnable(GL_TEXTURE_2D);
-
-			if (useMultShader)
-			{
-				glActiveTexture(GL_TEXTURE1);
-				glBindTexture(GL_TEXTURE_2D, texID);
-
-				glUseProgram(shader->getProgram());
-			}
-
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, it->second->lTex);
-
-			glBegin(GL_QUADS);
-				glVertex2f(-r, -r);
-				glTexCoord2i(0,0);
-
-				glVertex2f(r, -r);
-				glTexCoord2i(1,0);
-
-				glVertex2f(r, r);
-				glTexCoord2i(1,1);
-
-				glVertex2f(-r, r);
-				glTexCoord2i(0,1);
-			glEnd();
-
-			glUseProgram(0);
-
-			// The following renders the shadows casted by this light.
-
-			// THIS NEEDS TO BE RENDERED ONTO A SEPARATE FRAMEBUFFER, AND THEN
-			// RENDERED TO THE MAIN FRAMEBUFFER AS THE LAST STEP OF THE 
-			// ALGORITHM. SOME SWEET BLEND FUNC MUST BE UTILIZED. ALSO
-			// SOME SWEET SHADER HAS TO BE USED IN ORDER TO MAKE THE DARKNESS
-			// AND LIGHT COLORS CUSTOMIZEABLE.
-
-			continue;
-
-			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, shadowFBO);
-
-			glDisable(GL_TEXTURE_2D);
-			glColor4ub(0,0,0,255);
-			for (unsigned int i=0; i<castLines.size(); i++)
-			{
-				Vec2 v1 = (lpos-castLines[i]->getP1());
-				Vec2 v2 = (lpos-castLines[i]->getP2());
-				float a1 = v1.angleBetween(Vec2(1.f,0.f));
-				float a2 = v2.angleBetween(Vec2(1.f,0.f));
-
-				glBegin(GL_QUADS);
-					glVertex2f(-v1.x, -v1.y);
-					glVertex2f(-v2.x, -v2.y);
-
-					v1 += Vec2(cosf(a1*(M_PI/180.f)), sinf(a1*(M_PI/180.f))) * r;
-					v2 += Vec2(cosf(a2*(M_PI/180.f)), sinf(a2*(M_PI/180.f))) * r;
-
-
-					
-					glVertex2f(-v2.x, -v2.y);
-					glVertex2f(-v1.x, -v1.y);
-				glEnd();
-			}
-			glEnable(GL_TEXTURE_2D);
-
-			glPopMatrix();
 		}
 
-		return;
-		// Render the shadow FBO
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, shadowFBO);
-		glBindTexture(GL_TEXTURE_2D, 0);
+#ifdef _DEBUG					// IFDEF DEBUG
+		if (dbgDrawNormal)		
+		{
+			glEnd();
+			glEnable(GL_STENCIL_TEST);
+			glColor4f(color.r, color.g, color.b, 1.f);
+		}						
+#endif							// ENDIF
 
-		glMatrixMode(GL_PROJECTION);
-		glPushMatrix();
-		glLoadIdentity();
+		for (unsigned int i=0; i<castLines.size(); i++)
+		{
+			Vec2 v1 = (pos-castLines[i]->getP1(sc)),
+				 v2 = (pos-castLines[i]->getP2(sc));
+			float a1 = v1.angleBetween(Vec2(1.f,0.f)),
+				  a2 = v2.angleBetween(Vec2(1.f,0.f));
 
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		glLoadIdentity();
+			glBegin(GL_QUADS);
+				glVertex2f(-v1.x, -v1.y);
+				glVertex2f(-v2.x, -v2.y);
 
-		glPushAttrib(GL_VIEWPORT_BIT);
-		glViewport(0,0,800,600);
+				v1 += Vec2( cosf(a1*((float)M_PI/180.f)), 
+							sinf(a1*((float)M_PI/180.f))) * (float)r * 100.f;
+				v2 += Vec2( cosf(a2*((float)M_PI/180.f)), 
+							sinf(a2*((float)M_PI/180.f))) * (float)r * 100.f;
 
-		glOrtho(0, 800, 0, 600, 0, 1);
+				glVertex2f(-v2.x, -v2.y);
+				glVertex2f(-v1.x, -v1.y);
+			glEnd();
+		}
 
-		glDisable(GL_TEXTURE_2D);
-		glColor4ub(255,0,0,255);
-		glBegin(GL_QUADS);
-			glVertex2f(0.f, 0.f);
-			glVertex2f(800.f, 0.f);
-			glVertex2f(800.f, 600.f);
-			glVertex2f(0.f, 600.f);
-		glEnd();
+		glColor4f(1.f, 1.f, 1.f, 1.f);
 		glEnable(GL_TEXTURE_2D);
 
-		glPopAttrib();
-
-		glMatrixMode(GL_PROJECTION);
-		glPopMatrix();
-		glMatrixMode(GL_MODELVIEW);
-		glPopMatrix();
-		
-		glBindTexture(GL_TEXTURE_2D, shadowTex);
-
-		glBegin(GL_QUADS);
-			glVertex2f(0.f, 0.f);
-			glTexCoord2i(0,0);
-			glVertex2f(800.f, 0.f);
-			glTexCoord2i(1,0);
-			glVertex2f(800.f,600.f);
-			glTexCoord2i(1,1);
-			glVertex2f(0.f, 600.f);
-			glTexCoord2i(0,1);
-		glEnd();
+		glPopMatrix();				// Shadows
 	}
-	*/
 }

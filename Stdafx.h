@@ -26,16 +26,3 @@
 #include FT_FREETYPE_H
 
 #include "png.h"
-
-namespace Pim
-{
-	namespace Quality
-	{
-		typedef enum Quality
-		{
-			LOW,
-			MED,
-			HIGH,
-		};
-	}
-}

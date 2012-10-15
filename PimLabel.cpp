@@ -10,9 +10,10 @@ namespace Pim
 	{
 		PimAssert(pfont, "Error: cannot pass NULL-font!");
 
-		anchor = Vec2(0.5f, 0.5f);
-		scale  = Vec2(1.f, 1.f);
-		color  = Color(1.f, 1.f, 1.f, 1.f);
+		fontOwner	= false;
+		anchor		= Vec2(0.5f, 0.5f);
+		scale		= Vec2(1.f, 1.f);
+		color		= Color(1.f, 1.f, 1.f, 1.f);
 		linePadding = 0;
 
 		font = pfont;
@@ -21,9 +22,10 @@ namespace Pim
 	{
 		PimAssert(pfont, "Error: cannot pass NULL-font!");
 
-		anchor = Vec2(0.5f, 0.5f);
-		scale  = Vec2(1.f, 1.f);
-		color  = Color(1.f, 1.f, 1.f, 1.f);
+		fontOwner	= false;
+		anchor		= Vec2(0.5f, 0.5f);
+		scale		= Vec2(1.f, 1.f);
+		color		= Color(1.f, 1.f, 1.f, 1.f);
 		linePadding = 0;
 
 		font = pfont;
@@ -95,11 +97,11 @@ namespace Pim
 	void Label::setTextAlignment(Text::TextAlignment align)
 	{
 		if (align == Text::TEXT_LEFT) 
-			anchor = Vec2(1.f, 0.5);
+			anchor = Vec2(0.f, 0.5);
 		else if (align == Text::TEXT_CENTER)
 			anchor = Vec2(0.5f, 0.5f);
 		else if (align == Text::TEXT_RIGHT)
-			anchor = Vec2(0.f, 0.5f);
+			anchor = Vec2(1.f, 0.5f);
 	}
 	void Label::setLinePadding(int pad)
 	{
@@ -136,7 +138,7 @@ namespace Pim
 	void Label::draw()
 	{
 		// Update view matrix
-		Vec2 fac = GameControl::getSingleton()->forcedCoordinateFactor();
+		Vec2 fac = GameControl::getSingleton()->coordinateFactor();
 
 		Vec2 pos;
 		if (allowMidPixelPosition)
@@ -150,17 +152,16 @@ namespace Pim
 		// Push the attributes we're changing
 		glPushAttrib(GL_LIST_BIT | GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TRANSFORM_BIT);
 
-		// scale and apply color
-		fac = GameControl::getSingleton()->windowScale();
-		glScalef(scale.x * fac.x, scale.y * fac.y, 1.f);
-		glColor4f(color.r, color.g, color.b, color.a);
-
 		glTranslatef(
 			position.x, 
 			position.y  + dim.y/2 - font->size, 
 			0.f);
 		glRotatef(rotation, 0.f, 0.f, 1.f);
-		//glTranslatef(-(anchor.x*dim.x),(anchor.y*dim.y), 0.f);
+
+		// scale and apply color
+		fac = GameControl::getSingleton()->windowScale();
+		glScalef(scale.x * fac.x, scale.y * fac.y, 1.f);
+		glColor4f(color.r, color.g, color.b, color.a);
 
 		glListBase(font->listBase);
 
@@ -193,5 +194,11 @@ namespace Pim
 		std::cout<<"Hierarchy error: Label should not be child of a SpriteBatchNode!\n";
 #endif
 		draw();
+	}
+
+	void Label::giveOwnershipOfFont()
+	{
+		PimAssert(font, "Error: No font to take ownership over.");
+		fontOwner = true;
 	}
 }

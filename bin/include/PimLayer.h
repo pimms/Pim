@@ -54,7 +54,7 @@ namespace Pim
 
 		void setImmovableLayer(bool immov);
 
-		void draw();
+		virtual void draw();
 
 		const Color getColor() { return color; }
 
@@ -78,10 +78,10 @@ namespace Pim
 		void setCastShadows(bool shadows);
 		// Set the color of the darkest areas (unlit areas)
 		void setLightingUnlitColor(Color color);
-		// Set the current shadow technique (hard, soft, blur)
-		void setShadowTechnique(ShadowTechnique::ShadowTechnique tech);
-		// Set wether or not to multiply the lights upon rendering
-		void setLightMultiplicationShaderActive(bool);
+		// Set the transparency of the lights (0.0 - 1.0)
+		void setLightAlpha(float a);
+		// Set whether or not debug drawing of normals and edges is enabled
+		void setShadowcasterDebugDraw(bool);
 		// Return the lighting system
 		LightingSystem* getLightingSystem();
 

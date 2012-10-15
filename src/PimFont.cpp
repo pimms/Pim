@@ -6,11 +6,12 @@
 
 namespace Pim
 {
-	Font::Font(std::string font, int psize)
+	Font::Font(std::string font, int psize, bool bilinearFiltering)
 	{
 		charWidth	= NULL;
 		tex			= NULL;
 		size		= psize;
+		filter		= bilinearFiltering;
 		init(font, size);
 	}
 	Font::~Font(void)
@@ -108,7 +109,7 @@ namespace Pim
 	}
 	void Font::createDisplayList(FT_Face face, char ch)
 	{
-		if (FT_Load_Glyph(face, FT_Get_Char_Index(face, ch), FT_LOAD_DEFAULT))
+		if (FT_Load_Glyph(face, FT_Get_Char_Index(face, ch), FT_LOAD_DEFAULT | FT_LOAD_MONOCHROME))
 		{
 			MessageBox(
 				NULL,
@@ -137,8 +138,18 @@ namespace Pim
 		}
 
 		glBindTexture(GL_TEXTURE_2D, tex[ch]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		if (filter)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		}
+		else 
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		}
+
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
 			GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, expandedData);
 

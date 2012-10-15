@@ -72,7 +72,14 @@ namespace Pim
 		~LightDef()
 		{
 			if (lTex)
+			{
 				glDeleteTextures(1, &lTex);
+			}
+		}
+
+		GLuint getTexID()
+		{
+			return lTex;
 		}
 
 		
@@ -88,7 +95,7 @@ namespace Pim
 
 		short	lightType;		// 0=flat, 1=smooth
 
-		GLuint lTex;
+		GLuint lTex;			// Texture containing the light itself
 	};
 
 	// Flat lights have the same color in the radius area, and a "falloff" zone
@@ -119,29 +126,23 @@ namespace Pim
 		int innerPasses;
 	};
 
-	namespace ShadowTechnique
-	{
-		typedef enum ShadowTechnique
-		{
-			HARD,		// UNIMPLEMENTED
-			BLUR,		// UNIMPLEMENTED
-			SOFT,		// UNIMPLEMENTED
-		};
-	}
-
 	class LightingSystem
 	{
 	public:
 
-	private:
+	protected:
 		// Only layers can instantiate lighting systems. Call layer->createLightingSystem().
 		friend class Layer;
 
 		LightingSystem(Layer*, Vec2 resolution);
 		LightingSystem(const LightingSystem &o) {}
 		~LightingSystem();
+		
+		void loadShaders();	
 
-		void loadShaders();
+		// Called by layers - updates the uniform in the shader
+		void setUnlitColor(Color c);
+		void setLightAlpha(float a);
 
 		// Adds a light, and renders a light texture based on the data in light def
 		void addLight(GameNode *node, LightDef *lDef);
@@ -150,17 +151,18 @@ namespace Pim
 		void createSmoothLightTexture(LightDef *lDef);
 		void createFlatLightTexture(LightDef *lDef);
 
-		void renderLightTexture();		// The main rendering called every frame
-		void _renderLights();			// Merely a subroutine
+		virtual void renderLightTexture();		// The main rendering called every frame
+		virtual void _renderLights();			// Merely a subroutine
+		virtual void _renderShadows(LightDef *d, GameNode *n, Vec2 &p, Vec2 &rResSc);
 
 		Layer									*parent;
-		ShadowTechnique::ShadowTechnique		tech;
 
 		std::map<GameNode*,LightDef*>			lights;
 		std::vector<Sprite*>					casters;
 
 		bool									castShadow;
-		bool									useMultShader;
+
+		bool									dbgDrawNormal;	// Casting edges and normals
 
 		Vec2									resolution;		// Shadowtex resolution
 
@@ -168,6 +170,7 @@ namespace Pim
 
 		// OpenGL
 		GLuint			frameBuffer;
+		GLuint			renderBuffer;
 		GLuint			texID;
 		Shader			*shader;
 	};

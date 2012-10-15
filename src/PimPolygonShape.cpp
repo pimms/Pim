@@ -35,38 +35,38 @@ namespace Pim
 
 	}
 
-	Vec2 Line::getP1()
+	Vec2 Line::getP1(Vec2 &sc)
 	{
-		return p1.rotateAroundPoint(shape->parent->getLayerPosition(),
+		return (p1*sc).rotateAroundPoint(shape->parent->getLayerPosition(),
 			shape->parent->rotation);
 	}
-	Vec2 Line::getP2()
+	Vec2 Line::getP2(Vec2 &sc)
 	{
-		return p2.rotateAroundPoint(shape->parent->getLayerPosition(),
+		return (p2*sc).rotateAroundPoint(shape->parent->getLayerPosition(),
 			shape->parent->rotation);
 	}
-	Vec2 Line::getNormal()
+	Vec2 Line::getNormal(Vec2 &sc)
 	{
 		return normal.rotateDegrees(shape->parent->rotation);
 	}
-	Vec2 Line::getNormalEnd()
+	Vec2 Line::getNormalEnd(Vec2 &sc)
 	{
 		return (mid+normal*10.f).rotateAroundPoint(shape->parent->getLayerPosition(),
 			shape->parent->rotation);
 	}
-	Vec2 Line::getMid()
+	Vec2 Line::getMid(Vec2 &sc)
 	{
-		return mid.rotateAroundPoint(shape->parent->getLayerPosition(),
+		return (mid*sc).rotateAroundPoint(shape->parent->getLayerPosition(),
 			shape->parent->rotation);
 	}
 
-	float Line::relativeDot(Vec2 &vec)
+	float Line::relativeDot(Vec2 &vec, Vec2 &sc)
 	{
-		return getNormal().dot(vec-getMid());
+		return getNormal().dot(vec-getMid(sc));
 	}
-	bool Line::isFacing(Vec2 &vec)
+	bool Line::isFacing(Vec2 &vec, Vec2 &sc)
 	{
-		return relativeDot(vec) >= 0.f;
+		return relativeDot(vec, sc) >= 0.f;
 	}
 
 

@@ -55,6 +55,13 @@ namespace Pim
 		// to tell you if you're doing it wrong.
 		void batchDraw();
 
+		// WARNING: Calling this method WILL crash your app if the font used
+		// by this label is used anywhere else. The font will be deleted
+		// with this label. You will not have to manage the font yourself,
+		// but be ridiculously careful.
+		// The font must be set BEFORE calling this method.
+		void giveOwnershipOfFont();
+
 
 		// Font's are quite heavy to create, so you should only have a few font objects
 		// alive in your app at any given time. If you need the same font with 
@@ -73,5 +80,7 @@ namespace Pim
 
 		std::vector<std::string>		lines;
 		std::vector<int>				lineWidth;
+
+		bool							fontOwner;
 	};
 }
