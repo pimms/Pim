@@ -27,6 +27,8 @@ namespace Pim
 
 		colGroup				= 1|2|4|8;
 		colFilter				= 1|2|4|8;
+
+		userData				= NULL;
 	}
 	GameNode::~GameNode()
 	{

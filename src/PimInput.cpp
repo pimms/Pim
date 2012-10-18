@@ -174,7 +174,7 @@ namespace Pim
 				ml.erase(ml.begin() + i);
 	}
 	
-	// DO NOT CALL THESE METHODS MANUALLY
+	// DO NOT CALL THESE METHODS MANUALLY. I'M SERIOUS YO. DON'T.
 	void Input::_lostFocus()
 	{
 		// TODO: Dispatch a NULL message to all

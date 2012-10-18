@@ -31,6 +31,11 @@ namespace Pim
 		font = pfont;
 		setText(ptext);
 	}
+	Label::~Label()
+	{
+		if (fontOwner)
+			delete font;
+	}
 
 	void Label::setFont(Font *pfont)
 	{
@@ -153,8 +158,8 @@ namespace Pim
 		glPushAttrib(GL_LIST_BIT | GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TRANSFORM_BIT);
 
 		glTranslatef(
-			position.x, 
-			position.y  + dim.y/2 - font->size, 
+			pos.x, 
+			pos.y  + dim.y/2 - font->size, 
 			0.f);
 		glRotatef(rotation, 0.f, 0.f, 1.f);
 
@@ -198,7 +203,7 @@ namespace Pim
 
 	void Label::giveOwnershipOfFont()
 	{
-		PimAssert(font, "Error: No font to take ownership over.");
+		PimAssert(font != NULL, "Error: No font to take ownership over.");
 		fontOwner = true;
 	}
 }

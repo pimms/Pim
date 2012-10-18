@@ -100,6 +100,10 @@ namespace Pim
 		// Layers scale their children.
 		Vec2			scale;
 
+		bool			immovable;
+
+		Color			color;
+
 	protected:
 		friend class GameControl;
 		friend class CollisionManager;
@@ -111,12 +115,10 @@ namespace Pim
 		void _topLevelNode();
 
 		bool			isTopLayer;
-		bool			immovable;
-
-		Color			color;
 
 		LightingSystem	*lightSys;
 
+		// DEPRECATED
 		std::vector<GameNode*> collisionNodes;
 	};
 

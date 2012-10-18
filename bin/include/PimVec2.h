@@ -70,6 +70,8 @@ namespace Pim
 		Rect() 
 			: x(0), y(0), width(0), height(0){}
 
+		bool contains(Pim::Vec2 &vec);
+
 		png_int_32 x, y, width, height;
 	};
 

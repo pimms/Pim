@@ -274,6 +274,9 @@ namespace Pim
 			return NULL;
 		}
 
+		if (singleton->shaders.count(nm))
+			delete singleton->shaders[nm];
+
 		singleton->shaders[nm] = shader;
 		return shader;
 	}

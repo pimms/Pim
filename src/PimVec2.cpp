@@ -3,7 +3,15 @@
 
 namespace Pim
 {
+	////		RECT			////
+	bool Rect::contains(Pim::Vec2 &vec)
+	{
+		return (vec.x >= x && vec.x <= x+width &&
+				vec.y >= y && vec.y <= y+height);
+	}
 
+
+	////		VEC2			////
 	Vec2::Vec2(float px, float py)
 	{
 		x=px; y=py;

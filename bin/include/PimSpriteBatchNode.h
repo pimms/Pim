@@ -26,13 +26,13 @@ namespace Pim
 	{
 	public:
 		SpriteBatchNode(std::string file);
+		SpriteBatchNode() {}
 		~SpriteBatchNode(void);
 
 		void draw();
 		void batchDraw();
 
 	private:
-		SpriteBatchNode() {}
 	};
 
 }

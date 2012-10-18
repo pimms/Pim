@@ -20,10 +20,10 @@ namespace Pim
 	class Label : public GameNode
 	{
 	public:
-		// IMPORTANT: Must pass a non-nil value as Font *pfont!
 		Label(Font *pfont);
-		// IMPORTANT: Must pass a non-nil value as Font *pfont!
 		Label(Font *pfont, std::string ptext);
+		~Label();
+
 		// IMPORTANT: Must pass a non-nil value as Font *pfont!
 		void setFont(Font *pfont);
 

@@ -47,6 +47,10 @@ namespace Pim
 				}
 				break;
 
+			case WM_COMMAND:
+				std::cout<< "WM_COMMAND\n";
+				return 0;
+
 			case WM_CLOSE:
 				PostQuitMessage(0);
 				return 0;
@@ -101,12 +105,32 @@ namespace Pim
 
 		singleton		= this;
 		layer			= NULL;
+
+		// Get the module path
+		char path[260] = { '\0' };
+		GetModuleFileName(NULL, path, 260);
+
+		int lastSlash = 0;
+		for (int i=0; i<260; i++)
+			if (path[i] == '\\' || path[i] == '/')
+				lastSlash = i;
+			
+		for (int i=lastSlash+1; i<260; i++)
+			path[i] = '\0';
+
+		modulePath = path;
+		std::cout<<"Working directory:\n" <<modulePath <<"\n";
 	}
 	GameControl::~GameControl()
 	{
 		singleton = NULL;
 
 		if (renderWindow)	delete renderWindow;
+	}
+
+	std::string GameControl::getModulePath()
+	{
+		return singleton->modulePath;
 	}
 
 	void GameControl::go(Layer *l, WinStyle::CreationData data)
@@ -269,20 +293,17 @@ namespace Pim
 				}
 			}
 		
-			if (hasFocus)
-			{
-				// Dispatch key and mouse events 
-				Input::getSingleton()->_dispatch();
+			// Dispatch key and mouse events 
+			Input::getSingleton()->_dispatch();
 
-				// Dispatch update calls
-				dispatchPrerender();
+			// Dispatch update calls
+			dispatchPrerender();
 
-				// Render the frame - post render calls are made by renderWindow
-				renderWindow->renderFrame();
+			// Render the frame - post render calls are made by renderWindow
+			renderWindow->renderFrame();
 
-				// Dispatch postrender calls
-				dispatchPostrender();
-			}
+			// Dispatch postrender calls
+			dispatchPostrender();
 		}
 	}
 	void GameControl::dispatchPrerender()

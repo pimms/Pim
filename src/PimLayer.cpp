@@ -176,7 +176,7 @@ namespace Pim
 
 	void Layer::_topLevelNode()
 	{
-		PimAssert(!topLayer, "Error: another top layer already exist!");
+		PimAssert(topLayer == NULL, "Error: another top layer already exist!");
 		isTopLayer	= true;
 		topLayer	= this;
 	}

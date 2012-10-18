@@ -12,6 +12,11 @@ namespace Pim
 	{
 		// Using Pim::Sprite's init method
 	}
+	SpriteBatchNode::SpriteBatchNode()
+		: Sprite()
+	{
+		// Using Pim::Sprite's default init method
+	}
 	SpriteBatchNode::~SpriteBatchNode(void)
 	{
 		// Using Pim::Sprite's destruction method

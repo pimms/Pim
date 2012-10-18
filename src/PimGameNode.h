@@ -99,6 +99,16 @@ namespace Pim
 		Vec2					lightPosition;	// Relative to position
 		std::vector<GameNode*>	children;		// Children
 
+
+		// Use this string to identify nodes. It is not used internally by Pim
+		// at all, and is for your own reference only.
+		std::string				identifier;
+
+		// Use this pointer to reference objects outside of the functionality
+		// Pim provides. This pointer is not used internally, and is for your
+		// own reference only.
+		void					*userData;
+
 		// If this is false, nodes will be placed at the integer equivalent of their position.
 		// For instance, if the renderResolution of the window is 10x10, and the nodes position
 		// is [3.4,2.1], the ACTUAL position of the node will be [3,2]. 

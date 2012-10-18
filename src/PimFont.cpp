@@ -1,4 +1,6 @@
 #include "Stdafx.h"
+#include <sstream>
+
 #include "PimFont.h"
 #include "PimLabel.h"
 #include "PimGameControl.h"
@@ -8,6 +10,8 @@ namespace Pim
 {
 	Font::Font(std::string font, int psize, bool bilinearFiltering)
 	{
+		font = Pim::GameControl::getModulePath().append(font);
+
 		charWidth	= NULL;
 		tex			= NULL;
 		size		= psize;
@@ -49,6 +53,8 @@ namespace Pim
 		error = FT_New_Face(libFT, font.c_str(), 0, &face);
 		if (error == FT_Err_Unknown_File_Format)
 		{
+			FT_Done_FreeType(libFT);
+
 			std::string errstr = "Could not recognize format of file:\n";
 			errstr.append(font);
 			MessageBox(
@@ -60,7 +66,14 @@ namespace Pim
 		} 
 		else if (error) 
 		{
-			std::string errstr = "Unkown error opening file:\n";
+			FT_Done_FreeType(libFT);
+
+			std::stringstream ss;
+			ss << error;
+
+			std::string errstr = "Unkown error opening file (";
+			errstr.append( ss.str() );
+			errstr.append("):\n");
 			errstr.append(font);
 			MessageBox(
 				NULL,

@@ -101,8 +101,6 @@ namespace Pim
 			// It sets default values when there are none.
 			void prepare()
 			{
-				coordinateSystem = resolution;
-
 				if (forcedAspectRatio && aspectRatio == 0.f)
 					aspectRatio = resolution.x / resolution.y;
 			}

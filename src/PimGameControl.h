@@ -29,6 +29,7 @@ namespace Pim
 					{ return Vec2((float)getWindowWidth(),(float)getWindowHeight()); }
 		static const WinStyle::CreationData getCreationData()
 					{ return singleton->winData; }
+		static std::string getModulePath();	
 
 		GameControl();
 		~GameControl();
@@ -82,7 +83,9 @@ namespace Pim
 		RenderWindow			*renderWindow;
 		Layer					*layer;
 
-		std::vector<GameNode*>		frameListeners;
+		std::vector<GameNode*>	frameListeners;
+
+		std::string				modulePath;
 
 		// Used to calculate delta time
 		long long unsigned int ticks;

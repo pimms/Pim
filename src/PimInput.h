@@ -27,7 +27,10 @@ namespace Pim
 	{
 		typedef enum KeyCode
 		{
+			K_BACKSPACE = 8,
 			K_ENTER = 13,
+			K_LCTRL = 17,
+			K_ESC = 27,
 			K_SPACE = 32,
 			K_LEFT = 37,K_UP,K_RIGHT,K_DOWN,
 			K_0 = 48,K_1,K_2,K_3,K_4,K_5,K_6,K_7,K_8,K_9,
