@@ -26,7 +26,7 @@ namespace Pim
 	{
 	public:
 		SpriteBatchNode(std::string file);
-		SpriteBatchNode() {}
+		SpriteBatchNode();
 		~SpriteBatchNode(void);
 
 		void draw();

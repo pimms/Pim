@@ -53,7 +53,7 @@ namespace Pim
 	float Vec2::angleBetween(Vec2 &other)
 	{
 		float dot = normalize().dot(other.normalize());
-		float angle = acosf(dot) * (180.f / 3.14f);
+		float angle = acosf(dot) * (180.f / M_PI);
 
 		Vec2 diff = Vec2(x,y) - other;
 		if (diff.dot(Vec2(0.f,1.f)) < 0.f)

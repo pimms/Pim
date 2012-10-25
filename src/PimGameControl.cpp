@@ -8,6 +8,7 @@
 #include "PimLayer.h"
 #include "PimShaderManager.h"
 #include "PimCollisionManager.h"
+#include "PimAudioManager.h"
 
 #include <iostream>
 #include <ctime>
@@ -140,12 +141,13 @@ namespace Pim
 			winData = data;
 			winData.prepare();
 
+			renderWindow = new RenderWindow(data);
+			renderWindow->createWindow(data);
+
 			Input::instantiateSingleton();
 			ShaderManager::instantiateSingleton();
 			CollisionManager::instantiateSingleton();
-
-			renderWindow = new RenderWindow(data);
-			renderWindow->createWindow(data);
+			AudioManager::instantiateSingleton();
 
 #ifdef _DEBUG
 		std::cout<<"\n[OpenGL version " <<glGetString(GL_VERSION) <<"]\n\n"; 
@@ -175,6 +177,7 @@ namespace Pim
 		Input::clearSingleton();
 		ShaderManager::clearSingleton();
 		CollisionManager::clearSingleton();
+		AudioManager::clearSingleton();
 
 		renderWindow->killWindow();
 	}

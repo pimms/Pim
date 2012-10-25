@@ -4,8 +4,6 @@
 
 #include <Windows.h>
 #include <gl/GL.h>
-#include <gl/GLU.h>
-#include <GL/GLAux.h>
 
 #include <string>
 
