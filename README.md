@@ -72,8 +72,8 @@ And you're good to go!
 
 The following snippet will quickly throw an image up to the screen:
 
->#include "Pim.h"			// Include the Pim library
->#include <math.h>			// need cosf and sinf
+>\#include "Pim.h"			// Include the Pim library
+>\#include <math.h>			// need cosf and sinf
 >
 >class MyPimLayer : public Pim::Layer 					// Our Layer-class
 >{
