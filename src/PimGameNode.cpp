@@ -23,10 +23,10 @@ namespace Pim
 		dirtyZOrder				= false;
 
 		colShape				= NULL;
-		dbgColShape				= false;
+		//dbgColShape				= false;
 
-		colGroup				= 1|2|4|8;
-		colFilter				= 1|2|4|8;
+		//colGroup				= 1|2|4|8;
+		//colFilter				= 1|2|4|8;
 
 		userData				= NULL;
 	}
@@ -190,7 +190,7 @@ namespace Pim
 
 		glRotatef(rotation, 0.f, 0.f, 1.f);
 
-		// Debug draw the collison shape if required
+		/* THE INTEGRATED COLLISION DETECTION LIBRARY IS DEPRECATED
 		if (colShape && dbgColShape)
 		{
 			glPushMatrix();
@@ -198,6 +198,7 @@ namespace Pim
 			colShape->debugDraw();
 			glPopMatrix();
 		}
+		*/
 
 		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)
@@ -221,7 +222,7 @@ namespace Pim
 
 		glRotatef(rotation, 0.f, 0.f, 1.f);
 
-		// Debug draw the collison shape if required
+		/* THE INTEGRATED COLLISION DETECTION LIBRARY IS DEPRECATED
 		if (colShape && dbgColShape)
 		{
 			glPushMatrix();
@@ -229,6 +230,7 @@ namespace Pim
 			colShape->debugDraw();
 			glPopMatrix();
 		}
+		*/
 			
 		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)
@@ -246,6 +248,7 @@ namespace Pim
 		zOrder = z;
 	}
 
+	/*
 	void GameNode::setCollisionShape(Vec2 vertices[], int vertexCount)
 	{
 		if (colShape)
@@ -262,4 +265,5 @@ namespace Pim
 	{
 		return CollisionManager::validateMovement(this, o, n);
 	}
+	*/
 }

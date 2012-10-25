@@ -189,9 +189,9 @@ namespace Pim
 		if (shadowShape && dbgShadowShape)
 			shadowShape->debugDraw();
 
-		// Debug draw the collison shape if required
-		if (colShape && dbgColShape)
-			colShape->debugDraw();
+		// THE INTEGRATED COLLISION DETECTION LIBRARY IS DEPRECATED
+		//if (colShape && dbgColShape)
+		//	colShape->debugDraw();
 
 		// Children are unaffected by their parent's scale. Restore.
 		glPopMatrix();
@@ -256,9 +256,9 @@ namespace Pim
 		if (shadowShape && dbgShadowShape)
 			shadowShape->debugDraw();
 
-		// Debug draw the collison shape if required
-		if (colShape && dbgColShape)
-			colShape->debugDraw();
+		// THE INTEGRATED COLLISION DETECTION LIBRARY IS DEPRECATED
+		//if (colShape && dbgColShape)
+		//	colShape->debugDraw();
 
 		// Children are unaffected by their parent's scale. Restore.
 		glPopMatrix();

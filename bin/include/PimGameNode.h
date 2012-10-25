@@ -89,9 +89,9 @@ namespace Pim
 
 
 		// Set the collision shape
-		void setCollisionShape(Vec2 vertices[], int vertexCount);
-		void setCollisionShapeDebugDraw(bool flag);
-		Vec2 validateMovement(Vec2 &oldPos, Vec2 &newPos);
+		//void setCollisionShape(Vec2 vertices[], int vertexCount);
+		//void setCollisionShapeDebugDraw(bool flag);
+		//Vec2 validateMovement(Vec2 &oldPos, Vec2 &newPos);
 
 
 		float					rotation;		// Rotation - relative to parent
@@ -117,9 +117,10 @@ namespace Pim
 		// Best practice: equal for layers and sprites.
 		bool					allowMidPixelPosition;
 
-		bool					dbgColShape;	// Debug draw the collision shape?
-		unsigned short			colGroup;		// The group of THIS node
-		unsigned short			colFilter;		// The groups this node can collide with
+		// The integrated collision detection library is deprecated.
+		//bool					dbgColShape;	// Debug draw the collision shape?
+		//unsigned short			colGroup;		// The group of THIS node
+		//unsigned short			colFilter;		// The groups this node can collide with
 
 	protected:
 		friend class CollisionManager;

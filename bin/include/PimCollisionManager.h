@@ -1,5 +1,11 @@
 #pragma once
 
+/*		
+
+// THE INTEGRATED COLLISION DETECTION LIBRARY IS DEPRECATED.
+// THE INTEGRATED COLLISION DETECTION LIBRARY IS DEPRECATED.
+// THE INTEGRATED COLLISION DETECTION LIBRARY IS DEPRECATED.
+
 namespace Pim
 {
 	// forward declarations
@@ -35,3 +41,4 @@ namespace Pim
 		static CollisionManager *singleton;
 	};
 }
+*/

@@ -146,7 +146,7 @@ namespace Pim
 
 			Input::instantiateSingleton();
 			ShaderManager::instantiateSingleton();
-			CollisionManager::instantiateSingleton();
+			//CollisionManager::instantiateSingleton();		// TBI
 			AudioManager::instantiateSingleton();
 
 #ifdef _DEBUG
@@ -176,7 +176,7 @@ namespace Pim
 
 		Input::clearSingleton();
 		ShaderManager::clearSingleton();
-		CollisionManager::clearSingleton();
+		//CollisionManager::clearSingleton();	// TBI
 		AudioManager::clearSingleton();
 
 		renderWindow->killWindow();

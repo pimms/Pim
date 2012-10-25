@@ -1,3 +1,9 @@
+/*
+
+// THE INTEGRATED COLLISION DETECTION LIBRARY IS DEPRECATED.
+// THE INTEGRATED COLLISION DETECTION LIBRARY IS DEPRECATED.
+// THE INTEGRATED COLLISION DETECTION LIBRARY IS DEPRECATED.
+
 #include "Stdafx.h"
 #include "PimCollisionManager.h"
 #include "PimGameControl.h"
@@ -174,3 +180,5 @@ namespace Pim
 		}
 	}
 } 
+
+*/

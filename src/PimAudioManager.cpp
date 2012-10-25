@@ -12,6 +12,7 @@ namespace Pim
 
 	AudioManager::AudioManager()
 	{
+		/* // Don't do anything. It's not ready yet.
 		HWND hWnd = *Pim::GameControl::getSingleton()->getRenderWindow()->getHwnd();
 
 		m_DirectSound = 0;
@@ -46,6 +47,7 @@ namespace Pim
 
 		loadWav("rh.wav", &m_SecondaryBuffer1);
 		playWav();
+		*/
 	}
 	AudioManager::~AudioManager()
 	{
