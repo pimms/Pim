@@ -24,7 +24,7 @@ project use the updated header files and binaries.
 ## 2. Setting the PIM_HOME variable ##
 
 Start off by opening the command line (open cmd.exe), and type the following command:
->setx PIM_HOME  <path\to\Pim>
+>setx PIM_HOME  [somedirectory]\Pim\bin
 
 The path must be the parent folder of the "include" and the "lib" folders, which by default
 is located in the "bin" directory. $(PIM_HOME)\include should be the folder of the header files.
