@@ -27,6 +27,10 @@ namespace Pim
 		// Max volume: 1.0
 		void setVolume(float volume);
 
+		// all left: -1.0
+		// all right: 1.0
+		void setPan(float pan);
+
 		// Retreive the buffer. Try not to do anything stupid with it.
 		IDirectSoundBuffer8* getBuffer() { return buffer; }
 

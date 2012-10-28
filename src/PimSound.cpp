@@ -54,6 +54,10 @@ namespace Pim
 
 	void Sound::setVolume(float vol)
 	{
-		buffer->SetVolume(DSBVOLUME_MIN * (1.f-vol));
+		buffer->SetVolume(-7000 * (1.f-vol));
+	}
+	void Sound::setPan(float pan)
+	{
+		buffer->SetPan(pan * 3500);
 	}
 }
