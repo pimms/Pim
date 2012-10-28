@@ -21,3 +21,6 @@
 #include "PimCollisionManager.h"
 #include "PimFont.h"
 #include "PimLabel.h"
+#include "PimRenderWindow.h"
+#include "PimAudioManager.h"
+#include "PimSound.h"

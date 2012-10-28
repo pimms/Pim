@@ -3,6 +3,7 @@
 #include "PimGameControl.h"
 #include "PimException.h"
 #include "PimRenderWindow.h"
+#include "PimSound.h"
 
 
 namespace Pim
@@ -10,49 +11,22 @@ namespace Pim
 	
 	AudioManager* AudioManager::singleton = NULL;
 
+	AudioManager* AudioManager::getSingleton()
+	{
+		return singleton;
+	}
+
 	AudioManager::AudioManager()
 	{
-		/* // Don't do anything. It's not ready yet.
-		HWND hWnd = *Pim::GameControl::getSingleton()->getRenderWindow()->getHwnd();
-
 		m_DirectSound = 0;
-		m_PrimaryBuffer = 0;
-		m_SecondaryBuffer1 = 0;
 
-		DSBUFFERDESC bufferDesc;
-		WAVEFORMATEX waveFormat;
+		HWND hWnd = *Pim::GameControl::getSingleton()->getRenderWindow()->getHwnd();
 
 		DirectSoundCreate8(NULL, &m_DirectSound, NULL);
 		m_DirectSound->SetCooperativeLevel(hWnd, DSSCL_PRIORITY);
-
-		bufferDesc.dwSize = sizeof(DSBUFFERDESC);
-		bufferDesc.dwFlags = DSBCAPS_PRIMARYBUFFER | DSBCAPS_CTRLVOLUME;
-		bufferDesc.dwBufferBytes = 0;
-		bufferDesc.dwReserved = 0;
-		bufferDesc.lpwfxFormat = NULL;
-		bufferDesc.guid3DAlgorithm = GUID_NULL;
-
-		m_DirectSound->CreateSoundBuffer(&bufferDesc, &m_PrimaryBuffer, NULL);
-
-		waveFormat.wFormatTag = WAVE_FORMAT_PCM;
-		waveFormat.nSamplesPerSec = 44100;
-		waveFormat.wBitsPerSample = 16;
-		waveFormat.nChannels = 2;
-		waveFormat.nBlockAlign = (waveFormat.wBitsPerSample/8) * waveFormat.nChannels;
-		waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
-		waveFormat.cbSize = 0;
-
-		m_PrimaryBuffer->SetFormat(&waveFormat);
-
-
-		loadWav("rh.wav", &m_SecondaryBuffer1);
-		playWav();
-		*/
 	}
 	AudioManager::~AudioManager()
 	{
-		if (m_PrimaryBuffer)
-			m_PrimaryBuffer->Release();
 		if (m_DirectSound)
 			m_DirectSound->Release();
 	}
@@ -73,7 +47,7 @@ namespace Pim
 		singleton = NULL;
 	}
 
-	bool AudioManager::loadWav(char *filename, IDirectSoundBuffer8 **secondaryBuffer)
+	bool AudioManager::loadWav(const char *filename, IDirectSoundBuffer8 **secondaryBuffer)
 	{
 		int error;
 		FILE *filePtr;
@@ -164,7 +138,7 @@ namespace Pim
  
 		// Set the buffer description of the secondary sound buffer that the wave file will be loaded onto.
 		bufferDesc.dwSize = sizeof(DSBUFFERDESC);
-		bufferDesc.dwFlags = DSBCAPS_CTRLVOLUME;
+		bufferDesc.dwFlags = DSBCAPS_CTRLVOLUME | DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLPAN;
 		bufferDesc.dwBufferBytes = waveFileHeader.dataSize;
 		bufferDesc.dwReserved = 0;
 		bufferDesc.lpwfxFormat = &waveFormat;
@@ -232,33 +206,6 @@ namespace Pim
 		// Release the wave data since it was copied into the secondary buffer.
 		delete [] waveData;
 		waveData = 0;
- 
-		return true;
-	}
-	bool AudioManager::playWav()
-	{
-		HRESULT result;
- 
-		// Set position at the beginning of the sound buffer.
-		result = m_SecondaryBuffer1->SetCurrentPosition(0);
-		if(FAILED(result))
-		{
-			return false;
-		}
- 
-		// Set volume of the buffer to 100%.
-		result = m_SecondaryBuffer1->SetVolume(-500);
-		if(FAILED(result))
-		{
-			return false;
-		}
- 
-		// Play the contents of the secondary sound buffer.
-		result = m_SecondaryBuffer1->Play(0, 0, 0);
-		if(FAILED(result))
-		{
-			return false;
-		}
  
 		return true;
 	}

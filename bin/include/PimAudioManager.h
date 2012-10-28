@@ -9,6 +9,7 @@ namespace Pim
 {
 	// Forward declarations
 	class GameControl;
+	class Sound;
 
 	// Structure used for wav files
 	struct WaveHeaderType
@@ -33,9 +34,11 @@ namespace Pim
 	class AudioManager
 	{
 	public:
+		static AudioManager* getSingleton();
 
 	private:
 		friend class GameControl;
+		friend class Sound;
 
 		AudioManager();
 		~AudioManager();
@@ -43,15 +46,11 @@ namespace Pim
 		static void instantiateSingleton();
 		static void clearSingleton();
 
-		bool loadWav(char *file, IDirectSoundBuffer8**);
+		bool loadWav(const char *file, IDirectSoundBuffer8**);
 		void shutdownWav(IDirectSoundBuffer8**);
-		bool playWav();
-
 
 		static AudioManager *singleton;
 
 		IDirectSound8 *m_DirectSound;
-		IDirectSoundBuffer *m_PrimaryBuffer;
-		IDirectSoundBuffer8 *m_SecondaryBuffer1;
 	};
 }
