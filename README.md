@@ -108,8 +108,8 @@ The following snippet will quickly throw an image up to the screen:
 >			Pim::GameControl *gc = new Pim::GameControl;	
 >				
 >			Pim::WinStyle::CreationData cd(		// The window describer
->				"My Pim App", 					// Window title
->				600, 4000, 						// Window resolution
+>				"Pim Application", 				// Window title
+>				600, 400, 						// Window resolution
 >				Pim::WinStyle::WINDOWED 		// Window style
 >				);
 >		
