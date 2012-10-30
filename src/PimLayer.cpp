@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "PimInternal.h"
 
 #include "PimLayer.h"
 #include "PimGameNode.h"

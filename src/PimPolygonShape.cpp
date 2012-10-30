@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+#include "PimInternal.h"
 
 #include "PimSprite.h"
 #include "PimVec2.h"

@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+#include "PimInternal.h"
 
 #include "PimSpriteBatchNode.h"
 #include "PimGameNode.h"

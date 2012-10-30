@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Stdafx.h"
+#include "PimInternal.h"
 
 /*
 	The lighting system is the boss handling shadow casting, rendering of light textures
@@ -168,10 +168,19 @@ namespace Pim
 
 		Color									color;			// Color of the unlit areas
 
-		// OpenGL
+		// The framebuffer to which we render the light texture
 		GLuint			frameBuffer;
+
+		// The renderbuffer (used to get stencil buffer)
 		GLuint			renderBuffer;
+
+		// The light texture
 		GLuint			texID;
-		Shader			*shader;
+
+		// The shader used when rendering the light texture onto the main buffer
+		Shader			*shaderLightTex;
+
+		// Gaussian blur shader used to illude smooth shadows
+		Shader			*shaderGauss;
 	};
 }

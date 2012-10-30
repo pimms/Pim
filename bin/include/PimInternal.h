@@ -30,3 +30,7 @@
 // Direct sound
 #include <mmsystem.h>
 #include <dsound.h>
+
+// Ogg Vorbis
+#include "vorbis\codec.h"
+#include "vorbis\vorbisfile.h"

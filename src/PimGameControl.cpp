@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "PimInternal.h"
 #include "PimGameControl.h"
 
 #include "PimException.h"
@@ -307,6 +307,9 @@ namespace Pim
 
 			// Dispatch postrender calls
 			dispatchPostrender();
+
+			// Update playing ogg files
+			AudioManager::getSingleton()->oggUpdate();
 		}
 	}
 	void GameControl::dispatchPrerender()

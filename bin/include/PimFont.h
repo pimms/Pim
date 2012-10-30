@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Stdafx.h"
+#include "PimInternal.h"
 #include "PimGameNode.h"
 
 namespace Pim

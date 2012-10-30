@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+#include "PimInternal.h"
 
 #include "PimVec2.h"
 #include "PimLightingSystem.h"
@@ -33,24 +33,24 @@ namespace Pim
 						0, GL_RGBA, GL_FLOAT, NULL);
 
 		// Create the renderbuffer
-		glGenRenderbuffersEXT(1, &renderBuffer);
-		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, renderBuffer);
+		glGenRenderbuffers(1, &renderBuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
 
 		// Create the main framebuffer
-		glGenFramebuffersEXT(1, &frameBuffer);
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
+		glGenFramebuffers(1, &frameBuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8,
 						(GLsizei)resolution.x, (GLsizei)resolution.y);
-		glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_STENCIL_ATTACHMENT,
-						GL_RENDERBUFFER_EXT, renderBuffer);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+						GL_RENDERBUFFER, renderBuffer);
 
 		// Attach the texture
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, 
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 
 										GL_TEXTURE_2D, texID, 0);
 
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		loadShaders();
@@ -64,14 +64,15 @@ namespace Pim
 		}
 
 		glDeleteTextures(1, &texID);
-		glDeleteFramebuffersEXT(1, &frameBuffer);
-		glDeleteRenderbuffersEXT(1, &renderBuffer);
+		glDeleteFramebuffers(1, &frameBuffer);
+		glDeleteRenderbuffers(1, &renderBuffer);
 	}
 
 	void LightingSystem::loadShaders()
 	{
-		shader = ShaderManager::addShader(
-			"uniform sampler2D tex;									\n\
+		shaderLightTex = ShaderManager::addShader(
+			"// FRAGMENT SHADER										\n\
+			uniform sampler2D tex;									\n\
 			uniform float lalpha;									\n\
 			uniform vec4 ulcolor;									\n\
 			float length(vec4 v)									\n\
@@ -84,21 +85,39 @@ namespace Pim
 				src.a -= (length(src) - length(ulcolor)) * lalpha * 3.0;	\n\
 				gl_FragColor = src;									\n\
 			}",
-			"void main()											\n\
+			"// VERTEX SHADER										\n\
+			void main()												\n\
 			{														\n\
 				gl_Position = ftransform();							\n\
 				gl_TexCoord[0] = gl_MultiTexCoord0;					\n\
 			}",
 			"_ltMgr_");
+		shaderLightTex->setUniform1i("texSrc", 0);
+		shaderLightTex->setUniform1f("lalpha", 1.f);
 
-		shader->setUniform1i("texSrc", 0);
-		shader->setUniform1f("lalpha", 1.f);
+		shaderGauss = ShaderManager::addShader(
+			"// FRAGMENT SHADER										\n\
+			//uniform sampler2D tex;								\n\
+			//varying vec2 vTexCoord;								\n\
+			//const float blurSize = 1.0 / 512.0;					\n\
+			void main()												\n\
+			{														\n\
+				gl_FragColor = vec4(gl_FragCoord.y, gl_FragCoord.x, 0.0, 1.0);		\n\
+			}",
+			"// VERTEX SHADER									\n\
+			//varying vec2 vTexCoord;							\n\
+			void main()											\n\
+			{													\n\
+				gl_Position = ftransform();						\n\
+			}",
+			"_ltMgrGauss_"
+			);
 	}
 
 	void LightingSystem::setUnlitColor(Color c)
 	{
 		color = c;
-		shader->setUniform4f("ulcolor", c.r, c.g, c.b, c.a);
+		shaderLightTex->setUniform4f("ulcolor", c.r, c.g, c.b, c.a);
 	}
 	void LightingSystem::setLightAlpha(float a)
 	{
@@ -106,7 +125,7 @@ namespace Pim
 		if (a < 0.f) a = 0.f;
 
 		a = 1.f - a;
-		shader->setUniform1f("lalpha", a);
+		shaderLightTex->setUniform1f("lalpha", a);
 	}
 
 	void LightingSystem::addLight(GameNode *node, LightDef *lDef)
@@ -139,11 +158,11 @@ namespace Pim
 		
 		// Create a new framebuffer to avoid complications
 		GLuint fbo;
-		glGenFramebuffersEXT(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER_EXT, fbo);
+		glGenFramebuffers(1, &fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 		// Attach the new texture
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
 									GL_TEXTURE_2D, lDef->lTex, 0);
 		
 		glMatrixMode(GL_PROJECTION);
@@ -187,9 +206,9 @@ namespace Pim
 		glEnable(GL_TEXTURE_2D);
 		
 		// Unbind
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		glDeleteFramebuffersEXT(1, &fbo);
+		glDeleteFramebuffers(1, &fbo);
 
 		glPopAttrib();
 
@@ -200,7 +219,7 @@ namespace Pim
 		glPopMatrix();
 
 		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 	void LightingSystem::createFlatLightTexture(LightDef *lightDef)
 	{
@@ -225,14 +244,14 @@ namespace Pim
 			0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
 		// Create a new framebuffer to avoid complications
-		GLuint fbo;
-		glGenFramebuffersEXT(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER_EXT, fbo);
+		GLuint fbo = 0;
+		glGenFramebuffers(1, &fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 		// Attach the new texture
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
 									GL_TEXTURE_2D, lDef->lTex, 0);
-		
+
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadIdentity();
@@ -293,9 +312,9 @@ namespace Pim
 		glEnable(GL_TEXTURE_2D);
 		
 		// Unbind
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		glDeleteFramebuffersEXT(1, &fbo);
+		glDeleteFramebuffers(1, &fbo);
 
 		glPopAttrib();
 
@@ -307,9 +326,6 @@ namespace Pim
 
 		// Update the radius value
 		lDef->radius = (int)totalRadius;
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	}
 
 	void LightingSystem::renderLightTexture()
@@ -317,7 +333,7 @@ namespace Pim
 		Vec2 wd = GameControl::getSingleton()->getRenderWindow()->ortho;
 		Vec2 off = GameControl::getSingleton()->getRenderWindow()->orthoOff;
 				
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
@@ -352,7 +368,7 @@ namespace Pim
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, texID);
 
 		// Restore the matrices
@@ -363,9 +379,9 @@ namespace Pim
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		glUseProgram(shader->getProgram());
+		glUseProgram(shaderLightTex->getProgram());
 
-		glColor4f(1.f,1.f,1.f, color.a);
+		glColor4f(1.f,1.f,1.f, 1.f);
 		glBegin(GL_QUADS);
 			glTexCoord2i(0,0);
 			glVertex2f(0.f, 0.f);
@@ -515,6 +531,8 @@ namespace Pim
 			float a1 = v1.angleBetween(Vec2(1.f,0.f)),
 				  a2 = v2.angleBetween(Vec2(1.f,0.f));
 
+			glUseProgram(shaderGauss->getProgram());
+
 			glBegin(GL_QUADS);
 				glVertex2f(-v1.x, -v1.y);
 				glVertex2f(-v2.x, -v2.y);
@@ -527,6 +545,8 @@ namespace Pim
 				glVertex2f(-v2.x, -v2.y);
 				glVertex2f(-v1.x, -v1.y);
 			glEnd();
+
+			glUseProgram(0);
 		}
 
 		glColor4f(1.f, 1.f, 1.f, 1.f);

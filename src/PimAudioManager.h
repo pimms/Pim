@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Stdafx.h"
+#include "PimInternal.h"
 
 #define NUM_BUFFERS 32		// 32 simultaneous sounds
 #define BUFFER_SIZE 32768	// 32k sound buffer
@@ -47,10 +47,21 @@ namespace Pim
 		static void clearSingleton();
 
 		bool loadWav(const char *file, IDirectSoundBuffer8**);
-		void shutdownWav(IDirectSoundBuffer8**);
+		bool loadOgg(const char *file, IDirectSoundBuffer8**, OggVorbis_File*);
 
-		static AudioManager *singleton;
+		// Ogg files require an update roughly every 0.5 second. 
+		void oggUpdate();
+		void scheduleOggUpdate(Sound*);
+		void unscheduleOggUpdate(Sound*);
 
-		IDirectSound8 *m_DirectSound;
+		// Rewinding of ogg streams takes slightly more effort
+		void rewindOgg(Sound*);
+
+
+		std::vector<Sound*>		oggSounds;
+
+		static AudioManager		*singleton;
+
+		IDirectSound8			*m_DirectSound;
 	};
 }

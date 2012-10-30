@@ -1,6 +1,6 @@
 #pragma once
 #include "pimsprite.h"
-#include "Stdafx.h"
+#include "PimInternal.h"
 
 /*
 	SpriteBatchNode is the best way to go if you're using a huge sprite sheet.

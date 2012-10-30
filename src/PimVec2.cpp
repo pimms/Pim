@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "PimInternal.h"
 #include "PimVec2.h"
 
 namespace Pim

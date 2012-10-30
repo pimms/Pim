@@ -16,7 +16,7 @@
 	or by passing "true" to removeAllChildren(bool), or upon the parent's deletion.
 */
 
-#include "Stdafx.h"
+#include "PimInternal.h"
 
 #include "PimVec2.h"
 

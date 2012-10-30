@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+#include "PimInternal.h"
 #include "PimLabel.h"
 #include "PimFont.h"
 #include "PimGameControl.h"

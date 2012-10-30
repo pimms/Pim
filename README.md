@@ -41,6 +41,8 @@ Create a new Win32 console application. That's it for now. Let's get linkin'.
 
 ## 4. Linking to Pim ##
 
+Open up the project property-page by right clicking on the project name and select "properties".
+
 In the top left corner, select "All Configurations" from the Configuration selection menu.
 
 Open the project properties. Under the "C/C++"->"General" tab, add the following path

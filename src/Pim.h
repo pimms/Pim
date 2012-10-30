@@ -3,7 +3,7 @@
 #pragma once
 
 // Standard headers (Windows, OpenGL, std...)
-#include "Stdafx.h"
+#include "PimInternal.h"
 
 // Engine headers
 #include "PimVec2.h"

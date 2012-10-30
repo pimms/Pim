@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+#include "PimInternal.h"
 
 #include "PimShaderManager.h"
 #include "PimException.h"

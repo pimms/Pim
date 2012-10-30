@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Stdafx.h"
+#include "PimInternal.h"
 #include "PimVec2.h"
 #include "PimWinStyle.h"
 
