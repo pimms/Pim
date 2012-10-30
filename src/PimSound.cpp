@@ -12,7 +12,7 @@ namespace Pim
 		almostDone	= false;
 		done		= false;
 		audioStream = false;
-		rewindNext  = false;
+		isParallel  = false;
 
 		loadFile(file);
 	}
@@ -24,7 +24,7 @@ namespace Pim
 		almostDone	= false;
 		done		= false;
 		audioStream = false;
-		rewindNext  = false;
+		isParallel  = false;
 	}
 	Sound::~Sound()
 	{
@@ -32,8 +32,9 @@ namespace Pim
 		{
 			buffer->Release();
 		}
-		if (oggFile)
+		if (oggFile && !isParallel)
 		{
+			ov_clear(oggFile);
 			delete oggFile;
 		}
 
@@ -51,13 +52,13 @@ namespace Pim
 
 		if (format == ".wav")
 		{
-			if (!AudioManager::getSingleton()->loadWav(file.c_str(), &buffer))
+			if (!AudioManager::getSingleton()->loadWav(file.c_str(), this))
 				std::cout<<"ERROR: Failed to load file: " <<file <<"\n";
 		}
 		else if (format == ".ogg")
 		{
 			oggFile = new OggVorbis_File;
-			if (!AudioManager::getSingleton()->loadOgg(file.c_str(), &buffer, oggFile))
+			if (!AudioManager::getSingleton()->loadOgg(file.c_str(), this))
 				std::cout<<"ERROR: Failed to load file: " <<file <<"\n";
 			else
 				AudioManager::getSingleton()->scheduleOggUpdate(this);
@@ -116,5 +117,41 @@ namespace Pim
 	void Sound::setPan(float pan)
 	{
 		buffer->SetPan(pan * 3500);
+	}
+
+	Sound* Sound::playParallel()
+	{
+		// Set default values for parallel play
+		Sound *s = new Sound;
+		s->isParallel = true;
+		s->oggFile = oggFile;
+		s->audioStream = true;
+		s->curSection = 1;
+		s->lastSection = 0;
+
+		// Create a parallel buffer
+		s->buffer = AudioManager::getSingleton()->createBuffer(&wfm, &desc);
+
+		// Schedule the parallel sound for ogg updates
+		AudioManager::getSingleton()->scheduleOggUpdate(s);
+
+		// Read into the parallel sound
+		DWORD	pos = 0;
+		int		sec = 0;
+		int		ret = 1;
+		DWORD	size = BUFFER_SIZE * 2;
+		char	*buf;
+
+		s->buffer->Lock(0, size, (LPVOID*)&buf, &size, NULL, NULL, DSBLOCK_ENTIREBUFFER);
+
+		while (ret && pos<size)
+		{
+			ret = ov_read(s->oggFile, buf+pos, size-pos, 0, 2, 1, &sec);
+			pos += ret;
+		}
+
+		s->buffer->Unlock(buf, size, NULL, NULL);
+
+		return s;
 	}
 }

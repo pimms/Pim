@@ -46,7 +46,7 @@ namespace Pim
 		singleton = NULL;
 	}
 
-	bool AudioManager::loadWav(const char *filename, IDirectSoundBuffer8 **buffer)
+	bool AudioManager::loadWav(const char *filename, Sound *s)
 	{
 		// Thanks to Raster Tek (rastertek.com) for the following code.
 
@@ -54,8 +54,6 @@ namespace Pim
 		FILE *filePtr;
 		unsigned int count;
 		WaveHeaderType waveFileHeader;
-		WAVEFORMATEX waveFormat;
-		DSBUFFERDESC bufferDesc;
 		HRESULT result;
 		IDirectSoundBuffer *tempBuffer;
 		unsigned char *waveData;
@@ -109,29 +107,29 @@ namespace Pim
 			return false;
 
 		// Set the wave format of secondary buffer that this wave file will be loaded onto.
-		waveFormat.wFormatTag = WAVE_FORMAT_PCM;
-		waveFormat.nSamplesPerSec = 44100;
-		waveFormat.wBitsPerSample = 16;
-		waveFormat.nChannels = 2;
-		waveFormat.nBlockAlign = (waveFormat.wBitsPerSample / 8) * waveFormat.nChannels;
-		waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
-		waveFormat.cbSize = 0;
+		s->wfm.wFormatTag = WAVE_FORMAT_PCM;
+		s->wfm.nSamplesPerSec = 44100;
+		s->wfm.wBitsPerSample = 16;
+		s->wfm.nChannels = 2;
+		s->wfm.nBlockAlign = (s->wfm.wBitsPerSample / 8) * s->wfm.nChannels;
+		s->wfm.nAvgBytesPerSec = s->wfm.nSamplesPerSec * s->wfm.nBlockAlign;
+		s->wfm.cbSize = 0;
  
 		// Set the buffer description of the secondary sound buffer that the wave file will be loaded onto.
-		bufferDesc.dwSize = sizeof(DSBUFFERDESC);
-		bufferDesc.dwFlags = DSBCAPS_CTRLVOLUME | DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLPAN;
-		bufferDesc.dwBufferBytes = waveFileHeader.dataSize;
-		bufferDesc.dwReserved = 0;
-		bufferDesc.lpwfxFormat = &waveFormat;
-		bufferDesc.guid3DAlgorithm = GUID_NULL;
+		s->desc.dwSize = sizeof(DSBUFFERDESC);
+		s->desc.dwFlags = DSBCAPS_CTRLVOLUME | DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLPAN;
+		s->desc.dwBufferBytes = waveFileHeader.dataSize;
+		s->desc.dwReserved = 0;
+		s->desc.lpwfxFormat = &s->wfm;
+		s->desc.guid3DAlgorithm = GUID_NULL;
 
 		// Create a temporary sound buffer with the specific buffer settings.
-		result = m_DirectSound->CreateSoundBuffer(&bufferDesc, &tempBuffer, NULL);
+		result = m_DirectSound->CreateSoundBuffer(&s->desc, &tempBuffer, NULL);
 		if(FAILED(result))
 			return false;
  
 		// Test the buffer format against the direct sound 8 interface and create the secondary buffer.
-		result = tempBuffer->QueryInterface(IID_IDirectSoundBuffer8, (void**)&*buffer);
+		result = tempBuffer->QueryInterface(IID_IDirectSoundBuffer8, (void**)&*s->buffer);
 		if(FAILED(result))
 			return false;
  
@@ -160,7 +158,7 @@ namespace Pim
 		}
  
 		// Lock the secondary buffer to write wave data into it.
-		result = (*buffer)->Lock(0, waveFileHeader.dataSize, (void**)&bufferPtr, (DWORD*)&bufferSize, NULL, 0, 0);
+		result = s->buffer->Lock(0, waveFileHeader.dataSize, (void**)&bufferPtr, (DWORD*)&bufferSize, NULL, 0, 0);
 		if(FAILED(result))
 			return false;
  
@@ -168,7 +166,7 @@ namespace Pim
 		memcpy(bufferPtr, waveData, waveFileHeader.dataSize);
  
 		// Unlock the secondary buffer after the data has been written to it.
-		result = (*buffer)->Unlock((void*)bufferPtr, bufferSize, NULL, 0);
+		result = s->buffer->Unlock((void*)bufferPtr, bufferSize, NULL, 0);
 		if(FAILED(result))
 			return false;
 	
@@ -178,8 +176,7 @@ namespace Pim
  
 		return true;
 	}
-	bool AudioManager::loadOgg(const char *filename, IDirectSoundBuffer8 **buffer, 
-		OggVorbis_File *oggFile)
+	bool AudioManager::loadOgg(const char *filename, Sound *s)
 	{
 		int error;
 		FILE *f;
@@ -188,32 +185,32 @@ namespace Pim
 		if (error != 0)
 			return false;
 
-		ov_open(f, oggFile, NULL, 0);
-		vorbis_info *vi = ov_info(oggFile, -1);
+		if (ov_open(f, s->oggFile, NULL, 0) != 0)
+			return false;
+
+		vorbis_info *vi = ov_info(s->oggFile, -1);
 
 		// Wave format
-		WAVEFORMATEX wfm;
-		memset(&wfm, 0, sizeof(wfm));
-		wfm.cbSize			= sizeof(wfm);
-		wfm.nChannels		= vi->channels;
-		wfm.wBitsPerSample	= 16;
-		wfm.nSamplesPerSec	= vi->rate;
-		wfm.nAvgBytesPerSec	= wfm.nSamplesPerSec * wfm.nChannels * 2;
-		wfm.nBlockAlign		= 2 * wfm.nChannels;
-		wfm.wFormatTag		= 1;
+		memset(&s->wfm, 0, sizeof(s->wfm));
+		s->wfm.cbSize			= sizeof(s->wfm);
+		s->wfm.nChannels		= vi->channels;
+		s->wfm.wBitsPerSample	= 16;
+		s->wfm.nSamplesPerSec	= vi->rate;
+		s->wfm.nAvgBytesPerSec	= s->wfm.nSamplesPerSec * s->wfm.nChannels * 2;
+		s->wfm.nBlockAlign		= 2 * s->wfm.nChannels;
+		s->wfm.wFormatTag		= 1;
 
 		// Prepare the buffer
-		DSBUFFERDESC desc;
-		desc.dwSize			= sizeof(desc);
-		desc.dwFlags		= DSBCAPS_CTRLVOLUME | DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLPAN;
-		desc.lpwfxFormat	= &wfm;
-		desc.dwReserved		= 0;
-		desc.dwBufferBytes	= BUFFER_SIZE * 2;
+		s->desc.dwSize			= sizeof(s->desc);
+		s->desc.dwFlags			= DSBCAPS_CTRLVOLUME | DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLPAN;
+		s->desc.lpwfxFormat		= &s->wfm;
+		s->desc.dwReserved		= 0;
+		s->desc.dwBufferBytes	= BUFFER_SIZE * 2;
 		
 		IDirectSoundBuffer *tempBuffer;
-		m_DirectSound->CreateSoundBuffer(&desc, &tempBuffer, NULL);
+		m_DirectSound->CreateSoundBuffer(&s->desc, &tempBuffer, NULL);
 
-		tempBuffer->QueryInterface(IID_IDirectSoundBuffer8, (void**)&*buffer);
+		tempBuffer->QueryInterface(IID_IDirectSoundBuffer8, (void**)&*&s->buffer);
 
 		tempBuffer->Release();
 		tempBuffer = 0;
@@ -224,15 +221,15 @@ namespace Pim
 		DWORD	size = BUFFER_SIZE * 2;
 		char	*buf;
 
-		(*buffer)->Lock(0, size, (LPVOID*)&buf, &size, NULL, NULL, DSBLOCK_ENTIREBUFFER);
+		s->buffer->Lock(0, size, (LPVOID*)&buf, &size, NULL, NULL, DSBLOCK_ENTIREBUFFER);
 
 		while (ret && pos<size)
 		{
-			ret = ov_read(oggFile, buf+pos, size-pos, 0, 2, 1, &sec);
+			ret = ov_read(s->oggFile, buf+pos, size-pos, 0, 2, 1, &sec);
 			pos += ret;
 		}
 
-		(*buffer)->Unlock(buf, size, NULL, NULL);
+		s->buffer->Unlock(buf, size, NULL, NULL);
 
 		return true;
 	}
@@ -270,7 +267,7 @@ namespace Pim
 					pos += ret;
 				}
 
-				if ((!ret && s->isLoop) || s->rewindNext)
+				if (!ret && s->isLoop)
 				{
 					ret = 1;
 					ov_pcm_seek(s->oggFile, 0);
@@ -279,8 +276,6 @@ namespace Pim
 						ret = ov_read(s->oggFile, buf+pos, size-pos, 0, 2, 1, &sec);
 						pos += ret;
 					}
-
-					s->rewindNext = false;
 				}
 				else if (!ret && !s->isLoop)
 				{
@@ -316,7 +311,13 @@ namespace Pim
 		int		sec = 0;
 		int		ret = 1;
 
+		sound->curSection = 1;
+		sound->lastSection = 0;
+
 		sound->buffer->Lock(sound->lastSection*BUFFER_SIZE, size, (LPVOID*)&buf, &size, 0, 0, 0);
+
+		// Clear the entire buffer
+		memset(buf, 0, BUFFER_SIZE);
 
 		ret = 1;
 		ov_pcm_seek(sound->oggFile, 0);
@@ -326,12 +327,23 @@ namespace Pim
 			pos += ret;
 		}
 
-		sound->rewindNext = false;
-
 		sound->buffer->Unlock(buf, size, NULL, NULL);
 
-		sound->buffer->SetCurrentPosition(sound->curSection*BUFFER_SIZE);
+		sound->buffer->SetCurrentPosition(0);
 
 		sound->lastSection = sound->curSection;
+	}
+
+	IDirectSoundBuffer8* AudioManager::createBuffer(WAVEFORMATEX *wfm, DSBUFFERDESC *desc)
+	{
+		IDirectSoundBuffer *tempBuffer;
+
+		m_DirectSound->CreateSoundBuffer(desc, &tempBuffer, NULL); 
+
+		IDirectSoundBuffer8 *ret = 0;
+		tempBuffer->QueryInterface(IID_IDirectSoundBuffer8, (void**)&*&ret);
+		tempBuffer->Release();
+
+		return ret;
 	}
 }

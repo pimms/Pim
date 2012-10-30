@@ -46,8 +46,8 @@ namespace Pim
 		static void instantiateSingleton();
 		static void clearSingleton();
 
-		bool loadWav(const char *file, IDirectSoundBuffer8**);
-		bool loadOgg(const char *file, IDirectSoundBuffer8**, OggVorbis_File*);
+		bool loadWav(const char *file, Sound*);
+		bool loadOgg(const char *file, Sound*);
 
 		// Ogg files require an update roughly every 0.5 second. 
 		void oggUpdate();
@@ -56,6 +56,11 @@ namespace Pim
 
 		// Rewinding of ogg streams takes slightly more effort
 		void rewindOgg(Sound*);
+
+		// Create a new IDirectSoundBuffer8 (for parallel sounds)
+		IDirectSoundBuffer8* createBuffer(WAVEFORMATEX*, DSBUFFERDESC*);
+
+
 
 
 		std::vector<Sound*>		oggSounds;

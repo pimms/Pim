@@ -2,6 +2,16 @@
 
 #include "PimInternal.h"
 
+/*
+
+	Pim supports WAV and OGG file formats.
+	WAV files are loaded into memory in it's entirety, while OGG files are streamed
+	16kb at a time. 
+
+
+
+*/
+
 namespace Pim
 {
 	// Forward declaration
@@ -40,11 +50,17 @@ namespace Pim
 		// all right: 1.0
 		void setPan(float pan);
 
+		// Play the currently streamed (OGG ONLY) file in parallel
+		Sound* playParallel();
+
 		// Retreive the buffer. Try not to do anything stupid with it.
 		IDirectSoundBuffer8* getBuffer() { return buffer; }
 
 	protected:
 		friend class AudioManager;
+
+		WAVEFORMATEX wfm;
+		DSBUFFERDESC desc;
 
 		// The buffer object used for all sound formats.
 		IDirectSoundBuffer8 *buffer;
@@ -53,14 +69,20 @@ namespace Pim
 		OggVorbis_File *oggFile;
 		
 	private:
+		/*
+			All following member variables are only used when playing OGG-files, as they
+			are streamed from memory.
+		*/
+
 		bool audioStream;		// Is the audio streamed?
 
 		bool isLoop;			// Stream looping?
 		bool almostDone;		// Stream almost done?
 		bool done;				// Stream done?
-		bool rewindNext;		// Rewind stream next update
 
-		int lastSection;		// Which half of the buffer was filled?
-		int curSection;			// Which half of the buffer IS filled?
+		int lastSection;		// Which half of the buffer was played?
+		int curSection;			// Which half of the buffer IS played?
+
+		bool isParallel;		// Is this a parallel sound?
 	};
 }
