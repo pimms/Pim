@@ -63,7 +63,7 @@ dependencies":
 >OpenGL32.lib;Pim_d.lib;
 
 Change the Configuration selection to "Release", and add the following under the 
-"Linger"->"Input" tab:
+"Linker"->"Input" tab:
 
 >OpenGL32.lib;Pim.lib;
 
