@@ -67,7 +67,12 @@ Change the Configuration selection to "Release", and add the following under the
 
 >OpenGL32.lib;Pim.lib;
 
-And you're good to go!
+And you're ALMOST good to go!
+
+Finally under the project properties, navigate yourself to "C/C++"->"Code Generation".
+Under the "Runtime Library" pane, set the value to be "/MTd" for the Debug Configuration,
+and "/MT" for the Release Configuration. If you're getting spammed with error messages,
+that is probably the reason.
 
 
 ## 5. Your first project ##
@@ -114,7 +119,7 @@ The following snippet will quickly throw an image up to the screen:
 >				);
 >		
 >			cd.forcedAspectRatio = true;					// Force AR. Does not stretch image, creates black borders
->			cd.aspectRatio = 4.f / 3.f;						// 4:3 aspect ratio
+>			cd.aspectRatio = 3.f / 2.f;						// 4:3 aspect ratio
 >			cd.coordinateSystem = Pim::Vec2(1.f, 1.f);		// Sets the coordinate of the top right corner. (0,0) is always bottom left.
 >		
 >			gc->go(new MyPimLayer, cd);			// Hand control over to Pim. Send it the CreationData and an instance of MyPimLayer.
