@@ -98,17 +98,18 @@ namespace Pim
 		shaderGauss = ShaderManager::addShader(
 			"// FRAGMENT SHADER										\n\
 			//uniform sampler2D tex;								\n\
-			//varying vec2 vTexCoord;								\n\
+			varying vec2 vTexCoord;									\n\
 			//const float blurSize = 1.0 / 512.0;					\n\
 			void main()												\n\
 			{														\n\
-				gl_FragColor = vec4(gl_FragCoord.y, gl_FragCoord.x, 0.0, 1.0);		\n\
+				gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);			\n\
 			}",
 			"// VERTEX SHADER									\n\
-			//varying vec2 vTexCoord;							\n\
+			varying vec2 vTexCoord;								\n\
 			void main()											\n\
 			{													\n\
 				gl_Position = ftransform();						\n\
+				vTexCoord = gl_Position.xy;						\n\
 			}",
 			"_ltMgrGauss_"
 			);
@@ -526,8 +527,8 @@ namespace Pim
 
 		for (unsigned int i=0; i<castLines.size(); i++)
 		{
-			Vec2 v1 = (pos-castLines[i]->getP1(sc)),
-				 v2 = (pos-castLines[i]->getP2(sc));
+			Vec2  v1 = (pos-castLines[i]->getP1(sc)),
+				  v2 = (pos-castLines[i]->getP2(sc));
 			float a1 = v1.angleBetween(Vec2(1.f,0.f)),
 				  a2 = v2.angleBetween(Vec2(1.f,0.f));
 

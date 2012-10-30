@@ -7,6 +7,8 @@ namespace Pim
 {
 	GLint Shader::getUniformLocation(std::string name)
 	{
+		// Update the map to contain the uniform adresses.
+		// This way they are only queried for from OpenGL once.
 		if (!uniform.count(name))
 		{
 			GLint loc = glGetUniformLocation(program, name.c_str());
@@ -187,7 +189,7 @@ namespace Pim
 	Shader* ShaderManager::addShader(std::string fragString, std::string vertString, 
 		std::string nm)
 	{
-		std::cout<<"Loading shader " <<nm <<"...\n";
+		std::cout<<"\nCreating shader " <<nm <<"...\n";
 
 
 		Shader *shader = new Shader;
@@ -265,11 +267,11 @@ namespace Pim
 		glGetProgramiv(shader->program, GL_LINK_STATUS, &status);
 		if (status)
 		{
-			std::cout<<"Program linked successfully!\n";
+			std::cout<<"Program linked successfully!\n\n";
 		}
 		else
 		{
-			std::cout<<"Failed to link shaders.\n";
+			std::cout<<"Failed to link shaders.\n\n";
 			delete shader;
 			return NULL;
 		}
