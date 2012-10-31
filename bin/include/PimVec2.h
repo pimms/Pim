@@ -73,6 +73,15 @@ namespace Pim
 		bool contains(Pim::Vec2 &vec);
 
 		png_int_32 x, y, width, height;
+
+		// Operator overloading
+		bool operator==(const Rect &other)
+		{
+			return x == other.x 
+				&& y == other.y
+				&& width == other.width
+				&& height == other.height;
+		}
 	};
 
 	struct Color

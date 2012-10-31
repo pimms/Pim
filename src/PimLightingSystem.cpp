@@ -228,8 +228,10 @@ namespace Pim
 
 		if (lDef->falloff < 0.f)
 			lDef->falloff = 0.f;
-		else if (lDef->falloff > 1.f)
-			lDef->falloff = 1.f;
+
+		/* REMOVED IN VERSION 0.4d */
+		//else if (lDef->falloff > 1.f)
+		//	lDef->falloff = 1.f;
 
 		float totalRadius = lDef->radius + (lDef->radius * lDef->falloff);
 
@@ -353,7 +355,7 @@ namespace Pim
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);     
 
-		_renderLights();
+		renderLights();
 
 		glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
 
@@ -404,7 +406,7 @@ namespace Pim
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void LightingSystem::_renderLights()
+	void LightingSystem::renderLights()
 	{
 		Vec2 renres = GameControl::getSingleton()->getCreationData().renderResolution;
 		Vec2 coord = GameControl::getSingleton()->getCreationData().coordinateSystem;
@@ -423,8 +425,8 @@ namespace Pim
 			int r = it->second->radius;
 			Vec2 p = it->first->getLightPosition();
 
-			if (castShadow && it->second->castShadow)
-				_renderShadows(it->second, it->first, p, lineScale);
+			if (castShadow && it->second->castShadows)
+				renderShadows(it->second, it->first, p, lineScale);
 
 			glBindTexture(GL_TEXTURE_2D, it->second->lTex);
 			glPushMatrix();					// Light texture
@@ -455,7 +457,7 @@ namespace Pim
 			
 		glDisable(GL_STENCIL_TEST);
 	}
-	void LightingSystem::_renderShadows(LightDef *ld, GameNode *light, Vec2 &pos, Vec2 &sc)
+	void LightingSystem::renderShadows(LightDef *ld, GameNode *light, Vec2 &pos, Vec2 &sc)
 	{
 		// PARAMETERS:
 		//	ld:			The light definition struct

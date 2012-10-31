@@ -7,7 +7,6 @@
 
 namespace Pim
 {
-	
 	AudioManager* AudioManager::singleton = NULL;
 
 	AudioManager* AudioManager::getSingleton()

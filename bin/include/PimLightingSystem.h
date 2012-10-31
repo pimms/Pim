@@ -63,7 +63,7 @@ namespace Pim
 		{
 			innerColor		= Color(1.f, 1.f, 1.f, 1.f);
 			outerColor		= Color(0.2f, 0.2f, 0.2f, 0.0f);
-			castShadow		= true;
+			castShadows		= true;
 			radius			= 128;
 			lTex			= NULL;
 			falloff			= 0.2f;
@@ -86,7 +86,7 @@ namespace Pim
 		Color	innerColor;		// The inner color - Def=(1,1,1,1)
 		Color	outerColor;		// The outer color, the alpha SHOULD be 0 - Def=(0.2,0.2,0.2,0.0)
 		int		radius;			// The radius, and width&height of the light texture. Def=128
-		bool	castShadow;		// Should this light cast shadows?	Def=true
+		bool	castShadows;	// Should this light cast shadows?	Def=true
 
 		float	falloff;
 
@@ -128,8 +128,6 @@ namespace Pim
 
 	class LightingSystem
 	{
-	public:
-
 	protected:
 		// Only layers can instantiate lighting systems. Call layer->createLightingSystem().
 		friend class Layer;
@@ -152,8 +150,8 @@ namespace Pim
 		void createFlatLightTexture(LightDef *lDef);
 
 		virtual void renderLightTexture();		// The main rendering called every frame
-		virtual void _renderLights();			// Merely a subroutine
-		virtual void _renderShadows(LightDef *d, GameNode *n, Vec2 &p, Vec2 &rResSc);
+		virtual void renderLights();			// Merely a subroutine
+		virtual void renderShadows(LightDef *d, GameNode *n, Vec2 &p, Vec2 &rResSc);
 
 		Layer									*parent;
 

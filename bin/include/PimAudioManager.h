@@ -36,6 +36,10 @@ namespace Pim
 	public:
 		static AudioManager* getSingleton();
 
+		// Ogg files require an update roughly every 0.5 second. 
+		void asynchronousOggUpdate();
+		void oggUpdate();
+
 	private:
 		friend class GameControl;
 		friend class Sound;
@@ -49,8 +53,6 @@ namespace Pim
 		bool loadWav(const char *file, Sound*);
 		bool loadOgg(const char *file, Sound*);
 
-		// Ogg files require an update roughly every 0.5 second. 
-		void oggUpdate();
 		void scheduleOggUpdate(Sound*);
 		void unscheduleOggUpdate(Sound*);
 

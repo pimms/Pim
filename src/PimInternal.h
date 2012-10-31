@@ -16,6 +16,9 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+// Threading
+#include <process.h>
+
 // windows and OpenGL (glew)
 #include <Windows.h>
 #include <GL\glew.h>

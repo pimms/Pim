@@ -2,6 +2,8 @@
 
 #pragma once
 
+#define PIM_VERSION "0.4d"
+
 // Standard headers (Windows, OpenGL, std...)
 #include "PimInternal.h"
 
