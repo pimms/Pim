@@ -122,59 +122,60 @@ that is probably the reason.
 
 The following snippet will quickly throw an image up to the screen:
 
->		#include "Pim.h"			// Include the Pim library  
->		#include <math.h>			// need cosf and sinf
->
->		class MyPimLayer : public Pim::Layer 					// Our Layer-class
->		{
->			void update(float dt)								// Called every frame if you listen to the frame
->			{
->				time += dt;
->
->				mySprite->position = Pim::Vec2( 				// Move sprite in circle
->					400.f + 100*cosf(time),
->					300.f + 100*sinf(time)
->					);
->			}
->			void loadResources()								// Use this method to instantiate your objects
->			{
->				time = 0.f;
->		
->				mySprite = new Pim::Sprite("image.png");		// Only PNG's are supported
->				mySprite->position = Pim::Vec2(400.f, 300.f);
->		
->				listenFrame();									// Schedule self for updates (each frame)
->			}
->		
->			float time;
->			Pim::Sprite *mySprite;
->		};
->
->		class MyScene : public Pim::Scene 						// Our Scene-class
->		{
->			void loadResources()								// Called by the GameControl-object
->			{
->				MyPimLayer *layer = new MyPimLayer;				// Instantiate a layer
->				addLayer(layer);								// Add it to the scene. This calls "loadResources()" on the layer.
->			}
->		};
->		
->		int main()
->		{
->				// The game controller is the main object of the Pim library
->			Pim::GameControl *gc = new Pim::GameControl;	
->				
->			Pim::WinStyle::CreationData cd(		// The window describer
->				"Pim Application", 				// Window title
->				600, 400, 						// Window resolution
->				Pim::WinStyle::WINDOWED 		// Window style
->				);
->		
->			cd.forcedAspectRatio = true;					// Force AR. Does not stretch image, creates black borders
->			cd.aspectRatio = 3.f / 2.f;						// 4:3 aspect ratio
->		
->			gc->go(new MyScene, cd);			// Hand control over to Pim. Send it the CreationData and an instance of MyScene.
->			delete gc;							// Delete the game controller when the game quits.
->		
->			return 0;
->		}
+		#include "Pim.h"            // Include the Pim library  
+		#include <math.h>           // need cosf and sinf
+
+		class MyPimLayer : public Pim::Layer                    // Our Layer-class
+		{
+			void update(float dt)                               // Called every frame if you listen to the frame
+			{
+				time += dt;
+
+				mySprite->scale = Pim::Vec2(
+					1.f + cosf(time),
+					1.f + sinf(time)
+				);
+			}
+			void loadResources()                                // Use this method to instantiate your objects
+			{
+				time = 0.f;
+
+				mySprite = new Pim::Sprite("image.png");        // Only PNG's are supported
+				mySprite->position = Pim::Vec2(300.f, 200.f);
+				addChild(mySprite);
+
+				listenFrame();                                  // Schedule self for updates (each frame)
+			}
+
+			float time;
+			Pim::Sprite *mySprite;
+		};
+
+		class MyScene : public Pim::Scene                       // Our Scene-class
+		{
+			void loadResources()                                // Called by the GameControl-object
+			{
+				MyPimLayer *layer = new MyPimLayer;             // Instantiate a layer
+				addLayer(layer);                                // Add it to the scene. This calls "loadResources()" on the layer.
+			}
+		};
+
+		int main()
+		{
+			// The game controller is the main object of the Pim library
+			Pim::GameControl *gc = new Pim::GameControl;    
+
+			Pim::WinStyle::CreationData cd(     // The window describer
+				"Pim Application",              // Window title
+				600, 400,                       // Window resolution
+				Pim::WinStyle::WINDOWED         // Window style
+				);
+
+			cd.forcedAspectRatio = true;        // Force AR. Does not stretch image, creates black borders
+			cd.aspectRatio = 3.f / 2.f;         // 4:3 aspect ratio
+
+			gc->go(new MyScene, cd);            // Hand control over to Pim. Send it the CreationData and an instance of MyScene.
+			delete gc;                          // Delete the game controller when the game quits.
+
+			return 0;
+		}
