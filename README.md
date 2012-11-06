@@ -189,7 +189,7 @@ The Pim engine is built upon, and would not be possible without the use of the f
 A million thanks go out to all the contributors and developers of these libraries.
 
 
-# OpenGL 
+### OpenGL 
 
 http://www.opengl.org/
 
@@ -197,7 +197,7 @@ License:
 http://www.sgi.com/products/software/opengl/license.html
 
 
-# FreeType 2.1.10
+### FreeType 2.1.10
 
 http://www.freetype.org
 
@@ -206,7 +206,7 @@ http://www.freetype.org/FTL.TXT
 Attached
 
 
-# Ogg Vorbis
+### Ogg Vorbis
 
 www.vorbis.com
 
@@ -215,7 +215,7 @@ http://www.xiph.org/licenses/bsd/
 Attached
 
 
-# GLEW 1.9.0
+### GLEW 1.9.0
 
 http://glew.sourceforge.net/
 
@@ -223,7 +223,7 @@ License:
 Attached
 
 
-# libpng
+### libpng
 
 http://www.libpng.org
 
@@ -232,7 +232,7 @@ http://www.libpng.org/pub/png/src/libpng-LICENSE.txt
 Attached
 
 
-# zlib
+### zlib
 
 http://www.zlib.net
 
