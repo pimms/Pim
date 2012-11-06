@@ -10,6 +10,7 @@ namespace Pim
 	class RenderWindow;
 	class GameNode;
 	class Layer;
+	class Scene;
 
 	class GameControl
 	{
@@ -29,12 +30,22 @@ namespace Pim
 					{ return Vec2((float)getWindowWidth(),(float)getWindowHeight()); }
 		static const WinStyle::CreationData getCreationData()
 					{ return singleton->winData; }
+		static Scene* getScene()
+					{ return singleton->scene; }
 		static std::string getModulePath();	
 
 		GameControl();
 		~GameControl();
 
-		void go(Layer *l, WinStyle::CreationData data);
+		// Parameters: 
+		// Scene *s:
+		//		Pointer to a scene object. Cannot be nil. Deleted automatically.
+		// CreationData:
+		//		The structure describing how the window should behave.
+		// commandline:
+		//		Flag indicating whether or not the console should create a new thread
+		//		which reads input from the command line. 
+		void go(Scene *s, WinStyle::CreationData data, bool commandline=true);
 
 		void addKeyListener(GameNode* n);
 		void removeKeyListener(GameNode* n);
@@ -65,7 +76,10 @@ namespace Pim
 		Vec2 coordinateFactor();
 
 		// Deletes the old layer, replaces it with the passed.
-		void setLayer(Layer *l);
+		void setScene(Scene *newScene);
+
+
+		
 
 	protected:
 		friend class RenderWindow;
@@ -81,7 +95,7 @@ namespace Pim
 		int						actualWinHeight;	// the window style is BFS. Hence, these two.
 
 		RenderWindow			*renderWindow;
-		Layer					*layer;
+		Scene					*scene;
 
 		std::vector<GameNode*>	frameListeners;
 

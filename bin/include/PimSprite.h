@@ -23,8 +23,6 @@ namespace Pim
 		virtual void draw();					
 		virtual void batchDraw();				
 
-		void useBatchNode(SpriteBatchNode* batch);
-
 		// To set the shader, call getShader from ShaderManager and pass it here.
 		// The quality is not automatically updated.
 		void setShader(Shader *s);
@@ -34,6 +32,11 @@ namespace Pim
 		// and the shape must be convex.
 		void setShadowShape(Vec2 vertices[], int vertexCount);
 		void setShadowShapeDebugDraw(bool flag);
+
+		// This method is called automatically when adding a sprite to a batch node
+		// directly. However, if a sprite is grandchildren of a batch node, this 
+		// method must be called manually.
+		void useBatchNode(SpriteBatchNode* batch);
 
 		// Returns the shadow shape. Don't edit the points manually, you savage!
 		PolygonShape* getShadowShape();
@@ -47,7 +50,7 @@ namespace Pim
 
 	protected:
 		friend class LightingSystem;
-
+		friend class SpriteBatchNode;
 		
 		GLuint					texID;			// The texture ID
 		GLboolean				_a;				// Has the texture alpha?

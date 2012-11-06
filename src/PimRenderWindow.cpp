@@ -4,6 +4,7 @@
 #include "PimGameControl.h"
 #include "PimException.h"
 #include "PimLayer.h"
+#include "PimScene.h"
 
 #include <stdlib.h>
 
@@ -339,8 +340,8 @@ namespace Pim
 			winRect.bottom = (long)winData.defaultWindowedResolution.y;
 
 			// Place the window somewhat in the center
-			winRect.left   = (scrnw-winRect.right) / 2.f;
-			winRect.top	   = (scrnh-winRect.bottom) / 3.f;
+			winRect.left   = (scrnw-winRect.right) / 2;
+			winRect.top	   = (scrnh-winRect.bottom) / 3;
 
 			SetWindowLongPtr(hWnd, GWL_EXSTYLE,	dwExStyle);
 			SetWindowLongPtr(hWnd, GWL_STYLE,	dwStyle);
@@ -371,8 +372,9 @@ namespace Pim
 		printOpenGLErrors("PRERENDER FRAME (something has gone quite wrong)");
 #endif
 		// Clear screen with the top layer's color
-		Color c = Layer::getTopLayer()->getColor();
-		glClearColor(c.r,c.g, c.b, c.a);
+		Scene *s = GameControl::getScene();
+
+		glClearColor(s->color.r,s->color.g,s->color.b,s->color.a);
 		glClear(GL_COLOR_BUFFER_BIT);		// Clear the screen
 		glClearColor(0.f, 0.f, 0.f, 0.f);
 
@@ -380,9 +382,11 @@ namespace Pim
 
 		glLoadIdentity();					// Reset The Current view Matrix
 
-		Layer::getTopLayer()->draw();		// Draw the top level layer first
+		s->drawScene();						// Render the scene
 
 		glLoadIdentity();					// Reload the identity matrix
+
+		s->drawSceneHUD();					// Render HUD-layers
 
 		if (bpos == VER)
 		{
@@ -430,8 +434,10 @@ namespace Pim
 		}
 
 
+#ifdef _DEBUG
 		// Dispatch post render messages
 		GameControl::getSingleton()->dispatchPostrender();
+#endif
 
 		SwapBuffers(hDC);				// Swap the buffers to draw to screen
 

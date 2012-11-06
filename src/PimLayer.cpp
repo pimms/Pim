@@ -6,30 +6,22 @@
 #include "PimGameControl.h"
 #include "PimException.h"
 #include "PimCollisionManager.h"
+#include "PimScene.h"
 
 namespace Pim
 {
-	Layer* Layer::topLayer = NULL;
-
 	Layer::Layer(void)
 	{
-		isTopLayer	= false;
 		color		= Color(1.f, 1.f, 1.f, 1.f);
 		immovable	= false;
 		scale		= Vec2(1.f, 1.f);
 		lightSys	= NULL;
+		parentScene = NULL;
+		isHUD		= false;
 	}
 	Layer::~Layer(void)
 	{
-		if (isTopLayer)
-			topLayer = NULL;
-
 		destroyLightingSystem();
-	}
-
-	Layer* Layer::getTopLayer()
-	{
-		return topLayer;
 	}
 
 	Layer* Layer::getParentLayer()
@@ -97,6 +89,16 @@ namespace Pim
 		glPopMatrix();
 	}
 
+	void Layer::setZOrder(int z)
+	{
+		if (parent)
+			parent->dirtyZOrder = true;
+		else if (parentScene)
+			parentScene->dirtyZOrder = true;
+		
+		zOrder = z;
+	}
+
 	void Layer::createLightingSystem(Vec2 resolution)
 	{
 		destroyLightingSystem();
@@ -160,9 +162,13 @@ namespace Pim
 		return lightSys;
 	}
 	
+	/* // THE INTEGRATED COLLISION LIBRARY IS DEPRECATED
 	void Layer::addCollisionNode(GameNode *node)
 	{
+#ifdef _DEBUG
 		PimAssert(node->colShape, "Error: collision node has no collision shape!");
+#endif
+
 		collisionNodes.push_back(node);
 	}
 	void Layer::removeCollisionNode(GameNode *node)
@@ -173,11 +179,5 @@ namespace Pim
 				collisionNodes.erase(collisionNodes.begin() + i);
 		}
 	}
-
-	void Layer::_topLevelNode()
-	{
-		PimAssert(topLayer == NULL, "Error: another top layer already exist!");
-		isTopLayer	= true;
-		topLayer	= this;
-	}
+	*/
 }

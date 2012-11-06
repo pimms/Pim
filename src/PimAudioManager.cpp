@@ -60,50 +60,10 @@ namespace Pim
 		unsigned long bufferSize;
 
 		// Open the wave file in binary.
-		error = fopen_s(&filePtr, filename, "rb");
-		if(error != 0)
-			return false;
+		fopen_s(&filePtr, filename, "rb");
  
 		// Read in the wave file header.
-		count = fread(&waveFileHeader, sizeof(waveFileHeader), 1, filePtr);
-		if(count != 1)
-			return false;
- 
-		// Check that the chunk ID is the RIFF format.
-		if((waveFileHeader.chunkId[0] != 'R') || (waveFileHeader.chunkId[1] != 'I') || 
-		   (waveFileHeader.chunkId[2] != 'F') || (waveFileHeader.chunkId[3] != 'F'))
-			return false;
- 
-		// Check that the file format is the WAVE format.
-		if((waveFileHeader.format[0] != 'W') || (waveFileHeader.format[1] != 'A') ||
-		   (waveFileHeader.format[2] != 'V') || (waveFileHeader.format[3] != 'E'))
-			return false;
- 
-		// Check that the sub chunk ID is the fmt format.
-		if((waveFileHeader.subChunkId[0] != 'f') || (waveFileHeader.subChunkId[1] != 'm') ||
-		   (waveFileHeader.subChunkId[2] != 't') || (waveFileHeader.subChunkId[3] != ' '))
-			return false;
- 
-		// Check that the audio format is WAVE_FORMAT_PCM.
-		if(waveFileHeader.audioFormat != WAVE_FORMAT_PCM)
-			return false;
- 
-		// Check that the wave file was recorded in stereo format.
-		if(waveFileHeader.numChannels != 2)
-			return false;
- 
-		// Check that the wave file was recorded at a sample rate of 44.1 KHz.
-		if(waveFileHeader.sampleRate != 44100)
-			return false;
- 
-		// Ensure that the wave file was recorded in 16 bit format.
-		if(waveFileHeader.bitsPerSample != 16)
-			return false;
- 
-		// Check for the data chunk header.
-		if((waveFileHeader.dataChunkId[0] != 'd') || (waveFileHeader.dataChunkId[1] != 'a') ||
-		   (waveFileHeader.dataChunkId[2] != 't') || (waveFileHeader.dataChunkId[3] != 'a'))
-			return false;
+		fread(&waveFileHeader, sizeof(waveFileHeader), 1, filePtr);
 
 		// Set the wave format of secondary buffer that this wave file will be loaded onto.
 		s->wfm.wFormatTag = WAVE_FORMAT_PCM;
@@ -122,54 +82,26 @@ namespace Pim
 		s->desc.lpwfxFormat = &s->wfm;
 		s->desc.guid3DAlgorithm = GUID_NULL;
 
-		// Create a temporary sound buffer with the specific buffer settings.
-		result = m_DirectSound->CreateSoundBuffer(&s->desc, &tempBuffer, NULL);
-		if(FAILED(result))
-			return false;
- 
-		// Test the buffer format against the direct sound 8 interface and create the secondary buffer.
-		result = tempBuffer->QueryInterface(IID_IDirectSoundBuffer8, (void**)&*s->buffer);
-		if(FAILED(result))
-			return false;
- 
-		// Release the temporary buffer.
-		tempBuffer->Release();
-		tempBuffer = 0;
+		s->buffer = createBuffer(&s->wfm, &s->desc);
 
 		// Move to the beginning of the wave data which starts at the end of the data chunk header.
 		fseek(filePtr, sizeof(WaveHeaderType), SEEK_SET);
  
 		// Create a temporary buffer to hold the wave file data.
 		waveData = new unsigned char[waveFileHeader.dataSize];
-		if(!waveData)
-			return false;
  
 		// Read in the wave file data into the newly created buffer.
-		count = fread(waveData, 1, waveFileHeader.dataSize, filePtr);
-		if(count != waveFileHeader.dataSize)
-			return false;
+		fread(waveData, 1, waveFileHeader.dataSize, filePtr);
  
-		// Close the file once done reading.
-		error = fclose(filePtr);
-		if(error != 0)
-		{
-			return false;
-		}
+		fclose(filePtr);
  
-		// Lock the secondary buffer to write wave data into it.
-		result = s->buffer->Lock(0, waveFileHeader.dataSize, (void**)&bufferPtr, (DWORD*)&bufferSize, NULL, 0, 0);
-		if(FAILED(result))
-			return false;
- 
-		// Copy the wave data into the buffer.
+		s->buffer->Lock(0, waveFileHeader.dataSize, (void**)&bufferPtr,
+			(DWORD*)&bufferSize, NULL, 0, 0);
+
 		memcpy(bufferPtr, waveData, waveFileHeader.dataSize);
- 
-		// Unlock the secondary buffer after the data has been written to it.
-		result = s->buffer->Unlock((void*)bufferPtr, bufferSize, NULL, 0);
-		if(FAILED(result))
-			return false;
-	
-		// Release the wave data since it was copied into the secondary buffer.
+
+		s->buffer->Unlock((void*)bufferPtr, bufferSize, NULL, 0);
+
 		delete [] waveData;
 		waveData = 0;
  
@@ -206,13 +138,7 @@ namespace Pim
 		s->desc.dwReserved		= 0;
 		s->desc.dwBufferBytes	= BUFFER_SIZE * 2;
 		
-		IDirectSoundBuffer *tempBuffer;
-		m_DirectSound->CreateSoundBuffer(&s->desc, &tempBuffer, NULL);
-
-		tempBuffer->QueryInterface(IID_IDirectSoundBuffer8, (void**)&*&s->buffer);
-
-		tempBuffer->Release();
-		tempBuffer = 0;
+		s->buffer = createBuffer(&s->wfm, &s->desc);
 
 		DWORD	pos = 0;
 		int		sec = 0;
@@ -236,6 +162,8 @@ namespace Pim
 	void AudioManager::oggUpdate()
 	{
 		DWORD pos;
+
+		std::vector<Sound*> soundsToDelete;
 
 		for each (Sound *s in oggSounds)
 		{
@@ -289,7 +217,13 @@ namespace Pim
 				s->buffer->Unlock(buf, size, NULL, NULL);
 				s->lastSection = s->curSection;
 			}
+
+			if (s->deleteWhenDone && s->done && !s->isLoop)
+				soundsToDelete.push_back(s);
 		}
+
+		for each (Sound *s in soundsToDelete)
+			delete s;
 	}
 	void AudioManager::scheduleOggUpdate(Sound *sound)
 	{
@@ -312,6 +246,8 @@ namespace Pim
 
 		sound->curSection = 1;
 		sound->lastSection = 0;
+		sound->done = false;
+		sound->almostDone = false;
 
 		sound->buffer->Lock(sound->lastSection*BUFFER_SIZE, size, (LPVOID*)&buf, &size, 0, 0, 0);
 

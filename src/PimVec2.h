@@ -87,7 +87,7 @@ namespace Pim
 	struct Color
 	{
 		Color(float rr, float gg, float bb, float aa) : r(rr), g(gg), b(bb), a(aa) {}
-		Color() : r(0.f), g(0.f), b(0.f), a(0.f) {}
+		Color() : r(1.f), g(1.f), b(1.f), a(1.f) {}
 
 		float r, g, b, a;
 	};

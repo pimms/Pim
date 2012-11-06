@@ -9,6 +9,8 @@
 #include "PimShaderManager.h"
 #include "PimCollisionManager.h"
 #include "PimAudioManager.h"
+#include "PimScene.h"
+#include "PimConsoleReader.h"
 
 #include <iostream>
 #include <ctime>
@@ -105,7 +107,7 @@ namespace Pim
 		PimAssert(singleton == NULL, "Only one GameControl instance can exist at a time.");
 
 		singleton		= this;
-		layer			= NULL;
+		scene			= NULL;
 
 		// Get the module path
 		char path[260] = { '\0' };
@@ -134,7 +136,7 @@ namespace Pim
 		return singleton->modulePath;
 	}
 
-	void GameControl::go(Layer *l, WinStyle::CreationData data)
+	void GameControl::go(Scene *s, WinStyle::CreationData data, bool commandline)
 	{
 		try 
 		{
@@ -150,10 +152,12 @@ namespace Pim
 			AudioManager::instantiateSingleton();
 
 #ifdef _DEBUG
-		std::cout<<"\n[OpenGL version " <<glGetString(GL_VERSION) <<"]\n\n"; 
+			if (commandline)
+				ConsoleReader::begin();
+			std::cout<<"\n[OpenGL version " <<glGetString(GL_VERSION) <<"]\n\n"; 
 #endif
 
-			setLayer(l);
+			setScene(s);
 
 			gameLoop();
 		} 
@@ -171,13 +175,19 @@ namespace Pim
 				"Exception thrown", MB_OK | MB_ICONEXCLAMATION);
 		}
 
-		// Clean up the layer
-		if (layer) delete layer;
+		// Clean up the scene
+		if (scene) 
+			delete scene;
 
 		Input::clearSingleton();
 		ShaderManager::clearSingleton();
 		//CollisionManager::clearSingleton();	// TBI
 		AudioManager::clearSingleton();
+
+#ifdef _DEBUG
+		if (commandline)
+			ConsoleReader::shutDown();
+#endif
 
 		renderWindow->killWindow();
 	}
@@ -233,8 +243,8 @@ namespace Pim
 	{
 		if (winData.resolution.x  != w || winData.resolution.y != h)
 		{
-			winData.resolution.x = w;
-			winData.resolution.y = h;
+			winData.resolution.x = (float)w;
+			winData.resolution.y = (float)h;
 
 			renderWindow->resizeWindow(w, h);
 		}
@@ -263,16 +273,15 @@ namespace Pim
 		return winData.coordinateSystem / renderWindow->ortho;
 	}
 
-	void GameControl::setLayer(Layer *l)
+	void GameControl::setScene(Scene *newScene)
 	{
-		PimAssert(l != NULL, "Error: Cannot set layer: NULL.");
+		PimAssert(newScene != NULL, "Error: Cannot set scene: NULL.");
 
-		if (layer)
-			delete layer;
+		if (scene)
+			delete scene;
 
-		layer = l;
-		layer->_topLevelNode();
-		layer->loadResources();
+		scene = newScene;
+		scene->loadResources();
 	}
 
 	void GameControl::gameLoop() 
@@ -295,18 +304,20 @@ namespace Pim
 					DispatchMessage(&msg);
 				}
 			}
-		
+
+#ifdef _DEBUG
+			// Dispatch console commands
+			ConsoleReader::getSingleton()->dispatch();
+#endif
+
 			// Dispatch key and mouse events 
 			Input::getSingleton()->_dispatch();
 
 			// Dispatch update calls
 			dispatchPrerender();
 
-			// Render the frame - post render calls are made by renderWindow
+			// Render the frame - post render calls are dispatched by renderWindow
 			renderWindow->renderFrame();
-
-			// Dispatch postrender calls
-			dispatchPostrender();
 
 			// Update playing ogg files
 			AudioManager::getSingleton()->oggUpdate();

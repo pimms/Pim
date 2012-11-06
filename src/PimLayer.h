@@ -28,22 +28,20 @@
 #include "PimVec2.h"
 #include "PimGameNode.h"
 #include "PimLightingSystem.h"
-#include "PimCollisionFilter.h"
 
 namespace Pim
 {
 	// Forward declarations
 	class CollisionManager;
 	class GameControl;
+	class Scene;
 	struct Color;
 
 	class Layer : public GameNode
 	{
 	public:
 		Layer(void);
-		virtual ~Layer(void);				// Virtual for the sake of subclassing
-
-		static Layer* getTopLayer();
+		virtual ~Layer(void);			
 
 		Layer* getParentLayer();
 
@@ -60,6 +58,8 @@ namespace Pim
 
 		// USE loadResources TO INSTANTIATE YOUR LAYER - DO NOT USE Layer()!
 		virtual void loadResources() {}
+
+		virtual void setZOrder(int z);
 
 
 		// Create a lighting system.
@@ -91,30 +91,33 @@ namespace Pim
 		// Wether or not you choose to do something with the new position is up to you.
 		// This is not a physics implementation - PIM simply tells you whether or not 
 		// your node is intersecting another node.
-		void addCollisionNode(GameNode *node);
+		//void addCollisionNode(GameNode *node);
 		// The node will no longer be collided with.
 		// Called automatically upon node delete.
-		void removeCollisionNode(GameNode*);
+		//void removeCollisionNode(GameNode*);
 
 
 		// Layers scale their children.
 		Vec2			scale;
 
+		// Immovable indicates whether or not the layer should be moved as the parent
+		// layer (if there is one). The layer's position will only be relative to
+		// itself.
 		bool			immovable;
 
+		// HUD-layers are drawn last no matter what. Their ZOrder is relative to other
+		// HUD-layers only.
+		bool			isHUD;
+
+		// The background color
 		Color			color;
 
 	protected:
+		friend class Scene;
 		friend class GameControl;
 		friend class CollisionManager;
 
-		static Layer*	topLayer;
-
-
-		// Called when attached to the GameControl as the top level node
-		void _topLevelNode();
-
-		bool			isTopLayer;
+		Scene			*parentScene;
 
 		LightingSystem	*lightSys;
 

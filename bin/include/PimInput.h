@@ -23,42 +23,27 @@
 
 namespace Pim
 {
-	namespace Key
-	{
-		typedef enum KeyCode
-		{
-			K_BACKSPACE = 8,
-			K_ENTER = 13,
-			K_LCTRL = 17,
-			K_ESC = 27,
-			K_SPACE = 32,
-			K_LEFT = 37,K_UP,K_RIGHT,K_DOWN,
-			K_0 = 48,K_1,K_2,K_3,K_4,K_5,K_6,K_7,K_8,K_9,
-			K_A = 65,K_B,K_C,K_D,K_E,K_F,K_G,K_H,K_I,K_J,K_K,K_L,K_M,K_N,K_O,K_P,K_Q,K_R,K_S,K_T,K_U,K_V,K_W,K_X,K_Y,K_Z,
-			K_F1 = 112,K_F2,K_F3,K_F4,K_F5,	K_F6,K_F7,K_F8,K_F9,K_F10,K_F11,K_F12,
-		};
-	}
-	namespace Mouse
-	{
-		typedef enum MouseButton
-		{
-			MBTN_LEFT,
-			MBTN_RIGHT,
-		};
-	}
-
 	// Forward declarations
 	class Input;
 	class Vec2;
 	class GameControl;
 
 	// Class containing all key event data.
-	// One instance is kept by Input, and is passed to listeners as const.
+	// One instance is kept by Input, and is passed to listeners.
 	class KeyEvent
 	{
 	public:
-		bool isKeyDown(Key::KeyCode k);
-		bool isKeyFresh(Key::KeyCode k);
+		enum KeyCode
+		{
+			K_BACKSPACE = 8, K_ENTER = 13, K_LCTRL = 17, K_ESC = 27, K_SPACE = 32,
+			K_LEFT = 37,K_UP,K_RIGHT,K_DOWN,
+			K_0 = 48,K_1,K_2,K_3,K_4,K_5,K_6,K_7,K_8,K_9,
+			K_A = 65,K_B,K_C,K_D,K_E,K_F,K_G,K_H,K_I,K_J,K_K,K_L,K_M,K_N,K_O,K_P,K_Q,K_R,K_S,K_T,K_U,K_V,K_W,K_X,K_Y,K_Z,
+			K_F1 = 112,K_F2,K_F3,K_F4,K_F5,	K_F6,K_F7,K_F8,K_F9,K_F10,K_F11,K_F12,
+		};
+
+		bool isKeyDown(KeyCode k);
+		bool isKeyFresh(KeyCode k);
 			
 		bool isKeyDown(std::string str);
 		bool isKeyFresh(std::string str);
@@ -71,7 +56,7 @@ namespace Pim
 		int count;
 		bool keys[256];
 		bool fresh[256];
-		std::map<std::string,Key::KeyCode>	binds;
+		std::map<std::string,KeyCode>	binds;
 
 		KeyEvent();
 		KeyEvent(const KeyEvent&);
@@ -79,17 +64,23 @@ namespace Pim
 		inline void _unfresh();
 
 		// Binding keys by string
-		void bindKey(std::string &str, Key::KeyCode k);
+		void bindKey(std::string &str, KeyCode k);
 		void unbindKey(std::string &str);
 	};
 
 	// Class containing all mouse event data.
-	// One instance is kept by Input, and is passed to listeners as const.
+	// One instance is kept by Input, and is passed to listeners.
 	class MouseEvent
 	{
 	public:
-		bool isKeyDown(Mouse::MouseButton mb);
-		bool isKeyFresh(Mouse::MouseButton mb);
+		enum MouseButton
+		{
+			MBTN_LEFT,
+			MBTN_RIGHT,
+		};
+
+		bool isKeyDown(MouseButton mb);
+		bool isKeyFresh(MouseButton mb);
 		Vec2 getPosition();
 		Vec2 getRelative();
 
@@ -114,7 +105,7 @@ namespace Pim
 	public:
 		static Input* getSingleton() { return Input::singleton; }
 
-		void bindKey(std::string id, Key::KeyCode key);
+		void bindKey(std::string id, KeyEvent::KeyCode key);
 		void unbindKey(std::string id);
 
 		// Methods have to be manual in order for the WINAPI callback

@@ -34,7 +34,7 @@ namespace Pim
 	{
 		if (getParentLayer())
 		{
-			getParentLayer()->removeCollisionNode(this);
+			//getParentLayer()->removeCollisionNode(this);
 			getParentLayer()->removeLight(this);
 		}
 
@@ -155,16 +155,15 @@ namespace Pim
 
 	void GameNode::orderChildren()
 	{
-		if (!dirtyZOrder || children.size() < 2)
+		if (!dirtyZOrder || children.size() <= 1)
 			return;
 		
 		// Insertion sorting - the children should be somewhat sorted already.
-		int i;
-		GameNode *key;
 		for (unsigned int j=1; j<children.size(); j++)
 		{
-			key = children[j];
-			i = j - 1;
+			GameNode *key = children[j];
+			int i = j - 1;
+
 			while (i >= 0 && children[i]->zOrder > key->zOrder)
 			{
 				children[i+1] = children[i];

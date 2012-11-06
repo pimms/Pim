@@ -1,3 +1,46 @@
+0.5 changelog
+==============
+
+The following enum's accessibility has been altered:
+>		Text::TextAlignment -> Label::TextAlignment
+>
+>		Key::KeyCode -> KeyEvent::KeyCode
+>
+>		Mouse::MouseButton -> MouseEvent::MouseButton
+>
+>		Layer::loadResourcse() is now called 100% automatically 
+>		when adding a layer to a scene.
+
+The following classes have been added:
+	
+>		Pim::Button
+>			A button class. It requires sprites for the different states it
+>			can have (normal, hovered, pressed, deactivated), and is quite
+>			versatile.
+
+>		Pim::Slider
+>			The Slider class utilizes a Pim::Button as the slider handle, and
+>			as such it requires the same state-sprites as the Button-class. In
+>			addition to this, it requires a background sprite and two vectors.
+
+>		Pim::Scene
+>			The new top-level node. Scene-objects are primarily layer-handlers,
+>			and it is aimed to provide a more intuitive interface for dynamic
+>			layer changing and hierarchy logic. The Scene objects in themselves
+>			does absolutely nothing. The Scene class has a "loadResources()" method
+>			you should utilize to load your resources. It is called automatically 
+>			by the game controller when the Scene is set as the main scene. 
+
+The engine hierarchy has been altered slightly. GameControl can no longer
+work when only passed a layer - it must now be passed an instance of the
+new class "Pim::Scene". This should make the engine more flexible and 
+intuitive when it comes to game logic, layer hierarchy and HUD / UI.
+Note that only one scene can be active at any given time.
+
+The setup tutorial in the bottom section of this document has been altered
+to reflect all new changes.
+
+
 Pim setup tutorial
 ==================
 
@@ -63,7 +106,7 @@ dependencies":
 >OpenGL32.lib;Pim_d.lib;
 
 Change the Configuration selection to "Release", and add the following under the 
-"Linker"->"Input" tab:
+"Linekr"->"Input" tab:
 
 >OpenGL32.lib;Pim.lib;
 
@@ -106,6 +149,15 @@ The following snippet will quickly throw an image up to the screen:
 >			float time;
 >			Pim::Sprite *mySprite;
 >		};
+>
+>		class MyScene : public Pim::Scene 						// Our Scene-class
+>		{
+>			void loadResources()								// Called by the GameControl-object
+>			{
+>				MyPimLayer *layer = new MyPimLayer;				// Instantiate a layer
+>				addLayer(layer);								// Add it to the scene. This calls "loadResources()" on the layer.
+>			}
+>		};
 >		
 >		int main()
 >		{
@@ -120,9 +172,8 @@ The following snippet will quickly throw an image up to the screen:
 >		
 >			cd.forcedAspectRatio = true;					// Force AR. Does not stretch image, creates black borders
 >			cd.aspectRatio = 3.f / 2.f;						// 4:3 aspect ratio
->			cd.coordinateSystem = Pim::Vec2(1.f, 1.f);		// Sets the coordinate of the top right corner. (0,0) is always bottom left.
 >		
->			gc->go(new MyPimLayer, cd);			// Hand control over to Pim. Send it the CreationData and an instance of MyPimLayer.
+>			gc->go(new MyScene, cd);			// Hand control over to Pim. Send it the CreationData and an instance of MyScene.
 >			delete gc;							// Delete the game controller when the game quits.
 >		
 >			return 0;

@@ -13,6 +13,7 @@
 #include "PimWinStyle.h"
 #include "PimGameControl.h"
 #include "PimGameNode.h"
+#include "PimScene.h"
 #include "PimLayer.h"
 #include "PimException.h"
 #include "PimInput.h"
@@ -26,3 +27,5 @@
 #include "PimRenderWindow.h"
 #include "PimAudioManager.h"
 #include "PimSound.h"
+#include "PimButton.h"
+#include "PimSlider.h"

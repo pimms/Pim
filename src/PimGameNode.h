@@ -20,7 +20,7 @@
 
 #include "PimVec2.h"
 
-#include "PimCollisionFilter.h"
+#include "PimConsoleReader.h"
 
 namespace Pim
 {
@@ -33,7 +33,7 @@ namespace Pim
 	class KeyEvent;
 	class Layer;
 
-	class GameNode
+	class GameNode : public ConsoleListener
 	{
 	public:
 		GameNode();
@@ -42,7 +42,7 @@ namespace Pim
 		const GameNode* getParent();		// returns this node's parent
 		virtual Layer* getParentLayer();			// returns the closest layer in the hierarchy
 
-		void addChild(GameNode *ch);
+		virtual void addChild(GameNode *ch);
 		void removeChild(GameNode *ch, bool cleanup=false);
 		void removeAllChildren(bool cleanup=false);
 
@@ -61,7 +61,7 @@ namespace Pim
 		virtual void mouseEvent(MouseEvent &)	{}	// called on mouselisteners on event
 		virtual void keyEvent(KeyEvent &)		{}	// called on keylisteners on event
 		virtual void update(float dt)			{}	// called on framelisteners pre-render
-		virtual void postFrame()				{}	// called on framelisteners post-render
+		virtual void postFrame()				{}	// ## ONLY AVAILABLE IN DEBUG BUILDS ##
 
 		// Virtual for the sake of Layers.
 		virtual Vec2 getWorldPosition();	
@@ -85,7 +85,7 @@ namespace Pim
 		virtual void batchDraw();
 
 		// Change the ZOrder (0 is drawn first)
-		void setZOrder(int z);
+		virtual void setZOrder(int z);
 
 
 		// Set the collision shape
@@ -122,6 +122,11 @@ namespace Pim
 		//unsigned short			colGroup;		// The group of THIS node
 		//unsigned short			colFilter;		// The groups this node can collide with
 
+		// If dirtyZOrder is false, orderChildren() will do nothing.
+		// The z-order is dirty when a new child has been added, and is 
+		// clean when the children are ordered.
+		bool					dirtyZOrder;
+
 	protected:
 		friend class CollisionManager;
 		friend class Layer;
@@ -138,11 +143,6 @@ namespace Pim
 		// Use setZOrder(int) to change the order - this will dirtien the parent.
 		// The zOrder variable is the index relative to it's siblings.
 		int						zOrder;
-
-		// If dirtyZOrder is false, orderChildren() will do nothing.
-		// The z-order is dirty when a new child has been added, and is 
-		// clean when the children are ordered.
-		bool					dirtyZOrder;
 
 		// The collision shape. Likely to be removed.
 		PolygonShape			*colShape;		

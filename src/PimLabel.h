@@ -7,19 +7,16 @@ namespace Pim
 	// Forward declarations
 	class Font;
 
-	namespace Text
+	class Label : public GameNode
 	{
-		typedef enum TextAlignment
+	public:
+		enum TextAlignment
 		{
 			TEXT_LEFT,
 			TEXT_CENTER,
 			TEXT_RIGHT,
 		};
-	}
 
-	class Label : public GameNode
-	{
-	public:
 		Label(Font *pfont);
 		Label(Font *pfont, std::string ptext);
 		~Label();
@@ -36,7 +33,7 @@ namespace Pim
 		void setTextWithFormat(const char *ptext, ...);
 
 		// Set the text alignment of the label
-		void setTextAlignment(Text::TextAlignment align);
+		void setTextAlignment(TextAlignment align);
 
 		// Set the line padding (distance between lines, render pixels)
 		void setLinePadding(int pad);

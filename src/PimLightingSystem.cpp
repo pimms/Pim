@@ -483,6 +483,7 @@ namespace Pim
 #ifdef _DEBUG					// IFDEF DEBUG
 		if (dbgDrawNormal)		
 		{
+			glLineWidth(2.f);
 			glColor4f(0.f, 1.f, 0.f, 1.f);
 			glDisable(GL_STENCIL_TEST);
 			glBegin(GL_LINES);
@@ -524,6 +525,7 @@ namespace Pim
 			glEnd();
 			glEnable(GL_STENCIL_TEST);
 			glColor4f(color.r, color.g, color.b, 1.f);
+			glLineWidth(1.f);
 		}						
 #endif							// ENDIF
 
@@ -533,8 +535,6 @@ namespace Pim
 				  v2 = (pos-castLines[i]->getP2(sc));
 			float a1 = v1.angleBetween(Vec2(1.f,0.f)),
 				  a2 = v2.angleBetween(Vec2(1.f,0.f));
-
-			glUseProgram(shaderGauss->getProgram());
 
 			glBegin(GL_QUADS);
 				glVertex2f(-v1.x, -v1.y);
@@ -548,8 +548,6 @@ namespace Pim
 				glVertex2f(-v2.x, -v2.y);
 				glVertex2f(-v1.x, -v1.y);
 			glEnd();
-
-			glUseProgram(0);
 		}
 
 		glColor4f(1.f, 1.f, 1.f, 1.f);

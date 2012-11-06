@@ -55,7 +55,7 @@ namespace Pim
 
 		WinStyle::CreationData	winData;
 		
-		typedef enum BORDERPOS
+		enum BORDERPOS
 		{
 			NONE,
 			VER,

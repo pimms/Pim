@@ -8,7 +8,7 @@ namespace Pim
 	// Window style enum - the three accepted window styles for PC gaming
 	namespace WinStyle
 	{
-		typedef enum WinStyle
+		enum WinStyle
 		{
 			// The default. The window will be... windowed.
 			WINDOWED,

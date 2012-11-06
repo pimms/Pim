@@ -21,7 +21,6 @@ namespace Pim
 	{
 	public:
 		Sound(std::string file);
-		Sound();
 		~Sound();
 
 		// Load either a WAV or an OGG file.
@@ -29,6 +28,9 @@ namespace Pim
 
 		// Play the currently loaded audio file
 		void play();
+
+		// Rewind and play
+		void replay();
 
 		// Play the currently loaded audio file in an infinite loop
 		void loop();
@@ -38,9 +40,6 @@ namespace Pim
 
 		// Pause the current sound
 		void pause();
-
-		// Rewind and play
-		void replay();
 		
 		// No sound: 0.0 
 		// Max volume: 1.0
@@ -50,8 +49,10 @@ namespace Pim
 		// all right: 1.0
 		void setPan(float pan);
 
-		// Play the currently streamed (OGG ONLY) file in parallel
-		Sound* playParallel();
+		// Play the currently streamed (OGG ONLY) file in parallel.
+		// It's stupidly important to notice that ONLY OGG FILES CAN BE PLAYED IN PARALLEL.
+		// Pass true to this method in order to let the AudioManager clean it up for you.
+		Sound* playParallel(bool deleteWhenDone = false);
 
 		// Retreive the buffer. Try not to do anything stupid with it.
 		IDirectSoundBuffer8* getBuffer() { return buffer; }
@@ -74,6 +75,8 @@ namespace Pim
 			are streamed from memory.
 		*/
 
+		std::string filename;
+
 		bool audioStream;		// Is the audio streamed?
 
 		bool isLoop;			// Stream looping?
@@ -84,5 +87,6 @@ namespace Pim
 		int curSection;			// Which half of the buffer IS played?
 
 		bool isParallel;		// Is this a parallel sound?
+		bool deleteWhenDone;	// Delete sound when done playing?
 	};
 }

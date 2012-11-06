@@ -22,6 +22,14 @@ namespace Pim
 		// Using Pim::Sprite's destruction method
 	}
 
+	void SpriteBatchNode::addChild(GameNode *ch)
+	{
+		GameNode::addChild(ch);
+
+		if (Sprite *s = dynamic_cast<Sprite*>(ch))
+			s->useBatchNode(this);
+	}
+
 	void SpriteBatchNode::draw()
 	{
 		batchDraw();

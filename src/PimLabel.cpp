@@ -99,13 +99,13 @@ namespace Pim
 		calculateDimensions();
 	}
 
-	void Label::setTextAlignment(Text::TextAlignment align)
+	void Label::setTextAlignment(TextAlignment align)
 	{
-		if (align == Text::TEXT_LEFT) 
+		if (align == TEXT_LEFT) 
 			anchor = Vec2(0.f, 0.5);
-		else if (align == Text::TEXT_CENTER)
+		else if (align == TEXT_CENTER)
 			anchor = Vec2(0.5f, 0.5f);
-		else if (align == Text::TEXT_RIGHT)
+		else if (align == TEXT_RIGHT)
 			anchor = Vec2(1.f, 0.5f);
 	}
 	void Label::setLinePadding(int pad)
@@ -195,9 +195,7 @@ namespace Pim
 	}
 	void Label::batchDraw()
 	{
-#ifdef _DEBUG
-		std::cout<<"Hierarchy error: Label should not be child of a SpriteBatchNode!\n";
-#endif
+		// Draw normally.
 		draw();
 	}
 

@@ -29,6 +29,8 @@ namespace Pim
 		SpriteBatchNode();
 		~SpriteBatchNode(void);
 
+		void addChild(GameNode *ch);
+
 		void draw();
 		void batchDraw();
 

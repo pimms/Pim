@@ -35,11 +35,11 @@ namespace Pim
 			fresh[i]=false; 
 	}
 
-	bool KeyEvent::isKeyDown(Key::KeyCode k)
+	bool KeyEvent::isKeyDown(KeyCode k)
 	{ 
 		return keys[k]; 
 	}
-	bool KeyEvent::isKeyFresh(Key::KeyCode k)
+	bool KeyEvent::isKeyFresh(KeyCode k)
 	{ 
 		return keys[k] && fresh[k]; 
 	}
@@ -55,7 +55,7 @@ namespace Pim
 	{ 
 		return count; 
 	}
-	void KeyEvent::bindKey(std::string &str, Key::KeyCode k)
+	void KeyEvent::bindKey(std::string &str, KeyCode k)
 	{ 
 		binds[str] = k; 
 	}
@@ -97,11 +97,11 @@ namespace Pim
 		position = pos; 
 	}
 
-	bool MouseEvent::isKeyDown(Mouse::MouseButton mb)
+	bool MouseEvent::isKeyDown(MouseButton mb)
 	{ 
 		return keys[mb]; 
 	}
-	bool MouseEvent::isKeyFresh(Mouse::MouseButton mb)
+	bool MouseEvent::isKeyFresh(MouseButton mb)
 	{
 		return keys[mb] && fresh[mb]; 
 	}
@@ -137,7 +137,7 @@ namespace Pim
 		}
 	}
 
-	void Input::bindKey(std::string id, Key::KeyCode key)
+	void Input::bindKey(std::string id, KeyEvent::KeyCode key)
 	{
 		PimAssert(key >= 0 && key < 256, "Key out of range.");
 		keyEvent.bindKey(id, key);
