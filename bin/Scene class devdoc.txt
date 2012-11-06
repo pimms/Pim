@@ -1,5 +1,0 @@
-Functionality requirements for the Scene class:
-
-1. 	It must mainly focus on the handling of layers and general game logic.
-2.	There can only be one Scene active at any current time.
-

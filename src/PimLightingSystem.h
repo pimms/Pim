@@ -158,6 +158,8 @@ namespace Pim
 		std::map<GameNode*,LightDef*>			lights;
 		std::vector<Sprite*>					casters;
 
+		bool									hqShadow;
+
 		bool									castShadow;
 
 		bool									dbgDrawNormal;	// Casting edges and normals

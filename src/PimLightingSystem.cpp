@@ -20,6 +20,7 @@ namespace Pim
 		parent			= par;
 		castShadow		= true;
 		dbgDrawNormal   = false;
+		hqShadow		= false;
 		resolution		= pResolution;
 
 		// Create the texture
@@ -77,7 +78,7 @@ namespace Pim
 			uniform vec4 ulcolor;									\n\
 			float length(vec4 v)									\n\
 			{														\n\
-				return sqrt(v.x*v.x + v.y*v.y + v.z*v.z);	\n\
+				return sqrt(v.x*v.x + v.y*v.y + v.z*v.z);			\n\
 			}														\n\
 			void main()												\n\
 			{														\n\
@@ -96,23 +97,63 @@ namespace Pim
 		shaderLightTex->setUniform1f("lalpha", 1.f);
 
 		shaderGauss = ShaderManager::addShader(
-			"// FRAGMENT SHADER										\n\
-			//uniform sampler2D tex;								\n\
-			varying vec2 vTexCoord;									\n\
-			//const float blurSize = 1.0 / 512.0;					\n\
-			void main()												\n\
-			{														\n\
-				gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);			\n\
+			"// FRAGMENT SHADER																		\n\
+			// This shader is a modified version of Callum Hay's implementation:					\n\
+			// http://callumhay.blogspot.no/2010/09/gaussian-blur-shader-glsl.html					\n\
+			uniform float sigma;																	\n\
+			uniform float blurSize; 																\n\
+			uniform float lalpha;																	\n\
+			uniform vec4 ulcolor;																	\n\
+			uniform sampler2D blurSampler; 															\n\
+																									\n\
+			const float pi = 3.14159265;															\n\
+			const float numBlurPixelsPerSide = 10.0;												\n\
+																									\n\
+			float length(vec4 v)																	\n\
+			{																						\n\
+				return sqrt(v.x*v.x + v.y*v.y + v.z*v.z );											\n\
+			}																						\n\
+																									\n\
+			void main() {																			\n\
+			  vec3 incrementalGaussian;																\n\
+			  incrementalGaussian.x = 1.0 / (sqrt(2.0 * pi) * sigma);								\n\
+			  incrementalGaussian.y = exp(-0.5 / (sigma * sigma));									\n\
+			  incrementalGaussian.z = incrementalGaussian.y * incrementalGaussian.y;				\n\
+			  vec4 avgValue = vec4(0.0);															\n\
+			  float coefficientSum = 0.0;															\n\
+			  avgValue += texture2D(blurSampler, gl_TexCoord[0].xy) * incrementalGaussian.x;		\n\
+			  coefficientSum += incrementalGaussian.x;												\n\
+			  incrementalGaussian.xy *= incrementalGaussian.yz;										\n\
+			  for (float i = 1.0; i <= numBlurPixelsPerSide; i++) { 								\n\
+				avgValue += texture2D(blurSampler, gl_TexCoord[0].xy - i * blurSize *  				\n\
+								vec2(1.0,0.0)) * incrementalGaussian.x;         					\n\
+				avgValue += texture2D(blurSampler, gl_TexCoord[0].xy + i * blurSize *  				\n\
+								vec2(1.0,0.0)) * incrementalGaussian.x;         					\n\
+				avgValue += texture2D(blurSampler, gl_TexCoord[0].xy - i * blurSize *  				\n\
+								vec2(0.0,1.0)) * incrementalGaussian.x;         					\n\
+				avgValue += texture2D(blurSampler, gl_TexCoord[0].xy + i * blurSize *  				\n\
+								vec2(0.0,1.0)) * incrementalGaussian.x;         					\n\
+				coefficientSum += 4.0 * incrementalGaussian.x;										\n\
+				//incrementalGaussian.xy *= incrementalGaussian.yz;									\n\
+			  }																						\n\
+			  vec4 color = avgValue / coefficientSum;												\n\
+			  color.a -= (length(color) - length(ulcolor)) * lalpha * 3.0;							\n\
+			  gl_FragColor = color;																	\n\
 			}",
-			"// VERTEX SHADER									\n\
-			varying vec2 vTexCoord;								\n\
-			void main()											\n\
-			{													\n\
-				gl_Position = ftransform();						\n\
-				vTexCoord = gl_Position.xy;						\n\
+			"// VERTEX SHADER																		\n\
+			// This shader is a modified version of Callum Hay's implementation:					\n\
+			// http://callumhay.blogspot.no/2010/09/gaussian-blur-shader-glsl.html					\n\
+			void main() {																			\n\
+				gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;								\n\
+				gl_TexCoord[0] = gl_MultiTexCoord0;													\n\
 			}",
 			"_ltMgrGauss_"
 			);
+		shaderGauss->setUniform1i("blurSampler", 0);
+		shaderGauss->setUniform1f("blurSize", 1.f/resolution.y);
+		shaderGauss->setUniform1f("sigma", 2.f);
+		shaderGauss->setUniform1f("lalpha", 1.f);
+		shaderGauss->setUniform4f("ulcolor", 0.f, 0.f, 0.f, 1.f);
 	}
 
 	void LightingSystem::setUnlitColor(Color c)
@@ -370,7 +411,7 @@ namespace Pim
 		glEnable(GL_TEXTURE_2D);  
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, texID);
 
@@ -382,7 +423,10 @@ namespace Pim
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		glUseProgram(shaderLightTex->getProgram());
+		if (hqShadow)
+			glUseProgram(shaderGauss->getProgram());
+		else
+			glUseProgram(shaderLightTex->getProgram());
 
 		glColor4f(1.f,1.f,1.f, 1.f);
 		glBegin(GL_QUADS);

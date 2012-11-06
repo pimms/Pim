@@ -152,6 +152,11 @@ namespace Pim
 		if (lightSys)
 			lightSys->setLightAlpha(a);
 	}
+	void Layer::setSmoothShadows(bool flag)
+	{
+		if (lightSys)
+			lightSys->hqShadow = flag;
+	}
 	void Layer::setShadowcasterDebugDraw(bool flag)
 	{
 		if (lightSys)

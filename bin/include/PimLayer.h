@@ -80,6 +80,8 @@ namespace Pim
 		void setLightingUnlitColor(Color color);
 		// Set the transparency of the lights (0.0 - 1.0)
 		void setLightAlpha(float a);
+		// Set whether or not we're using the advanced shader (gaussian blurred shadow texture)
+		void setSmoothShadows(bool flag);
 		// Set whether or not debug drawing of normals and edges is enabled
 		void setShadowcasterDebugDraw(bool);
 		// Return the lighting system

@@ -89,17 +89,21 @@ namespace Pim
 
 	void ConsoleReader::addListener(ConsoleListener *lst, const char *cmd)
 	{
-		singleton->listeners[cmd].push_back(lst);
+		if (singleton)
+			singleton->listeners[cmd].push_back(lst);
 	}
 	void ConsoleReader::removeListener(ConsoleListener *lst)
 	{
-		for (	auto it=singleton->listeners.begin(); 
-				it != singleton->listeners.end(); it++)
+		if (singleton)
 		{
-			for (unsigned int i=0; i<it->second.size(); i++)
+			for (	auto it=singleton->listeners.begin(); 
+					it != singleton->listeners.end(); it++)
 			{
-				if (it->second[i] == lst)
-					it->second.erase(it->second.begin() + i);
+				for (unsigned int i=0; i<it->second.size(); i++)
+				{
+					if (it->second[i] == lst)
+						it->second.erase(it->second.begin() + i);
+				}
 			}
 		}
 	}
