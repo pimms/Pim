@@ -189,6 +189,14 @@ The Pim engine is built upon, and would not be possible without the use of the f
 Ten million thanks go out to all the contributors and developers of these libraries.
 
 
+## OpenGL 
+
+http://www.opengl.org/
+
+License:
+http://www.sgi.com/products/software/opengl/license.html
+
+
 ## FreeType 2.1.10
 
 http://www.freetype.org
