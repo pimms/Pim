@@ -150,6 +150,8 @@ namespace Pim
 		void createFlatLightTexture(LightDef *lDef);
 
 		virtual void renderLightTexture();		// The main rendering called every frame
+		virtual void gaussPass();				// Currently never called. 
+
 		virtual void renderLights();			// Merely a subroutine
 		virtual void renderShadows(LightDef *d, GameNode *n, Vec2 &p, Vec2 &rResSc);
 
@@ -176,6 +178,9 @@ namespace Pim
 
 		// The light texture
 		GLuint			texID;
+
+		// The texture used when rendering the second pass
+		GLuint			secpassTexID;
 
 		// The shader used when rendering the light texture onto the main buffer
 		Shader			*shaderLightTex;

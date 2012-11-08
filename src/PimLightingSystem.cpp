@@ -23,7 +23,16 @@ namespace Pim
 		hqShadow		= false;
 		resolution		= pResolution;
 
-		// Create the texture
+		// Create the textures
+		glGenTextures(1, &secpassTexID);
+		glBindTexture(GL_TEXTURE_2D, secpassTexID);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, (GLsizei)resolution.x, (GLsizei)resolution.y, 
+						0, GL_RGBA, GL_FLOAT, NULL);
+
 		glGenTextures(1, &texID);
 		glBindTexture(GL_TEXTURE_2D, texID);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
@@ -55,7 +64,6 @@ namespace Pim
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		loadShaders();
-		setUnlitColor(Color(0.f, 0.f, 0.f, 1.f));
 	}
 	LightingSystem::~LightingSystem()
 	{
@@ -95,6 +103,7 @@ namespace Pim
 			"_ltMgr_");
 		shaderLightTex->setUniform1i("texSrc", 0);
 		shaderLightTex->setUniform1f("lalpha", 1.f);
+		shaderLightTex->setUniform4f("ulcolor", 0.f, 0.f, 0.f, 1.f);
 
 		shaderGauss = ShaderManager::addShader(
 			"// FRAGMENT SHADER																		\n\
@@ -137,7 +146,7 @@ namespace Pim
 				//incrementalGaussian.xy *= incrementalGaussian.yz;									\n\
 			  }																						\n\
 			  vec4 color = avgValue / coefficientSum;												\n\
-			  color.a -= (length(color) - length(ulcolor)) * lalpha * 3.0;							\n\
+			  color.a -= (length(color) - length(ulcolor)) * lalpha * 2.0;							\n\
 			  gl_FragColor = color;																	\n\
 			}",
 			"// VERTEX SHADER																		\n\
@@ -151,7 +160,7 @@ namespace Pim
 			);
 		shaderGauss->setUniform1i("blurSampler", 0);
 		shaderGauss->setUniform1f("blurSize", 1.f/resolution.y);
-		shaderGauss->setUniform1f("sigma", 2.f);
+		shaderGauss->setUniform1f("sigma", 5.f);
 		shaderGauss->setUniform1f("lalpha", 1.f);
 		shaderGauss->setUniform4f("ulcolor", 0.f, 0.f, 0.f, 1.f);
 	}
@@ -160,6 +169,7 @@ namespace Pim
 	{
 		color = c;
 		shaderLightTex->setUniform4f("ulcolor", c.r, c.g, c.b, c.a);
+		shaderGauss->setUniform4f("ulcolor", c.r, c.g, c.b, c.a);
 	}
 	void LightingSystem::setLightAlpha(float a)
 	{
@@ -168,6 +178,7 @@ namespace Pim
 
 		a = 1.f - a;
 		shaderLightTex->setUniform1f("lalpha", a);
+		shaderGauss->setUniform1f("lalpha", a);
 	}
 
 	void LightingSystem::addLight(GameNode *node, LightDef *lDef)
@@ -412,9 +423,10 @@ namespace Pim
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, texID);
 
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		
 		// Restore the matrices
 		glPopAttrib();
 
@@ -430,17 +442,10 @@ namespace Pim
 
 		glColor4f(1.f,1.f,1.f, 1.f);
 		glBegin(GL_QUADS);
-			glTexCoord2i(0,0);
-			glVertex2f(0.f, 0.f);
-
-			glTexCoord2i(1,0);
-			glVertex2f(wd.x, 0.f);
-
-			glTexCoord2i(1,1);
-			glVertex2f(wd.x, wd.y);
-
-			glTexCoord2i(0,1);
-			glVertex2f(0.f, wd.y);
+			glTexCoord2i(0,0);		glVertex2f(0.f, 0.f);
+			glTexCoord2i(1,0);		glVertex2f(wd.x, 0.f);
+			glTexCoord2i(1,1);		glVertex2f(wd.x, wd.y);
+			glTexCoord2i(0,1);		glVertex2f(0.f, wd.y);
 		glEnd();
 
 		glUseProgram(0);
@@ -448,6 +453,37 @@ namespace Pim
 		glPopMatrix();
 
 		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	void LightingSystem::gaussPass()
+	{
+		// Currently never called
+		glUseProgram(shaderGauss->getProgram());
+		glEnable(GL_TEXTURE_2D);
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 
+										GL_TEXTURE_2D, secpassTexID, 0);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glBindTexture(GL_TEXTURE_2D, texID);
+		glBegin(GL_QUADS);
+			glTexCoord2i(0,0);		glVertex2f(0.f, 0.f);
+			glTexCoord2i(1,0);		glVertex2f(resolution.x, 0.f);
+			glTexCoord2i(1,1);		glVertex2f(resolution.x, resolution.y);
+			glTexCoord2i(0,1);		glVertex2f(0.f, resolution.y);
+		glEnd();
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 
+										GL_TEXTURE_2D, texID, 0);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glBindTexture(GL_TEXTURE_2D, secpassTexID);
+		glBegin(GL_QUADS);
+			glTexCoord2i(0,0);		glVertex2f(0.f, 0.f);
+			glTexCoord2i(1,0);		glVertex2f(resolution.x, 0.f);
+			glTexCoord2i(1,1);		glVertex2f(resolution.x, resolution.y);
+			glTexCoord2i(0,1);		glVertex2f(0.f, resolution.y);
+		glEnd();
+
+		glBindTexture(GL_TEXTURE_2D, texID);
+
 	}
 
 	void LightingSystem::renderLights()

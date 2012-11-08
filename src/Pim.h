@@ -29,3 +29,4 @@
 #include "PimSound.h"
 #include "PimButton.h"
 #include "PimSlider.h"
+#include "PimParticleSystem.h"

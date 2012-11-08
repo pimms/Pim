@@ -19,7 +19,7 @@ namespace Pim
 	{
 		while (!quit)
 		{
-			if (kbhit())
+			if (_kbhit())
 			{
 				char input[80];
 				std::cin.getline(input,80);
@@ -29,6 +29,7 @@ namespace Pim
 					prepareCommand(input);
 				ReleaseMutex(mutex);
 			}
+			Sleep(100);
 		}
 	}
 	void ConsoleReader::prepareCommand(const char *cmd)
