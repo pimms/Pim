@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PimInternal.h"
+#include "PimRenderTexture.h"
 
 /*
 	The lighting system is the boss handling shadow casting, rendering of light textures
@@ -150,7 +151,7 @@ namespace Pim
 		void createFlatLightTexture(LightDef *lDef);
 
 		virtual void renderLightTexture();		// The main rendering called every frame
-		virtual void gaussPass();				// Currently never called. 
+		void gaussPass();
 
 		virtual void renderLights();			// Merely a subroutine
 		virtual void renderShadows(LightDef *d, GameNode *n, Vec2 &p, Vec2 &rResSc);
@@ -170,17 +171,8 @@ namespace Pim
 
 		Color									color;			// Color of the unlit areas
 
-		// The framebuffer to which we render the light texture
-		GLuint			frameBuffer;
-
-		// The renderbuffer (used to get stencil buffer)
-		GLuint			renderBuffer;
-
-		// The light texture
-		GLuint			texID;
-
-		// The texture used when rendering the second pass
-		GLuint			secpassTexID;
+		RenderTexture	*rt;
+		RenderTexture	*rtGauss;
 
 		// The shader used when rendering the light texture onto the main buffer
 		Shader			*shaderLightTex;

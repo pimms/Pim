@@ -1,5 +1,7 @@
 #pragma once
 
+#define PIM_VERSION "0.5b"
+
 // memory-leak tracing for debug builds
 #ifdef _DEBUG
 #define _CRTDBG_MAP_ALLOC

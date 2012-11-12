@@ -23,45 +23,8 @@ namespace Pim
 		hqShadow		= false;
 		resolution		= pResolution;
 
-		// Create the textures
-		glGenTextures(1, &secpassTexID);
-		glBindTexture(GL_TEXTURE_2D, secpassTexID);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, (GLsizei)resolution.x, (GLsizei)resolution.y, 
-						0, GL_RGBA, GL_FLOAT, NULL);
-
-		glGenTextures(1, &texID);
-		glBindTexture(GL_TEXTURE_2D, texID);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, (GLsizei)resolution.x, (GLsizei)resolution.y, 
-						0, GL_RGBA, GL_FLOAT, NULL);
-
-		// Create the renderbuffer
-		glGenRenderbuffers(1, &renderBuffer);
-		glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
-
-		// Create the main framebuffer
-		glGenFramebuffers(1, &frameBuffer);
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8,
-						(GLsizei)resolution.x, (GLsizei)resolution.y);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-						GL_RENDERBUFFER, renderBuffer);
-
-		// Attach the texture
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 
-										GL_TEXTURE_2D, texID, 0);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		rt = new RenderTexture(resolution, true);
+		rtGauss = new RenderTexture(resolution);
 
 		loadShaders();
 	}
@@ -72,9 +35,8 @@ namespace Pim
 			delete it->second;
 		}
 
-		glDeleteTextures(1, &texID);
-		glDeleteFramebuffers(1, &frameBuffer);
-		glDeleteRenderbuffers(1, &renderBuffer);
+		delete rt;
+		delete rtGauss;
 	}
 
 	void LightingSystem::loadShaders()
@@ -112,11 +74,12 @@ namespace Pim
 			uniform float sigma;																	\n\
 			uniform float blurSize; 																\n\
 			uniform float lalpha;																	\n\
+			uniform float pixels = 10.0;															\n\
 			uniform vec4 ulcolor;																	\n\
+			uniform vec2 direction;																	\n\
 			uniform sampler2D blurSampler; 															\n\
 																									\n\
 			const float pi = 3.14159265;															\n\
-			const float numBlurPixelsPerSide = 10.0;												\n\
 																									\n\
 			float length(vec4 v)																	\n\
 			{																						\n\
@@ -133,17 +96,13 @@ namespace Pim
 			  avgValue += texture2D(blurSampler, gl_TexCoord[0].xy) * incrementalGaussian.x;		\n\
 			  coefficientSum += incrementalGaussian.x;												\n\
 			  incrementalGaussian.xy *= incrementalGaussian.yz;										\n\
-			  for (float i = 1.0; i <= numBlurPixelsPerSide; i++) { 								\n\
+			  for (float i = 1.0; i <= pixels; i++) { 												\n\
 				avgValue += texture2D(blurSampler, gl_TexCoord[0].xy - i * blurSize *  				\n\
-								vec2(1.0,0.0)) * incrementalGaussian.x;         					\n\
+								direction) * incrementalGaussian.x;         						\n\
 				avgValue += texture2D(blurSampler, gl_TexCoord[0].xy + i * blurSize *  				\n\
-								vec2(1.0,0.0)) * incrementalGaussian.x;         					\n\
-				avgValue += texture2D(blurSampler, gl_TexCoord[0].xy - i * blurSize *  				\n\
-								vec2(0.0,1.0)) * incrementalGaussian.x;         					\n\
-				avgValue += texture2D(blurSampler, gl_TexCoord[0].xy + i * blurSize *  				\n\
-								vec2(0.0,1.0)) * incrementalGaussian.x;         					\n\
-				coefficientSum += 4.0 * incrementalGaussian.x;										\n\
-				//incrementalGaussian.xy *= incrementalGaussian.yz;									\n\
+								direction) * incrementalGaussian.x;         						\n\
+				coefficientSum += 2.0 * incrementalGaussian.x;										\n\
+				incrementalGaussian.xy *= incrementalGaussian.yz;									\n\
 			  }																						\n\
 			  vec4 color = avgValue / coefficientSum;												\n\
 			  color.a -= (length(color) - length(ulcolor)) * lalpha * 2.0;							\n\
@@ -162,6 +121,7 @@ namespace Pim
 		shaderGauss->setUniform1f("blurSize", 1.f/resolution.y);
 		shaderGauss->setUniform1f("sigma", 5.f);
 		shaderGauss->setUniform1f("lalpha", 1.f);
+		shaderGauss->setUniform1f("pixels", 5.f);
 		shaderGauss->setUniform4f("ulcolor", 0.f, 0.f, 0.f, 1.f);
 	}
 
@@ -386,26 +346,9 @@ namespace Pim
 	void LightingSystem::renderLightTexture()
 	{
 		Vec2 wd = GameControl::getSingleton()->getRenderWindow()->ortho;
-		Vec2 off = GameControl::getSingleton()->getRenderWindow()->orthoOff;
-				
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-
-		glMatrixMode(GL_PROJECTION);
-		glPushMatrix();
-		glLoadIdentity();
-
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		glLoadIdentity();
-
-		// Set the ortho and viewport to match the texture's size
-		glPushAttrib(GL_VIEWPORT_BIT);
-		glViewport(0,0, (GLsizei)resolution.x, (GLsizei)resolution.y);
-		glOrtho(0, resolution.x, 0, resolution.y, 0, 1);
-
-		glTranslatef(0.f, 0.f, 0.f);
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);     
+		
+		rt->bindFBO();
+		rt->clear(GL_STENCIL_BUFFER_BIT);    
 
 		renderLights();
 
@@ -422,25 +365,24 @@ namespace Pim
 		glEnable(GL_TEXTURE_2D);  
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor4ub(255,255,255,255);
 
-		glBindTexture(GL_TEXTURE_2D, texID);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		
-		// Restore the matrices
-		glPopAttrib();
-
-		glMatrixMode(GL_PROJECTION);
-		glPopMatrix();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
+		rt->unbindFBO();
 
 		if (hqShadow)
-			glUseProgram(shaderGauss->getProgram());
+		{
+			gaussPass();
+			rtGauss->bindTex();
+		}
 		else
+		{	
 			glUseProgram(shaderLightTex->getProgram());
+			rt->bindTex();
+		}
 
-		glColor4f(1.f,1.f,1.f, 1.f);
+		glPushMatrix();				// Render to main FBO
+		glLoadIdentity();
+
 		glBegin(GL_QUADS);
 			glTexCoord2i(0,0);		glVertex2f(0.f, 0.f);
 			glTexCoord2i(1,0);		glVertex2f(wd.x, 0.f);
@@ -449,21 +391,19 @@ namespace Pim
 		glEnd();
 
 		glUseProgram(0);
-
-		glPopMatrix();
-
 		glBindTexture(GL_TEXTURE_2D, 0);
+		glPopMatrix();				// Render to main FBO
 	}
 	void LightingSystem::gaussPass()
 	{
-		// Currently never called
+		shaderGauss->setUniform2f("direction", 0.f, 1.f);
 		glUseProgram(shaderGauss->getProgram());
-		glEnable(GL_TEXTURE_2D);
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 
-										GL_TEXTURE_2D, secpassTexID, 0);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glBindTexture(GL_TEXTURE_2D, texID);
+		rtGauss->bindFBO();
+		rtGauss->clear();
+
+		rt->bindTex();
+
 		glBegin(GL_QUADS);
 			glTexCoord2i(0,0);		glVertex2f(0.f, 0.f);
 			glTexCoord2i(1,0);		glVertex2f(resolution.x, 0.f);
@@ -471,19 +411,12 @@ namespace Pim
 			glTexCoord2i(0,1);		glVertex2f(0.f, resolution.y);
 		glEnd();
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 
-										GL_TEXTURE_2D, texID, 0);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glBindTexture(GL_TEXTURE_2D, secpassTexID);
-		glBegin(GL_QUADS);
-			glTexCoord2i(0,0);		glVertex2f(0.f, 0.f);
-			glTexCoord2i(1,0);		glVertex2f(resolution.x, 0.f);
-			glTexCoord2i(1,1);		glVertex2f(resolution.x, resolution.y);
-			glTexCoord2i(0,1);		glVertex2f(0.f, resolution.y);
-		glEnd();
+		rtGauss->unbindFBO();
+		
+		glUseProgram(0);
+		shaderGauss->setUniform2f("direction", 1.f, 0.f); 
 
-		glBindTexture(GL_TEXTURE_2D, texID);
-
+		glUseProgram(shaderGauss->getProgram());
 	}
 
 	void LightingSystem::renderLights()
@@ -517,9 +450,6 @@ namespace Pim
 
 			glColor4f(1.f, 1.f, 1.f, 0.2f);
 
-			glPushMatrix();
-			//glScalef(renderScale.x, renderScale.y, 1.f);
-
 			//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 			glBegin(GL_QUADS);
 				glTexCoord2i(0,0);glVertex2i(-r,-r);
@@ -529,7 +459,6 @@ namespace Pim
 			glEnd();
 			//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			glPopMatrix();
 			glPopMatrix();					// Light texture
 		}
 

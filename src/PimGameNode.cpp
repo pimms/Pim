@@ -179,25 +179,14 @@ namespace Pim
 	{
 		glPushMatrix();
 
-		// Update position
-		Vec2 fac = GameControl::getSingleton()->windowScale();
+		Vec2 fac = GameControl::getSingleton()->coordinateFactor();
 
 		if (allowMidPixelPosition)
-			glTranslatef(position.x * fac.x, position.y * fac.y, 0.f);
+			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
 		else
-			glTranslatef(floor(position.x) / fac.x, position.y / fac.y, 0.f);
+			glTranslatef(floor(position.x) / fac.x, floor(position.y) / fac.y, 0.f);
 
 		glRotatef(rotation, 0.f, 0.f, 1.f);
-
-		/* THE INTEGRATED COLLISION DETECTION LIBRARY IS DEPRECATED
-		if (colShape && dbgColShape)
-		{
-			glPushMatrix();
-			glScalef(fac.x, fac.y, 1.f);
-			colShape->debugDraw();
-			glPopMatrix();
-		}
-		*/
 
 		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)
@@ -211,26 +200,15 @@ namespace Pim
 	{
 		glPushMatrix();
 
-		// Update position
-		Vec2 fac = GameControl::getSingleton()->windowScale();
+		Vec2 fac = GameControl::getSingleton()->coordinateFactor();
 
 		if (allowMidPixelPosition)
 			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
 		else
-			glTranslatef(floor(position.x) / fac.x, position.y / fac.y, 0.f);
+			glTranslatef(floor(position.x) / fac.x, floor(position.y) / fac.y, 0.f);
 
 		glRotatef(rotation, 0.f, 0.f, 1.f);
 
-		/* THE INTEGRATED COLLISION DETECTION LIBRARY IS DEPRECATED
-		if (colShape && dbgColShape)
-		{
-			glPushMatrix();
-			glScalef(fac.x, fac.y, 1.f);
-			colShape->debugDraw();
-			glPopMatrix();
-		}
-		*/
-			
 		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)
 		{

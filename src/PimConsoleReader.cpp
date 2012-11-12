@@ -80,7 +80,7 @@ namespace Pim
 			{
 				for each (ConsoleListener *l in listeners[command[0]])
 				{
-					l->handleCommand(&command);
+					l->handleCommand(command);
 				}
 			}
 

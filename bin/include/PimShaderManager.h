@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PimInternal.h"
+#include "PimConsoleReader.h"
 
 namespace Pim
 {
@@ -90,7 +91,7 @@ namespace Pim
 		//std::map<std::string,GLint>	attrib;
 	};
 
-	class ShaderManager
+	class ShaderManager : public ConsoleListener
 	{
 	public:
 		static ShaderManager* getSingleton()
@@ -100,6 +101,8 @@ namespace Pim
 		static Shader* addShader(std::string fragString,std::string vertString,std::string name);
 		
 		static Shader* getShader(std::string name);
+
+		void handleCommand(ConsoleCommand cmd);
 
 	private:
 		friend class GameControl;

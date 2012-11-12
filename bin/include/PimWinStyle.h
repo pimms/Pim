@@ -38,6 +38,10 @@ namespace Pim
 				resolution					= Vec2(wf, hf);
 				defaultWindowedResolution	= Vec2(wf, hf);
 			}
+			//CreationData() {}
+			//CreationData(const CreationData &) {}
+
+			
 			CreationData()
 			{
 				// Default init like a buss
@@ -53,6 +57,7 @@ namespace Pim
 				resolution					= Vec2(640.f, 480.f);
 				defaultWindowedResolution	= Vec2(640.f, 480.f);
 			}
+			
 
 			std::string		winTitle;
 

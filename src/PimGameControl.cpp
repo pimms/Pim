@@ -146,16 +146,17 @@ namespace Pim
 			renderWindow = new RenderWindow(data);
 			renderWindow->createWindow(data);
 
+#ifdef _DEBUG
+			if (commandline)
+				ConsoleReader::begin();
+			std::cout<<"\n[PIM-version " <<PIM_VERSION <<"]\n";
+			std::cout<<"[OpenGL version " <<glGetString(GL_VERSION) <<"]\n\n"; 
+#endif
+
 			Input::instantiateSingleton();
 			ShaderManager::instantiateSingleton();
 			//CollisionManager::instantiateSingleton();		// TBI
 			AudioManager::instantiateSingleton();
-
-#ifdef _DEBUG
-			if (commandline)
-				ConsoleReader::begin();
-			std::cout<<"\n[OpenGL version " <<glGetString(GL_VERSION) <<"]\n\n"; 
-#endif
 
 			setScene(s);
 

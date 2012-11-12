@@ -132,7 +132,16 @@ namespace Pim
 
 	ShaderManager::ShaderManager()
 	{
-		
+		listenCommand("shadermgr");
+
+#ifdef _DEBUG
+		std::cout <<"\nInstructions for altering shader uniforms via command line:\n";
+		std::cout <<"\tThe following command will alter the 'factor' uniform in the\n";
+		std::cout <<"\tshader 'myShader' to the value '0.5':\n";
+		std::cout <<"\t\tshadermgr myShader uniform1f factor 0.5\n";
+		std::cout <<"\tExample of setting a vec2 in the same shader:\n";
+		std::cout <<"\t\tshadermgr myShader uniform2f position 13.2 10.0\n\n";
+#endif
 	}
 	ShaderManager::~ShaderManager()
 	{
@@ -287,5 +296,65 @@ namespace Pim
 	{
 		if (singleton->shaders.count(name))
 			return singleton->shaders[name];
+	}
+
+	void ShaderManager::handleCommand(ConsoleCommand cmd)
+	{
+		if (cmd.size() > 4)
+		{
+			if (cmd[2].length() == 9)
+			{
+				char ty = cmd[2][8];
+				int n = atoi(&cmd[2][7]);
+
+				if (n + 4 != cmd.size() && n) return;
+
+				Shader *s = getShader(cmd[1]);
+				if (!s) return;
+
+				if (ty == 'f' || ty == 'd')
+				{
+					float buf[4] = {0.f};
+					for (int i=0; i<n; i++)
+						buf[i] = atof(cmd[4+i].c_str());
+					
+					switch (n)
+					{
+					case 1:
+						s->setUniform1f(cmd[3], buf[0]);
+						break;
+					case 2:
+						s->setUniform2f(cmd[3], buf[0], buf[1]); 
+						break;
+					case 3:
+						s->setUniform3f(cmd[3], buf[0], buf[1], buf[2]);
+						break;
+					case 4:
+						s->setUniform4f(cmd[3], buf[0], buf[1], buf[2], buf[3]);
+					}
+				}
+				else if (ty == 'i')
+				{
+					int buf[4] = {0.f};
+					for (int i=0; i<n; i++)
+						buf[i] = atoi(cmd[4+i].c_str());
+					
+					switch (n)
+					{
+					case 1:
+						s->setUniform1i(cmd[3], buf[0]);
+						break;
+					case 2:
+						s->setUniform2i(cmd[3], buf[0], buf[1]); 
+						break;
+					case 3:
+						s->setUniform3i(cmd[3], buf[0], buf[1], buf[2]);
+						break;
+					case 4:
+						s->setUniform4i(cmd[3], buf[0], buf[1], buf[2], buf[3]);
+					}
+				}
+			}
+		}
 	}
 }

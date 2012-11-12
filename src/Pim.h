@@ -2,8 +2,6 @@
 
 #pragma once
 
-#define PIM_VERSION "0.4d"
-
 // Standard headers (Windows, OpenGL, std...)
 #include "PimInternal.h"
 
@@ -30,3 +28,4 @@
 #include "PimButton.h"
 #include "PimSlider.h"
 #include "PimParticleSystem.h"
+#include "PimRenderTexture.h"

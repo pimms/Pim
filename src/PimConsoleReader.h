@@ -27,6 +27,8 @@ namespace Pim
 	// Forward declarations
 	class GameControl;
 	class ConsoleListener;
+
+	typedef std::vector<std::string>& ConsoleCommand;
 	
 	// The ConsoleReader class
 	class ConsoleReader
@@ -92,7 +94,7 @@ namespace Pim
 			ConsoleReader::removeListener(this);
 		}
 
-		virtual void handleCommand(std::vector<std::string> *cmd)	
+		virtual void handleCommand(ConsoleCommand cmd)	
 		{
 			// ...
 		}
