@@ -162,10 +162,10 @@ namespace Pim
 
 			gameLoop();
 		} 
-		catch (Exception &e) 
-		{
-			MessageBox(NULL,e.getDescription().c_str(),"Exception thrown", MB_OK | MB_ICONEXCLAMATION);
-		}
+		//catch (Exception &e) 
+		//{
+		//	MessageBox(NULL,e.getDescription().c_str(),"Exception thrown", MB_OK | MB_ICONEXCLAMATION);
+		//}
 		catch (std::exception &e)
 		{
 			MessageBox(NULL,e.what(),"Exception thrown", MB_OK | MB_ICONEXCLAMATION);

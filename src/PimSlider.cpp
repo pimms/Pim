@@ -60,6 +60,11 @@ namespace Pim
 		if (callback)
 			callback->sliderValueChanged(this,getValue());
 	}
+	void Slider::setActive(bool flag)
+	{
+		handle->setActive(flag);
+	}
+
 	float Slider::getValue()
 	{
 		float fac = (handle->position-minPt).length() / (maxPt-minPt).length();

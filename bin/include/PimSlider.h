@@ -62,6 +62,8 @@ namespace Pim
 		// be the minimum and lowest value, defaults to {0.0 - 1.0}). This initiates
 		// a callback.
 		void setHandlePosition(float val);
+
+		void setActive(bool flag);
 		
 		// Returns the current value
 		float getValue();

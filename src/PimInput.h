@@ -53,6 +53,7 @@ namespace Pim
 	protected:
 		friend class Input;
 
+		bool activePrevFrame;
 		int count;
 		bool keys[256];
 		bool fresh[256];

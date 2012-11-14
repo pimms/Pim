@@ -15,6 +15,7 @@ namespace Pim
 
 	KeyEvent::KeyEvent()
 	{ 
+		activePrevFrame = false;
 		_reset(); 
 	}
 	KeyEvent::KeyEvent(const KeyEvent&)
@@ -199,6 +200,7 @@ namespace Pim
 	{
 		keyEvent.keys[key] = false;
 		keyEvent.count--;
+		keyEvent.activePrevFrame = true;
 	}
 	void Input::_mouseMoved(int x, int y)
 	{
@@ -220,10 +222,12 @@ namespace Pim
 	void Input::_dispatch()
 	{
 		// dispatch keys..
-		if (keyEvent.count)
+		if (keyEvent.count || keyEvent.activePrevFrame)
 		{
 			for (unsigned int i=0; i<kl.size(); i++)
 				kl[i]->keyEvent(keyEvent);
+
+			keyEvent.activePrevFrame = false;
 		}
 		keyEvent._unfresh();
 

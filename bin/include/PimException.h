@@ -2,32 +2,15 @@
 
 #include <stdlib.h>
 #include <exception>
+#include <cassert>
 #include <string>
 
 namespace Pim
 {
-	class Exception : public std::exception
-	{
-	public:
-		Exception(std::string desc) : _desc(desc) {}
-
-		std::string getDescription() 
-		{
-			return _desc;
-		}
-
-	private:
-		Exception();
-		Exception(Exception&);
-
-		std::string _desc;
-	};
-
-
 	// Assertion
 
 #ifdef _DEBUG
-	void PimAssert(bool statement, std::string desc);
+void PimAssert(bool expr, std::string desc);
 #else
 #define PimAssert(_X_, _Y_) ;
 #endif

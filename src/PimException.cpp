@@ -2,6 +2,7 @@
 
 #include "PimException.h"
 
+
 namespace Pim
 {
 #ifdef _DEBUG
@@ -9,9 +10,9 @@ namespace Pim
 	{
 		if (!statement) 
 		{
-			MessageBox(NULL, desc.c_str(), "PimAssertion failed!", MB_ICONEXCLAMATION | MB_OK);
-			//throw new Exception(desc);
-			exit(-1);
+			//MessageBox(NULL, desc.c_str(), "PimAssertion failed!", MB_ICONEXCLAMATION | MB_OK);
+			throw new std::exception(desc.c_str());
+			//exit(-1);
 		}
 	}
 #else

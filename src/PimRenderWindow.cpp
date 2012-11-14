@@ -69,7 +69,7 @@ namespace Pim
 
 		if (!RegisterClass(&wc))
 		{
-			throw new Exception("Failed to register the window class.");
+			throw new std::exception("Failed to register the window class.");
 			return false;
 		}
 
@@ -99,7 +99,7 @@ namespace Pim
 									NULL)))
 		{
 			killWindow();
-			throw new Exception("Window creation error.");
+			throw new std::exception("Window creation error.");
 			return false;
 		}
 
@@ -130,7 +130,7 @@ namespace Pim
 		if (!(hDC = GetDC(hWnd)))
 		{
 			killWindow();
-			throw new Exception("Could not create a GL device context.");
+			throw new std::exception("Could not create a GL device context.");
 			return false;
 		}
 
@@ -138,7 +138,7 @@ namespace Pim
 		if (!(pixelFormat = ChoosePixelFormat(hDC, &pfd)))
 		{
 			killWindow();
-			throw new Exception("Can't find a suitable pixel format.");
+			throw new std::exception("Can't find a suitable pixel format.");
 			return false;
 		}
 
@@ -146,7 +146,7 @@ namespace Pim
 		if (!SetPixelFormat(hDC,pixelFormat,&pfd))
 		{
 			killWindow();
-			throw new Exception("Can't set the pixel format.");
+			throw new std::exception("Can't set the pixel format.");
 			return false;
 		}
 
@@ -154,7 +154,7 @@ namespace Pim
 		if (!(hRC = wglCreateContext(hDC)))
 		{
 			killWindow();
-			throw new Exception("Can't create a rendering context.");
+			throw new std::exception("Can't create a rendering context.");
 			return false;
 		}
 
@@ -162,7 +162,7 @@ namespace Pim
 		if (!wglMakeCurrent(hDC,hRC))
 		{
 			killWindow();
-			throw new Exception("Can't activate the GL rendering context.");
+			throw new std::exception("Can't activate the GL rendering context.");
 			return false;
 		}
 
@@ -170,7 +170,7 @@ namespace Pim
 		if (!initOpenGL())
 		{
 			killWindow();
-			throw new Exception("Initialization of OpenGL failed.");
+			throw new std::exception("Initialization of OpenGL failed.");
 			return false;
 		}
 

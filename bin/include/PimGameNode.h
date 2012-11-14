@@ -87,6 +87,9 @@ namespace Pim
 		// Change the ZOrder (0 is drawn first)
 		virtual void setZOrder(int z);
 
+		// Get the z order
+		int getZOrder() { return zOrder; }
+
 
 		// Set the collision shape
 		//void setCollisionShape(Vec2 vertices[], int vertexCount);

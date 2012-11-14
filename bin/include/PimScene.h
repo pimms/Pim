@@ -24,6 +24,10 @@ namespace Pim
 		void addLayer(Layer *layer);
 		void removeLayer(Layer *layer);
 
+		// The update calls are made automatically on the currently active
+		// scene object. 
+		virtual void update(float dt) {}
+
 		virtual void loadResources() {}
 
 		bool	dirtyZOrder;
