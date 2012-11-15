@@ -328,6 +328,8 @@ namespace Pim
 	{
 		float dt = calculateDeltaTime();
 
+		scene->update(dt);
+
 		for (unsigned int i=0; i<frameListeners.size(); i++)
 		{
 			frameListeners[i]->update(dt);

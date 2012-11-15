@@ -48,8 +48,6 @@ namespace Pim
 	bool AudioManager::loadWav(const char *filename, Sound *s)
 	{
 		// Thanks to Raster Tek (rastertek.com) for the following code.
-
-		int error;
 		FILE *filePtr;
 		unsigned int count;
 		WaveHeaderType waveFileHeader;

@@ -33,6 +33,9 @@ namespace Pim
 		// Returns the dot product between this vector and the passed vector
 		float dot(const Vec2 &other);
 
+		// Returns the cross product between this vector and the passed vector
+		float cross(const Vec2 &other);
+
 		// Returns the unit length vector without altering any current values.
 		Vec2 normalize();
 

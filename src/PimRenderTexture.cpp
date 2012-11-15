@@ -30,11 +30,11 @@ namespace Pim
 			glGenRenderbuffers(1, &rbo);
 			glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-						GL_RENDERBUFFER, rbo);
-
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 
 						(GLsizei)res.x, (GLsizei)res.y);
+
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+						GL_RENDERBUFFER, rbo);
 
 			glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		}

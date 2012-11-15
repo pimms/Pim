@@ -66,6 +66,10 @@ namespace Pim
 	{
 		return x * other.x + y * other.y;
 	}
+	float Vec2::cross(const Vec2 &other)
+	{
+		return x*other.y - y*other.x;
+	}
 
 	Vec2 Vec2::normalize()
 	{
