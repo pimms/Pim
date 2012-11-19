@@ -161,6 +161,7 @@ namespace Pim
 
 		RenderTexture *rt = new RenderTexture(Pim::Vec2(lDef->radius*2, lDef->radius*2));
 		rt->bindFBO();
+		rt->clear();
 		rt->retainTexture = true;
 
 		glDisable(GL_TEXTURE_2D);
@@ -206,6 +207,7 @@ namespace Pim
 
 		RenderTexture *rt = new RenderTexture(Pim::Vec2(totalRadius*2,totalRadius*2));
 		rt->bindFBO();
+		rt->clear();
 		rt->retainTexture = true;
 
 		// Render the light texture
