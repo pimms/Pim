@@ -23,8 +23,8 @@ namespace Pim
 		hqShadow		= false;
 		resolution		= pResolution;
 
-		rt = new RenderTexture(resolution, true);
-		rtGauss = new RenderTexture(resolution);
+		mainRT = new RenderTexture(resolution, true);
+		gaussRT = new RenderTexture(resolution);
 
 		loadShaders();
 	}
@@ -35,8 +35,8 @@ namespace Pim
 			delete it->second;
 		}
 
-		delete rt;
-		delete rtGauss;
+		delete mainRT;
+		delete gaussRT;
 	}
 
 	void LightingSystem::loadShaders()
@@ -152,43 +152,16 @@ namespace Pim
 			createFlatLightTexture(lDef);
 		else if (lDef->lightType == 1)
 			createSmoothLightTexture(lDef);
-		else PimAssert(0, "Error: invalid light type!");
+		else 
+			PimAssert(0, "Error: invalid light type!");
 	}
 	void LightingSystem::createSmoothLightTexture(LightDef *lightDef)
 	{
 		SmoothLightDef *lDef = (SmoothLightDef*)lightDef;
 
-		// Generate the texture
-		glGenTextures(1, &lDef->lTex);
-		glBindTexture(GL_TEXTURE_2D, lDef->lTex);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, lDef->radius*2, lDef->radius*2, 
-			0, GL_RGBA, GL_FLOAT, NULL);
-		
-		// Create a new framebuffer to avoid complications
-		GLuint fbo;
-		glGenFramebuffers(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-		// Attach the new texture
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-									GL_TEXTURE_2D, lDef->lTex, 0);
-		
-		glMatrixMode(GL_PROJECTION);
-		glPushMatrix();
-		glLoadIdentity();
-
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		glLoadIdentity();
-
-		glPushAttrib(GL_VIEWPORT_BIT);
-		glViewport(0,0,lDef->radius*2, lDef->radius*2);
-		glOrtho(0, lDef->radius*2, 0, lDef->radius*2, 0, 1);
+		RenderTexture *rt = new RenderTexture(Pim::Vec2(lDef->radius*2, lDef->radius*2));
+		rt->bindFBO();
+		rt->retainTexture = true;
 
 		glDisable(GL_TEXTURE_2D);
 
@@ -218,21 +191,9 @@ namespace Pim
 
 		glEnable(GL_TEXTURE_2D);
 		
-		// Unbind
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glDeleteFramebuffers(1, &fbo);
-
-		glPopAttrib();
-
-		glMatrixMode(GL_PROJECTION);
-		glPopMatrix();
-
-		glMatrixMode(GL_MODELVIEW);
-		glPopMatrix();
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		lDef->lTex = rt->getTex();
+		rt->unbindFBO();
+		delete rt;
 	}
 	void LightingSystem::createFlatLightTexture(LightDef *lightDef)
 	{
@@ -241,52 +202,18 @@ namespace Pim
 		if (lDef->falloff < 0.f)
 			lDef->falloff = 0.f;
 
-		/* REMOVED IN VERSION 0.4d */
-		//else if (lDef->falloff > 1.f)
-		//	lDef->falloff = 1.f;
-
 		float totalRadius = lDef->radius + (lDef->radius * lDef->falloff);
 
-		// Generate the texture
-		glGenTextures(1, &lDef->lTex);
-		glBindTexture(GL_TEXTURE_2D, lDef->lTex);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)totalRadius*2, (GLsizei)totalRadius*2, 
-			0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-
-		// Create a new framebuffer to avoid complications
-		GLuint fbo = 0;
-		glGenFramebuffers(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-		// Attach the new texture
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-									GL_TEXTURE_2D, lDef->lTex, 0);
-
-		glMatrixMode(GL_PROJECTION);
-		glPushMatrix();
-		glLoadIdentity();
-
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		glLoadIdentity();
-
-		glPushAttrib(GL_VIEWPORT_BIT);
-		glViewport(0,0, (GLsizei)totalRadius*2, (GLsizei)totalRadius*2);
-		glOrtho(0, totalRadius*2, 0, totalRadius*2, 0, 1);
-
-		glDisable(GL_TEXTURE_2D);
+		RenderTexture *rt = new RenderTexture(Pim::Vec2(totalRadius*2,totalRadius*2));
+		rt->bindFBO();
+		rt->retainTexture = true;
 
 		// Render the light texture
 		Color ic = lDef->innerColor;
 		Color oc = lDef->outerColor;
 
+		glDisable(GL_TEXTURE_2D);
 		glTranslatef(totalRadius, totalRadius, 0.f);
-
 
 		// The inner circle
 		const float step = 6.283f/100.f;
@@ -326,29 +253,20 @@ namespace Pim
 
 		glEnable(GL_TEXTURE_2D);
 		
-		// Unbind
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glDeleteFramebuffers(1, &fbo);
-
-		glPopAttrib();
-
-		glMatrixMode(GL_PROJECTION);
-		glPopMatrix();
-
-		glMatrixMode(GL_MODELVIEW);
-		glPopMatrix();
-
 		// Update the radius value
-		lDef->radius = (int)totalRadius;
+		lDef->radius = (int)ceil(totalRadius);
+
+		lDef->lTex = rt->getTex();
+		rt->unbindFBO();
+		delete rt;
 	}
 
 	void LightingSystem::renderLightTexture()
 	{
 		Vec2 wd = GameControl::getSingleton()->getRenderWindow()->ortho;
 		
-		rt->bindFBO();
-		rt->clear(GL_STENCIL_BUFFER_BIT);    
+		mainRT->bindFBO();
+		mainRT->clear(GL_STENCIL_BUFFER_BIT);    
 
 		renderLights();
 
@@ -367,17 +285,17 @@ namespace Pim
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor4ub(255,255,255,255);
 
-		rt->unbindFBO();
+		mainRT->unbindFBO();
 
 		if (hqShadow)
 		{
 			gaussPass();
-			rtGauss->bindTex();
+			gaussRT->bindTex();
 		}
 		else
 		{	
 			glUseProgram(shaderLightTex->getProgram());
-			rt->bindTex();
+			mainRT->bindTex();
 		}
 
 		glPushMatrix();				// Render to main FBO
@@ -399,10 +317,10 @@ namespace Pim
 		shaderGauss->setUniform2f("direction", 0.f, 1.f);
 		glUseProgram(shaderGauss->getProgram());
 
-		rtGauss->bindFBO();
-		rtGauss->clear();
+		gaussRT->bindFBO();
+		gaussRT->clear();
 
-		rt->bindTex();
+		mainRT->bindTex();
 
 		glBegin(GL_QUADS);
 			glTexCoord2i(0,0);		glVertex2f(0.f, 0.f);
@@ -411,7 +329,7 @@ namespace Pim
 			glTexCoord2i(0,1);		glVertex2f(0.f, resolution.y);
 		glEnd();
 
-		rtGauss->unbindFBO();
+		gaussRT->unbindFBO();
 		
 		glUseProgram(0);
 		shaderGauss->setUniform2f("direction", 1.f, 0.f); 
@@ -430,13 +348,13 @@ namespace Pim
 		glEnable(GL_STENCIL_TEST);    
 
 		glPushMatrix();						// Layer position & scale
-		glScalef(posScale.x, posScale.y, 1.f);
-		glTranslatef(parent->position.x, parent->position.y, 0.f);
+		//glScalef(posScale.x, posScale.y, 1.f);
+		glTranslatef(parent->position.x*posScale.x, parent->position.y*posScale.y, 0.f);
 		
 		for (auto it=lights.begin(); it!=lights.end(); it++)
 		{
 			int r = it->second->radius;
-			Vec2 p = it->first->getLightPosition();
+			Vec2 p = it->first->getLightPosition() * posScale;
 
 			if (castShadow && it->second->castShadows)
 				renderShadows(it->second, it->first, p, lineScale);

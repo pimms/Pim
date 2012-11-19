@@ -24,6 +24,10 @@ namespace Pim
 
 		GLuint getTex();
 
+		// If this is true, the texture will not be deleted 
+		// with the RenderTexture.
+		bool retainTexture;	
+
 	private:
 		RenderTexture() {}
 		RenderTexture(const RenderTexture&) {}

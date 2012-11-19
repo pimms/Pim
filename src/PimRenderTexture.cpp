@@ -4,10 +4,11 @@ namespace Pim
 {
 	RenderTexture::RenderTexture(Vec2 resolution, bool renderBuffer)
 	{
-		res = resolution;
-		fbo = 0;
-		rbo = 0;
-		tex = 0;
+		res				= resolution;
+		fbo				= 0;
+		rbo				= 0;
+		tex				= 0;
+		retainTexture	= false;
 
 		glGenTextures(1, &tex);
 		glBindTexture(GL_TEXTURE_2D, tex);
@@ -48,7 +49,7 @@ namespace Pim
 			glDeleteFramebuffers(1, &fbo);
 		if (rbo)
 			glDeleteRenderbuffers(1, &rbo);
-		if (tex)
+		if (tex && !retainTexture)
 			glDeleteTextures(1, &tex);
 	}
 

@@ -66,7 +66,7 @@ namespace Pim
 			outerColor		= Color(0.2f, 0.2f, 0.2f, 0.0f);
 			castShadows		= true;
 			radius			= 128;
-			lTex			= NULL;
+			lTex			= 0;
 			falloff			= 0.2f;
 			lightType		= -1;
 		}
@@ -146,14 +146,14 @@ namespace Pim
 		// Adds a light, and renders a light texture based on the data in light def
 		void addLight(GameNode *node, LightDef *lDef);
 
-		// Render the light texture.
-		void createSmoothLightTexture(LightDef *lDef);
-		void createFlatLightTexture(LightDef *lDef);
+		// Render the lights onto a texture
+		static void createSmoothLightTexture(LightDef *lDef);
+		static void createFlatLightTexture(LightDef *lDef);
 
 		virtual void renderLightTexture();		// The main rendering called every frame
 		void gaussPass();
 
-		virtual void renderLights();			// Merely a subroutine
+		virtual void renderLights();
 		virtual void renderShadows(LightDef *d, GameNode *n, Vec2 &p, Vec2 &rResSc);
 
 		Layer									*parent;
@@ -171,8 +171,8 @@ namespace Pim
 
 		Color									color;			// Color of the unlit areas
 
-		RenderTexture	*rt;
-		RenderTexture	*rtGauss;
+		RenderTexture	*mainRT;
+		RenderTexture	*gaussRT;
 
 		// The shader used when rendering the light texture onto the main buffer
 		Shader			*shaderLightTex;

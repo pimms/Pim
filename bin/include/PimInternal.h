@@ -1,6 +1,6 @@
 #pragma once
 
-#define PIM_VERSION "0.5b"
+#define PIM_VERSION "0.5c"
 
 // memory-leak tracing for debug builds
 #ifdef _DEBUG
@@ -12,6 +12,7 @@
 // C++ standard library
 #include <string>
 #include <vector>
+#include <list>
 #include <iostream>
 #include <fstream>
 #include <map>

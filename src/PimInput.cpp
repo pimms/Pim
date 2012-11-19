@@ -87,7 +87,7 @@ namespace Pim
 	}
 	void MouseEvent::_unfresh()
 	{ 
-		dirty=false; 
+		dirty=keys[0] || keys[1]; 
 		relPosition=Vec2(0.f, 0.f); 
 		fresh[0]=false;
 		fresh[1]=false;

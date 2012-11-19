@@ -34,12 +34,8 @@ namespace Pim
 	{
 		if (getParentLayer())
 		{
-			//getParentLayer()->removeCollisionNode(this);
 			getParentLayer()->removeLight(this);
 		}
-
-		if (colShape)
-			delete colShape;
 
 		removeAllChildren(true);
 		
@@ -49,7 +45,9 @@ namespace Pim
 
 	void GameNode::addChild(GameNode *ch)
 	{
+#ifdef _DEBUG
 		PimAssert(!ch->getParent(), "Node already has a parent");
+#endif
 
 		ch->parent = this;
 		children.push_back(ch);
@@ -63,10 +61,12 @@ namespace Pim
 			if (children[i] == ch)
 			{
 				children.erase(children.begin() + i);
-				if (cleanup)
-				{
+
+				if (cleanup) 
 					delete ch;
-				}
+				else
+					ch->parent = NULL;
+
 				return;
 			}
 		}
@@ -74,26 +74,28 @@ namespace Pim
 	void GameNode::removeAllChildren(bool cleanup)
 	{
 		// Delete all if required
-		if (cleanup)
+		for each (GameNode *child in children)
 		{
-			for each (GameNode *child in children)
-			{
+			if (cleanup) 
 				delete child;
-			}
+			else
+				child->parent = NULL;
 		}
 
 		// THEN clear the array
 		children.clear();
 	}
 
-	const GameNode* GameNode::getParent()
+	GameNode* GameNode::getParent()
 	{
 		return parent;
 	}
 	Layer* GameNode::getParentLayer()
 	{
 		if (parent)
+		{
 			return parent->getParentLayer();
+		}
 		return NULL;
 	}
 	

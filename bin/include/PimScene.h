@@ -39,7 +39,6 @@ namespace Pim
 		friend class RenderWindow;
 
 		void drawScene();		// Called from RenderWindow's renderFrame().
-		void drawSceneHUD();	// Called after drawScene().
 
 		void orderLayers();		// Duplicate of GameNode::orderChildren.
 

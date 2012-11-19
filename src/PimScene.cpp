@@ -38,14 +38,7 @@ namespace Pim
 		orderLayers();
 
 		for (unsigned int i=0; i<layers.size(); i++)
-			if (!layers[i]->isHUD)
-				layers[i]->draw();
-	}
-	void Scene::drawSceneHUD()
-	{
-		for (unsigned int i=0; i<layers.size(); i++)
-			if (layers[i]->isHUD)
-				layers[i]->draw();
+			layers[i]->draw();
 	}
 
 	void Scene::orderLayers()

@@ -384,10 +384,6 @@ namespace Pim
 
 		s->drawScene();						// Render the scene
 
-		glLoadIdentity();					// Reload the identity matrix
-
-		s->drawSceneHUD();					// Render HUD-layers
-
 		if (bpos == VER)
 		{
 			glColor4ub(0,0,0,255);

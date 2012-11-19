@@ -43,10 +43,10 @@ namespace Pim
 		Layer(void);
 		virtual ~Layer(void);			
 
-		Layer* getParentLayer();
+		Layer* getParentLayer();		// Returns this
 
-		Vec2 getWorldPosition();			
-		float getWorldRotation();	
+		Vec2 getWorldPosition();
+		float getWorldRotation();
 
 		Vec2 getLayerPosition();
 
@@ -56,7 +56,7 @@ namespace Pim
 
 		const Color getColor() { return color; }
 
-		// USE loadResources TO INSTANTIATE YOUR LAYER - DO NOT USE Layer()!
+		// USE LOADRESOURCES() TO INITIATE YOUR LAYER - DO NOT USE LAYER()!
 		virtual void loadResources() {}
 
 		virtual void setZOrder(int z);
@@ -106,10 +106,6 @@ namespace Pim
 		// layer (if there is one). The layer's position will only be relative to
 		// itself.
 		bool			immovable;
-
-		// HUD-layers are drawn last no matter what. Their ZOrder is relative to other
-		// HUD-layers only.
-		bool			isHUD;
 
 		// The background color
 		Color			color;

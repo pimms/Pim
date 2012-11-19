@@ -17,7 +17,6 @@ namespace Pim
 		scale		= Vec2(1.f, 1.f);
 		lightSys	= NULL;
 		parentScene = NULL;
-		isHUD		= false;
 	}
 	Layer::~Layer(void)
 	{
@@ -114,6 +113,10 @@ namespace Pim
 	}
 	void Layer::addLight(GameNode *node, LightDef *lDef)
 	{
+#ifdef _DEBUG
+		PimAssert(node->parent != NULL, "ERROR: Orphan lights are not allowed");
+#endif
+
 		if (lightSys)
 			lightSys->addLight(node, lDef);
 	}
@@ -121,7 +124,7 @@ namespace Pim
 	{
 		if (lightSys->lights.count(node))
 		{
-			removeChild(node, true);
+			delete lightSys->lights[node];
 			lightSys->lights.erase(node);
 		}
 	}

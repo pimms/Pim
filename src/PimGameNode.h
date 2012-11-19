@@ -39,7 +39,7 @@ namespace Pim
 		GameNode();
 		virtual ~GameNode();
 		
-		const GameNode* getParent();		// returns this node's parent
+		GameNode* getParent();						// returns this node's parent
 		virtual Layer* getParentLayer();			// returns the closest layer in the hierarchy
 
 		virtual void addChild(GameNode *ch);
