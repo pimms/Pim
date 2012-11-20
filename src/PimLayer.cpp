@@ -105,11 +105,11 @@ namespace Pim
 	}
 	void Layer::destroyLightingSystem()
 	{
-		if (!lightSys)
-			return;
-
-		delete lightSys;
-		lightSys = NULL;
+		if (lightSys)
+		{
+			delete lightSys;
+			lightSys = NULL;
+		}
 	}
 	void Layer::addLight(GameNode *node, LightDef *lDef)
 	{
@@ -122,7 +122,7 @@ namespace Pim
 	}
 	void Layer::removeLight(GameNode *node)
 	{
-		if (lightSys->lights.count(node))
+		if (lightSys && lightSys->lights.count(node))
 		{
 			delete lightSys->lights[node];
 			lightSys->lights.erase(node);
@@ -130,7 +130,8 @@ namespace Pim
 	}
 	void Layer::addShadowCaster(Sprite *caster)
 	{
-		lightSys->casters.push_back(caster);
+		if (lightSys)
+			lightSys->casters.push_back(caster);
 	}
 	void Layer::removeShadowCaster(Sprite *caster)
 	{
