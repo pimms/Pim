@@ -33,7 +33,6 @@ namespace Pim
 
 		Button(Sprite* normal, Sprite* hovered=NULL, Sprite* 
 			pressed=NULL, Sprite* deactivated=NULL);
-		
 
 		void replaceSprite(ButtonState state, Sprite*);
 

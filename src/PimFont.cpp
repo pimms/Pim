@@ -10,7 +10,7 @@ namespace Pim
 {
 	Font::Font(std::string font, int psize, bool bilinearFiltering)
 	{
-		font = Pim::GameControl::getModulePath().append(font);
+		//font = Pim::GameControl::getModulePath().append(font);
 
 		charWidth	= NULL;
 		tex			= NULL;
