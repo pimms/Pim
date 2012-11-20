@@ -43,8 +43,8 @@ namespace Pim
 		virtual Layer* getParentLayer();			// returns the closest layer in the hierarchy
 
 		virtual void addChild(GameNode *ch);
-		void removeChild(GameNode *ch, bool cleanup=false);
-		void removeAllChildren(bool cleanup=false);
+		virtual void removeChild(GameNode *ch, bool cleanup=false);
+		virtual void removeAllChildren(bool cleanup=false);
 
 		void listenInput();
 		void unlistenInput();
