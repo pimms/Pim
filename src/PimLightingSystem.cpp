@@ -2,6 +2,7 @@
 
 #include "PimVec2.h"
 #include "PimLightingSystem.h"
+#include "PimLightDef.h"
 #include "PimRenderWindow.h"
 #include "PimShaderManager.h"
 #include "PimGameControl.h"
@@ -33,6 +34,14 @@ namespace Pim
 		for (auto it=lights.begin(); it!=lights.end(); it++)
 		{
 			delete it->second;
+		}
+
+		for (auto it=preloadTex.begin(); it!=preloadTex.end(); it++)
+		{
+			if (it->second)
+			{
+				glDeleteTextures(1, &it->second);
+			}
 		}
 
 		delete mainRT;
@@ -144,18 +153,70 @@ namespace Pim
 	void LightingSystem::addLight(GameNode *node, LightDef *lDef)
 	{
 		if (lights.count(node))
+		{
 			delete lights[node];
+		}
 
 		lights[node] = lDef;
 
 		if (lDef->lightType == 0)
+		{
 			createFlatLightTexture(lDef);
+		}
 		else if (lDef->lightType == 1)
+		{
 			createSmoothLightTexture(lDef);
-		else 
+		}
+		else if (lDef->lightType != 2)
+		{
 			PimAssert(0, "Error: invalid light type!");
+		}
 	}
-	void LightingSystem::createSmoothLightTexture(LightDef *lightDef)
+	void LightingSystem::preloadTexture(LightDef *ld, std::string identifier)
+	{
+		if (!identifier.length() || preloadTex.count(identifier))
+		{
+			PimAssert(0, "Error: invalid identifying string!");
+		}
+
+		if (ld->lightType == 0)
+		{
+			createFlatLightTexture(ld, true);
+		}
+		else if (ld->lightType == 1)
+		{
+			createSmoothLightTexture(ld, true);
+		}
+		else
+		{
+			PimAssert(0, "Error: invalid light type!");
+		}
+
+		preloadTex[identifier] = ld->lTex;
+	}
+	bool LightingSystem::usePreloadedTexture(LightDef *ld, std::string identifier)
+	{
+		if (preloadTex.count(identifier))
+		{
+			ld->lTex = preloadTex[identifier];
+			return true;
+		}
+		
+		return false;
+	}
+	void LightingSystem::deletePreloadedTexture(std::string identifier)
+	{
+		if (preloadTex.count(identifier))
+		{
+			if (preloadTex[identifier])
+			{
+				glDeleteTextures(1, &preloadTex[identifier]);
+				preloadTex.erase(identifier);
+			}
+		}
+	}
+
+	void LightingSystem::createSmoothLightTexture(LightDef *lightDef, bool preload)
 	{
 		SmoothLightDef *lDef = (SmoothLightDef*)lightDef;
 
@@ -193,10 +254,15 @@ namespace Pim
 		glEnable(GL_TEXTURE_2D);
 		
 		lDef->lTex = rt->getTex();
+		if (preload)
+		{
+			lightDef->isPreloaded = true;
+		}
+
 		rt->unbindFBO();
 		delete rt;
 	}
-	void LightingSystem::createFlatLightTexture(LightDef *lightDef)
+	void LightingSystem::createFlatLightTexture(LightDef *lightDef, bool preload)
 	{
 		FlatLightDef *lDef = (FlatLightDef*)lightDef;
 
@@ -244,12 +310,11 @@ namespace Pim
 					glVertex2f(cosf(a)*totalRadius, sinf(a)*totalRadius);
 				}
 
-			glColor4f(ic.r, ic.g, ic.b, ic.a);
-			glVertex2f(cosf(0.f)*lDef->radius, sinf(0.f)*lDef->radius);
+				glColor4f(ic.r, ic.g, ic.b, ic.a);
+				glVertex2f(cosf(0.f)*lDef->radius, sinf(0.f)*lDef->radius);
 
-			glColor4f(oc.r, oc.g, oc.b, 0.f);
-			glVertex2f(cosf(0.f)*totalRadius, sinf(0.f)*totalRadius);
-
+				glColor4f(oc.r, oc.g, oc.b, 0.f);
+				glVertex2f(cosf(0.f)*totalRadius, sinf(0.f)*totalRadius);
 			glEnd();
 		}
 
@@ -259,6 +324,11 @@ namespace Pim
 		lDef->radius = (int)ceil(totalRadius);
 
 		lDef->lTex = rt->getTex();
+		if (preload)
+		{
+			lightDef->isPreloaded = true;
+		}
+
 		rt->unbindFBO();
 		delete rt;
 	}

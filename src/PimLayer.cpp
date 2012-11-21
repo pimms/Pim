@@ -1,5 +1,6 @@
 #include "PimInternal.h"
 
+#include "PimLightDef.h"
 #include "PimLayer.h"
 #include "PimGameNode.h"
 #include "PimVec2.h"
@@ -98,6 +99,10 @@ namespace Pim
 		zOrder = z;
 	}
 
+
+	// ---------- LIGHTING SYSTEM METHODS ----------
+
+
 	void Layer::createLightingSystem(Vec2 resolution)
 	{
 		destroyLightingSystem();
@@ -120,12 +125,38 @@ namespace Pim
 		if (lightSys)
 			lightSys->addLight(node, lDef);
 	}
+	bool Layer::addLight(GameNode *node, PreloadLightDef *pld, std::string identifier)
+	{
+		if (lightSys)
+		{
+			if (!lightSys->usePreloadedTexture(pld, identifier))
+			{
+				return false;
+			}
+
+			addLight(node, pld);
+		}
+
+		return true;
+	}
 	void Layer::removeLight(GameNode *node)
 	{
 		if (lightSys && lightSys->lights.count(node))
 		{
 			delete lightSys->lights[node];
 			lightSys->lights.erase(node);
+		}
+	}
+	void Layer::preloadLightTexture(LightDef *ld, std::string identifier)
+	{
+		if (ld)
+		{
+			if (lightSys)
+			{
+				lightSys->preloadTexture(ld, identifier);
+			}
+
+			delete ld;
 		}
 	}
 	void Layer::addShadowCaster(Sprite *caster)
@@ -171,6 +202,10 @@ namespace Pim
 		return lightSys;
 	}
 	
+
+	// ---------------------------------------------
+
+
 	/* // THE INTEGRATED COLLISION LIBRARY IS DEPRECATED
 	void Layer::addCollisionNode(GameNode *node)
 	{

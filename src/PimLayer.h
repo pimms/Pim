@@ -36,6 +36,7 @@ namespace Pim
 	class GameControl;
 	class Scene;
 	struct Color;
+	struct PreloadLightDef;
 
 	class Layer : public GameNode
 	{
@@ -62,40 +63,55 @@ namespace Pim
 		virtual void setZOrder(int z);
 
 
+		// ---------- LIGHTING SYSTEM METHODS ----------
+
 		// Create a lighting system.
 		void createLightingSystem(Vec2 resolution);
+
 		// Destroy the lighting system
 		void destroyLightingSystem();
+
 		// Adds a light - can be any game node
 		void addLight(GameNode *node, LightDef *lDef);
+
+		// Add a light that will use a pre-loaded light texture
+		bool addLight(GameNode *node, PreloadLightDef *pld, std::string identifier);
+
 		// Removes a light
 		void removeLight(GameNode *node);
+
+		// Preload a texture. THE LIGHTDEF IS DELETED AUTOMATICALLY.
+		// Pass an identifying string used to reference the light with later.
+		void preloadLightTexture(LightDef *ld, std::string identifier);
+
 		// Adds a shadowcaster - must be a sprite
 		void addShadowCaster(Sprite *caster);
+
 		// Removes a shadow caster
 		void removeShadowCaster(Sprite *caster);
+
 		// Sets wether or not shadows are enabled
 		void setCastShadows(bool shadows);
+
 		// Set the color of the darkest areas (unlit areas)
 		void setLightingUnlitColor(Color color);
+
 		// Set the transparency of the lights (0.0 - 1.0)
 		void setLightAlpha(float a);
+
 		// Set whether or not we're using the advanced shader (gaussian blurred shadow texture)
 		void setSmoothShadows(bool flag);
+
 		// Set whether or not debug drawing of normals and edges is enabled
 		void setShadowcasterDebugDraw(bool);
+
 		// Return the lighting system
 		LightingSystem* getLightingSystem();
 
 
-		// Add a game node to the collision world - you will then be able to retrieve
-		// collision detection data from calling "Vec2 p = node->validateMove(old,new)".
-		// Wether or not you choose to do something with the new position is up to you.
-		// This is not a physics implementation - PIM simply tells you whether or not 
-		// your node is intersecting another node.
-		//void addCollisionNode(GameNode *node);
-		// The node will no longer be collided with.
-		// Called automatically upon node delete.
+		// ---------------------------------------------
+
+		// DEPRECTAED
 		//void removeCollisionNode(GameNode*);
 
 

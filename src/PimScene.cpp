@@ -20,6 +20,8 @@ namespace Pim
 		layers.push_back(l);
 		l->parentScene = this;
 		l->loadResources();
+
+		dirtyZOrder = true;
 	}
 	void Scene::removeLayer(Layer *l)
 	{
