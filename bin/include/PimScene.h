@@ -30,6 +30,10 @@ namespace Pim
 
 		virtual void loadResources() {}
 
+		// Called from the GameController when GameControl::pause() is called. If this
+		// method returns NULL, the game is not paused.
+		virtual Layer* pauseLayer();
+
 		bool	dirtyZOrder;
 
 		Color	color;

@@ -70,11 +70,18 @@ namespace Pim
 		Vec2 fac = GameControl::getSingleton()->coordinateFactor();
 
 		if (allowMidPixelPosition)
+		{
 			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
+		}
 		else
+		{
 			glTranslatef(floor(position.x) / fac.x, position.y / fac.y, 0.f);
+		}
 
 		glRotatef(rotation, 0.f, 0.f, 1.f);
+
+		fac = GameControl::getSingleton()->windowScale();
+		glScalef(scale.x, scale.y, 1.f);
 
 		orderChildren();
 

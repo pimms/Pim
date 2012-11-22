@@ -56,6 +56,7 @@ namespace Pim
 		GLboolean				_a;				// Has the texture alpha?
 		png_uint_32				_tw;			// Texture width
 		png_uint_32				_th;			// Texture height
+		bool					_usebatch;		// Using batch?
 
 		Shader					*shader;		// The shader
 		

@@ -109,6 +109,9 @@ namespace Pim
 		singleton		= this;
 		scene			= NULL;
 
+		paused			= false;
+		pauseLayer		= NULL;
+
 		// Get the module path
 		char path[260] = { '\0' };
 		GetModuleFileName(NULL, path, 260);
@@ -224,6 +227,27 @@ namespace Pim
 		}
 	}
 
+	void GameControl::pause()
+	{
+		if (!paused)
+		{
+			pauseLayer = scene->pauseLayer();
+			if (pauseLayer)
+			{
+				scene->addLayer(pauseLayer);
+				pauseLayer->setZOrder(~0);
+				paused = true;
+			}
+		}
+	}
+	void GameControl::unpause()
+	{
+		if (paused && pauseLayer)
+		{
+			paused = false;
+		}
+	}
+
 	void GameControl::setWindowCreationData(WinStyle::CreationData data)
 	{
 		winData = data;
@@ -306,22 +330,41 @@ namespace Pim
 				}
 			}
 
+			if (!paused)
+			{
+
 #ifdef _DEBUG
-			// Dispatch console commands
-			ConsoleReader::getSingleton()->dispatch();
+				// Dispatch console commands
+				ConsoleReader::getSingleton()->dispatch();
 #endif
 
-			// Dispatch key and mouse events 
-			Input::getSingleton()->_dispatch();
+				// Dispatch key and mouse events 
+				Input::getSingleton()->dispatch();
 
-			// Dispatch update calls
-			dispatchPrerender();
+				// Dispatch update calls
+				dispatchPrerender();
+			}
+			else
+			{
+				// Dispatch update to all children of pauseLayer
+				dispatchPausedPreRender();
+
+				// Dispatch input to all children of pauseLayer
+				Input::getSingleton()->dispatchPaused(pauseLayer);
+			}
 
 			// Render the frame - post render calls are dispatched by renderWindow
 			renderWindow->renderFrame();
 
 			// Update playing ogg files
 			AudioManager::getSingleton()->oggUpdate();
+
+			// Was the game recently unpaused?
+			if (pauseLayer && !paused)
+			{
+				scene->removeLayer(pauseLayer);
+				pauseLayer = NULL;
+			}
 		}
 	}
 	void GameControl::dispatchPrerender()
@@ -340,6 +383,23 @@ namespace Pim
 		for (unsigned int i=0; i<frameListeners.size(); i++)
 		{
 			frameListeners[i]->postFrame();
+		}
+	}
+
+	void GameControl::dispatchPausedPreRender()
+	{
+		float dt = calculateDeltaTime();
+
+		// Iterate over ALL the children of pauseLayer
+		recursivePreRender(pauseLayer, dt);
+	}
+	void GameControl::recursivePreRender(GameNode *n, float dt)
+	{
+		n->update(dt);
+
+		for each (GameNode *child in n->children)
+		{
+			recursivePreRender(child, dt);
 		}
 	}
 

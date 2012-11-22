@@ -137,7 +137,11 @@ namespace Pim
 		void removeMouseListener(GameNode* n);
 
 		// Dispatches all events to listeners
-		void _dispatch();
+		void dispatch();
+
+		// Dispatches all events to all children of the passed node
+		void dispatchPaused(GameNode *l);
+		void recursiveDispatch(GameNode *n);
 
 		static Input						*singleton;
 		std::vector<GameNode*>				kl;				// key listeners

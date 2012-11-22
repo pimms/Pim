@@ -56,6 +56,15 @@ namespace Pim
 		void addFrameListener(GameNode* n);
 		void removeFrameListener(GameNode* n);
 
+		// Pause the game. The currently active scene is queried for a 
+		// pause layer through the "Scene::pauseLayer()" method. All children of
+		// the returned layer will receive input and frame-updates. 
+		void pause();
+
+		// Unpause the game. The currently active pauseLayer is cleaned up, and the
+		// game continues as normal.
+		void unpause();
+
 		// Change the window methods. Never ever deal with the render window
 		// by yourself. That's a stupid thang to do.
 		void setWindowCreationData(WinStyle::CreationData data);
@@ -90,6 +99,9 @@ namespace Pim
 		void dispatchPrerender();
 		void dispatchPostrender();
 
+		void dispatchPausedPreRender();
+		void recursivePreRender(GameNode *n, float dt);
+
 		WinStyle::CreationData	winData;
 		int						actualWinWidth;		// The values in winData does NOT apply if
 		int						actualWinHeight;	// the window style is BFS. Hence, these two.
@@ -100,6 +112,9 @@ namespace Pim
 		std::vector<GameNode*>	frameListeners;
 
 		std::string				modulePath;
+
+		bool					paused;
+		Layer					*pauseLayer;
 
 		// Used to calculate delta time
 		long long unsigned int ticks;

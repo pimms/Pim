@@ -181,7 +181,7 @@ namespace Pim
 		// TODO: Dispatch a NULL message to all
 		keyEvent._reset();
 		mouseEvent._reset();
-		_dispatch();
+		dispatch();
 	}
 	void Input::_gainedFocus()
 	{
@@ -219,7 +219,7 @@ namespace Pim
 		mouseEvent.dirty = true;
 	}
 
-	void Input::_dispatch()
+	void Input::dispatch()
 	{
 		// dispatch keys..
 		if (keyEvent.count || keyEvent.activePrevFrame)
@@ -238,5 +238,25 @@ namespace Pim
 				ml[i]->mouseEvent(mouseEvent);
 		}
 		mouseEvent._unfresh();
+	}
+	
+	void Input::dispatchPaused(GameNode *n)
+	{
+		// Dispatch to the pause-layer regardless of what has occured
+		recursiveDispatch(n);
+
+		keyEvent.activePrevFrame = false;
+		keyEvent._unfresh();
+		mouseEvent._unfresh();
+	}
+	void Input::recursiveDispatch(GameNode *n)
+	{
+		n->keyEvent(keyEvent);
+		n->mouseEvent(mouseEvent);
+
+		for each (GameNode *child in n->children)
+		{
+			recursiveDispatch(child);
+		}
 	}
 }

@@ -35,6 +35,12 @@ namespace Pim
 		}
 	}
 
+	Layer* Scene::pauseLayer()
+	{
+		// Return NULL by default. This will not pause the game.
+		return NULL;
+	}
+
 	void Scene::drawScene()
 	{
 		orderLayers();

@@ -21,6 +21,7 @@ namespace Pim
 		shadowShape		= NULL;
 		dbgShadowShape	= false;
 		hidden			= false;
+		_usebatch		= false;
 
 		loadSprite(file);
 	}
@@ -34,13 +35,19 @@ namespace Pim
 		shadowShape		= NULL;
 		dbgShadowShape	= false;
 		hidden			= false;
+		_usebatch		= false;
 	}
 	Sprite::~Sprite()
 	{
-		glDeleteTextures(1, &texID);
+		if (!_usebatch)
+		{
+			glDeleteTextures(1, &texID);
+		}
 
 		if (shadowShape)
+		{
 			delete shadowShape;
+		}
 	}
 
 	void Sprite::loadSprite(std::string file)
@@ -280,6 +287,8 @@ namespace Pim
 		_tw   = batch->_tw;
 		_th	  = batch->_th;
 		texID = batch->texID;
+		
+		_usebatch = true;
 	}
 
 	void Sprite::setShader(Shader *s)
