@@ -56,6 +56,9 @@ namespace Pim
 		void addFrameListener(GameNode* n);
 		void removeFrameListener(GameNode* n);
 
+		// Limit the framerate to the passed value.
+		void limitFrame(int maxfps);
+
 		// Pause the game. The currently active scene is queried for a 
 		// pause layer through the "Scene::pauseLayer()" method. All children of
 		// the returned layer will receive input and frame-updates. 
@@ -115,6 +118,11 @@ namespace Pim
 
 		bool					paused;
 		Layer					*pauseLayer;
+
+		// The frametime for the highest allowed FPS 
+		float					maxDelta;
+		bool					sleepNextFrame;
+		float					sleepTime;
 
 		// Used to calculate delta time
 		long long unsigned int ticks;

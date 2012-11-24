@@ -112,6 +112,11 @@ namespace Pim
 		paused			= false;
 		pauseLayer		= NULL;
 
+		// No initial limit
+		maxDelta		= 10000000.f;
+		sleepNextFrame	= false;
+		sleepTime		= 0.f;
+
 		// Get the module path
 		char path[260] = { '\0' };
 		GetModuleFileName(NULL, path, 260);
@@ -225,6 +230,11 @@ namespace Pim
 			if (frameListeners[i] == node)
 				frameListeners.erase(frameListeners.begin() + i);
 		}
+	}
+
+	void GameControl::limitFrame(int maxFPS)
+	{
+		maxDelta = 1.f/(float)maxFPS;
 	}
 
 	void GameControl::pause()
@@ -370,6 +380,13 @@ namespace Pim
 	void GameControl::dispatchPrerender()
 	{
 		float dt = calculateDeltaTime();
+
+		/*
+		if (dt < maxDelta)
+		{
+			Sleep((maxDelta-dt)*1000.f);
+		}
+		*/
 
 		scene->update(dt);
 
