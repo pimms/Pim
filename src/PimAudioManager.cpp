@@ -18,7 +18,7 @@ namespace Pim
 	{
 		m_DirectSound = 0;
 
-		HWND hWnd = *Pim::GameControl::getSingleton()->getRenderWindow()->getHwnd();
+		HWND hWnd = Pim::GameControl::getSingleton()->getRenderWindow()->getHwnd();
 
 		DirectSoundCreate8(NULL, &m_DirectSound, NULL);
 		m_DirectSound->SetCooperativeLevel(hWnd, DSSCL_PRIORITY);

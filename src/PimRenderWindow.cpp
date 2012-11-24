@@ -36,9 +36,9 @@ namespace Pim
 		return orthoOff;
 	}
 
-	const HWND* RenderWindow::getHwnd()
+	HWND RenderWindow::getHwnd()
 	{
-		return &hWnd;
+		return hWnd;
 	}
 
 	bool RenderWindow::createWindow(WinStyle::CreationData &data)

@@ -27,7 +27,7 @@ namespace Pim
 		// has occured.
 		void printOpenGLErrors(std::string identifier);
 
-		const HWND* getHwnd();
+		HWND getHwnd();
 
 		Vec2 getOrtho();		// Get the render dimensions in pixels
 		Vec2 getOrthoOffset();	// Get the offset of the ortho projection (black borders)
