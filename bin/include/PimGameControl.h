@@ -56,8 +56,8 @@ namespace Pim
 		void addFrameListener(GameNode* n);
 		void removeFrameListener(GameNode* n);
 
-		// Limit the framerate to the passed value.
-		void limitFrame(int maxfps);
+		// Limit the framerate to the passed value. Pass 0 as a parameter to set no limit.
+		void limitFrame(unsigned int maxfps);
 
 		// Pause the game. The currently active scene is queried for a 
 		// pause layer through the "Scene::pauseLayer()" method. All children of
@@ -99,10 +99,10 @@ namespace Pim
 		static GameControl* singleton;
 
 		void gameLoop();
-		void dispatchPrerender();
+		void dispatchPrerender(float dt);
 		void dispatchPostrender();
 
-		void dispatchPausedPreRender();
+		void dispatchPausedPreRender(float dt);
 		void recursivePreRender(GameNode *n, float dt);
 
 		WinStyle::CreationData	winData;

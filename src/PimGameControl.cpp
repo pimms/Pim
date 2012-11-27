@@ -12,6 +12,7 @@
 #include "PimScene.h"
 #include "PimConsoleReader.h"
 
+#include <climits>
 #include <iostream>
 #include <ctime>
 
@@ -112,8 +113,8 @@ namespace Pim
 		paused			= false;
 		pauseLayer		= NULL;
 
-		// No initial limit
-		maxDelta		= 10000000.f;
+		// Limit initially to 200 fps
+		maxDelta		= 1.f / 200.f;
 		sleepNextFrame	= false;
 		sleepTime		= 0.f;
 
@@ -232,9 +233,16 @@ namespace Pim
 		}
 	}
 
-	void GameControl::limitFrame(int maxFPS)
+	void GameControl::limitFrame(unsigned int maxFPS)
 	{
-		maxDelta = 1.f/(float)maxFPS;
+		if (!maxFPS)
+		{
+			maxDelta = 0.f;
+		}
+		else
+		{
+			maxDelta = 1.f/(float)maxFPS;
+		}
 	}
 
 	void GameControl::pause()
@@ -244,8 +252,9 @@ namespace Pim
 			pauseLayer = scene->pauseLayer();
 			if (pauseLayer)
 			{
+				
 				scene->addLayer(pauseLayer);
-				pauseLayer->setZOrder(~0);
+				pauseLayer->setZOrder(INT_MAX);
 				paused = true;
 			}
 		}
@@ -327,6 +336,13 @@ namespace Pim
 
 		while (!quit)
 		{
+			// Get the DT
+			float dt = calculateDeltaTime();
+			if (dt < maxDelta)
+			{
+				Sleep((maxDelta-dt)*1000.f);
+			}
+
 			while (PeekMessage(&msg,NULL,0,0,PM_REMOVE))
 			{
 				if (msg.message == WM_QUIT)
@@ -352,12 +368,12 @@ namespace Pim
 				Input::getSingleton()->dispatch();
 
 				// Dispatch update calls
-				dispatchPrerender();
+				dispatchPrerender(dt);
 			}
 			else
 			{
 				// Dispatch update to all children of pauseLayer
-				dispatchPausedPreRender();
+				dispatchPausedPreRender(dt);
 
 				// Dispatch input to all children of pauseLayer
 				Input::getSingleton()->dispatchPaused(pauseLayer);
@@ -377,17 +393,8 @@ namespace Pim
 			}
 		}
 	}
-	void GameControl::dispatchPrerender()
+	void GameControl::dispatchPrerender(float dt)
 	{
-		float dt = calculateDeltaTime();
-
-		/*
-		if (dt < maxDelta)
-		{
-			Sleep((maxDelta-dt)*1000.f);
-		}
-		*/
-
 		scene->update(dt);
 
 		for (unsigned int i=0; i<frameListeners.size(); i++)
@@ -403,10 +410,8 @@ namespace Pim
 		}
 	}
 
-	void GameControl::dispatchPausedPreRender()
+	void GameControl::dispatchPausedPreRender(float dt)
 	{
-		float dt = calculateDeltaTime();
-
 		// Iterate over ALL the children of pauseLayer
 		recursivePreRender(pauseLayer, dt);
 	}

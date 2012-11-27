@@ -74,6 +74,7 @@ namespace Pim
 		}
 		else 
 		{
+			// Get the arguments, write to the text
 			va_start(ap,ptext);
 			vsprintf_s(text, ptext, ap);
 			va_end(ap);
@@ -82,7 +83,7 @@ namespace Pim
 		const char *startLine = text;
 		for (const char *c = text; *c; c++)
 		{
-			if (*c == '\n')
+			if (*c == '\n' || *c == '\0')
 			{
 				std::string line;
 				for (const char *n=startLine; n<c; n++) line.append(1,*n);
@@ -90,6 +91,7 @@ namespace Pim
 				startLine = c+1;
 			}
 		}
+
 		if (startLine && !lines.size())
 		{
 			std::string line(ptext);
