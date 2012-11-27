@@ -46,18 +46,24 @@ namespace Pim
 		if (format == ".wav")
 		{
 			if (!AudioManager::getSingleton()->loadWav(file.c_str(), this))
+			{
 				std::cout<<"ERROR: Failed to load file: " <<file <<"\n";
+			}
 		}
 		else if (format == ".ogg")
 		{
 			oggFile = new OggVorbis_File;
 			if (!AudioManager::getSingleton()->loadOgg(file.c_str(), this))
+			{
 				std::cout<<"ERROR: Failed to load file: " <<file <<"\n";
+			}
 			else
+			{
 				AudioManager::getSingleton()->scheduleOggUpdate(this);
+			}
 
-			curSection = 1;
-			lastSection = 0;
+			curSection = 0;
+			lastSection = 1;
 			audioStream = true;
 		}
 		else
@@ -124,10 +130,27 @@ namespace Pim
 		buffer->SetPan(pan * 3500);
 	}
 
-	Sound* Sound::playParallel(bool kill)
+	float Sound::position()
+	{
+		return (float)ov_time_tell(oggFile);
+	}
+	int Sound::position(float time)
+	{
+		int ret = ov_time_seek(oggFile, (double)time);
+
+		if (!ret)
+		{
+			AudioManager::getSingleton()->fillBuffer(this, 0);
+			buffer->SetCurrentPosition(0);
+		}
+
+		return ret;
+	}
+
+	Sound* Sound::playParallel(bool delWhenDone)
 	{
 		Sound *s = new Sound(filename);
-		s->deleteWhenDone = kill;
+		s->deleteWhenDone = delWhenDone;
 		s->play();
 		return s;
 	}

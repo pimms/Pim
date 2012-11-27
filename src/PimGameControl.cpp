@@ -233,6 +233,11 @@ namespace Pim
 		}
 	}
 
+	void GameControl::exit()
+	{
+		quit = true;
+	}
+
 	void GameControl::limitFrame(unsigned int maxFPS)
 	{
 		if (!maxFPS)
@@ -331,7 +336,7 @@ namespace Pim
 	void GameControl::gameLoop() 
 	{
 		MSG  msg;
-		bool quit = false;
+		quit = false;
 		ticks = clock();
 
 		while (!quit)

@@ -56,6 +56,9 @@ namespace Pim
 		void addFrameListener(GameNode* n);
 		void removeFrameListener(GameNode* n);
 
+		// Quit the game here and now
+		void exit();
+
 		// Limit the framerate to the passed value. Pass 0 as a parameter to set no limit.
 		void limitFrame(unsigned int maxfps);
 
@@ -116,6 +119,7 @@ namespace Pim
 
 		std::string				modulePath;
 
+		bool					quit;
 		bool					paused;
 		Layer					*pauseLayer;
 

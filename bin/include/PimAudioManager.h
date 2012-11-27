@@ -49,6 +49,8 @@ namespace Pim
 		bool loadWav(const char *file, Sound*);
 		bool loadOgg(const char *file, Sound*);
 
+		void fillBuffer(Sound *s, int section);
+
 		// Ogg files require an update roughly every 0.5 second. 
 		void oggUpdate();
 		void scheduleOggUpdate(Sound*);
@@ -59,9 +61,6 @@ namespace Pim
 
 		// Create a new IDirectSoundBuffer8 (for parallel sounds)
 		IDirectSoundBuffer8* createBuffer(WAVEFORMATEX*, DSBUFFERDESC*);
-
-
-
 
 		std::vector<Sound*>		oggSounds;
 

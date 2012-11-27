@@ -49,6 +49,12 @@ namespace Pim
 		// all right: 1.0
 		void setPan(float pan);
 
+		// Returns the current position in the sound in seconds
+		float position();
+
+		// Seek to a position in the file in seconds
+		int position(float time);
+
 		// Play the currently streamed (OGG ONLY) file in parallel.
 		// It's stupidly important to notice that ONLY OGG FILES CAN BE PLAYED IN PARALLEL.
 		// Pass true to this method in order to let the AudioManager clean it up for you.

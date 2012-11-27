@@ -18,7 +18,7 @@ namespace Pim
 	{
 		m_DirectSound = 0;
 
-		HWND hWnd = Pim::GameControl::getSingleton()->getRenderWindow()->getHwnd();
+		HWND hWnd = GameControl::getSingleton()->getRenderWindow()->getHwnd();
 
 		DirectSoundCreate8(NULL, &m_DirectSound, NULL);
 		m_DirectSound->SetCooperativeLevel(hWnd, DSSCL_PRIORITY);
@@ -138,27 +138,60 @@ namespace Pim
 		
 		s->buffer = createBuffer(&s->wfm, &s->desc);
 
+		fillBuffer(s, 0);
+
+		return true;
+	}
+
+	void AudioManager::fillBuffer(Sound *s, int section)
+	{
+		DWORD size = BUFFER_SIZE;
+		char *buf;
+
+		// Fill the section we just left
+		s->buffer->Lock(section*BUFFER_SIZE, size, (LPVOID*)&buf, &size, 0, 0, 0);
+
 		DWORD	pos = 0;
 		int		sec = 0;
 		int		ret = 1;
-		DWORD	size = BUFFER_SIZE * 2;
-		char	*buf;
 
-		s->buffer->Lock(0, size, (LPVOID*)&buf, &size, NULL, NULL, DSBLOCK_ENTIREBUFFER);
-
-		while (ret && pos<size)
+		while (ret && pos < size)
 		{
 			ret = ov_read(s->oggFile, buf+pos, size-pos, 0, 2, 1, &sec);
 			pos += ret;
 		}
 
-		s->buffer->Unlock(buf, size, NULL, NULL);
+		// If we reached the end of the file but we're looping, rewind to the 
+		// beginning and start filling from there.
+		if (!ret && s->isLoop)
+		{
+			ret = 1;
+			ov_pcm_seek(s->oggFile, 0);
+			while (ret && pos<size)
+			{
+				ret = ov_read(s->oggFile, buf+pos, size-pos, 0, 2, 1, &sec);
+				pos += ret;
+			}
+		}
 
-		return true;
+		// We've reached the end of the file, and we're not looping. Nullify the 
+		// remaining part of the buffer.
+		else if (!ret && !s->isLoop)
+		{
+			while (pos < size)
+			{
+				*(buf+pos++) = 0;
+			}
+			s->almostDone = true;
+		}
+
+		s->buffer->Unlock(buf, size, NULL, NULL);
 	}
 
 	void AudioManager::oggUpdate()
 	{
+		// Thanks to some dude on the internet for the stream functionality.
+
 		DWORD pos;
 
 		std::vector<Sound*> soundsToDelete;
@@ -176,43 +209,8 @@ namespace Pim
 				if (s->almostDone && !s->isLoop)
 					s->done = true;
 
-				DWORD size = BUFFER_SIZE;
-				char *buf;
-
-				// Fill the section we just left
-				s->buffer->Lock(s->lastSection*BUFFER_SIZE, size, (LPVOID*)&buf, &size, 0, 0, 0);
-
-				DWORD	pos = 0;
-				int		sec = 0;
-				int		ret = 1;
-
-				while (ret && pos < size)
-				{
-					ret = ov_read(s->oggFile, buf+pos, size-pos, 0, 2, 1, &sec);
-					pos += ret;
-				}
-
-				if (!ret && s->isLoop)
-				{
-					ret = 1;
-					ov_pcm_seek(s->oggFile, 0);
-					while (ret && pos<size)
-					{
-						ret = ov_read(s->oggFile, buf+pos, size-pos, 0, 2, 1, &sec);
-						pos += ret;
-					}
-				}
-				else if (!ret && !s->isLoop)
-				{
-					while (pos < size)
-					{
-						*(buf+pos) = 0;
-						pos++;
-					}
-					s->almostDone = true;
-				}
-
-				s->buffer->Unlock(buf, size, NULL, NULL);
+				fillBuffer(s, s->lastSection);
+				
 				s->lastSection = s->curSection;
 			}
 
