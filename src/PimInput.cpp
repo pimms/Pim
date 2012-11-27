@@ -167,13 +167,35 @@ namespace Pim
 	}
 	Vec2 ControllerEvent::leftStick()
 	{
-		return Pim::Vec2((float)xinputState.Gamepad.sThumbLX/32767.f, 
-						 (float)xinputState.Gamepad.sThumbLY/32767.f);
+		SHORT lx = xinputState.Gamepad.sThumbLX;
+		if (abs(lx) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
+		{
+			lx = 0;
+		}
+
+		SHORT ly = xinputState.Gamepad.sThumbLY;
+		if (abs(ly) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
+		{
+			ly = 0;
+		}
+
+		return Pim::Vec2((float)lx/32767.f, (float)ly/32767.f);
 	}
 	Vec2 ControllerEvent::rightStick()
 	{
-		return Pim::Vec2((float)xinputState.Gamepad.sThumbRX/32767.f, 
-						 (float)xinputState.Gamepad.sThumbRY/32767.f);
+		SHORT rx = xinputState.Gamepad.sThumbRX;
+		if (abs(rx) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
+		{
+			rx = 0;
+		}
+
+		SHORT ry = xinputState.Gamepad.sThumbRY;
+		if (abs(ry) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
+		{
+			ry = 0;
+		}
+
+		return Pim::Vec2((float)rx/32767.f, (float)ry/32767.f);
 	}
 
 
