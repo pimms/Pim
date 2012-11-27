@@ -63,6 +63,9 @@ namespace Pim
 		// Retreive the buffer. Try not to do anything stupid with it.
 		IDirectSoundBuffer8* getBuffer() { return buffer; }
 
+
+		bool deleteWhenDone;	// Delete sound when done playing?
+
 	protected:
 		friend class AudioManager;
 
@@ -93,6 +96,5 @@ namespace Pim
 		int curSection;			// Which half of the buffer IS played?
 
 		bool isParallel;		// Is this a parallel sound?
-		bool deleteWhenDone;	// Delete sound when done playing?
 	};
 }
