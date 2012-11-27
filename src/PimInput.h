@@ -128,8 +128,10 @@ namespace Pim
 
 		bool isKeyDown(Xbox x);
 		bool isKeyFresh(Xbox x);
-		Vec2 leftStick();	// Returns a unit vector of the stick
-		Vec2 rightStick();	// Returns a unit vector of the stick
+		Vec2 leftStick();		// Returns a unit vector of the stick
+		Vec2 rightStick();		// Returns a unit vector of the stick
+		float leftTrigger();	// Returns the presedness of LT (0.0 - 1.0)
+		float rightTrigger();	// Returns the pressedness of RT (0.0 - 1.0)
 
 	private:
 		friend class Input;

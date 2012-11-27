@@ -197,6 +197,14 @@ namespace Pim
 
 		return Pim::Vec2((float)rx/32767.f, (float)ry/32767.f);
 	}
+	float ControllerEvent::leftTrigger()
+	{
+		return (float)xinputState.Gamepad.bLeftTrigger / 255.f;
+	}
+	float ControllerEvent::rightTrigger()
+	{
+		return (float)xinputState.Gamepad.bRightTrigger / 255.f;
+	}
 
 
 	// --- Input ---
