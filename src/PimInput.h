@@ -20,6 +20,7 @@
 
 #include <string>
 #include <map>
+#include <Xinput.h>
 
 namespace Pim
 {
@@ -93,12 +94,56 @@ namespace Pim
 		bool fresh[2];
 		Vec2 position;
 		Vec2 relPosition;
+		Vec2 lastPosition;
 
 		MouseEvent();
 		MouseEvent(const MouseEvent&);
 		void _reset();
 		void _unfresh();
 		void _mouseMoved(Vec2 pos);
+	};
+
+	// Class containing all Xinput-event data.
+	// One instance is kept by Input, and is passed to listeners.
+	class ControllerEvent
+	{
+	public:
+		enum Xbox
+		{
+			X_A		= XINPUT_GAMEPAD_A, 
+			X_B		= XINPUT_GAMEPAD_B, 
+			X_X		= XINPUT_GAMEPAD_X, 
+			X_Y		= XINPUT_GAMEPAD_Y,
+			X_DUP	= XINPUT_GAMEPAD_DPAD_UP, 
+			X_DRIGHT= XINPUT_GAMEPAD_DPAD_RIGHT, 
+			X_DDOWN = XINPUT_GAMEPAD_DPAD_DOWN, 
+			X_DLEFT = XINPUT_GAMEPAD_DPAD_LEFT,
+			X_BACK	= XINPUT_GAMEPAD_BACK, 
+			X_START = XINPUT_GAMEPAD_START, 
+			X_LB	= XINPUT_GAMEPAD_LEFT_SHOULDER, 
+			X_RB	= XINPUT_GAMEPAD_RIGHT_SHOULDER, 
+			X_LS	= XINPUT_GAMEPAD_LEFT_THUMB, 
+			X_RS	= XINPUT_GAMEPAD_RIGHT_THUMB
+		};
+
+		bool isKeyDown(Xbox x);
+		bool isKeyFresh(Xbox x);
+		Vec2 leftStick();	// Returns a unit vector of the stick
+		Vec2 rightStick();	// Returns a unit vector of the stick
+
+	private:
+		friend class Input;
+
+		ControllerEvent();
+	
+		bool connected();
+		void getStates();
+		void vibrate(float l, float r);
+
+		WORD			curBtnState;
+		WORD			prevBtnState;
+
+		XINPUT_STATE	xinputState;
 	};
 
 	class Input
@@ -108,6 +153,10 @@ namespace Pim
 
 		void bindKey(std::string id, KeyEvent::KeyCode key);
 		void unbindKey(std::string id);
+
+		// If a 360-pad is connected, it vibrates. 0.0 means no vibration,
+		// 1.0 means full vibration.
+		void vibrateXbox(float leftVib, float rightVib);
 
 		// Methods have to be manual in order for the WINAPI callback
 		// function to reach them. Might make these inaccessible at a
@@ -136,20 +185,25 @@ namespace Pim
 		void addMouseListener(GameNode* n);
 		void removeMouseListener(GameNode* n);
 
+		void addControlListener(GameNode *n);
+		void removeControlListener(GameNode *n);
+
 		// Dispatches all events to listeners
 		void dispatch();
 
 		// Dispatches all events to all children of the passed node
 		void dispatchPaused(GameNode *l);
-		void recursiveDispatch(GameNode *n);
+		void recursiveDispatch(GameNode *n, bool controller);
 
 		static Input						*singleton;
 		std::vector<GameNode*>				kl;				// key listeners
 		std::vector<GameNode*>				ml;				// mouse listeners
+		std::vector<GameNode*>				cl;				// control listeners
 
 		// The events containing input data
-		KeyEvent keyEvent;
-		MouseEvent mouseEvent;
+		KeyEvent							keyEvent;
+		MouseEvent							mouseEvent;
+		ControllerEvent						contEvent;
 	};
 
 }

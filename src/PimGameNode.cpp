@@ -41,6 +41,7 @@ namespace Pim
 		
 		unlistenFrame();
 		unlistenInput();
+		unlistenController();
 	}
 
 	void GameNode::addChild(GameNode *ch)
@@ -126,6 +127,15 @@ namespace Pim
 	void GameNode::unlistenMouse()
 	{
 		GameControl::getSingleton()->removeMouseListener(this);
+	}
+
+	void GameNode::listenController()
+	{
+		GameControl::getSingleton()->addControlListener(this);
+	}
+	void GameNode::unlistenController()
+	{
+		GameControl::getSingleton()->removeControlListener(this);
 	}
 
 	void GameNode::listenFrame()

@@ -12,7 +12,6 @@
 namespace Pim
 {
 	// --- KeyEvent ---
-
 	KeyEvent::KeyEvent()
 	{ 
 		activePrevFrame = false;
@@ -65,8 +64,8 @@ namespace Pim
 		binds.erase(str); 
 	}
 
-	// --- MouseEvent ---
 
+	// --- MouseEvent ---
 	MouseEvent::MouseEvent()
 	{ 
 		_reset(); 
@@ -87,10 +86,9 @@ namespace Pim
 	}
 	void MouseEvent::_unfresh()
 	{ 
-		dirty=keys[0] || keys[1]; 
-		relPosition=Vec2(0.f, 0.f); 
-		fresh[0]=false;
-		fresh[1]=false;
+		dirty		= keys[0] || keys[1]; 
+		fresh[0]	= false;
+		fresh[1]	= false;
 	}
 	void MouseEvent::_mouseMoved(Vec2 pos)
 	{ 
@@ -117,8 +115,69 @@ namespace Pim
 		return relPosition;
 	}
 
-	// --- Input ---
 
+	// --- ControllerEvent ---
+	ControllerEvent::ControllerEvent()
+	{
+		curBtnState = 0;
+		prevBtnState = 0;
+
+		if (connected())
+		{
+			getStates();
+		}
+	}
+
+	bool ControllerEvent::connected()
+	{
+		ZeroMemory(&xinputState, sizeof(XINPUT_STATE));
+		return !XInputGetState(0, &xinputState);
+	}
+	void ControllerEvent::getStates()
+	{
+		prevBtnState = curBtnState;
+		curBtnState = xinputState.Gamepad.wButtons;
+	}
+	void ControllerEvent::vibrate(float l, float r)
+	{
+		if (connected())
+		{
+			// Create a Vibraton State
+			XINPUT_VIBRATION vibration;
+
+			// Zeroise the Vibration
+			ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
+
+			// Set the Vibration Values
+			vibration.wLeftMotorSpeed = l * 65535;
+			vibration.wRightMotorSpeed = r * 65535;
+
+			// Vibrate the controller
+			XInputSetState(0, &vibration);
+		}
+	}
+
+	bool ControllerEvent::isKeyDown(Xbox x)
+	{
+		return (bool)(curBtnState & x);
+	}
+	bool ControllerEvent::isKeyFresh(Xbox x)
+	{
+		return (bool)(curBtnState & x) && !(bool)(prevBtnState & x);
+	}
+	Vec2 ControllerEvent::leftStick()
+	{
+		return Pim::Vec2((float)xinputState.Gamepad.sThumbLX/32767.f, 
+						 (float)xinputState.Gamepad.sThumbLY/32767.f);
+	}
+	Vec2 ControllerEvent::rightStick()
+	{
+		return Pim::Vec2((float)xinputState.Gamepad.sThumbRX/32767.f, 
+						 (float)xinputState.Gamepad.sThumbRY/32767.f);
+	}
+
+
+	// --- Input ---
 	Input* Input::singleton = NULL;
 	
 	Input::Input()
@@ -171,8 +230,32 @@ namespace Pim
 	void Input::removeMouseListener(GameNode *node)
 	{
 		for (unsigned int i=0; i<ml.size(); i++)
+		{
 			if (ml[i] == node)
+			{
 				ml.erase(ml.begin() + i);
+			}
+		}
+	}
+
+	void Input::addControlListener(GameNode *node)
+	{
+		cl.push_back(node);
+	}
+	void Input::removeControlListener(GameNode *node)
+	{
+		for (unsigned int i=0; i<cl.size(); i++)
+		{
+			if (cl[i] == node)
+			{
+				cl.erase(cl.begin() + i);
+			}
+		}
+	}
+
+	void Input::vibrateXbox(float leftVib, float rightVib)
+	{
+		contEvent.vibrate(leftVib, rightVib);
 	}
 	
 	// DO NOT CALL THESE METHODS MANUALLY. I'M SERIOUS YO. DON'T.
@@ -225,7 +308,9 @@ namespace Pim
 		if (keyEvent.count || keyEvent.activePrevFrame)
 		{
 			for (unsigned int i=0; i<kl.size(); i++)
+			{
 				kl[i]->keyEvent(keyEvent);
+			}
 
 			keyEvent.activePrevFrame = false;
 		}
@@ -234,29 +319,59 @@ namespace Pim
 		// dispatch mouse..
 		if (mouseEvent.dirty)
 		{
+			mouseEvent.relPosition = mouseEvent.position - mouseEvent.lastPosition;
+			mouseEvent.lastPosition = mouseEvent.position;
+
 			for (unsigned int i=0; i<ml.size(); i++)
+			{
 				ml[i]->mouseEvent(mouseEvent);
+			}
 		}
 		mouseEvent._unfresh();
+
+		// dispatch control...
+		if (cl.size() && contEvent.connected())
+		{
+			contEvent.getStates();
+
+			for (unsigned int i=0; i<cl.size(); i++)
+			{
+				cl[i]->controllerEvent(contEvent);
+			}
+		}
 	}
 	
 	void Input::dispatchPaused(GameNode *n)
 	{
+		mouseEvent.relPosition = mouseEvent.position - mouseEvent.lastPosition;
+		mouseEvent.lastPosition = mouseEvent.position;
+
+		bool cont = contEvent.connected();
+		if (cont)
+		{
+			contEvent.getStates();
+		}
+
 		// Dispatch to the pause-layer regardless of what has occured
-		recursiveDispatch(n);
+		recursiveDispatch(n, cont);
 
 		keyEvent.activePrevFrame = false;
 		keyEvent._unfresh();
 		mouseEvent._unfresh();
 	}
-	void Input::recursiveDispatch(GameNode *n)
+	void Input::recursiveDispatch(GameNode *n, bool controller)
 	{
 		n->keyEvent(keyEvent);
 		n->mouseEvent(mouseEvent);
 
+		if (controller)
+		{
+			n->controllerEvent(contEvent);
+		}
+
 		for each (GameNode *child in n->children)
 		{
-			recursiveDispatch(child);
+			recursiveDispatch(child, controller);
 		}
 	}
 }

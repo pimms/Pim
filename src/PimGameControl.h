@@ -53,6 +53,9 @@ namespace Pim
 		void addMouseListener(GameNode* n);
 		void removeMouseListener(GameNode* n);
 
+		void addControlListener(GameNode *n);
+		void removeControlListener(GameNode *n);
+
 		void addFrameListener(GameNode* n);
 		void removeFrameListener(GameNode* n);
 

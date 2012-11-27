@@ -31,6 +31,7 @@ namespace Pim
 	class Input;
 	class MouseEvent;
 	class KeyEvent;
+	class ControllerEvent;
 	class Layer;
 
 	class GameNode : public ConsoleListener
@@ -46,7 +47,7 @@ namespace Pim
 		virtual void removeChild(GameNode *ch, bool cleanup=false);
 		virtual void removeAllChildren(bool cleanup=false);
 
-		void listenInput();
+		void listenInput();		// Calls listenKeys() and listenMouse() - NOT listenController()!!
 		void unlistenInput();
 
 		void listenKeys();
@@ -55,13 +56,17 @@ namespace Pim
 		void listenMouse();
 		void unlistenMouse();
 
+		void listenController();
+		void unlistenController();
+
 		void listenFrame();
 		void unlistenFrame();
 
-		virtual void mouseEvent(MouseEvent &)	{}	// called on mouselisteners on event
-		virtual void keyEvent(KeyEvent &)		{}	// called on keylisteners on event
-		virtual void update(float dt)			{}	// called on framelisteners pre-render
-		virtual void postFrame()				{}	// ## ONLY AVAILABLE IN DEBUG BUILDS ##
+		virtual void mouseEvent(MouseEvent &)			{}	// called on mouselisteners on event
+		virtual void keyEvent(KeyEvent &)				{}	// called on keylisteners on event
+		virtual void controllerEvent(ControllerEvent&)	{}	// called on controller listeners
+		virtual void update(float dt)					{}	// called on framelisteners pre-render
+		virtual void postFrame()						{}	// ## ONLY AVAILABLE IN DEBUG BUILDS ##
 
 		// Virtual for the sake of Layers.
 		virtual Vec2 getWorldPosition();	

@@ -220,6 +220,15 @@ namespace Pim
 		Input::getSingleton()->removeMouseListener(node);
 	}
 
+	void GameControl::addControlListener(GameNode *n)
+	{
+		Input::getSingleton()->addControlListener(n);
+	}
+	void GameControl::removeControlListener(GameNode *n)
+	{
+		Input::getSingleton()->removeControlListener(n);
+	}
+
 	void GameControl::addFrameListener(GameNode *node)
 	{
 		frameListeners.push_back(node);
