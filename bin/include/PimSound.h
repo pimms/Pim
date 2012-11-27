@@ -1,30 +1,33 @@
 #pragma once
 
 #include "PimInternal.h"
+#include "PimAudioManager.h"
 
 /*
 
 	Pim supports WAV and OGG file formats.
 	WAV files are loaded into memory in it's entirety, while OGG files are streamed
 	16kb at a time. 
-
-
-
 */
 
 namespace Pim
 {
 	// Forward declaration
 	class AudioManager;
+	struct SoundCache;
 
 	class Sound
 	{
 	public:
 		Sound(std::string file);
+		Sound();
 		~Sound();
 
-		// Load either a WAV or an OGG file.
+		// Load an OGG file.
 		void loadFile(std::string file);
+
+		// Use cache by ID
+		void useCache(std::string id);
 
 		// Play the currently loaded audio file
 		void play();
@@ -63,8 +66,8 @@ namespace Pim
 		// Retreive the buffer. Try not to do anything stupid with it.
 		IDirectSoundBuffer8* getBuffer() { return buffer; }
 
-
-		bool deleteWhenDone;	// Delete sound when done playing?
+		// Delete sound when done playing?
+		bool deleteWhenDone;
 
 	protected:
 		friend class AudioManager;
@@ -87,6 +90,9 @@ namespace Pim
 		std::string filename;
 
 		bool audioStream;		// Is the audio streamed?
+
+		SoundCache *cache;		// Pointer to the cache 			
+		long cachePosition;		// Otherwise, it's probably cached
 
 		bool isLoop;			// Stream looping?
 		bool almostDone;		// Stream almost done?

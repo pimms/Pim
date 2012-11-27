@@ -25,8 +25,27 @@ namespace Pim
 	}
 	AudioManager::~AudioManager()
 	{
+		// Delete scheduled, delete-when-done Sounds.
+		for (unsigned int i=0; i<oggSounds.size(); i++)
+		{
+			if (oggSounds[i]->deleteWhenDone)
+			{
+				delete oggSounds[i];
+			}
+		}
+
+		// Release all cached objects
+		for (auto it=cache.begin(); it!=cache.end(); it++)
+		{
+			it->second->buf.clear();
+			delete it->second;
+		}
+		cache.clear();
+
 		if (m_DirectSound)
+		{
 			m_DirectSound->Release();
+		}
 	}
 
 	void AudioManager::instantiateSingleton()
@@ -45,6 +64,58 @@ namespace Pim
 		singleton = NULL;
 	}
 
+	bool AudioManager::cacheOgg(std::string id, char *filename)
+	{
+		deleteCache(id);
+
+		OggVorbis_File *file = new OggVorbis_File;
+		FILE *f;
+
+		if (fopen_s(&f, filename, "rb"))
+		{
+			return false;
+		}
+
+		if (ov_open(f, file, NULL, 0))
+		{
+			fclose(f);
+			return false;
+		}
+
+		vorbis_info *vi = ov_info(file, -1);
+			
+		cache[id] = new SoundCache;
+		cache[id]->size = 0;
+		cache[id]->rate = vi->rate;
+		cache[id]->channels = vi->channels;
+
+		int ret = 1;
+		int sec = 0;
+
+		while (ret)
+		{
+			char b[512];
+			ret = ov_read(file, b, 512, 0, 2, 1, &sec);
+			cache[id]->buf.insert(cache[id]->buf.end(), b, b+ret);
+			cache[id]->size += ret;
+		}
+
+		ov_clear(file);
+		delete file;
+
+		return true;
+	}
+	void AudioManager::deleteCache(std::string id)
+	{
+		if (cache.count(id))
+		{
+			delete cache[id];
+			cache.erase(id);
+		}
+	}
+
+	/* THE WAVE FORMAT IS NO LONGER SUPPORTED */
+	/*
 	bool AudioManager::loadWav(const char *filename, Sound *s)
 	{
 		// Thanks to Raster Tek (rastertek.com) for the following code.
@@ -105,6 +176,8 @@ namespace Pim
  
 		return true;
 	}
+	*/
+
 	bool AudioManager::loadOgg(const char *filename, Sound *s)
 	{
 		int error;
@@ -115,8 +188,10 @@ namespace Pim
 			return false;
 
 		if (ov_open(f, s->oggFile, NULL, 0) != 0)
+		{
+			fclose(f);
 			return false;
-
+		}
 		vorbis_info *vi = ov_info(s->oggFile, -1);
 
 		// Wave format
@@ -155,34 +230,70 @@ namespace Pim
 		int		sec = 0;
 		int		ret = 1;
 
-		while (ret && pos < size)
+		if (s->audioStream)
 		{
-			ret = ov_read(s->oggFile, buf+pos, size-pos, 0, 2, 1, &sec);
-			pos += ret;
-		}
-
-		// If we reached the end of the file but we're looping, rewind to the 
-		// beginning and start filling from there.
-		if (!ret && s->isLoop)
-		{
-			ret = 1;
-			ov_pcm_seek(s->oggFile, 0);
-			while (ret && pos<size)
+			while (ret && pos < size)
 			{
 				ret = ov_read(s->oggFile, buf+pos, size-pos, 0, 2, 1, &sec);
 				pos += ret;
 			}
-		}
 
-		// We've reached the end of the file, and we're not looping. Nullify the 
-		// remaining part of the buffer.
-		else if (!ret && !s->isLoop)
-		{
-			while (pos < size)
+			// If we reached the end of the file but we're looping, rewind to the 
+			// beginning and start filling from there.
+			if (!ret && s->isLoop)
 			{
-				*(buf+pos++) = 0;
+				ret = 1;
+				ov_pcm_seek(s->oggFile, 0);
+				while (ret && pos<size)
+				{
+					ret = ov_read(s->oggFile, buf+pos, size-pos, 0, 2, 1, &sec);
+					pos += ret;
+				}
 			}
-			s->almostDone = true;
+
+			// We've reached the end of the file, and we're not looping. Nullify the 
+			// remaining part of the buffer.
+			else if (!ret && !s->isLoop)
+			{
+				while (pos < size)
+				{
+					*(buf+pos++) = 0;
+				}
+				s->almostDone = true;
+			}
+		}
+		else
+		{
+			// Don't copy more than the cache holds
+			int toCopy = size;
+			int remainding = s->cache->size - s->cachePosition;
+			if (remainding < size)
+			{
+				toCopy = remainding;
+			}
+			
+			// Copy the remainding into the buffer
+			memcpy(buf, &s->cache->buf[0]+s->cachePosition, toCopy);
+			s->cachePosition += toCopy;
+
+			// If we're looping and has reached the end of the cache
+			if (remainding < size && s->isLoop)
+			{
+				toCopy = size - toCopy;
+
+				memcpy(buf, &s->cache->buf[0], toCopy);
+				s->cachePosition = toCopy;
+			}
+
+			// We've reached the end, but we're not looping
+			else if (remainding < size && !s->isLoop)
+			{
+				// Null the rest of the buffer
+				memset(buf, 0, size-toCopy);
+				s->cachePosition = s->cache->size;
+
+				s->almostDone = true;
+			}
 		}
 
 		s->buffer->Unlock(buf, size, NULL, NULL);
@@ -240,8 +351,8 @@ namespace Pim
 		int		sec = 0;
 		int		ret = 1;
 
-		sound->curSection = 1;
-		sound->lastSection = 0;
+		sound->curSection = 0;
+		sound->lastSection = 1;
 		sound->done = false;
 		sound->almostDone = false;
 
