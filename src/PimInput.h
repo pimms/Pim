@@ -36,7 +36,7 @@ namespace Pim
 	public:
 		enum KeyCode
 		{
-			K_BACKSPACE = 8, K_ENTER = 13, K_LCTRL = 17, K_ESC = 27, K_SPACE = 32,
+			K_BACKSPACE = 8, K_ENTER = 13, K_SHIFT = 16, K_CTRL = 17, K_ESC = 27, K_SPACE = 32,
 			K_LEFT = 37,K_UP,K_RIGHT,K_DOWN,
 			K_0 = 48,K_1,K_2,K_3,K_4,K_5,K_6,K_7,K_8,K_9,
 			K_A = 65,K_B,K_C,K_D,K_E,K_F,K_G,K_H,K_I,K_J,K_K,K_L,K_M,K_N,K_O,K_P,K_Q,K_R,K_S,K_T,K_U,K_V,K_W,K_X,K_Y,K_Z,

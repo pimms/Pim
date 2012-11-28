@@ -64,9 +64,13 @@ namespace Pim
 				children.erase(children.begin() + i);
 
 				if (cleanup) 
+				{
 					delete ch;
+				}
 				else
+				{
 					ch->parent = NULL;
+				}
 
 				return;
 			}
