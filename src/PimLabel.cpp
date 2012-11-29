@@ -156,13 +156,7 @@ namespace Pim
 		// Push matrix before scaling and overlaying color
 		glPushMatrix();
 
-		// Push the attributes we're changing
-		glPushAttrib(GL_LIST_BIT | GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TRANSFORM_BIT);
-
-		glTranslatef(
-			pos.x, 
-			pos.y  + dim.y/2 - font->size, 
-			0.f);
+		glTranslatef(pos.x, pos.y, 0.f);
 		glRotatef(rotation, 0.f, 0.f, 1.f);
 
 		// scale and apply color
@@ -170,8 +164,11 @@ namespace Pim
 		glScalef(scale.x * fac.x, scale.y * fac.y, 1.f);
 		glColor4f(color.r, color.g, color.b, color.a);
 
+		glTranslatef(0.f, dim.y/2 - font->size, 0.f);
+
 		glListBase(font->listBase);
 
+		// Render each line in the label individually
 		for (unsigned int i=0; i<lines.size(); i++)
 		{
 			glPushMatrix();
@@ -184,8 +181,6 @@ namespace Pim
 			
 			glPopMatrix();
 		}
-
-		glPopAttrib();
 
 		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)

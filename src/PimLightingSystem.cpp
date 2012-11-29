@@ -414,26 +414,26 @@ namespace Pim
 		Vec2 renres = GameControl::getSingleton()->getCreationData().renderResolution;
 		Vec2 coord = GameControl::getSingleton()->getCreationData().coordinateSystem;
 		Vec2 posScale		= resolution / coord;		// The position (coord) scale
-		Vec2 lineScale		= coord / renres;			// The shadow line initial position scale
-		Vec2 renderScale	= renres / resolution;		// The final scale
+		Vec2 lineScale		= coord / renres;			// The shadow line position scale
 
 		glEnable(GL_STENCIL_TEST);    
 
 		glPushMatrix();						// Layer position & scale
-		//glScalef(posScale.x, posScale.y, 1.f);
+		glScalef(posScale.x, posScale.y, 1.f); posScale = Pim::Vec2(1,1);
 		glTranslatef(parent->position.x*posScale.x, parent->position.y*posScale.y, 0.f);
-		
+
 		for (auto it=lights.begin(); it!=lights.end(); it++)
 		{
 			int r = it->second->radius;
-			Vec2 p = it->first->getLightPosition() * posScale;
+			Vec2 p = it->first->getLightPosition();
 
 			if (castShadow && it->second->castShadows)
 				renderShadows(it->second, it->first, p, lineScale);
 
 			glBindTexture(GL_TEXTURE_2D, it->second->lTex);
 			glPushMatrix();					// Light texture
-			glTranslatef(p.x, p.y, 0.f);
+
+			glTranslatef(p.x*posScale.x, p.y*posScale.y, 0.f);
 
 			glStencilFunc(GL_NOTEQUAL, 0x1, 0x1);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
