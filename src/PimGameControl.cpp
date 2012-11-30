@@ -109,6 +109,7 @@ namespace Pim
 
 		singleton		= this;
 		scene			= NULL;
+		newScene		= NULL;
 
 		paused			= false;
 		pauseLayer		= NULL;
@@ -168,6 +169,7 @@ namespace Pim
 			AudioManager::instantiateSingleton();
 
 			setScene(s);
+			sceneTransition();
 
 			gameLoop();
 		} 
@@ -331,15 +333,32 @@ namespace Pim
 		return winData.coordinateSystem / renderWindow->ortho;
 	}
 
-	void GameControl::setScene(Scene *newScene)
+	void GameControl::setScene(Scene *ns)
 	{
-		PimAssert(newScene != NULL, "Error: Cannot set scene: NULL.");
+		PimAssert(ns != NULL, "Error: Cannot set scene: NULL.");
 
+		newScene = ns;
+
+		/*
 		if (scene)
 			delete scene;
 
 		scene = newScene;
 		scene->loadResources();
+		*/
+	}
+	void GameControl::sceneTransition()
+	{
+		if (newScene)
+		{
+			if (scene)
+				delete scene;
+
+			scene = newScene;
+			scene->loadResources();
+
+			newScene = NULL;
+		}
 	}
 
 	void GameControl::gameLoop() 
@@ -405,6 +424,9 @@ namespace Pim
 				scene->removeLayer(pauseLayer);
 				pauseLayer = NULL;
 			}
+
+			// If a new scene has been set, transition it here
+			sceneTransition();
 		}
 	}
 	void GameControl::dispatchPrerender(float dt)

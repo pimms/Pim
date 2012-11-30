@@ -108,6 +108,8 @@ namespace Pim
 		void dispatchPrerender(float dt);
 		void dispatchPostrender();
 
+		void sceneTransition();
+
 		void dispatchPausedPreRender(float dt);
 		void recursivePreRender(GameNode *n, float dt);
 
@@ -117,6 +119,7 @@ namespace Pim
 
 		RenderWindow			*renderWindow;
 		Scene					*scene;
+		Scene					*newScene;
 
 		std::vector<GameNode*>	frameListeners;
 
