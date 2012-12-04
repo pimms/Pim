@@ -99,7 +99,7 @@ namespace Pim
 
 		
 
-	protected:
+	private:
 		friend class RenderWindow;
 
 		static GameControl* singleton;

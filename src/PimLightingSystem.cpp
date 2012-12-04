@@ -335,17 +335,21 @@ namespace Pim
 
 	void LightingSystem::renderLightTexture()
 	{
+		// The Window Dimensions
 		Vec2 wd = GameControl::getSingleton()->getRenderWindow()->ortho;
 		
+		// Prepare the mainRT
 		mainRT->bindFBO();
 		mainRT->clear(GL_STENCIL_BUFFER_BIT);    
 
+		// Render the lights and shadows onto the mainRT
 		renderLights();
 
 		glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
-
 		glDisable(GL_TEXTURE_2D);
 		glColor4f(color.r, color.g, color.b, color.a);
+		
+		// Render black over the mainRT in blank areas
 		glBegin(GL_QUADS);
 			glVertex2f(0.f, 0.f);
 			glVertex2f(resolution.x, 0.f);
@@ -357,6 +361,7 @@ namespace Pim
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor4ub(255,255,255,255);
 
+		// Unbind the FBO
 		mainRT->unbindFBO();
 
 		if (hqShadow)
@@ -419,21 +424,24 @@ namespace Pim
 		glEnable(GL_STENCIL_TEST);    
 
 		glPushMatrix();						// Layer position & scale
-		glScalef(posScale.x, posScale.y, 1.f); posScale = Pim::Vec2(1,1);
-		glTranslatef(parent->position.x*posScale.x, parent->position.y*posScale.y, 0.f);
+		glScalef(posScale.x, posScale.y, 1.f);
+		glTranslatef(parent->position.x, parent->position.y, 0.f);
+		glScalef(parent->scale.x, parent->scale.y, 1.f);
 
 		for (auto it=lights.begin(); it!=lights.end(); it++)
 		{
 			int r = it->second->radius;
-			Vec2 p = it->first->getLightPosition();
+			Vec2 p = it->first->getLightPosition() / parent->scale;
 
 			if (castShadow && it->second->castShadows)
+			{
 				renderShadows(it->second, it->first, p, lineScale);
+			}
 
 			glBindTexture(GL_TEXTURE_2D, it->second->lTex);
 			glPushMatrix();					// Light texture
 
-			glTranslatef(p.x*posScale.x, p.y*posScale.y, 0.f);
+			glTranslatef(p.x, p.y, 0.f);
 
 			glStencilFunc(GL_NOTEQUAL, 0x1, 0x1);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);

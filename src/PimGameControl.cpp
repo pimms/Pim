@@ -337,6 +337,11 @@ namespace Pim
 	{
 		PimAssert(ns != NULL, "Error: Cannot set scene: NULL.");
 
+		if (newScene)
+		{
+			delete newScene;
+		}
+
 		newScene = ns;
 
 		/*

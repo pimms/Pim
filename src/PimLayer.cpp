@@ -91,7 +91,9 @@ namespace Pim
 		}
 
 		if (lightSys)
+		{
 			lightSys->renderLightTexture();
+		}
 
 		glPopMatrix();
 	}

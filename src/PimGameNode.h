@@ -40,25 +40,42 @@ namespace Pim
 		GameNode();
 		virtual ~GameNode();
 		
-		GameNode* getParent();						// returns this node's parent
-		virtual Layer* getParentLayer();			// returns the closest layer in the hierarchy
+		// returns this node's parent. IMPORTANT! Layers attached directly to a Scene-object
+		// will not have a parent, and will return NULL.
+		GameNode* getParent();	
 
+		// returns the first layer in the hierarchy. Layers returns themselves.
+		virtual Layer* getParentLayer();			
+
+		// Add a child to this node. 
 		virtual void addChild(GameNode *ch);
-		virtual void removeChild(GameNode *ch, bool cleanup=false);
-		virtual void removeAllChildren(bool cleanup=false);
 
-		void listenInput();		// Calls listenKeys() and listenMouse() - NOT listenController()!!
-		void unlistenInput();
+		// Remove a child from this node - "cleanup" indicated whether or not the 
+		// child should be deleted. 
+		virtual void removeChild(GameNode *ch, bool cleanup=true);
 
+		// Remove ALL children from this node - "cleanup" indicates whether or not the
+		// children should be deleted.
+		virtual void removeAllChildren(bool cleanup=true);
+
+		// Calls listenKeys() and listenMouse() - NOT listenController()!!!
+		void listenInput();	
+		// Calls unlistenKeys() and unlistenMouse() - NOT unlistenController()!!!
+		void unlistenInput();	
+
+		// The keyEvent(KeyEvent&) function is called on key press / release
 		void listenKeys();
 		void unlistenKeys();
 
-		void listenMouse();
+		// The mouseEvent(MouseEvent&) function is called on mouse action
+		void listenMouse();	
 		void unlistenMouse();
 
+		// The controllerEvent(ControllerEvent&) function is called each frame
 		void listenController();
 		void unlistenController();
 
+		// The "update(float)" function is called before the scene is rendered.
 		void listenFrame();
 		void unlistenFrame();
 
