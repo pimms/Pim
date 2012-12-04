@@ -24,6 +24,17 @@ namespace Pim
 		destroyLightingSystem();
 	}
 
+	Scene* Layer::getParentScene()
+	{
+		if (parent)
+		{
+			return parent->getParentScene();
+		}
+		else 
+		{
+			return parentScene;
+		}
+	}
 	Layer* Layer::getParentLayer()
 	{
 		return this;
@@ -168,12 +179,12 @@ namespace Pim
 			delete ld;
 		}
 	}
-	void Layer::addShadowCaster(Sprite *caster)
+	void Layer::addShadowCaster(GameNode *caster)
 	{
 		if (lightSys)
 			lightSys->casters.push_back(caster);
 	}
-	void Layer::removeShadowCaster(Sprite *caster)
+	void Layer::removeShadowCaster(GameNode *caster)
 	{
 		for (unsigned int i=0; i<lightSys->casters.size(); i++)
 		{

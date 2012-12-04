@@ -86,7 +86,7 @@ namespace Pim
 		Layer									*parent;
 
 		std::map<GameNode*,LightDef*>			lights;
-		std::vector<Sprite*>					casters;
+		std::vector<GameNode*>					casters;
 
 		bool									hqShadow;
 

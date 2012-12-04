@@ -44,6 +44,7 @@ namespace Pim
 		Layer(void);
 		virtual ~Layer(void);			
 
+		Scene* getParentScene();
 		Layer* getParentLayer();		// Returns this
 
 		Vec2 getWorldPosition();
@@ -85,10 +86,10 @@ namespace Pim
 		void preloadLightTexture(LightDef *ld, std::string identifier);
 
 		// Adds a shadowcaster - must be a sprite
-		void addShadowCaster(Sprite *caster);
+		void addShadowCaster(GameNode *caster);
 
 		// Removes a shadow caster
-		void removeShadowCaster(Sprite *caster);
+		void removeShadowCaster(GameNode *caster);
 
 		// Sets wether or not shadows are enabled
 		void setCastShadows(bool shadows);
@@ -126,17 +127,17 @@ namespace Pim
 		// The background color
 		Color			color;
 
-	protected:
+	private:
 		friend class Scene;
 		friend class GameControl;
-		friend class CollisionManager;
+		//friend class CollisionManager;
 
 		Scene			*parentScene;
 
 		LightingSystem	*lightSys;
 
 		// DEPRECATED
-		std::vector<GameNode*> collisionNodes;
+		//std::vector<GameNode*> collisionNodes;
 	};
 
 }

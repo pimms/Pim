@@ -15,7 +15,6 @@
 
 namespace Pim
 {
-
 	LightingSystem::LightingSystem(Layer *par, Vec2 pResolution)
 	{
 		parent			= par;
@@ -220,7 +219,7 @@ namespace Pim
 	{
 		SmoothLightDef *lDef = (SmoothLightDef*)lightDef;
 
-		RenderTexture *rt = new RenderTexture(Pim::Vec2(lDef->radius*2, lDef->radius*2));
+		RenderTexture *rt = new RenderTexture(Pim::Vec2(lDef->radius*2.f, lDef->radius*2.f));
 		rt->bindFBO();
 		rt->clear();
 		rt->retainTexture = true;
@@ -321,7 +320,7 @@ namespace Pim
 		glEnable(GL_TEXTURE_2D);
 		
 		// Update the radius value
-		lDef->radius = (int)ceil(totalRadius);
+		lDef->radius = totalRadius;
 
 		lDef->lTex = rt->getTex();
 		if (preload)
@@ -430,7 +429,7 @@ namespace Pim
 
 		for (auto it=lights.begin(); it!=lights.end(); it++)
 		{
-			int r = it->second->radius;
+			float r = it->second->radius;
 			Vec2 p = it->first->getLightPosition() / parent->scale;
 
 			if (castShadow && it->second->castShadows)
@@ -450,10 +449,10 @@ namespace Pim
 
 			//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 			glBegin(GL_QUADS);
-				glTexCoord2i(0,0);glVertex2i(-r,-r);
-				glTexCoord2i(1,0);glVertex2i(r,-r);
-				glTexCoord2i(1,1);glVertex2i(r,r);
-				glTexCoord2i(0,1);glVertex2i(-r,r);
+				glTexCoord2i(0,0);glVertex2f(-r,-r);
+				glTexCoord2i(1,0);glVertex2f(r,-r);
+				glTexCoord2i(1,1);glVertex2f(r,r);
+				glTexCoord2i(0,1);glVertex2f(-r,r);
 			glEnd();
 			//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -472,7 +471,7 @@ namespace Pim
 		//	pos:		The position of the light relative to it's parent
 		//	sc:			The scale (lightingSys.resolution / renderResolution)
 
-		int r = ld->radius;
+		float r = ld->radius;
 		std::vector<Line*> castLines;
 
 

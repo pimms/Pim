@@ -1,6 +1,6 @@
 #pragma once
 
-#define PIM_VERSION "0.6c"
+#define PIM_VERSION "0.6d"
 
 // memory-leak tracing for debug builds
 #ifdef _DEBUG

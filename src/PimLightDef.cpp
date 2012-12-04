@@ -8,7 +8,7 @@ namespace Pim
 		innerColor		= Color(1.f, 1.f, 1.f, 1.f);
 		outerColor		= Color(0.2f, 0.2f, 0.2f, 0.0f);
 		castShadows		= true;
-		radius			= 128;
+		radius			= 128.f;
 		lTex			= 0;
 		falloff			= 0.2f;
 		lightType		= -1;

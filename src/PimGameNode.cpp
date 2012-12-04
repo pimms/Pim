@@ -8,6 +8,8 @@
 #include "PimLayer.h"
 #include "PimPolygonShape.h"
 #include "PimCollisionManager.h"
+#include "PimScene.h"
+#include "PimLightingSystem.h"
 
 #include <iostream>
 
@@ -22,7 +24,10 @@ namespace Pim
 		zOrder					= 0;
 		dirtyZOrder				= false;
 
-		colShape				= NULL;
+		shadowShape		= NULL;
+		dbgShadowShape	= false;
+
+		//colShape				= NULL;
 		//dbgColShape				= false;
 
 		//colGroup				= 1|2|4|8;
@@ -35,6 +40,11 @@ namespace Pim
 		if (getParentLayer())
 		{
 			getParentLayer()->removeLight(this);
+		}
+
+		if (shadowShape)
+		{
+			delete shadowShape;
 		}
 
 		removeAllChildren(true);
@@ -94,6 +104,14 @@ namespace Pim
 	GameNode* GameNode::getParent()
 	{
 		return parent;
+	}
+	Scene* GameNode::getParentScene()
+	{
+		if (parent)
+		{
+			return parent->getParentScene();
+		}
+		return NULL;
 	}
 	Layer* GameNode::getParentLayer()
 	{
@@ -194,15 +212,24 @@ namespace Pim
 	void GameNode::draw()
 	{
 		glPushMatrix();
-
 		Vec2 fac = GameControl::getSingleton()->coordinateFactor();
 
 		if (allowMidPixelPosition)
+		{
 			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
+		}
 		else
+		{
 			glTranslatef(floor(position.x) / fac.x, floor(position.y) / fac.y, 0.f);
+		}
 
 		glRotatef(rotation, 0.f, 0.f, 1.f);
+
+		// Debug draw shadow shape if flagged to do so
+		if (shadowShape && dbgShadowShape)
+		{
+			shadowShape->debugDraw();
+		}
 
 		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)
@@ -215,19 +242,32 @@ namespace Pim
 	void GameNode::batchDraw()
 	{
 		glPushMatrix();
-
 		Vec2 fac = GameControl::getSingleton()->coordinateFactor();
 
+		// Translate
 		if (allowMidPixelPosition)
+		{
 			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
+		}
 		else
+		{
 			glTranslatef(floor(position.x) / fac.x, floor(position.y) / fac.y, 0.f);
+		}
 
+		// Rotate
 		glRotatef(rotation, 0.f, 0.f, 1.f);
+
+		// Debug draw shadow shape if flagged to do so
+		if (shadowShape && dbgShadowShape)
+		{
+			shadowShape->debugDraw();
+		}
 
 		orderChildren();
 		for (unsigned int i=0; i<children.size(); i++)
 		{
+			// This is the only difference from GameNode::draw(): batchDraw is called
+			// on the node's children.
 			children[i]->batchDraw();
 		}
 
@@ -239,6 +279,22 @@ namespace Pim
 		if (parent)
 			parent->dirtyZOrder = true;
 		zOrder = z;
+	}
+
+	void GameNode::setShadowShape(Vec2 vertices[], int vertexCount)
+	{
+		if (shadowShape)
+			delete shadowShape;
+
+		shadowShape = new PolygonShape(vertices, vertexCount, this);
+	}
+	void GameNode::setShadowShapeDebugDraw(bool flag)
+	{
+		dbgShadowShape = flag;
+	}
+	PolygonShape* GameNode::getShadowShape()
+	{
+		return shadowShape;
 	}
 
 	/*

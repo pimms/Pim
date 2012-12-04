@@ -27,7 +27,7 @@ namespace Pim
 		
 		Color	innerColor;		// The inner color - Def=(1,1,1,1)
 		Color	outerColor;		// The outer color, the alpha SHOULD be 0 - Def=(0.2,0.2,0.2,0.0)
-		int		radius;			// The radius, and width&height of the light texture. Def=128
+		float	radius;			// The radius, and width&height of the light texture. Def=128
 		bool	castShadows;	// Should this light cast shadows?	Def=true
 
 		float	falloff;

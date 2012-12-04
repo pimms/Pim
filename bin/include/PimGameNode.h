@@ -25,7 +25,7 @@
 namespace Pim
 {
 	// Forward declarations
-	class CollisionManager;
+	class LightingSystem;
 	class PolygonShape;
 	class Vec2;
 	class Input;
@@ -33,16 +33,20 @@ namespace Pim
 	class KeyEvent;
 	class ControllerEvent;
 	class Layer;
+	class Scene;
 
 	class GameNode : public ConsoleListener
 	{
 	public:
 		GameNode();
 		virtual ~GameNode();
-		
+
 		// returns this node's parent. IMPORTANT! Layers attached directly to a Scene-object
 		// will not have a parent, and will return NULL.
 		GameNode* getParent();	
+
+		// Returns the node's scene (given that it's parented)
+		virtual Scene* getParentScene();
 
 		// returns the first layer in the hierarchy. Layers returns themselves.
 		virtual Layer* getParentLayer();			
@@ -113,6 +117,21 @@ namespace Pim
 		int getZOrder() { return zOrder; }
 
 
+		// Set the shadow shape. The vertices can be wound either direction,
+		// but the shape must be convex in order for the rendering to occur
+		// corrently. To use concave shapes, utilize several convex shapes
+		// scattered across multiple shadow casters. 
+		// You must call "addShadowCaster()" on the layer in order for the shadow
+		// to actually be drawn.
+		void setShadowShape(Vec2 vertices[], int vertexCount);
+
+		// Enable / disable debug drawing of a specific shadow shape
+		void setShadowShapeDebugDraw(bool flag);
+
+		// Returns the shadow shape. Don't edit the points manually, you wild savage!
+		PolygonShape* getShadowShape();
+
+
 		// Set the collision shape
 		//void setCollisionShape(Vec2 vertices[], int vertexCount);
 		//void setCollisionShapeDebugDraw(bool flag);
@@ -152,8 +171,10 @@ namespace Pim
 		// clean when the children are ordered.
 		bool					dirtyZOrder;
 
-	protected:
-		friend class CollisionManager;
+	private:
+		// friend class CollisionManager;
+		friend class LightingSystem;
+		friend class Scene;
 		friend class Layer;
 
 		// While it is possible to set the parent variable
@@ -169,8 +190,12 @@ namespace Pim
 		// The zOrder variable is the index relative to it's siblings.
 		int						zOrder;
 
-		// The collision shape. Likely to be removed.
-		PolygonShape			*colShape;		
+		// The collision shape. It's deprecated and unused until further notice.
+		//PolygonShape			*colShape;	
+
+		// The shadow casting shape
+		PolygonShape			*shadowShape;
+		bool					dbgShadowShape;
 	};
 
 }

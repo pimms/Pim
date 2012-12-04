@@ -28,27 +28,18 @@ namespace Pim
 		void setShader(Shader *s);
 		Shader* getShader() { return shader; }
 
-		// Set the shadow shape. The vertices __MUST__ be wound counter clockwise,
-		// and the shape must be convex.
-		void setShadowShape(Vec2 vertices[], int vertexCount);
-		void setShadowShapeDebugDraw(bool flag);
-
 		// This method is called automatically when adding a sprite to a batch node
-		// directly. However, if a sprite is grandchildren of a batch node, this 
-		// method must be called manually.
+		// directly. However, if a sprite is grandchildren of a batch node (or not related
+		// to a batch node at all), this method must be called manually.
 		void useBatchNode(SpriteBatchNode* batch);
-
-		// Returns the shadow shape. Don't edit the points manually, you savage!
-		PolygonShape* getShadowShape();
 
 		bool					hidden;			// Hidden?
 		Vec2					anchor;			// (0.5,0.5) puts the sprites anchor in the center
 		Vec2					scale;			// Scale in X and Y directions. 100% independent.
 		Color					color;			// Color overlay
 		Rect					rect;			// Used for clipping in sprite sheets
-		bool					dbgShadowShape; // Debug draw the shadow shape?
 
-	protected:
+	private:
 		friend class LightingSystem;
 		friend class SpriteBatchNode;
 		
@@ -59,8 +50,6 @@ namespace Pim
 		bool					_usebatch;		// Using batch?
 
 		Shader					*shader;		// The shader
-		
-		PolygonShape			*shadowShape;	// The shadow casting shape
 	};
 
 }

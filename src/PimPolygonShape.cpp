@@ -31,7 +31,7 @@ namespace Pim
 				a = 360.f - a;
 		}
 
-		normal = Vec2(cosf(a*(M_PI/180.f)), sinf(a*(M_PI/180.f)));
+		normal = Vec2(cosf(a*((float)M_PI/180.f)), sinf(a*((float)M_PI/180.f)));
 
 	}
 
@@ -73,7 +73,7 @@ namespace Pim
 	PolygonShape::PolygonShape(Vec2 vertices[], int vertexCount, GameNode *par)
 	{
 		PimAssert(vertexCount > 2, "Error: A shape must have 3 or more vertices!");
-		PimAssert(par, "Error: A shape must be provided a game node parent!");
+		PimAssert(par != NULL, "Error: A shape must be provided a game node parent!");
 
 		parent = par;
 
@@ -116,7 +116,7 @@ namespace Pim
 			i += 2;
 		}
 
-		return c / i;
+		return c / (float)i;
 	}
 
 	void PolygonShape::debugDraw()

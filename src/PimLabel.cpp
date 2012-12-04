@@ -8,7 +8,7 @@ namespace Pim
 {
 	Label::Label(Font *pfont)
 	{
-		PimAssert(pfont, "Error: cannot pass NULL-font!");
+		PimAssert(pfont != NULL, "Error: cannot pass NULL-font!");
 
 		fontOwner	= false;
 		anchor		= Vec2(0.5f, 0.5f);
@@ -20,7 +20,7 @@ namespace Pim
 	}
 	Label::Label(Font *pfont, std::string ptext)
 	{
-		PimAssert(pfont, "Error: cannot pass NULL-font!");
+		PimAssert(pfont != NULL, "Error: cannot pass NULL-font!");
 
 		fontOwner	= false;
 		anchor		= Vec2(0.5f, 0.5f);
@@ -39,7 +39,7 @@ namespace Pim
 
 	void Label::setFont(Font *pfont)
 	{
-		PimAssert(pfont, "Error: cannot pass NULL-font!");
+		PimAssert(pfont != NULL, "Error: cannot pass NULL-font!");
 
 		font = pfont;
 		calculateDimensions();
@@ -134,8 +134,8 @@ namespace Pim
 			lineWidth.push_back(cur);
 		}
 
-		dim.x = lon;
-		dim.y = font->size + (font->size + linePadding) * (lines.size()-1);
+		dim.x = (float)lon;
+		dim.y = (float)(font->size + (font->size + linePadding) * (lines.size()-1));
 	}
 	Vec2 Label::getDimensions()
 	{

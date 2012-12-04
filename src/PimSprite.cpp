@@ -18,8 +18,6 @@ namespace Pim
 		color			= Color(1.f, 1.f, 1.f, 1.f);
 		texID			= -1;
 		shader			= NULL;
-		shadowShape		= NULL;
-		dbgShadowShape	= false;
 		hidden			= false;
 		_usebatch		= false;
 
@@ -32,8 +30,6 @@ namespace Pim
 		color			= Color(1.f, 1.f, 1.f, 1.f);
 		texID			= -1;
 		shader			= NULL;
-		shadowShape		= NULL;
-		dbgShadowShape	= false;
 		hidden			= false;
 		_usebatch		= false;
 	}
@@ -42,11 +38,6 @@ namespace Pim
 		if (!_usebatch)
 		{
 			glDeleteTextures(1, &texID);
-		}
-
-		if (shadowShape)
-		{
-			delete shadowShape;
 		}
 	}
 
@@ -192,10 +183,6 @@ namespace Pim
 		
 		glUseProgram(0);
 
-		// Debug draw shadow shape if flagged to do so
-		if (shadowShape && dbgShadowShape)
-			shadowShape->debugDraw();
-
 		// THE INTEGRATED COLLISION DETECTION LIBRARY IS DEPRECATED
 		//if (colShape && dbgColShape)
 		//	colShape->debugDraw();
@@ -259,10 +246,6 @@ namespace Pim
 
 		glUseProgram(0);
 
-		// Debug draw shadow shape if flagged to do so
-		if (shadowShape && dbgShadowShape)
-			shadowShape->debugDraw();
-
 		// THE INTEGRATED COLLISION DETECTION LIBRARY IS DEPRECATED
 		//if (colShape && dbgColShape)
 		//	colShape->debugDraw();
@@ -294,21 +277,5 @@ namespace Pim
 	void Sprite::setShader(Shader *s)
 	{
 		shader = s;
-	}
-
-	void Sprite::setShadowShape(Vec2 vertices[], int vertexCount)
-	{
-		if (shadowShape)
-			delete shadowShape;
-
-		shadowShape = new PolygonShape(vertices, vertexCount, this);
-	}
-	void Sprite::setShadowShapeDebugDraw(bool flag)
-	{
-		dbgShadowShape = flag;
-	}
-	PolygonShape* Sprite::getShadowShape()
-	{
-		return shadowShape;
 	}
 }
