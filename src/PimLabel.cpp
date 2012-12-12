@@ -2,7 +2,7 @@
 #include "PimLabel.h"
 #include "PimFont.h"
 #include "PimGameControl.h"
-#include "PimException.h"
+#include "PimAssert.h"
 
 namespace Pim
 {

@@ -4,7 +4,7 @@
 
 #include "PimConsoleReader.h"
 #include "PimGameControl.h"
-#include "PimException.h"
+#include "PimAssert.h"
 
 namespace Pim
 {

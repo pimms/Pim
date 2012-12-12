@@ -1,7 +1,7 @@
 #include "PimSlider.h"
 #include "PimSprite.h"
 #include "PimButton.h"
-#include "PimException.h"
+#include "PimAssert.h"
 #include "PimInput.h"
 #include "PimLayer.h"
 

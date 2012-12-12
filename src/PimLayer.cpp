@@ -5,7 +5,7 @@
 #include "PimGameNode.h"
 #include "PimVec2.h"
 #include "PimGameControl.h"
-#include "PimException.h"
+#include "PimAssert.h"
 #include "PimCollisionManager.h"
 #include "PimScene.h"
 
@@ -138,9 +138,7 @@ namespace Pim
 	}
 	void Layer::addLight(GameNode *node, LightDef *lDef)
 	{
-#ifdef _DEBUG
 		PimAssert(node->parent != NULL, "ERROR: Orphan lights are not allowed");
-#endif
 
 		if (lightSys)
 			lightSys->addLight(node, lDef);
@@ -229,9 +227,7 @@ namespace Pim
 	/* // THE INTEGRATED COLLISION LIBRARY IS DEPRECATED
 	void Layer::addCollisionNode(GameNode *node)
 	{
-#ifdef _DEBUG
 		PimAssert(node->colShape, "Error: collision node has no collision shape!");
-#endif
 
 		collisionNodes.push_back(node);
 	}

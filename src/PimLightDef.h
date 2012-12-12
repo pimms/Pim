@@ -30,7 +30,9 @@ namespace Pim
 		float	radius;			// The radius, and width&height of the light texture. Def=128
 		bool	castShadows;	// Should this light cast shadows?	Def=true
 
-		float	falloff;
+		float	falloff;		// The falloff rate
+
+		Vec2	position;		// Relative to the parent's position
 
 	protected:
 		friend class LightingSystem;

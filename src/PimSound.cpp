@@ -1,6 +1,6 @@
 #include "PimSound.h"
 #include "PimAudioManager.h"
-#include "PimException.h"
+#include "PimAssert.h"
 
 namespace Pim
 {
@@ -48,9 +48,7 @@ namespace Pim
 
 	void Sound::loadFile(std::string file)
 	{
-#ifdef _DEBUG
 		PimAssert(file.length() >= 4, "Error: invalid file");
-#endif
 		
 		filename = file;
 

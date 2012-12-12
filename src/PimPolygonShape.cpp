@@ -4,7 +4,7 @@
 #include "PimVec2.h"
 #include "PimPolygonShape.h"
 #include "PimGameNode.h"
-#include "PimException.h"
+#include "PimAssert.h"
 #include "PimLightingSystem.h"
 #include "PimCollisionManager.h"
 
@@ -18,21 +18,7 @@ namespace Pim
 		shape	= p;
 
 		float a = (v2-v1).angleBetween(Vec2(0.f,1.f));
-		
-		// Modify 'a' if necessary 
-		if (v2.x > v1.x)
-		{
-			if (a > 0.f)
-				a = 360.f - a;
-		}
-		else if (v1.x > v2.x)
-		{
-			if (a < 0.f)
-				a = 360.f - a;
-		}
-
-		normal = Vec2(cosf(a*((float)M_PI/180.f)), sinf(a*((float)M_PI/180.f)));
-
+		normal = Vec2(cosf(a*DEGTORAD), sinf(a*DEGTORAD));
 	}
 
 	Vec2 Line::getP1(Vec2 &sc)
@@ -85,6 +71,21 @@ namespace Pim
 			lines.push_back(new Line(*v1, *v2, this));
 		}
 		lines.push_back(new Line(vertices[i], vertices[0], this));
+
+		// Calculate the normal (some of the line's normals are invertex)
+		for (int i=0; i<lines.size(); i++)
+		{
+			Line *cur = lines[i];
+			Line *next = (i==lines.size()-1) ? (lines[0]) : (lines[i+1]);
+			Line *prev = (!i) ? (lines[lines.size()-1]) : (lines[i-1]);
+
+			float d = cur->getNormal().dot( next->getP2() - cur->getP1() );
+			if (d > 0.f)
+			{
+				// Flip the normal
+				cur->normal *= Vec2(-1.f, -1.f);
+			}
+		}
 	}
 	PolygonShape::~PolygonShape()
 	{

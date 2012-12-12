@@ -1,6 +1,6 @@
 #pragma once
 
-#define PIM_VERSION "0.6d"
+#define PIM_VERSION "0.7"
 
 // memory-leak tracing for debug builds
 #ifdef _DEBUG
@@ -40,3 +40,7 @@
 // Ogg Vorbis
 #include "vorbis\codec.h"
 #include "vorbis\vorbisfile.h"
+
+// Custom defines
+#define DEGTORAD ((float)M_PI/180.f)
+#define RADTODEG (180.f/(float)M_PI)

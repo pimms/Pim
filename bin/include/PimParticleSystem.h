@@ -1,6 +1,6 @@
 #pragma once
 #include "PimSpriteBatchNode.h"
-#include "PimException.h"
+#include "PimAssert.h"
 #include "PimInternal.h"
 
 namespace Pim

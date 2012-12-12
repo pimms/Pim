@@ -2,11 +2,12 @@
 
 #include "PimVec2.h"
 #include "PimSprite.h"
-#include "PimException.h"
+#include "PimAssert.h"
 #include "PimShaderManager.h"
 #include "PimPolygonShape.h"
 #include "PimGameControl.h"
 #include "PimSpriteBatchNode.h"
+#include "PimAction.h"
 
 namespace Pim
 {
@@ -49,7 +50,7 @@ namespace Pim
 		FILE *fp;
 
 		fopen_s(&fp, file.c_str(), "rb");
-		PimAssert(fp != NULL, file.append(": Does not exist!"));
+		PimAssert(fp != NULL, file.append(": Does not exist!").c_str());
 		
 		png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
@@ -187,6 +188,12 @@ namespace Pim
 		//if (colShape && dbgColShape)
 		//	colShape->debugDraw();
 
+		// Debug draw shadow shape if flagged to do so
+		if (shadowShape && dbgShadowShape)
+		{
+			shadowShape->debugDraw();
+		}
+
 		// Children are unaffected by their parent's scale. Restore.
 		glPopMatrix();
 
@@ -250,6 +257,12 @@ namespace Pim
 		//if (colShape && dbgColShape)
 		//	colShape->debugDraw();
 
+		// Debug draw shadow shape if flagged to do so
+		if (shadowShape && dbgShadowShape)
+		{
+			shadowShape->debugDraw();
+		}
+
 		// Children are unaffected by their parent's scale. Restore.
 		glPopMatrix();
 
@@ -261,6 +274,16 @@ namespace Pim
 
 		// Restore this parent's view matrix
 		glPopMatrix();
+	}
+
+	void Sprite::runAction(SpriteAction *a)
+	{
+		addChild(a);
+		a->activate();
+	}
+	void Sprite::runAction(Action *a)
+	{
+		GameNode::runAction(a);
 	}
 
 	void Sprite::useBatchNode(SpriteBatchNode *batch)

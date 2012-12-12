@@ -30,7 +30,6 @@ namespace Pim
 		// Returns the relative dot product between the normal and the provided vector.
 		float relativeDot(Vec2 &vec, Vec2 &sc = Vec2(1,1));
 
-		// return relativeDot(vec) >= 0.f;
 		bool isFacing(Vec2 &vec, Vec2 &sc = Vec2(1,1));
 
 	private:

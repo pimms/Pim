@@ -2,7 +2,7 @@
 
 #include "PimVec2.h"
 #include "PimGameNode.h"
-#include "PimException.h"
+#include "PimAssert.h"
 #include "PimGameControl.h"
 
 #include "PimInput.h"

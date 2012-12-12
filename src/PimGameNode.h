@@ -34,6 +34,9 @@ namespace Pim
 	class ControllerEvent;
 	class Layer;
 	class Scene;
+	class ActionQueue;
+	class BaseAction;
+	class Action;
 
 	class GameNode : public ConsoleListener
 	{
@@ -87,7 +90,6 @@ namespace Pim
 		virtual void keyEvent(KeyEvent &)				{}	// called on keylisteners on event
 		virtual void controllerEvent(ControllerEvent&)	{}	// called on controller listeners
 		virtual void update(float dt)					{}	// called on framelisteners pre-render
-		virtual void postFrame()						{}	// ## ONLY AVAILABLE IN DEBUG BUILDS ##
 
 		// Virtual for the sake of Layers.
 		virtual Vec2 getWorldPosition();	
@@ -96,8 +98,6 @@ namespace Pim
 		// Returns the position of this node relative to the first layer-parent.
 		// Returns (0,0) from ALL layers.
 		virtual Vec2 getLayerPosition();
-		// Returns the position of the light (getLayerPosition() + lightPosition)
-		Vec2 getLightPosition();
 
 		// Sorts children based on their zOrder
 		void orderChildren();
@@ -116,6 +116,15 @@ namespace Pim
 		// Get the z order
 		int getZOrder() { return zOrder; }
 
+		// Perform a single Action. The Action-object is automatically
+		// cleaned after it's execution.
+		void runAction(Action *a);
+
+		// Perform a sequence of actions in rapid succession
+		void runActionQueue(ActionQueue *queue);
+
+		// Called when an action has completed (queued actions and normal actions)
+		virtual void actionCompleted(BaseAction *action) {}
 
 		// Set the shadow shape. The vertices can be wound either direction,
 		// but the shape must be convex in order for the rendering to occur
@@ -140,7 +149,6 @@ namespace Pim
 
 		float					rotation;		// Rotation - relative to parent
 		Vec2					position;		// Position - CCW degrees - relative to parent
-		Vec2					lightPosition;	// Relative to position
 		std::vector<GameNode*>	children;		// Children
 
 
@@ -162,20 +170,26 @@ namespace Pim
 		bool					allowMidPixelPosition;
 
 		// The integrated collision detection library is deprecated.
-		//bool					dbgColShape;	// Debug draw the collision shape?
-		//unsigned short			colGroup;		// The group of THIS node
-		//unsigned short			colFilter;		// The groups this node can collide with
+		/*
+		bool					dbgColShape;	// Debug draw the collision shape?
+		unsigned short			colGroup;		// The group of THIS node
+		unsigned short			colFilter;		// The groups this node can collide with
+		*/
+
+	protected: 
+		// friend class CollisionManager;
+		friend class LightingSystem;
+		friend class Scene;
+		friend class Layer;
 
 		// If dirtyZOrder is false, orderChildren() will do nothing.
 		// The z-order is dirty when a new child has been added, and is 
 		// clean when the children are ordered.
 		bool					dirtyZOrder;
 
-	private:
-		// friend class CollisionManager;
-		friend class LightingSystem;
-		friend class Scene;
-		friend class Layer;
+		// The shadow casting shape
+		PolygonShape			*shadowShape;
+		bool					dbgShadowShape;
 
 		// While it is possible to set the parent variable
 		// to some obscure value by yourself, you would be 
@@ -192,10 +206,6 @@ namespace Pim
 
 		// The collision shape. It's deprecated and unused until further notice.
 		//PolygonShape			*colShape;	
-
-		// The shadow casting shape
-		PolygonShape			*shadowShape;
-		bool					dbgShadowShape;
 	};
 
 }

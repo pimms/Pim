@@ -2,7 +2,7 @@
 #include "PimRenderWindow.h"
 
 #include "PimGameControl.h"
-#include "PimException.h"
+#include "PimAssert.h"
 #include "PimLayer.h"
 #include "PimScene.h"
 
@@ -428,12 +428,6 @@ namespace Pim
 			glEnd();
 			glEnable(GL_TEXTURE_2D);
 		}
-
-
-#ifdef _DEBUG
-		// Dispatch post render messages
-		GameControl::getSingleton()->dispatchPostrender();
-#endif
 
 		SwapBuffers(hDC);				// Swap the buffers to draw to screen
 

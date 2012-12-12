@@ -10,7 +10,7 @@
 #include "PimLayer.h"
 #include "PimSprite.h"
 #include "PimPolygonShape.h"
-#include "PimException.h"
+#include "PimAssert.h"
 
 
 namespace Pim
@@ -417,6 +417,7 @@ namespace Pim
 	{
 		Vec2 renres = GameControl::getSingleton()->getCreationData().renderResolution;
 		Vec2 coord = GameControl::getSingleton()->getCreationData().coordinateSystem;
+		Vec2 lightScale		= renres / resolution;		// The scale of the light texture
 		Vec2 posScale		= resolution / coord;		// The position (coord) scale
 		Vec2 lineScale		= coord / renres;			// The shadow line position scale
 
@@ -430,7 +431,7 @@ namespace Pim
 		for (auto it=lights.begin(); it!=lights.end(); it++)
 		{
 			float r = it->second->radius;
-			Vec2 p = it->first->getLightPosition() / parent->scale;
+			Vec2 p = (it->first->getLayerPosition() + it->second->position) / parent->scale;
 
 			if (castShadow && it->second->castShadows)
 			{
@@ -446,6 +447,9 @@ namespace Pim
 			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
 			glColor4f(1.f, 1.f, 1.f, 0.2f);
+			
+			// Apply the light scale
+			glScalef(lightScale.x, lightScale.y, 1.f);
 
 			//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 			glBegin(GL_QUADS);

@@ -9,6 +9,7 @@ namespace Pim
 	class SpriteBatchNode;
 	class LightingSystem;
 	class PolygonShape;
+	class SpriteAction;
 	class Shader;
 
 	class Sprite : public GameNode
@@ -22,6 +23,11 @@ namespace Pim
 
 		virtual void draw();					
 		virtual void batchDraw();				
+
+		// Perform a single SpriteAction. The Action-object is automatically
+		// cleaned after it's execution.
+		void runAction(SpriteAction *action);
+		void runAction(Action *action);
 
 		// To set the shader, call getShader from ShaderManager and pass it here.
 		// The quality is not automatically updated.
@@ -39,7 +45,9 @@ namespace Pim
 		Color					color;			// Color overlay
 		Rect					rect;			// Used for clipping in sprite sheets
 
-	private:
+		Shader					*shader;		// The shader
+
+	protected:
 		friend class LightingSystem;
 		friend class SpriteBatchNode;
 		
@@ -48,8 +56,6 @@ namespace Pim
 		png_uint_32				_tw;			// Texture width
 		png_uint_32				_th;			// Texture height
 		bool					_usebatch;		// Using batch?
-
-		Shader					*shader;		// The shader
 	};
 
 }

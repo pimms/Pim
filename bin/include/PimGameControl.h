@@ -106,7 +106,6 @@ namespace Pim
 
 		void gameLoop();
 		void dispatchPrerender(float dt);
-		void dispatchPostrender();
 
 		void sceneTransition();
 

@@ -1,7 +1,7 @@
 #include "PimAudioManager.h"
 
 #include "PimGameControl.h"
-#include "PimException.h"
+#include "PimAssert.h"
 #include "PimRenderWindow.h"
 #include "PimSound.h"
 
@@ -50,16 +50,12 @@ namespace Pim
 
 	void AudioManager::instantiateSingleton()
 	{
-#ifdef _DEBUG
 		PimAssert(singleton == NULL, "Error: AudioManager singleton instantiated twice.");
-#endif
 		singleton = new AudioManager;
 	}
 	void AudioManager::clearSingleton()
 	{
-#ifdef _DEBUG
 		PimAssert(singleton != NULL, "Error: AudioManager was never initialized.");
-#endif
 		delete singleton;
 		singleton = NULL;
 	}

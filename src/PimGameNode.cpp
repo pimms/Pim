@@ -2,7 +2,7 @@
 
 #include "PimVec2.h"
 #include "PimGameNode.h"
-#include "PimException.h"
+#include "PimAssert.h"
 #include "PimInput.h"
 #include "PimGameControl.h"
 #include "PimLayer.h"
@@ -10,6 +10,7 @@
 #include "PimCollisionManager.h"
 #include "PimScene.h"
 #include "PimLightingSystem.h"
+#include "PimAction.h"
 
 #include <iostream>
 
@@ -56,9 +57,7 @@ namespace Pim
 
 	void GameNode::addChild(GameNode *ch)
 	{
-#ifdef _DEBUG
 		PimAssert(!ch->getParent(), "Node already has a parent");
-#endif
 
 		ch->parent = this;
 		children.push_back(ch);
@@ -92,9 +91,13 @@ namespace Pim
 		for each (GameNode *child in children)
 		{
 			if (cleanup) 
+			{
 				delete child;
+			}
 			else
+			{
 				child->parent = NULL;
+			}
 		}
 
 		// THEN clear the array
@@ -182,10 +185,6 @@ namespace Pim
 	{
 		return position + parent->getLayerPosition();
 	}
-	Vec2 GameNode::getLightPosition()
-	{
-		return getLayerPosition() + lightPosition;
-	}
 
 	void GameNode::orderChildren()
 	{
@@ -228,7 +227,14 @@ namespace Pim
 		// Debug draw shadow shape if flagged to do so
 		if (shadowShape && dbgShadowShape)
 		{
+			glPushMatrix();
+
+			fac = GameControl::getSingleton()->windowScale();
+			glScalef(fac.x, fac.y, 1.f);
+
 			shadowShape->debugDraw();
+
+			glPopMatrix();
 		}
 
 		orderChildren();
@@ -260,7 +266,14 @@ namespace Pim
 		// Debug draw shadow shape if flagged to do so
 		if (shadowShape && dbgShadowShape)
 		{
+			glPushMatrix();
+
+			fac = GameControl::getSingleton()->windowScale();
+			glScalef(fac.x, fac.y, 1.f);
+
 			shadowShape->debugDraw();
+
+			glPopMatrix();
 		}
 
 		orderChildren();
@@ -279,6 +292,17 @@ namespace Pim
 		if (parent)
 			parent->dirtyZOrder = true;
 		zOrder = z;
+	}
+
+	void GameNode::runAction(Action *a)
+	{
+		addChild(a);
+		a->activate();
+	}
+	void GameNode::runActionQueue(ActionQueue *aq)
+	{
+		addChild(aq);
+		aq->activate();
 	}
 
 	void GameNode::setShadowShape(Vec2 vertices[], int vertexCount)

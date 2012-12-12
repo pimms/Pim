@@ -1,7 +1,7 @@
 #include "PimInternal.h"
 
 #include "PimShaderManager.h"
-#include "PimException.h"
+#include "PimAssert.h"
 
 namespace Pim
 {

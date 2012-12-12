@@ -1,7 +1,7 @@
 #include "PimInternal.h"
 #include "PimGameControl.h"
 
-#include "PimException.h"
+#include "PimAssert.h"
 #include "PimRenderWindow.h"
 #include "PimInput.h"
 #include "PimGameNode.h"
@@ -20,7 +20,8 @@ namespace Pim
 {
 	// Global variables only accessible from this file. Used to
 	// to store values from the callback function.
-	bool hasFocus = false;
+	bool hasFocus		= false;
+	bool winHasMoved	= false;		// The window has been moved or resized
 
 	// Callback for window events
 	LRESULT	CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -30,29 +31,36 @@ namespace Pim
 			case WM_ACTIVATE:
 				if (wParam)
 				{
+					printf("gained focus\n");
 					hasFocus = true;
 					if (Input::getSingleton())
 						Input::getSingleton()->_gainedFocus();
 				}
 				else
 				{
+					printf("lost focus\n");
 					hasFocus = false;
 					if (Input::getSingleton())
 						Input::getSingleton()->_lostFocus();
 				}
 				return 0;
 
+				
 			case WM_SYSCOMMAND:
-				switch (wParam)
+				if (wParam == 0xf012)
 				{
-					case SC_SCREENSAVE:
-					case SC_MONITORPOWER:
-					return 0;
+					winHasMoved = true;
 				}
-				break;
+				return DefWindowProc(hWnd,msg,wParam,lParam);
+				
+			case WM_ENTERSIZEMOVE:
+			case WM_MOVE:
+			case WM_MOVING:
+				winHasMoved = true;
+				return 0;
 
-			case WM_COMMAND:
-				std::cout<< "WM_COMMAND\n";
+			case WM_EXITSIZEMOVE:
+				//winHasMoved = false;
 				return 0;
 
 			case WM_CLOSE:
@@ -363,6 +371,9 @@ namespace Pim
 			scene->loadResources();
 
 			newScene = NULL;
+
+			// Discard the new (and too high) delta time
+			calculateDeltaTime();
 		}
 	}
 
@@ -374,13 +385,6 @@ namespace Pim
 
 		while (!quit)
 		{
-			// Get the DT
-			float dt = calculateDeltaTime();
-			if (dt < maxDelta)
-			{
-				Sleep((maxDelta-dt)*1000.f);
-			}
-
 			while (PeekMessage(&msg,NULL,0,0,PM_REMOVE))
 			{
 				if (msg.message == WM_QUIT)
@@ -394,9 +398,23 @@ namespace Pim
 				}
 			}
 
+			if (winHasMoved)
+			{
+				// Discard the delta time
+				calculateDeltaTime();
+				winHasMoved = false;
+			}
+
+			// Get the DT
+			float dt = calculateDeltaTime();
+			if (dt < maxDelta)
+			{
+				Sleep( ceil((maxDelta-dt)*1000.f) );
+				dt += calculateDeltaTime();
+			}
+
 			if (!paused)
 			{
-
 #ifdef _DEBUG
 				// Dispatch console commands
 				ConsoleReader::getSingleton()->dispatch();
@@ -417,7 +435,7 @@ namespace Pim
 				Input::getSingleton()->dispatchPaused(pauseLayer);
 			}
 
-			// Render the frame - post render calls are dispatched by renderWindow
+			// Render the frame
 			renderWindow->renderFrame();
 
 			// Update playing ogg files
@@ -438,16 +456,11 @@ namespace Pim
 	{
 		scene->update(dt);
 
-		for (unsigned int i=0; i<frameListeners.size(); i++)
+		auto tempList = frameListeners;
+
+		for (unsigned int i=0; i<tempList.size(); i++)
 		{
-			frameListeners[i]->update(dt);
-		}
-	}
-	void GameControl::dispatchPostrender()
-	{
-		for (unsigned int i=0; i<frameListeners.size(); i++)
-		{
-			frameListeners[i]->postFrame();
+			tempList[i]->update(dt);
 		}
 	}
 

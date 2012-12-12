@@ -239,6 +239,14 @@ http://www.zlib.net
 License:
 http://www.zlib.net/zlib_license.html
 
+### TinyXML
+
+http://www.grinninglizard.com/tinyxml/index.html
+
+License:
+Zlib (http://www.grinninglizard.com/tinyxmldocs/index.html)
+
+
 
 License
 =======

@@ -109,9 +109,6 @@ namespace Pim
 		// Return the lighting system
 		LightingSystem* getLightingSystem();
 
-
-		// ---------------------------------------------
-
 		// DEPRECTAED
 		//void removeCollisionNode(GameNode*);
 
@@ -127,7 +124,7 @@ namespace Pim
 		// The background color
 		Color			color;
 
-	private:
+	protected:
 		friend class Scene;
 		friend class GameControl;
 		//friend class CollisionManager;
