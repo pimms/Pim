@@ -176,8 +176,12 @@ namespace Pim
 		unsigned short			colFilter;		// The groups this node can collide with
 		*/
 
+	private:
+		void prepareDeletion();
+
 	protected: 
 		// friend class CollisionManager;
+		friend class GameControl;
 		friend class LightingSystem;
 		friend class Scene;
 		friend class Layer;
@@ -195,7 +199,7 @@ namespace Pim
 		// to some obscure value by yourself, you would be 
 		// a giant moron to do so. Leave this alone.
 		// No matter what. You do now know what you are doing.
-		GameNode	*parent;
+		GameNode				*parent;
 
 		// zOrder is handled in an ascending fashion: 0 is drawn first, then 1, etc.
 		// The ordering only occurs with siblings of the same parent. 
@@ -205,7 +209,10 @@ namespace Pim
 		int						zOrder;
 
 		// The collision shape. It's deprecated and unused until further notice.
-		//PolygonShape			*colShape;	
+		//PolygonShape			*colShape;
+
+		// Set to true when "prepareDeletion()" is called.
+		bool					willDelete;
 	};
 
 }

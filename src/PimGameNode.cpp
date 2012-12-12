@@ -24,6 +24,7 @@ namespace Pim
 		allowMidPixelPosition	= true;
 		zOrder					= 0;
 		dirtyZOrder				= false;
+		willDelete				= false;
 
 		shadowShape		= NULL;
 		dbgShadowShape	= false;
@@ -38,6 +39,19 @@ namespace Pim
 	}
 	GameNode::~GameNode()
 	{
+		if (!willDelete)
+		{
+			prepareDeletion();
+		}
+
+		removeAllChildren();
+
+		unlistenFrame();
+		unlistenInput();
+		unlistenController();
+	}
+	void GameNode::prepareDeletion()
+	{
 		if (getParentLayer())
 		{
 			getParentLayer()->removeLight(this);
@@ -48,11 +62,13 @@ namespace Pim
 			delete shadowShape;
 		}
 
-		removeAllChildren(true);
-		
-		unlistenFrame();
+		removeAllChildren();
+
 		unlistenInput();
 		unlistenController();
+
+		parent = NULL;
+		willDelete = true;
 	}
 
 	void GameNode::addChild(GameNode *ch)
@@ -74,13 +90,13 @@ namespace Pim
 
 				if (cleanup) 
 				{
-					delete ch;
+					//delete ch;
+					GameControl::getSingleton()->addNodeToDelete(ch);
 				}
 				else
 				{
 					ch->parent = NULL;
 				}
-
 				return;
 			}
 		}
@@ -92,7 +108,8 @@ namespace Pim
 		{
 			if (cleanup) 
 			{
-				delete child;
+				//delete child;
+				GameControl::getSingleton()->addNodeToDelete(child);
 			}
 			else
 			{
@@ -174,16 +191,29 @@ namespace Pim
 
 	Vec2 GameNode::getWorldPosition()
 	{
-		return position + parent->getWorldPosition();
+		if (parent)
+		{
+			return position + parent->getWorldPosition();
+		}
+		return position;
 	}
 	float GameNode::getWorldRotation()
 	{
-		return rotation + parent->getWorldRotation();
+		if (parent)
+		{
+			return rotation + parent->getWorldRotation();
+		}
+		return rotation;
 	}
 
 	Vec2 GameNode::getLayerPosition()
 	{
-		return position + parent->getLayerPosition();
+		if (parent)
+		{
+			return position + parent->getLayerPosition();
+		}
+		
+		return position;
 	}
 
 	void GameNode::orderChildren()

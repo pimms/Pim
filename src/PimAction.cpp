@@ -84,31 +84,21 @@ namespace Pim
 	}
 	void BaseAction::cleanup()
 	{
+		if (notifyOnCompletion)
+		{
+			notificationCallback->actionCompleted(this);
+		}
+
 		if (inQueue)
 		{
 			done = true;
 			unlistenFrame();
 
-			if (notifyOnCompletion)
-			{
-				notificationCallback->actionCompleted(this);
-			}
-
 			queue->activateNext();
 		}
 		else
 		{
-			// Make this node an orphan
-			getParent()->removeChild(this, false);
-
-			// Notify the parent if required - note that this
-			// call may call "removeAllChildren"
-			if (notifyOnCompletion)
-			{
-				notificationCallback->actionCompleted(this);
-			}
-
-			delete this;
+			getParent()->removeChild(this);
 		}
 	}
 
@@ -354,7 +344,11 @@ namespace Pim
 			if (curAct)
 			{
 				excess = curAct->timer;
-				getParent()->removeChild(curAct);
+
+				if (parent)
+				{
+					parent->removeChild(curAct);
+				}
 			}
 
 			curAct = actions[0];
@@ -363,8 +357,11 @@ namespace Pim
 			curAct->dur += excess;
 			curAct->timer += excess;
 
-			getParent()->addChild(curAct);
-			curAct->activate();
+			if (parent)
+			{
+				parent->addChild(curAct);
+				curAct->activate();
+			}
 		}
 		else
 		{
@@ -416,12 +413,19 @@ namespace Pim
 				if (actions[i] == curAct)
 				{
 					actions.erase(actions.begin() + i);
+					
+					if (parent)
+					{
+						parent->removeChild(curAct);
+					}
 				}
 			}
 		}
 	}
 	void ActionQueueRepeat::activateNext()
 	{
+		if (willDelete) return;
+
 		// Update the action counters
 		if (++actionIdx >= actions.size())
 		{
@@ -442,7 +446,11 @@ namespace Pim
 				excess = curAct->timer;
 
 				// The action is not deleted.
-				getParent()->removeChild(curAct, false);
+				if (parent)
+				{
+					getParent()->removeChild(curAct, false);
+				}
+
 				curAct->unlistenFrame();
 			}
 
@@ -454,8 +462,11 @@ namespace Pim
 			curAct->done	= false;
 
 			// Run the next action
-			getParent()->addChild(curAct);
-			curAct->activate();
+			if (parent)
+			{
+				getParent()->addChild(curAct);
+				curAct->activate();
+			}
 
 			//curAct->update(-excess);
 		}

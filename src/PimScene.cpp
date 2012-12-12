@@ -11,8 +11,10 @@ namespace Pim
 	}
 	Scene::~Scene()
 	{
-		for each (Layer *l in layers)
-			delete l;
+		for each (Layer *layer in layers)
+		{
+			GameControl::getSingleton()->addNodeToDelete(layer);
+		}
 	}
 
 	void Scene::addLayer(Layer *l)

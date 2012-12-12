@@ -64,7 +64,7 @@ namespace Pim
 				return 0;
 
 			case WM_CLOSE:
-				PostQuitMessage(0);
+				GameControl::getSingleton()->exit();
 				return 0;
 
 			case WM_KEYDOWN:
@@ -198,6 +198,7 @@ namespace Pim
 		// Clean up the scene
 		if (scene) 
 			delete scene;
+		clearDeleteQueue();
 
 		Input::clearSingleton();
 		ShaderManager::clearSingleton();
@@ -367,6 +368,8 @@ namespace Pim
 			if (scene)
 				delete scene;
 
+			clearDeleteQueue();
+
 			scene = newScene;
 			scene->loadResources();
 
@@ -418,22 +421,29 @@ namespace Pim
 #ifdef _DEBUG
 				// Dispatch console commands
 				ConsoleReader::getSingleton()->dispatch();
+				clearDeleteQueue();
 #endif
 
 				// Dispatch key and mouse events 
 				Input::getSingleton()->dispatch();
+
+				clearDeleteQueue();
 
 				// Dispatch update calls
 				dispatchPrerender(dt);
 			}
 			else
 			{
-				// Dispatch update to all children of pauseLayer
-				dispatchPausedPreRender(dt);
-
 				// Dispatch input to all children of pauseLayer
 				Input::getSingleton()->dispatchPaused(pauseLayer);
+
+				clearDeleteQueue();
+
+				// Dispatch update to all children of pauseLayer
+				dispatchPausedPreRender(dt);
 			}
+
+			clearDeleteQueue();
 
 			// Render the frame
 			renderWindow->renderFrame();
@@ -451,17 +461,35 @@ namespace Pim
 			// If a new scene has been set, transition it here
 			sceneTransition();
 		}
+
+		clearDeleteQueue();
 	}
 	void GameControl::dispatchPrerender(float dt)
 	{
 		scene->update(dt);
 
-		auto tempList = frameListeners;
-
-		for (unsigned int i=0; i<tempList.size(); i++)
+		for (unsigned int i=0; i<frameListeners.size(); i++)
 		{
-			tempList[i]->update(dt);
+			if (!frameListeners[i]->willDelete)
+			{
+				frameListeners[i]->update(dt);
+			}
 		}
+	}
+
+	void GameControl::addNodeToDelete(GameNode *node)
+	{
+		node->prepareDeletion();
+		delQueue.push_back(node);
+	}
+	void GameControl::clearDeleteQueue()
+	{
+		for each (GameNode *node in delQueue)
+		{
+			delete node;
+		}
+
+		delQueue.clear();
 	}
 
 	void GameControl::dispatchPausedPreRender(float dt)

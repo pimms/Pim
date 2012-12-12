@@ -96,8 +96,9 @@ namespace Pim
 		// Deletes the old layer, replaces it with the passed.
 		void setScene(Scene *newScene);
 
-
-		
+		// Adds a node to the delete queue - called internally when a node is called
+		// to remove either one or all children
+		void addNodeToDelete(GameNode *node);
 
 	private:
 		friend class RenderWindow;
@@ -106,6 +107,8 @@ namespace Pim
 
 		void gameLoop();
 		void dispatchPrerender(float dt);
+
+		void clearDeleteQueue();
 
 		void sceneTransition();
 
@@ -121,6 +124,8 @@ namespace Pim
 		Scene					*newScene;
 
 		std::vector<GameNode*>	frameListeners;
+
+		std::vector<GameNode*>	delQueue;
 
 		std::string				modulePath;
 
