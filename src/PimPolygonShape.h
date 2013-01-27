@@ -2,9 +2,7 @@
 
 #include "PimInternal.h"
 
-namespace Pim
-{
-	// Forward declarations
+namespace Pim {
 	class GameNode;
 	class Sprite;
 	class PolygonShape;
@@ -12,53 +10,33 @@ namespace Pim
 	class LightingSystem;
 	class CollisionManager;
 
-	class Line
-	{
-	public:
-		Line(Vec2 &v1, Vec2 &v2, PolygonShape *p);
-
-		/* 
-			THE SC PARAMETER IS THE SCALE OF THE LINE COORDINATES ITSELF.
-			THE ROTATION IN WORLD SPACE IS PERFORMED WITHOUT THIS SCALE.
-		*/
-		Vec2 getP1(Vec2 &sc = Vec2(1,1));			// Returns the first point
-		Vec2 getP2(Vec2 &sc = Vec2(1,1));			// Returns the second point
-		Vec2 getNormal(Vec2 &sc = Vec2(1,1));		// Returns the normal
-		Vec2 getNormalEnd(Vec2 &sc = Vec2(1,1));	// Returns mid+normal transformed
-		Vec2 getMid(Vec2 &sc = Vec2(1,1));			// Returns the center of the line
-
-		// Returns the relative dot product between the normal and the provided vector.
-		float relativeDot(Vec2 &vec, Vec2 &sc = Vec2(1,1));
-
-		bool isFacing(Vec2 &vec, Vec2 &sc = Vec2(1,1));
-
+	class Line {
 	private:
 		friend class PolygonShape;
 
-		Line()				{shape=NULL;}
-		Line(const Line&)	{shape=NULL;}
+	public:
+							Line(const Vec2 &v1, const Vec2 &v2, const PolygonShape *p);
+		Vec2				GetP1(const Vec2 &scale = Vec2(1,1)) const;
+		Vec2				GetP2(const Vec2 &scale = Vec2(1,1)) const;
+		Vec2				GetNormal(const Vec2 &scale = Vec2(1,1)) const;
+		Vec2				GetNormalEnd(const Vec2 &scale = Vec2(1,1)) const;
+		Vec2				GetMid(const Vec2 &scale = Vec2(1,1)) const;
+		float				RelativeDot(const Vec2 &vec, const Vec2 &scale = Vec2(1,1)) const;
+		bool				IsFacing(const Vec2 &vec, const Vec2 &scale = Vec2(1,1)) const;
 
-		PolygonShape *shape;
+	private:
+		const PolygonShape	*shape;
+		Vec2				p1;
+		Vec2				p2;
+		Vec2				mid;
+		Vec2				normal;
 
-		Vec2 p1, p2, mid, normal;
+							Line() { shape=NULL; }
+							Line(const Line&) { shape=NULL; }
 	};
 
 
-	class PolygonShape
-	{
-	public:
-		// THE VERTICES MUST BE WOUND COUNTER CLOCKWISE, AND THE SHAPE MUST BE CONVEX.
-		PolygonShape(Vec2 vertices[], int vertexCount, GameNode *par);
-		~PolygonShape();
-
-		// Returns true if the provided point is contained by the  shape
-		bool shapeContains(Vec2 &vec);
-
-		Vec2 center();
-
-		// Public for the sake of publicness. Don't edit manually, you beast!
-		std::vector<Line*>	lines;
-
+	class PolygonShape {
 	private:
 		friend class Line;
 		friend class GameNode;
@@ -66,13 +44,22 @@ namespace Pim
 		friend class LightingSystem;
 		friend class CollisionManager;
 
-		PolygonShape()						{parent=NULL;}
-		PolygonShape(const PolygonShape&)	{parent=NULL;}
+	public:
+		vector<Line*>		lines;
 
-		void debugDraw();
+							PolygonShape(Vec2 vertices[], int vertCount, const GameNode *parent);
+							~PolygonShape();
+		bool				ShapeContains(Vec2 &vec) const;
+		Vec2				GetCenter() const;
+		const GameNode*		GetParent() const;
 
-		void projectPolygon(Vec2 axis, float &min, float &max, Vec2 offset=Vec2(0.f,0.f));
+	private:
+		const GameNode		*parent;
 
-		GameNode *parent;
+							PolygonShape() { parent=NULL; }
+							PolygonShape(const PolygonShape&) { parent=NULL; }
+		void				ProjectPolygon(const Vec2 axis, float &min, float &max, 
+											const Vec2 offset=Vec2(0.f,0.f));
+		void				DebugDraw();
 	};
 }

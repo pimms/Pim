@@ -2,33 +2,23 @@
 
 #include "PimInternal.h"
 #include "tinyxml.h"
+#include "PimVec2.h"
 
-namespace Pim
-{
-	// Forward declarations
+namespace Pim {
 	class SpriteBatchNode;
 	class GameNode;
-	struct LightDef;
 	class Sprite;
 	class Layer;
 	class Vec2;
+	struct LightDef;
 	struct Color;
-	struct Rect;
 
-	typedef std::vector<std::vector<Vec2>> Polygons;
+	typedef vector<vector<Vec2>> Polygons;
 
-	// The level data object - contains all data found within the PIM-file
-	struct LevelData
-	{
-		// The main layer - all nodes, sprites etc are children of this layer
-		Layer		*layer;
-
-		// Polygons flagged as physics. As there currently is no physics integrations
-		// in Pim, you have to handle these polygons yourself. Manually. Alone. In the dark.
-		Polygons	physics;
-
-		// Polygons flagged as shadow caster
-		Polygons	shadows;
+	struct LevelData {
+		Layer*							layer;
+		Polygons						physics;
+		Polygons						shadows;
 	};
 
 
@@ -40,104 +30,68 @@ namespace Pim
 		the level of customization you need. parseCustom() is called once for every node
 		being parsed - in other words, it must be a child of an XML-element.
 	*/
-	class LevelParser
-	{
+	class LevelParser {
 	public:
+		LevelData						data;
 
-		// Returns the resource path from the meta data in the provided file
-		// Primarily used by PimEdit, but it may be useful if your resources are in odd places.
-		std::string getResourcePath(std::string path);
-
-		// Changes the resource path in the meta data in the provided file
-		// Also mainly used by the PimEdit app.
-		void setResourcePath(std::string file, std::string resPath);
-
-		// Parse a level file
-		bool parse(std::string path, Layer *layer);
-
-		LevelData data;
-
-	private:
-
-		std::string								resPath;
-		std::map<std::string,SpriteBatchNode*>	batchNodes;
+		string							GetResourcePath(const string path);
+		void							SetResourcePath(const string file, 
+														const string resPath);
+		bool							Parse(const string path, Layer* layer);
 
 	protected:
-
-		// Parse polygons
-		void parsePoly(TiXmlDocument *elem);
-
-		// parse SpriteBatchNodes on root
-		void parseRootBatchNodes(TiXmlDocument *doc);
-
-		// Handles children of the node
-		void parseNode(TiXmlElement *elem, GameNode *node);
-
-		// Custom parsing - called for every node and requires overriding
-		virtual void parseCustom(TiXmlElement *elem, GameNode *parent) {}
-
-		// Parses attributes and sets them accordingly on the passed node
-		void setNodeAttributes(TiXmlElement *elem, GameNode *node);
-
-		// Parses attributes and sets them accordingly on the passed layer
-		void setLayerAttributes(TiXmlElement *elem, Layer *layer);
-
-		// Parses attributes and sets them accordingly on the passed sprite
-		void setSpriteAttributes(TiXmlElement *elem, Sprite *sprite);
-
-	
-		//////////////////////////  NOTICE  //////////////////////////////
-		//		   The following methods reads a string input,          //
-		//     and returns a Vec2 or a Color structure.	    //
-		//////////////////////////////////////////////////////////////////
-
-		Vec2 vecFromString(const char *str);
-		Color colorFromString(const char *str);
-		Rect rectFromString(const char *str);
-	
-	
-		//////////////////////////  NOTICE  //////////////////////////////
-		//		The following methods all parse the data and            //
-		//	 sets an attribute accordingly. The attribute should        //
-		//	     be easily identifiable by the method names.            //
-		//////////////////////////////////////////////////////////////////
-	
-		/*
-			COMMON ATTRIBUTES
-		*/
-		void parsePosition(TiXmlElement *elem, GameNode *node);
-		void parseRotation(TiXmlElement *elem, GameNode *node);
-		void parseIdentifier(TiXmlElement *elem, GameNode *node);
+		void							ParsePoly(TiXmlDocument *elem);
+		void							ParseRootBatchNodes(TiXmlDocument *doc);
+		void							ParseNode(TiXmlElement *elem, GameNode *node);
+		virtual void					ParseCustom(TiXmlElement *elem, GameNode *parent) {}
+		void							SetNodeAttributes(TiXmlElement *elem, GameNode *node);
+		void							SetLayerAttributes(TiXmlElement *elem, Layer *layer);
+		void							SetSpriteAttributes(TiXmlElement *elem, Sprite *sprite);
+		Vec2							VecFromString(const char *str);
+		Color							ColorFromString(const char *str);
+		Rect							RectFromString(const char *str);
 
 		/*
-			SPRITE ATTRIBUTES
+    		COMMON ATTRIBUTES
 		*/
-		void parseAnchor(TiXmlElement *elem, Sprite *sprite);
-		void parseImage(TiXmlElement *elem, Sprite *sprite);
-		void parseColor(TiXmlElement *elem, Sprite *sprite);
-		void parseScale(TiXmlElement *elem, Sprite *sprite);
-		void parseRect(TiXmlElement *elem, Sprite *sprite);
-		void parseBatch(TiXmlElement *elem, Sprite *sprite);
-
-		/* SPRITE AND GAMENODE ATTRIBUTES */
-		void parseLight(TiXmlElement *elem, GameNode *node);
-		void parseLightRadius(TiXmlElement *elem, LightDef *ldef);
-		void parseLightInnerColor(TiXmlElement *elem, LightDef *ldef);
-		void parseLightOuterColor(TiXmlElement *elem, LightDef *ldef);
-		void parseLightFalloff(TiXmlElement *elem, LightDef *ldef);
-		void parseLightPosition(TiXmlElement *elem, LightDef *ldef);
+		void							ParsePosition(TiXmlElement *elem, GameNode *node);
+		void							ParseRotation(TiXmlElement *elem, GameNode *node);
+		void							ParseIdentifier(TiXmlElement *elem, GameNode *node);
 
 		/*
-			LAYER ATTRIBUTES
+    		SPRITE ATTRIBUTES
 		*/
-		void parseColor(TiXmlElement *elem, Layer *layer);
-		void parseImmovable(TiXmlElement *elem, Layer *layer);
-		void parseScale(TiXmlElement *elem, Layer *layer);
+		void							ParseAnchor(TiXmlElement *elem, Sprite *sprite);
+		void							ParseImage(TiXmlElement *elem, Sprite *sprite);
+		void							ParseColor(TiXmlElement *elem, Sprite *sprite);
+		void							ParseScale(TiXmlElement *elem, Sprite *sprite);
+		void							ParseRect(TiXmlElement *elem, Sprite *sprite);
+		void							ParseBatch(TiXmlElement *elem, Sprite *sprite);
 
-		void parseLightingSystem(TiXmlElement *elem, Layer *layer);
-		void parseLSUnlitColor(TiXmlElement *elem, Layer *layer);
-		void parseLSLightAlpha(TiXmlElement *elem, Layer *layer);
-		void parseLSCastShadows(TiXmlElement *elem, Layer *layer);
-		void parseLSSmoothShadows(TiXmlElement *elem, Layer *layer);
+		/* 
+			SPRITE AND GAMENODE ATTRIBUTES 
+		*/
+		void							ParseLight(TiXmlElement *elem, GameNode *node);
+		void							ParseLightRadius(TiXmlElement *elem, LightDef *ldef);
+		void							ParseLightInnerColor(TiXmlElement *elem, LightDef *ldef);
+		void							ParseLightOuterColor(TiXmlElement *elem, LightDef *ldef);
+		void							ParseLightFalloff(TiXmlElement *elem, LightDef *ldef);
+		void							ParseLightPosition(TiXmlElement *elem, LightDef *ldef);
+
+		/*
+    		LAYER ATTRIBUTES
+		*/
+		void							ParseColor(TiXmlElement *elem, Layer *layer);
+		void							ParseImmovable(TiXmlElement *elem, Layer *layer);
+		void							ParseScale(TiXmlElement *elem, Layer *layer);
+		void							ParseLightingSystem(TiXmlElement *elem, Layer *layer);
+		void							ParseLSUnlitColor(TiXmlElement *elem, Layer *layer);
+		void							ParseLSLightAlpha(TiXmlElement *elem, Layer *layer);
+		void							ParseLSCastShadows(TiXmlElement *elem, Layer *layer);
+		void							ParseLSSmoothShadows(TiXmlElement *elem, Layer *layer);
+
+	private:
+		string							resPath;
+		map<string,SpriteBatchNode*>	batchNodes;
 	};
 }

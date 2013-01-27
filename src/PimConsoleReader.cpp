@@ -6,81 +6,128 @@
 #include "PimGameControl.h"
 #include "PimAssert.h"
 
-namespace Pim
-{
-	ConsoleReader* ConsoleReader::singleton = NULL;
+namespace Pim {
+ConsoleReader* ConsoleReader::singleton = NULL;
 
-	void ConsoleReader::beginLoop(void *param)
-	{
-		ConsoleReader *reader = static_cast<ConsoleReader*>(param);
-		reader->consoleLoop();
+	/*
+	=====================
+	ConsoleReader::ConsoleReader
+	=====================
+	*/
+	ConsoleReader::ConsoleReader() {
+		DWORD threadID;
+
+		quit = false;
+		thread = CreateThread(
+					 0,
+					 0,
+					 (LPTHREAD_START_ROUTINE)BeginLoop,
+					 this,
+					 0,
+					 &threadID
+				 );
+		if (!threadID) {
+			cout<<"ERROR: Failed to thread ConsoleReader!\n";
+		}
+
+		mutex = CreateMutex(NULL, false, "cmdmtx");
 	}
-	void ConsoleReader::consoleLoop()
-	{
-		while (!quit)
-		{
-			if (_kbhit())
-			{
+
+	/*
+	=====================
+	ConsoleReader::~ConsoleReader
+	=====================
+	*/
+	ConsoleReader::~ConsoleReader() {
+		CloseHandle(thread);
+		CloseHandle(mutex);
+	}
+
+	/*
+	=====================
+	ConsoleReader::BeginLoop
+	=====================
+	*/
+	void ConsoleReader::BeginLoop(void *param) {
+		ConsoleReader *reader = static_cast<ConsoleReader*>(param);
+		reader->ConsoleLoop();
+	}
+
+	/*
+	=====================
+	ConsoleReader::ConsoleLoop
+	=====================
+	*/
+	void ConsoleReader::ConsoleLoop() {
+		while (!quit) {
+			if (_kbhit()) {
 				char input[80];
-				std::cin.getline(input,80);
+				cin.getline(input,80);
 
 				DWORD ret = WaitForSingleObject(mutex, INFINITE);
-				if (ret == WAIT_OBJECT_0)
-					prepareCommand(input);
+				if (ret == WAIT_OBJECT_0) {
+					PrepareCommand(input);
+				}
+
 				ReleaseMutex(mutex);
 			}
 			Sleep(100);
 		}
 	}
-	void ConsoleReader::prepareCommand(const char *cmd)
-	{
+
+	/*
+	=====================
+	ConsoleReader::PrepareCommand
+	=====================
+	*/
+	void ConsoleReader::PrepareCommand(const char *cmd) {
 		// Split the command into individual words
-		int b=0, e=0;
-		for (int i=0; i<strlen(cmd)+1; i++)
-		{
-			if (cmd[i] == ' ' || cmd[i] == '\0')
-			{
-				if (b != e)
-				{
-					char *sub = new char[e-b+1];
-					memcpy(sub, &cmd[b], e-b);
-					sub[e-b] = '\0';
+		int begin = 0;
+		int end = 0;
+		for (unsigned i=0; i<strlen(cmd)+1; i++) {
+			if (cmd[i] == ' ' || cmd[i] == '\0') {
+				if (begin != end) {
+					char *sub = new char[end-begin+1];
+					memcpy(sub, &cmd[begin], end-begin);
+					sub[end-begin] = '\0';
 					command.push_back(sub);
 					delete sub;
 				}
-				b = ++e;
-			}
-			else
-			{
-				e++;
+				begin = ++end;
+			} else {
+				end++;
 			}
 		}
 	}
 
-	void ConsoleReader::dispatch()
-	{
-		if (singleton)
-		{
-			/*	Not particularly thread-safe. No issues detected thus far.			*/
+	/*
+	=====================
+	ConsoleReader::Dispatch
+	=====================
+	*/
+	void ConsoleReader::Dispatch() {
+		if (singleton) {
 			/*	Waiting for the mutex to be ready seems to only slow things down.	*/
 			/*	Uncomment at own will.												*/
 
 			//DWORD ret = WaitForSingleObject(singleton->mutex, 0);
-			//if (ret == WAIT_OBJECT_0)
-				singleton->dispatchCommand();
+			//if (ret == WAIT_OBJECT_0) {
+				singleton->DispatchCommand();
+			//}
 			//ReleaseMutex(singleton->mutex);
 		}
 	}
-	void ConsoleReader::dispatchCommand()
-	{
-		if (command.size())
-		{
-			// Notify shit
-			for (unsigned int i=0; i<listeners[command[0]].size(); i++)
-			{
-				for each (ConsoleListener *l in listeners[command[0]])
-				{
-					l->handleCommand(command);
+
+	/*
+	=====================
+	ConsoleReader::DispatchCommand
+	=====================
+	*/
+	void ConsoleReader::DispatchCommand() {
+		if (command.size()) {
+			for (unsigned int i=0; i<listeners[command[0]].size(); i++) {
+				for each (ConsoleListener *l in listeners[command[0]]) {
+					l->HandleCommand(command);
 				}
 			}
 
@@ -88,68 +135,59 @@ namespace Pim
 		}
 	}
 
-	void ConsoleReader::addListener(ConsoleListener *lst, const char *cmd)
-	{
-		if (singleton)
+	/*
+	=====================
+	ConsoleReader::AddListener
+	=====================
+	*/
+	void ConsoleReader::AddListener(ConsoleListener *lst, const char *cmd) {
+		if (singleton) {
 			singleton->listeners[cmd].push_back(lst);
+		}
 	}
-	void ConsoleReader::removeListener(ConsoleListener *lst)
-	{
-		if (singleton)
-		{
-			for (	auto it=singleton->listeners.begin(); 
-					it != singleton->listeners.end(); it++)
-			{
-				for (unsigned int i=0; i<it->second.size(); i++)
-				{
-					if (it->second[i] == lst)
+
+	/*
+	=====================
+	ConsoleReader::RemoveListener
+	=====================
+	*/
+	void ConsoleReader::RemoveListener(ConsoleListener *lst) {
+		if (singleton) {
+			for (auto it=singleton->listeners.begin();
+				it != singleton->listeners.end(); it++) {
+				for (unsigned int i=0; i<it->second.size(); i++) {
+					if (it->second[i] == lst) {
 						it->second.erase(it->second.begin() + i);
+					}
 				}
 			}
 		}
 	}
 
-	ConsoleReader::ConsoleReader()
-	{
-		DWORD threadID;
-
-		quit = false;
-		thread = CreateThread(
-					0, 
-					0, 
-					(LPTHREAD_START_ROUTINE)beginLoop, 
-					this, 
-					0, 
-					&threadID
-					);
-		if (!threadID)
-		{
-			std::cout<<"ERROR: Failed to thread ConsoleReader!\n";	
-		}
-
-		mutex = CreateMutex(NULL, false, "cmdmtx");
-	}
-	ConsoleReader::~ConsoleReader()
-	{
-		CloseHandle(thread);
-		CloseHandle(mutex);
-	}
-
-	void ConsoleReader::begin()
-	{
-		std::cout<<"\nIMPORTANT NOTICE:\n"
+	/*
+	=====================
+	ConsoleReader::Begin
+	=====================
+	*/
+	void ConsoleReader::Begin() {
+		cout<<"\nIMPORTANT NOTICE:\n"
 				 <<"If you try to close the window and nothing happens, focus the\n"
 				 <<"console window and press enter. The window should now close.\n\n";
 		PimAssert(singleton == NULL, "Error: ConsoleReader already instantiated!");
-		
+
 		singleton = new ConsoleReader;
 	}
-	void ConsoleReader::shutDown()
-	{
+
+	/*
+	=====================
+	ConsoleReader::ShutDown
+	=====================
+	*/
+	void ConsoleReader::ShutDown() {
 		singleton->quit = true;
 
 		WaitForSingleObject(singleton->thread, INFINITE);
-		
+
 		delete singleton;
 	}
 }

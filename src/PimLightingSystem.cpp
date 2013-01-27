@@ -12,11 +12,16 @@
 #include "PimPolygonShape.h"
 #include "PimAssert.h"
 
+#include "PimLightingSystemShaders.h"
 
-namespace Pim
-{
-	LightingSystem::LightingSystem(Layer *par, Vec2 pResolution)
-	{
+
+namespace Pim {
+	/*
+	=====================
+	LightingSystem::LightingSystem
+	=====================
+	*/
+	LightingSystem::LightingSystem(Layer *par, Vec2 pResolution) {
 		parent			= par;
 		castShadow		= true;
 		dbgDrawNormal   = false;
@@ -26,19 +31,21 @@ namespace Pim
 		mainRT = new RenderTexture(resolution, true);
 		gaussRT = new RenderTexture(resolution);
 
-		loadShaders();
+		LoadShaders();
 	}
-	LightingSystem::~LightingSystem()
-	{
-		for (auto it=lights.begin(); it!=lights.end(); it++)
-		{
+
+	/*
+	=====================
+	LightingSystem::~LightingSystem
+	=====================
+	*/
+	LightingSystem::~LightingSystem() {
+		for (auto it=lights.begin(); it!=lights.end(); it++) {
 			delete it->second;
 		}
 
-		for (auto it=preloadTex.begin(); it!=preloadTex.end(); it++)
-		{
-			if (it->second)
-			{
+		for (auto it=preloadTex.begin(); it!=preloadTex.end(); it++) {
+			if (it->second) {
 				glDeleteTextures(1, &it->second);
 			}
 		}
@@ -47,181 +54,135 @@ namespace Pim
 		delete gaussRT;
 	}
 
-	void LightingSystem::loadShaders()
-	{
-		shaderLightTex = ShaderManager::addShader(
-			"// FRAGMENT SHADER										\n\
-			uniform sampler2D tex;									\n\
-			uniform float lalpha;									\n\
-			uniform vec4 ulcolor;									\n\
-			float length(vec4 v)									\n\
-			{														\n\
-				return sqrt(v.x*v.x + v.y*v.y + v.z*v.z);			\n\
-			}														\n\
-			void main()												\n\
-			{														\n\
-				vec4 src = texture2D(tex, gl_TexCoord[0].xy);		\n\
-				src.a -= (length(src) - length(ulcolor)) * lalpha * 3.0;	\n\
-				gl_FragColor = src;									\n\
-			}",
-			"// VERTEX SHADER										\n\
-			void main()												\n\
-			{														\n\
-				gl_Position = ftransform();							\n\
-				gl_TexCoord[0] = gl_MultiTexCoord0;					\n\
-			}",
-			"_ltMgr_");
-		shaderLightTex->setUniform1i("texSrc", 0);
-		shaderLightTex->setUniform1f("lalpha", 1.f);
-		shaderLightTex->setUniform4f("ulcolor", 0.f, 0.f, 0.f, 1.f);
+	/*
+	=====================
+	LightingSystem::LoadShaders
+	=====================
+	*/
+	void LightingSystem::LoadShaders() {
+		// Low quality, default shader
+		shaderLightTex = ShaderManager::AddShader(
+				PIM_LS_LOWQ_FRAG, PIM_LS_LOWQ_VERT, "ltMgr");
+		shaderLightTex->SetUniform1i("texSrc", 0);
+		shaderLightTex->SetUniform1f("lalpha", 1.f);
+		shaderLightTex->SetUniform4f("ulcolor", 0.f, 0.f, 0.f, 1.f);
 
-		shaderGauss = ShaderManager::addShader(
-			"// FRAGMENT SHADER																		\n\
-			// This shader is a modified version of Callum Hay's implementation:					\n\
-			// http://callumhay.blogspot.no/2010/09/gaussian-blur-shader-glsl.html					\n\
-			uniform float sigma;																	\n\
-			uniform float blurSize; 																\n\
-			uniform float lalpha;																	\n\
-			uniform float pixels = 10.0;															\n\
-			uniform vec4 ulcolor;																	\n\
-			uniform vec2 direction;																	\n\
-			uniform sampler2D blurSampler; 															\n\
-																									\n\
-			const float pi = 3.14159265;															\n\
-																									\n\
-			float length(vec4 v)																	\n\
-			{																						\n\
-				return sqrt(v.x*v.x + v.y*v.y + v.z*v.z );											\n\
-			}																						\n\
-																									\n\
-			void main() {																			\n\
-			  vec3 incrementalGaussian;																\n\
-			  incrementalGaussian.x = 1.0 / (sqrt(2.0 * pi) * sigma);								\n\
-			  incrementalGaussian.y = exp(-0.5 / (sigma * sigma));									\n\
-			  incrementalGaussian.z = incrementalGaussian.y * incrementalGaussian.y;				\n\
-			  vec4 avgValue = vec4(0.0);															\n\
-			  float coefficientSum = 0.0;															\n\
-			  avgValue += texture2D(blurSampler, gl_TexCoord[0].xy) * incrementalGaussian.x;		\n\
-			  coefficientSum += incrementalGaussian.x;												\n\
-			  incrementalGaussian.xy *= incrementalGaussian.yz;										\n\
-			  for (float i = 1.0; i <= pixels; i++) { 												\n\
-				avgValue += texture2D(blurSampler, gl_TexCoord[0].xy - i * blurSize *  				\n\
-								direction) * incrementalGaussian.x;         						\n\
-				avgValue += texture2D(blurSampler, gl_TexCoord[0].xy + i * blurSize *  				\n\
-								direction) * incrementalGaussian.x;         						\n\
-				coefficientSum += 2.0 * incrementalGaussian.x;										\n\
-				incrementalGaussian.xy *= incrementalGaussian.yz;									\n\
-			  }																						\n\
-			  vec4 color = avgValue / coefficientSum;												\n\
-			  color.a -= (length(color) - length(ulcolor)) * lalpha * 2.0;							\n\
-			  gl_FragColor = color;																	\n\
-			}",
-			"// VERTEX SHADER																		\n\
-			// This shader is a modified version of Callum Hay's implementation:					\n\
-			// http://callumhay.blogspot.no/2010/09/gaussian-blur-shader-glsl.html					\n\
-			void main() {																			\n\
-				gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;								\n\
-				gl_TexCoord[0] = gl_MultiTexCoord0;													\n\
-			}",
-			"_ltMgrGauss_"
-			);
-		shaderGauss->setUniform1i("blurSampler", 0);
-		shaderGauss->setUniform1f("blurSize", 1.f/resolution.y);
-		shaderGauss->setUniform1f("sigma", 5.f);
-		shaderGauss->setUniform1f("lalpha", 1.f);
-		shaderGauss->setUniform1f("pixels", 5.f);
-		shaderGauss->setUniform4f("ulcolor", 0.f, 0.f, 0.f, 1.f);
+		// High quality gauss shader
+		shaderGauss = ShaderManager::AddShader(
+				PIM_LS_HIGHQ_FRAG, PIM_LS_HIGHQ_VERT, "ltMgrGauss");
+		shaderGauss->SetUniform1i("blurSampler", 0);
+		shaderGauss->SetUniform1f("blurSize", 1.f/resolution.y);
+		shaderGauss->SetUniform1f("sigma", 5.f);
+		shaderGauss->SetUniform1f("lalpha", 1.f);
+		shaderGauss->SetUniform1f("pixels", 5.f);
+		shaderGauss->SetUniform4f("ulcolor", 0.f, 0.f, 0.f, 1.f);
 	}
 
-	void LightingSystem::setUnlitColor(Color c)
-	{
+	/*
+	=====================
+	LightingSystem::SetUnlitColor
+	=====================
+	*/
+	void LightingSystem::SetUnlitColor(const Color c) {
 		color = c;
-		shaderLightTex->setUniform4f("ulcolor", c.r, c.g, c.b, c.a);
-		shaderGauss->setUniform4f("ulcolor", c.r, c.g, c.b, c.a);
+		shaderLightTex->SetUniform4f("ulcolor", c.r, c.g, c.b, c.a);
+		shaderGauss->SetUniform4f("ulcolor", c.r, c.g, c.b, c.a);
 	}
-	void LightingSystem::setLightAlpha(float a)
-	{
+
+	/*
+	=====================
+	LightingSystem::SetLightAlpha
+	=====================
+	*/
+	void LightingSystem::SetLightAlpha(float a) {
 		if (a > 1.f ) a = 1.f;
 		if (a < 0.f) a = 0.f;
 
 		a = 1.f - a;
-		shaderLightTex->setUniform1f("lalpha", a);
-		shaderGauss->setUniform1f("lalpha", a);
+		shaderLightTex->SetUniform1f("lalpha", a);
+		shaderGauss->SetUniform1f("lalpha", a);
 	}
 
-	void LightingSystem::addLight(GameNode *node, LightDef *lDef)
-	{
-		if (lights.count(node))
-		{
+	/*
+	=====================
+	LightingSystem::AddLight
+	=====================
+	*/
+	void LightingSystem::AddLight(GameNode *node, LightDef *lDef) {
+		if (lights.count(node)) {
 			delete lights[node];
 		}
 
 		lights[node] = lDef;
 
-		if (lDef->lightType == 0)
-		{
-			createFlatLightTexture(lDef);
-		}
-		else if (lDef->lightType == 1)
-		{
-			createSmoothLightTexture(lDef);
-		}
-		else if (lDef->lightType != 2)
-		{
+		if (lDef->lightType == 0) {
+			CreateFlatLightTexture(lDef);
+		} else if (lDef->lightType == 1) {
+			CreateSmoothLightTexture(lDef);
+		} else if (lDef->lightType != 2) {
 			PimAssert(0, "Error: invalid light type!");
 		}
 	}
-	void LightingSystem::preloadTexture(LightDef *ld, std::string identifier)
-	{
-		if (!identifier.length() || preloadTex.count(identifier))
-		{
+
+	/*
+	=====================
+	LightingSystem::PreloadTexture
+	=====================
+	*/
+	void LightingSystem::PreloadTexture(LightDef *ld, const string identifier) {
+		if (!identifier.length() || preloadTex.count(identifier)) {
 			PimAssert(0, "Error: invalid identifying string!");
 		}
 
-		if (ld->lightType == 0)
-		{
-			createFlatLightTexture(ld, true);
-		}
-		else if (ld->lightType == 1)
-		{
-			createSmoothLightTexture(ld, true);
-		}
-		else
-		{
+		if (ld->lightType == 0) {
+			CreateFlatLightTexture(ld, true);
+		} else if (ld->lightType == 1) {
+			CreateSmoothLightTexture(ld, true);
+		} else {
 			PimAssert(0, "Error: invalid light type!");
 		}
 
 		preloadTex[identifier] = ld->lTex;
 	}
-	bool LightingSystem::usePreloadedTexture(LightDef *ld, std::string identifier)
-	{
-		if (preloadTex.count(identifier))
-		{
+
+	/*
+	=====================
+	LightingSystem::UsePreloadedTexture
+	=====================
+	*/
+	bool LightingSystem::UsePreloadedTexture(LightDef *ld, const string identifier) {
+		if (preloadTex.count(identifier)) {
 			ld->lTex = preloadTex[identifier];
 			return true;
 		}
-		
 		return false;
 	}
-	void LightingSystem::deletePreloadedTexture(std::string identifier)
-	{
-		if (preloadTex.count(identifier))
-		{
-			if (preloadTex[identifier])
-			{
+
+	/*
+	=====================
+	LightingSystem::DeletePreloadedTexture
+	=====================
+	*/
+	void LightingSystem::DeletePreloadedTexture(const string identifier) {
+		if (preloadTex.count(identifier)) {
+			if (preloadTex[identifier]) {
 				glDeleteTextures(1, &preloadTex[identifier]);
 				preloadTex.erase(identifier);
 			}
 		}
 	}
 
-	void LightingSystem::createSmoothLightTexture(LightDef *lightDef, bool preload)
-	{
+	/*
+	=====================
+	LightingSystem::CreateSmoothLightTexture
+	=====================
+	*/
+	void LightingSystem::CreateSmoothLightTexture(LightDef *lightDef, bool preload) {
 		SmoothLightDef *lDef = (SmoothLightDef*)lightDef;
 
 		RenderTexture *rt = new RenderTexture(Pim::Vec2(lDef->radius*2.f, lDef->radius*2.f));
-		rt->bindFBO();
-		rt->clear();
+		rt->BindFBO();
+		rt->Clear();
 		rt->retainTexture = true;
 
 		glDisable(GL_TEXTURE_2D);
@@ -234,45 +195,48 @@ namespace Pim
 
 		// The outer circle
 		const float step = 6.283f/100.f;
-		for (int i=0; i<lDef->innerPasses; i++)
-		{
+		for (int i=0; i<lDef->innerPasses; i++) {
 			glBegin(GL_TRIANGLE_FAN);
 				glColor4d(ic.r, ic.g, ic.b, ic.a);
 				glVertex2f(0.f, 0.f);
 				glColor4f(oc.r, oc.g, oc.b, oc.a);
-				for (float a=0.f; a+step<6.283f; a+=step)
-				{
-					glVertex2f(	cosf(a)*lDef->radius, 
+				for (float a=0.f; a+step<6.283f; a+=step) {
+					glVertex2f(	cosf(a)*lDef->radius,
 								sinf(a)*lDef->radius);
 				}
-				glVertex2f(	cosf(0.f)*lDef->radius, 
+				glVertex2f(	cosf(0.f)*lDef->radius,
 							sinf(0.f)*lDef->radius);
 			glEnd();
 		}
 
 		glEnable(GL_TEXTURE_2D);
-		
-		lDef->lTex = rt->getTex();
-		if (preload)
-		{
+
+		lDef->lTex = rt->GetTex();
+		if (preload) {
 			lightDef->isPreloaded = true;
 		}
 
-		rt->unbindFBO();
+		rt->UnbindFBO();
 		delete rt;
 	}
-	void LightingSystem::createFlatLightTexture(LightDef *lightDef, bool preload)
-	{
+
+	/*
+	=====================
+	LightingSystem::CreateFlatLightTexture
+	=====================
+	*/
+	void LightingSystem::CreateFlatLightTexture(LightDef *lightDef, bool preload) {
 		FlatLightDef *lDef = (FlatLightDef*)lightDef;
 
-		if (lDef->falloff < 0.f)
+		if (lDef->falloff < 0.f) {
 			lDef->falloff = 0.f;
+		}
 
 		float totalRadius = lDef->radius + (lDef->radius * lDef->falloff);
 
 		RenderTexture *rt = new RenderTexture(Pim::Vec2(totalRadius*2,totalRadius*2));
-		rt->bindFBO();
-		rt->clear();
+		rt->BindFBO();
+		rt->Clear();
 		rt->retainTexture = true;
 
 		// Render the light texture
@@ -287,20 +251,17 @@ namespace Pim
 		glBegin(GL_TRIANGLE_FAN);
 			glColor4f(ic.r, ic.g, ic.b, ic.a);
 			glVertex2f(0.f, 0.f);
-			for (float a=0.f; a+step<6.283f; a+=step)
-			{
+			for (float a=0.f; a+step<6.283f; a+=step) {
 				glVertex2f(cosf(a)*lDef->radius, sinf(a)*lDef->radius);
 			}
 			glVertex2f(cosf(0.f)*lDef->radius, sinf(0.f)*lDef->radius);
 		glEnd();
 
-		if (lDef->falloff != 0.f)
-		{
-			// The falloff 
+		if (lDef->falloff != 0.f) {
+			// The falloff
 			glBegin(GL_TRIANGLE_STRIP);
-				for (float a=0.f; a+step<6.283f; a+=step)
-				{
-					// Use the inner color.. 
+				for (float a=0.f; a+step<6.283f; a+=step) {
+					// Use the inner color..
 					glColor4f(ic.r, ic.g, ic.b, ic.a);
 					glVertex2f(cosf(a)*lDef->radius, sinf(a)*lDef->radius);
 
@@ -318,165 +279,175 @@ namespace Pim
 		}
 
 		glEnable(GL_TEXTURE_2D);
-		
+
 		// Update the radius value
 		lDef->radius = totalRadius;
 
-		lDef->lTex = rt->getTex();
-		if (preload)
-		{
+		lDef->lTex = rt->GetTex();
+		if (preload) {
 			lightDef->isPreloaded = true;
 		}
 
-		rt->unbindFBO();
+		rt->UnbindFBO();
 		delete rt;
 	}
 
-	void LightingSystem::renderLightTexture()
-	{
+	/*
+	=====================
+	LightingSystem::RenderLightTexture
+	=====================
+	*/
+	void LightingSystem::RenderLightTexture() {
 		// The Window Dimensions
-		Vec2 wd = GameControl::getSingleton()->getRenderWindow()->ortho;
-		
+		Vec2 wd = GameControl::GetSingleton()->GetRenderWindow()->ortho;
+
 		// Prepare the mainRT
-		mainRT->bindFBO();
-		mainRT->clear(GL_STENCIL_BUFFER_BIT);    
+		mainRT->BindFBO();
+		mainRT->Clear(GL_STENCIL_BUFFER_BIT);
 
 		// Render the lights and shadows onto the mainRT
-		renderLights();
+		RenderLights();
 
 		glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
 		glDisable(GL_TEXTURE_2D);
 		glColor4f(color.r, color.g, color.b, color.a);
-		
-		// Render black over the mainRT in blank areas
+
+		// Render the unlit color over the mainRT in blank areas
 		glBegin(GL_QUADS);
 			glVertex2f(0.f, 0.f);
 			glVertex2f(resolution.x, 0.f);
 			glVertex2f(resolution.x, resolution.y);
 			glVertex2f(0.f, resolution.y);
 		glEnd();
-		glEnable(GL_TEXTURE_2D);  
+		glEnable(GL_TEXTURE_2D);
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor4ub(255,255,255,255);
 
 		// Unbind the FBO
-		mainRT->unbindFBO();
+		mainRT->UnbindFBO();
 
-		if (hqShadow)
-		{
-			gaussPass();
-			gaussRT->bindTex();
-		}
-		else
-		{	
-			glUseProgram(shaderLightTex->getProgram());
-			mainRT->bindTex();
+		if (hqShadow) {
+			GaussPass();
+			gaussRT->BindTex();
+		} else {
+			glUseProgram(shaderLightTex->GetProgram());
+			mainRT->BindTex();
 		}
 
 		glPushMatrix();				// Render to main FBO
 		glLoadIdentity();
 
 		glBegin(GL_QUADS);
-			glTexCoord2i(0,0);		glVertex2f(0.f, 0.f);
-			glTexCoord2i(1,0);		glVertex2f(wd.x, 0.f);
-			glTexCoord2i(1,1);		glVertex2f(wd.x, wd.y);
-			glTexCoord2i(0,1);		glVertex2f(0.f, wd.y);
+			glTexCoord2i(0,0); glVertex2f(0.f, 0.f);
+			glTexCoord2i(1,0); glVertex2f(wd.x, 0.f);
+			glTexCoord2i(1,1); glVertex2f(wd.x, wd.y);
+			glTexCoord2i(0,1); glVertex2f(0.f, wd.y);
 		glEnd();
 
 		glUseProgram(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glPopMatrix();				// Render to main FBO
 	}
-	void LightingSystem::gaussPass()
-	{
-		shaderGauss->setUniform2f("direction", 0.f, 1.f);
-		glUseProgram(shaderGauss->getProgram());
 
-		gaussRT->bindFBO();
-		gaussRT->clear();
+	/*
+	=====================
+	LightingSystem::GaussPass
+	=====================
+	*/
+	void LightingSystem::GaussPass() {
+		shaderGauss->SetUniform2f("direction", 0.f, 1.f);
+		glUseProgram(shaderGauss->GetProgram());
 
-		mainRT->bindTex();
+		gaussRT->BindFBO();
+		gaussRT->Clear();
+		mainRT->BindTex();
 
 		glBegin(GL_QUADS);
-			glTexCoord2i(0,0);		glVertex2f(0.f, 0.f);
-			glTexCoord2i(1,0);		glVertex2f(resolution.x, 0.f);
-			glTexCoord2i(1,1);		glVertex2f(resolution.x, resolution.y);
-			glTexCoord2i(0,1);		glVertex2f(0.f, resolution.y);
+			glTexCoord2i(0,0); glVertex2f(0.f, 0.f);
+			glTexCoord2i(1,0); glVertex2f(resolution.x, 0.f);
+			glTexCoord2i(1,1); glVertex2f(resolution.x, resolution.y);
+			glTexCoord2i(0,1); glVertex2f(0.f, resolution.y);
 		glEnd();
 
-		gaussRT->unbindFBO();
-		
-		glUseProgram(0);
-		shaderGauss->setUniform2f("direction", 1.f, 0.f); 
+		gaussRT->UnbindFBO();
 
-		glUseProgram(shaderGauss->getProgram());
+		glUseProgram(0);
+		shaderGauss->SetUniform2f("direction", 1.f, 0.f);
+
+		glUseProgram(shaderGauss->GetProgram());
 	}
 
-	void LightingSystem::renderLights()
-	{
-		Vec2 renres = GameControl::getSingleton()->getCreationData().renderResolution;
-		Vec2 coord = GameControl::getSingleton()->getCreationData().coordinateSystem;
+	/*
+	=====================
+	LightingSystem::RenderLights
+	=====================
+	*/
+	void LightingSystem::RenderLights() {
+		Vec2 renres = GameControl::GetSingleton()->GetCreationData().renderResolution;
+		Vec2 coord = GameControl::GetSingleton()->GetCreationData().coordinateSystem;
 		Vec2 lightScale		= renres / resolution;		// The scale of the light texture
 		Vec2 posScale		= resolution / coord;		// The position (coord) scale
 		Vec2 lineScale		= coord / renres;			// The shadow line position scale
 
-		glEnable(GL_STENCIL_TEST);    
+		glEnable(GL_STENCIL_TEST);
 
 		glPushMatrix();						// Layer position & scale
 		glScalef(posScale.x, posScale.y, 1.f);
 		glTranslatef(parent->position.x, parent->position.y, 0.f);
 		glScalef(parent->scale.x, parent->scale.y, 1.f);
 
-		for (auto it=lights.begin(); it!=lights.end(); it++)
-		{
+		for (auto it=lights.begin(); it!=lights.end(); it++) {
 			float r = it->second->radius;
-			Vec2 p = (it->first->getLayerPosition() + it->second->position) / parent->scale;
+			Vec2 p = (it->first->GetLayerPosition() + it->second->position);
 
-			if (castShadow && it->second->castShadows)
-			{
-				renderShadows(it->second, it->first, p, lineScale);
+			if (castShadow && it->second->castShadows) {
+				RenderShadows(it->second, it->first, p, lineScale);
 			}
 
 			glBindTexture(GL_TEXTURE_2D, it->second->lTex);
 			glPushMatrix();					// Light texture
 
+			//p *= parent->scale;
 			glTranslatef(p.x, p.y, 0.f);
 
 			glStencilFunc(GL_NOTEQUAL, 0x1, 0x1);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
 			glColor4f(1.f, 1.f, 1.f, 0.2f);
-			
-			// Apply the light scale
+
 			glScalef(lightScale.x, lightScale.y, 1.f);
 
-			//glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 			glBegin(GL_QUADS);
-				glTexCoord2i(0,0);glVertex2f(-r,-r);
-				glTexCoord2i(1,0);glVertex2f(r,-r);
-				glTexCoord2i(1,1);glVertex2f(r,r);
-				glTexCoord2i(0,1);glVertex2f(-r,r);
+				glTexCoord2i(0,0); glVertex2f(-r,-r);
+				glTexCoord2i(1,0); glVertex2f(r,-r);
+				glTexCoord2i(1,1); glVertex2f(r,r);
+				glTexCoord2i(0,1); glVertex2f(-r,r);
 			glEnd();
-			//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			glPopMatrix();					// Light texture
 		}
 
 		glPopMatrix();						// Layer position & scale
-			
+
 		glDisable(GL_STENCIL_TEST);
 	}
-	void LightingSystem::renderShadows(LightDef *ld, GameNode *light, Vec2 &pos, Vec2 &sc)
-	{
+
+	/*
+	=====================
+	LightingSystem::RenderShadows
+	=====================
+	*/
+	void LightingSystem::RenderShadows(LightDef *ld, GameNode *light, 
+										const Vec2 &pos, const Vec2 &sc) {
 		// PARAMETERS:
 		//	ld:			The light definition struct
 		//	light:		The game node, acting as a light
 		//	pos:		The position of the light relative to it's parent
 		//	sc:			The scale (lightingSys.resolution / renderResolution)
 
-		float r = ld->radius;
-		std::vector<Line*> castLines;
+		float r = ld->radius + ld->radius*ld->falloff;
+		vector<Line*> castLines;
 
 
 		glPushMatrix();				// Shadows
@@ -485,80 +456,80 @@ namespace Pim
 		glClear(GL_STENCIL_BUFFER_BIT);
 
 		glStencilFunc(GL_NEVER, 0x1, 0x0);
-		glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);	
+		glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
 
 		glDisable(GL_TEXTURE_2D);
 		glColor4f(color.r, color.g, color.b, 1.f);
 
-#ifdef _DEBUG					// IFDEF DEBUG
-		if (dbgDrawNormal)		
-		{
+		#ifdef _DEBUG	
+		if (dbgDrawNormal) {
 			glLineWidth(2.f);
 			glColor4f(0.f, 1.f, 0.f, 1.f);
 			glDisable(GL_STENCIL_TEST);
 			glBegin(GL_LINES);
-		}						
-#endif							// ENDIF
+		}
+		#endif /* _DEBUG */
 
-		for (unsigned int i=0; i<casters.size(); i++)
-		{
+		for (unsigned int i=0; i<casters.size(); i++) {
 			auto lines = casters[i]->shadowShape->lines;
 			{
-				for (unsigned int i=0; i<lines.size(); i++)
-				{
-					if ((pos-lines[i]->getMid(sc)).length() <= r)
-					{
-						if (lines[i]->isFacing(pos, sc))
-						{
+				for (unsigned int i=0; i<lines.size(); i++) {
+					if ((pos-lines[i]->GetMid(sc)).Length() <= r ||
+							(pos-lines[i]->GetP1(sc)).Length()  <= r ||
+							(pos-lines[i]->GetP2(sc)).Length()  <= r) {
+						if (lines[i]->IsFacing(pos, sc)) {
 							castLines.push_back(lines[i]);
 
-#ifdef _DEBUG									// IFDEF DEBUG
-							if (dbgDrawNormal)	
-							{
-								glVertex2f(lines[i]->getP1(sc).x-pos.x, lines[i]->getP1(sc).y-pos.y);
-								glVertex2f(lines[i]->getP2(sc).x-pos.x, lines[i]->getP2(sc).y-pos.y);
+							#ifdef _DEBUG
+							if (dbgDrawNormal) {
+								glVertex2f(lines[i]->GetP1(sc).x-pos.x, 
+											lines[i]->GetP1(sc).y-pos.y);
+								glVertex2f(lines[i]->GetP2(sc).x-pos.x, 
+											lines[i]->GetP2(sc).y-pos.y);
 
-								glVertex2f(lines[i]->getMid(sc).x-pos.x, lines[i]->getMid(sc).y-pos.y);
-								glVertex2f(lines[i]->getNormalEnd(sc).x-pos.x, 
-											lines[i]->getNormalEnd(sc).y-pos.y);
-							}					
-#endif											// ENDIF
+								glVertex2f(lines[i]->GetMid(sc).x-pos.x, 
+											lines[i]->GetMid(sc).y-pos.y);
+								glVertex2f(lines[i]->GetNormalEnd(sc).x-pos.x,
+										   lines[i]->GetNormalEnd(sc).y-pos.y);
+							}
+							#endif /* _DEBUG */
 						}
 					}
 				}
 			}
 		}
 
-#ifdef _DEBUG					// IFDEF DEBUG
-		if (dbgDrawNormal)		
-		{
+		#ifdef _DEBUG
+		if (dbgDrawNormal) {
 			glEnd();
 			glEnable(GL_STENCIL_TEST);
 			glColor4f(color.r, color.g, color.b, 1.f);
 			glLineWidth(1.f);
-		}						
-#endif							// ENDIF
-
-		for (unsigned int i=0; i<castLines.size(); i++)
-		{
-			Vec2  v1 = (pos-castLines[i]->getP1(sc)),
-				  v2 = (pos-castLines[i]->getP2(sc));
-			float a1 = v1.angleBetween(Vec2(1.f,0.f)),
-				  a2 = v2.angleBetween(Vec2(1.f,0.f));
-
-			glBegin(GL_QUADS);
-				glVertex2f(-v1.x, -v1.y);
-				glVertex2f(-v2.x, -v2.y);
-
-				v1 += Vec2( cosf(a1*((float)M_PI/180.f)), 
-							sinf(a1*((float)M_PI/180.f))) * (float)r * 100.f;
-				v2 += Vec2( cosf(a2*((float)M_PI/180.f)), 
-							sinf(a2*((float)M_PI/180.f))) * (float)r * 100.f;
-
-				glVertex2f(-v2.x, -v2.y);
-				glVertex2f(-v1.x, -v1.y);
-			glEnd();
 		}
+		#endif /* _DEBUG */
+
+		glBegin(GL_QUADS);
+
+		for (unsigned int i=0; i<castLines.size(); i++) {
+			Vec2  v1 = (pos-castLines[i]->GetP1(sc)),
+				  v2 = (pos-castLines[i]->GetP2(sc));
+			float a1 = v1.AngleBetween(Vec2(1.f,0.f)),
+				  a2 = v2.AngleBetween(Vec2(1.f,0.f));
+
+			glVertex2f(-v1.x, -v1.y);
+			glVertex2f(-v2.x, -v2.y);
+
+			v1 += Vec2( cosf(a1*((float)M_PI/180.f)),
+						sinf(a1*((float)M_PI/180.f))) * (float)r * 100.f;
+			v2 += Vec2( cosf(a2*((float)M_PI/180.f)),
+						sinf(a2*((float)M_PI/180.f))) * (float)r * 100.f;
+
+			glVertex2f(-v2.x, -v2.y);
+			glVertex2f(-v1.x, -v1.y);
+
+		}
+
+		glEnd();
 
 		glColor4f(1.f, 1.f, 1.f, 1.f);
 		glEnable(GL_TEXTURE_2D);

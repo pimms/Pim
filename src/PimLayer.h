@@ -10,13 +10,13 @@
 	A Layer containing game objects is movable. I.e., you can move the layer opposite of
 	the direction the player is moving, thus "scrolling the world". In order for any UI-layers
 	to stand completely still, you NEED to flag the Layer as an 'immovableLayer'. This will cause
-	the "getWorldPosition()" method to return (0,0)+(position) no matter what. 
-	Failure to flag immovable will cause the same method to return 
+	the "getWorldPosition()" method to return (0,0)+(position) no matter what.
+	Failure to flag immovable will cause the same method to return
 	(parent->worldPosition())+(position) - which effectively would scroll the UI along with the
 	world. Any sub-layers to the UI layer can be treated however you'd like, as the UI layer
 	will return a constant value regardless of it's parent.
 
-	As the top level Layer will not have a parent, it is flagged as "topLayer", and a 
+	As the top level Layer will not have a parent, it is flagged as "topLayer", and a
 	static pointer is set to point to this layer. It can be accessed through the static method
 	Layer::getTopLayer().
 
@@ -29,112 +29,65 @@
 #include "PimGameNode.h"
 #include "PimLightingSystem.h"
 
-namespace Pim
-{
-	// Forward declarations
+namespace Pim {
 	class CollisionManager;
+	class RenderTexture;
 	class GameControl;
 	class Scene;
 	struct Color;
 	struct PreloadLightDef;
 
-	class Layer : public GameNode
-	{
-	public:
-		Layer(void);
-		virtual ~Layer(void);			
-
-		Scene* getParentScene();
-		Layer* getParentLayer();		// Returns this
-
-		Vec2 getWorldPosition();
-		float getWorldRotation();
-
-		Vec2 getLayerPosition();
-
-		void setImmovableLayer(bool immov);
-
-		virtual void draw();
-
-		const Color getColor() { return color; }
-
-		// USE LOADRESOURCES() TO INITIATE YOUR LAYER - DO NOT USE LAYER()!
-		virtual void loadResources() {}
-
-		virtual void setZOrder(int z);
-
-
-		// ---------- LIGHTING SYSTEM METHODS ----------
-
-		// Create a lighting system.
-		void createLightingSystem(Vec2 resolution);
-
-		// Destroy the lighting system
-		void destroyLightingSystem();
-
-		// Adds a light - can be any game node
-		void addLight(GameNode *node, LightDef *lDef);
-
-		// Add a light that will use a pre-loaded light texture
-		bool addLight(GameNode *node, PreloadLightDef *pld, std::string identifier);
-
-		// Removes a light
-		void removeLight(GameNode *node);
-
-		// Preload a texture. THE LIGHTDEF IS DELETED AUTOMATICALLY.
-		// Pass an identifying string used to reference the light with later.
-		void preloadLightTexture(LightDef *ld, std::string identifier);
-
-		// Adds a shadowcaster - must be a sprite
-		void addShadowCaster(GameNode *caster);
-
-		// Removes a shadow caster
-		void removeShadowCaster(GameNode *caster);
-
-		// Sets wether or not shadows are enabled
-		void setCastShadows(bool shadows);
-
-		// Set the color of the darkest areas (unlit areas)
-		void setLightingUnlitColor(Color color);
-
-		// Set the transparency of the lights (0.0 - 1.0)
-		void setLightAlpha(float a);
-
-		// Set whether or not we're using the advanced shader (gaussian blurred shadow texture)
-		void setSmoothShadows(bool flag);
-
-		// Set whether or not debug drawing of normals and edges is enabled
-		void setShadowcasterDebugDraw(bool);
-
-		// Return the lighting system
-		LightingSystem* getLightingSystem();
-
-		// DEPRECTAED
-		//void removeCollisionNode(GameNode*);
-
-
-		// Layers scale their children.
-		Vec2			scale;
-
-		// Immovable indicates whether or not the layer should be moved as the parent
-		// layer (if there is one). The layer's position will only be relative to
-		// itself.
-		bool			immovable;
-
-		// The background color
-		Color			color;
-
+	class Layer : public GameNode {
 	protected:
 		friend class Scene;
 		friend class GameControl;
-		//friend class CollisionManager;
 
-		Scene			*parentScene;
+	public:
 
-		LightingSystem	*lightSys;
+		Vec2					scale;
+		bool					immovable;
+		Color					color;
+		Shader					*shader;
 
-		// DEPRECATED
-		//std::vector<GameNode*> collisionNodes;
+								Layer();
+		virtual					~Layer();
+		Scene*					GetParentScene() const;
+		Layer*					GetParentLayer();	// Returns this
+		Vec2					GetWorldPosition() const;
+		float					GetWorldRotation() const;
+		Vec2					GetLayerPosition() const;
+		void					SetImmovableLayer(bool immov);
+		virtual void			Draw();
+		virtual void			LoadResources() {}
+		virtual void			SetZOrder(const int z);
+		void					SetShader(Shader *shader);
+		Color					GetColor() const;
+
+		// ---------- LIGHTING SYSTEM METHODS ----------
+		void					CreateLightingSystem(Vec2 resolution);
+		void					DestroyLightingSystem();
+		void					AddLight(GameNode *node, LightDef *lDef);
+		bool					AddLight(GameNode *node, PreloadLightDef *pld, const string id);
+		void					RemoveLight(GameNode *node);
+		void					PreloadLightTexture(LightDef *ld, const string id);
+		void					AddShadowCaster(GameNode *caster);
+		void					RemoveShadowCaster(GameNode *caster);
+		void					SetCastShadows(const bool shadows);
+		void					SetLightingUnlitColor(const Color color);
+		void					SetLightAlpha(const float a);
+		void					SetSmoothShadows(const bool flag);
+		void					SetShadowcasterDebugDraw(const bool);
+		LightingSystem*			GetLightingSystem() const;
+
+	protected:
+		Scene					*parentScene;
+		LightingSystem			*lightSys;
+
+		void					PrepareRT();
+		void					RenderRT() const;
+
+	private:
+		RenderTexture*			rt;			// Used for post processing effects (shader)
+		Vec2					curRTRes;	// Resolution of the RT
 	};
-
 }

@@ -6,238 +6,418 @@
 #include "PimVec2.h"
 #include "PimGameControl.h"
 #include "PimAssert.h"
-#include "PimCollisionManager.h"
 #include "PimScene.h"
+#include "PimRenderTexture.h"
+#include "PimShaderManager.h"
+#include "PimRenderWindow.h"
 
-namespace Pim
-{
-	Layer::Layer(void)
-	{
+namespace Pim {
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	Layer::Layer(void) {
 		color		= Color(1.f, 1.f, 1.f, 1.f);
 		immovable	= false;
 		scale		= Vec2(1.f, 1.f);
 		lightSys	= NULL;
 		parentScene = NULL;
-	}
-	Layer::~Layer(void)
-	{
-		destroyLightingSystem();
+		shader		= NULL;
+		rt			= NULL;
 	}
 
-	Scene* Layer::getParentScene()
-	{
-		if (parent)
-		{
-			return parent->getParentScene();
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	Layer::~Layer(void) {
+		DestroyLightingSystem();
+
+		if (rt) {
+			delete rt;
 		}
-		else 
-		{
+	}
+
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	Scene* Layer::GetParentScene() const {
+		if (parent) {
+			return parent->GetParentScene();
+		} else {
 			return parentScene;
 		}
 	}
-	Layer* Layer::getParentLayer()
-	{
+
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	Layer* Layer::GetParentLayer() {
 		return this;
 	}
 
-	Vec2 Layer::getWorldPosition()
-	{
-		if (immovable)
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	Vec2 Layer::GetWorldPosition() const {
+		if (immovable) {
 			return position;
-		
-		if (parent)
-			return position + parent->getWorldPosition();
+		}
+
+		if (parent) {
+			return position + parent->GetWorldPosition();
+		}
 
 		return position;
 	}
-	float Layer::getWorldRotation()
-	{
-		if (parent)
-			return rotation + parent->getWorldRotation();
+
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	float Layer::GetWorldRotation() const {
+		if (parent) {
+			return rotation + parent->GetWorldRotation();
+		}
 
 		return rotation;
 	}
 
-	Vec2 Layer::getLayerPosition()
-	{
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	Vec2 Layer::GetLayerPosition() const {
 		return Vec2(0.f, 0.f);
 	}
 
-	void Layer::setImmovableLayer(bool immov)
-	{
-		immovable = immov; 
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::SetImmovableLayer(bool immov) {
+		immovable = immov;
 	}
 
-	void Layer::draw()
-	{
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::Draw() {
+		PrepareRT();
+
 		glPushMatrix();
 
-		if (immovable)
-		{
+		if (immovable) {
 			glLoadIdentity();
 		}
 
 		// Update position
-		Vec2 fac = GameControl::getSingleton()->coordinateFactor();
+		Vec2 fac = GameControl::GetSingleton()->GetCoordinateFactor();
 
-		if (allowMidPixelPosition)
-		{
-			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
-		}
-		else
-		{
-			glTranslatef(floor(position.x) / fac.x, position.y / fac.y, 0.f);
-		}
-
+		glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
 		glRotatef(rotation, 0.f, 0.f, 1.f);
 
-		fac = GameControl::getSingleton()->windowScale();
+		fac = GameControl::GetSingleton()->GetWindowScale();
 		glScalef(scale.x, scale.y, 1.f);
 
-		orderChildren();
+		OrderChildren();
 
-		for (unsigned int i=0; i<children.size(); i++)
-		{
-			children[i]->draw();
+		for (unsigned int i=0; i<children.size(); i++) {
+			children[i]->Draw();
 		}
 
-		if (lightSys)
-		{
-			lightSys->renderLightTexture();
+		if (lightSys) {
+			lightSys->RenderLightTexture();
 		}
 
 		glPopMatrix();
+
+		RenderRT();
 	}
 
-	void Layer::setZOrder(int z)
-	{
-		if (parent)
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::SetZOrder(const int z) {
+		if (parent) {
 			parent->dirtyZOrder = true;
-		else if (parentScene)
+		} else if (parentScene) {
 			parentScene->dirtyZOrder = true;
-		
+		}
+
 		zOrder = z;
 	}
 
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::SetShader(Shader *s) {
+		shader = s;
 
+		if (s && !rt) {
+				curRTRes = GameControl::GetSingleton()->GetRenderWindow()->GetOrtho();
+				rt = new RenderTexture(curRTRes);
+		}
+	}
+
+	/*
+	=====================
+	Layer::GetColor
+	=====================
+	*/
+	Color Layer::GetColor() const {
+		return color;
+	}
+	
 	// ---------- LIGHTING SYSTEM METHODS ----------
 
 
-	void Layer::createLightingSystem(Vec2 resolution)
-	{
-		destroyLightingSystem();
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::CreateLightingSystem(Vec2 resolution) {
+		DestroyLightingSystem();
 		lightSys = new LightingSystem(this, resolution);
 	}
-	void Layer::destroyLightingSystem()
-	{
-		if (lightSys)
-		{
+
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::DestroyLightingSystem() {
+		if (lightSys) {
 			delete lightSys;
 			lightSys = NULL;
 		}
 	}
-	void Layer::addLight(GameNode *node, LightDef *lDef)
-	{
+
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::AddLight(GameNode *node, LightDef *lDef) {
 		PimAssert(node->parent != NULL, "ERROR: Orphan lights are not allowed");
 
-		if (lightSys)
-			lightSys->addLight(node, lDef);
+		if (lightSys) {
+			lightSys->AddLight(node, lDef);
+		}
 	}
-	bool Layer::addLight(GameNode *node, PreloadLightDef *pld, std::string identifier)
-	{
-		if (lightSys)
-		{
-			if (!lightSys->usePreloadedTexture(pld, identifier))
-			{
+
+	/*
+	=====================
+	Layer::Layer
+	
+		Add a light using a preloaded texture.
+		Define the light texture to use with the identifier string.
+		Lights can be preloaded through the PreloadLightDef method.
+	=====================
+	*/
+	bool Layer::AddLight(GameNode *node, PreloadLightDef *pld, const string identifier) {
+		if (lightSys) {
+			if (!lightSys->UsePreloadedTexture(pld, identifier)) {
 				return false;
 			}
 
-			addLight(node, pld);
+			AddLight(node, pld);
+			return true;
 		}
 
-		return true;
+		return false;
 	}
-	void Layer::removeLight(GameNode *node)
-	{
-		if (lightSys && lightSys->lights.count(node))
-		{
+
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::RemoveLight(GameNode *node) {
+		if (lightSys && lightSys->lights.count(node)) {
 			delete lightSys->lights[node];
 			lightSys->lights.erase(node);
 		}
 	}
-	void Layer::preloadLightTexture(LightDef *ld, std::string identifier)
-	{
-		if (ld)
-		{
-			if (lightSys)
-			{
-				lightSys->preloadTexture(ld, identifier);
+
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::PreloadLightTexture(LightDef *ld, const string identifier) {
+		if (ld) {
+			if (lightSys) {
+				lightSys->PreloadTexture(ld, identifier);
 			}
 
 			delete ld;
 		}
 	}
-	void Layer::addShadowCaster(GameNode *caster)
-	{
-		if (lightSys)
+
+	/*
+	=====================
+	Layer::Layer
+
+		The GameNode must have a ShadowShape prepared before it's added.
+		use:	GameNode::SetShadowShape(Vec2[], int)
+	=====================
+	*/
+	void Layer::AddShadowCaster(GameNode *caster) {
+		if (lightSys) {
+			PimAssert(caster->GetShadowShape() != NULL, 
+						"Error: Shadow Caster must have a defined shadow shape");
+
 			lightSys->casters.push_back(caster);
-	}
-	void Layer::removeShadowCaster(GameNode *caster)
-	{
-		for (unsigned int i=0; i<lightSys->casters.size(); i++)
-		{
-			if (lightSys->casters[i] == caster)
-				lightSys->casters.erase(lightSys->casters.begin() + i);
 		}
 	}
-	void Layer::setCastShadows(bool shadows)
-	{
-		if (lightSys)
+
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::RemoveShadowCaster(GameNode *caster) {
+		if (lightSys) {
+			for (unsigned int i=0; i<lightSys->casters.size(); i++) {
+				if (lightSys->casters[i] == caster) {
+					lightSys->casters.erase(lightSys->casters.begin() + i);
+				}
+			}
+		}
+	}
+
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::SetCastShadows(bool shadows) {
+		if (lightSys) {
 			lightSys->castShadow = shadows;
+		}
 	}
-	void Layer::setLightingUnlitColor(Color color)
-	{
-		if (lightSys)
-			lightSys->setUnlitColor(color);
+
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::SetLightingUnlitColor(const Color color) {
+		if (lightSys) {
+			lightSys->SetUnlitColor(color);
+		}
+	}	
+	
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::SetLightAlpha(const float a) {
+		if (lightSys) {
+			lightSys->SetLightAlpha(a);
+		}
 	}
-	void Layer::setLightAlpha(float a)
-	{
-		if (lightSys)
-			lightSys->setLightAlpha(a);
-	}
-	void Layer::setSmoothShadows(bool flag)
-	{
-		if (lightSys)
+
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::SetSmoothShadows(const bool flag) {
+		if (lightSys) {
 			lightSys->hqShadow = flag;
+		}
 	}
-	void Layer::setShadowcasterDebugDraw(bool flag)
-	{
-		if (lightSys)
+
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::SetShadowcasterDebugDraw(const bool flag) {
+		if (lightSys) {
 			lightSys->dbgDrawNormal = flag;
+		}
 	}
-	LightingSystem* Layer::getLightingSystem()
-	{
+
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	LightingSystem* Layer::GetLightingSystem() const {
 		return lightSys;
 	}
-	
-
-	// ---------------------------------------------
 
 
-	/* // THE INTEGRATED COLLISION LIBRARY IS DEPRECATED
-	void Layer::addCollisionNode(GameNode *node)
-	{
-		PimAssert(node->colShape, "Error: collision node has no collision shape!");
+	/*
+	=====================
+	Layer::Layer
+	=====================
+	*/
+	void Layer::PrepareRT() {
+		if (shader) {
+			if (curRTRes != GameControl::GetSingleton()->GetRenderWindow()->GetOrtho()) {
+				delete rt;
 
-		collisionNodes.push_back(node);
-	}
-	void Layer::removeCollisionNode(GameNode *node)
-	{
-		for (unsigned int i=0; i<collisionNodes.size(); i++)
-		{
-			if (collisionNodes[i] == node)
-				collisionNodes.erase(collisionNodes.begin() + i);
+				curRTRes = GameControl::GetSingleton()->GetRenderWindow()->GetOrtho();
+				rt = new RenderTexture(curRTRes);
+			}
+
+			rt->BindFBO();
+			rt->Clear();
+		} else if (rt) {
+			delete rt;
 		}
 	}
+
+	/*
+	=====================
+	Layer::Layer
+	=====================
 	*/
+	void Layer::RenderRT() const  {
+		if (shader) {
+			rt->UnbindFBO();
+
+			glUseProgram(shader->GetProgram());
+
+			rt->BindTex();
+
+			glPushMatrix();
+			glLoadIdentity();
+			glColor3ub(255,255,255);
+
+			glBegin(GL_QUADS);
+				glTexCoord2i(0, 0); glVertex2f(0.f,			0.f);
+				glTexCoord2i(1, 0); glVertex2f(curRTRes.x,	0.f);
+				glTexCoord2i(1, 1); glVertex2f(curRTRes.x,	curRTRes.y);
+				glTexCoord2i(0, 1); glVertex2f(0.f,			curRTRes.y);
+			glEnd();
+
+			glPopMatrix();
+
+			glUseProgram(0);
+		}
+	}
 }

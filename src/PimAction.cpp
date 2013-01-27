@@ -3,13 +3,13 @@
 #include "PimSprite.h"
 #include "PimAssert.h"
 
-// Upon implementing the various Action subclasses, I noticed that most of the 
+// Upon implementing the various Action subclasses, I noticed that most of the
 // code in the update-methods were structurally identical. The following macros
 // may seem large, inuntuitive and nasty (and frankly they are), but the amount
 // of duplicated code avoided by this method is in my opinion a worthy tradeoff.
 
-// 
-//	ACTION_UPDATE_RELATIVE: 
+//
+//	ACTION_UPDATE_RELATIVE:
 //		Update macro for [verb]ToActions
 //
 //	PARAMETERS:
@@ -21,13 +21,13 @@
 timer -= dt;																\
 if (timer > 0.f )													\
 {																			\
-	((_PARENT_TYPE*)getParent())->_MEMBER = _UPDATE_SET;					\
+	((_PARENT_TYPE*)GetParent())->_MEMBER = _UPDATE_SET;					\
 }																			\
 else																		\
 {																			\
-	((_PARENT_TYPE*)getParent())->_MEMBER = _FINAL_SET;						\
-	cleanup();																\
-}	
+	((_PARENT_TYPE*)GetParent())->_MEMBER = _FINAL_SET;						\
+	Cleanup();																\
+}
 
 //
 //	ACTION_UPDATE_RELATIVE:
@@ -54,25 +54,27 @@ else																		\
 }																			\
 if (timer > 0.f || ovride)													\
 {																			\
-	((_PARENT_TYPE*)getParent())->_MEMBER += _UPDATE_VAR *dt*(1.f/dur);		\
+	((_PARENT_TYPE*)GetParent())->_MEMBER += _UPDATE_VAR *dt*(1.f/dur);		\
 	if (ovride) /* override means we're done */								\
 	{																		\
-		cleanup();															\
+		Cleanup();															\
 	}																		\
 }																			\
 else																		\
 {																			\
-	cleanup();																\
-}																			
+	Cleanup();																\
+}
 
 
 
 
-namespace Pim
-{
-	/* VIRTUAL Base Action */
-	BaseAction::BaseAction(float duration)
-	{
+namespace Pim {
+	/*
+	=====================
+	BaseAction::BaseAction
+	=====================
+	*/
+	BaseAction::BaseAction(float duration) {
 		done					= false;
 		inQueue					= false;
 		notifyOnCompletion		= false;
@@ -82,57 +84,71 @@ namespace Pim
 		timer					= duration;
 		initialDur				= duration;
 	}
-	void BaseAction::cleanup()
-	{
-		if (notifyOnCompletion)
-		{
-			notificationCallback->actionCompleted(this);
-		}
 
-		if (inQueue)
-		{
-			done = true;
-			unlistenFrame();
-
-			queue->activateNext();
-		}
-		else
-		{
-			getParent()->removeChild(this);
-		}
-	}
-
-
-	/*	
-		###########################################
-		#####          NODE ACTIONS		      #####
-		###########################################
+	/*
+	=====================
+	BaseAction::Cleanup
+	=====================
 	*/
-	/* Action */
-	void Action::activate()
-	{
-		PimAssert(getParent() != NULL, "Action is orphan");
-		listenFrame();
+	void BaseAction::Cleanup() {
+		if (notifyOnCompletion) {
+			notificationCallback->OnActionCompleted(this);
+		}
 
-		if (!notificationCallback)
-		{
-			notificationCallback = getParent();
+		if (inQueue) {
+			done = true;
+			UnlistenFrame();
+
+			queue->ActivateNext();
+		} else {
+			GetParent()->RemoveChild(this);
 		}
 	}
 
-	/* Move To Action */
+
+
+	/*
+	=====================
+	Action::Action
+	=====================
+	*/
+	void Action::Activate() {
+		PimAssert(GetParent() != NULL, "Action is orphan");
+		ListenFrame();
+
+		if (!notificationCallback) {
+			notificationCallback = GetParent();
+		}
+	}
+
+	
+
+	/*
+	=====================
+	MoveToAction::MoveToAction
+	=====================
+	*/
 	MoveToAction::MoveToAction(Vec2 destination, float duration)
-		: Action(duration)
-	{
-		dest		= destination;
+		: Action(duration) {
+		dest = destination;
 	}
-	void MoveToAction::activate()
-	{
-		Action::activate();
-		start = getParent()->position;
+
+	/*
+	=====================
+	MoveToAction::Activate
+	=====================
+	*/
+	void MoveToAction::Activate() {
+		Action::Activate();
+		start = GetParent()->position;
 	}
-	void MoveToAction::update(float dt)
-	{
+
+	/*
+	=====================
+	MoveToAction::Update
+	=====================
+	*/
+	void MoveToAction::Update(float dt) {
 		ACTION_UPDATE_STATIC(
 			GameNode,
 			position,
@@ -144,90 +160,148 @@ namespace Pim
 		);
 	}
 
-	/* Move By Action */
+	
+
+	/*
+	=====================
+	MoveByAction::MoveByAction
+	=====================
+	*/
 	MoveByAction::MoveByAction(Vec2 relative, float duration)
-		: Action(duration)
-	{
+		: Action(duration) {
 		rel		= relative;
 	}
-	void MoveByAction::activate()
-	{
-		Action::activate();
+
+	/*
+	=====================
+	MoveByAction::Activate
+	=====================
+	*/
+	void MoveByAction::Activate() {
+		Action::Activate();
 	}
-	void MoveByAction::update(float dt)
-	{
+
+	/*
+	=====================
+	MoveByAction::Update
+	=====================
+	*/
+	void MoveByAction::Update(float dt) {
 		ACTION_UPDATE_RELATIVE(GameNode, position, rel);
 	}
 
-	/* Rotate By Action */
+	
+
+	/*
+	=====================
+	RotateByAction::RotateByAction
+	=====================
+	*/
 	RotateByAction::RotateByAction(float angle, float duration)
-		: Action(duration)
-	{
+		: Action(duration) {
 		total		= angle;
 		dir			= angle / abs(angle);
 	}
-	void RotateByAction::activate()
-	{
-		Action::activate();
+
+	/*
+	=====================
+	RotateByAction::Activate
+	=====================
+	*/
+	void RotateByAction::Activate() {
+		Action::Activate();
 		remainding = total;
 	}
-	void RotateByAction::update(float dt)
-	{
+
+	/*
+	=====================
+	RotateByAction::Update
+	=====================
+	*/
+	void RotateByAction::Update(float dt) {
 		ACTION_UPDATE_RELATIVE(GameNode, rotation, total);
 	}
 
-	/* Delay Action */
+	
+
+	/*
+	=====================
+	DelayAction::DelayAction
+	=====================
+	*/
 	DelayAction::DelayAction(float duration)
-		: Action(duration)
-	{
+		: Action(duration) {
 	}
-	void DelayAction::activate()
-	{
-		Action::activate();
+
+	/*
+	=====================
+	DelayAction::Activate
+	=====================
+	*/
+	void DelayAction::Activate() {
+		Action::Activate();
 	}
-	void DelayAction::update(float dt)
-	{
+
+	/*
+	=====================
+	DelayAction::Update
+	=====================
+	*/
+	void DelayAction::Update(float dt) {
 		timer -= dt;
 
-		if (timer <= 0.f)
-		{
-			cleanup();
+		if (timer <= 0.f) {
+			Cleanup();
 		}
 	}
 
-	/*	
-		###########################################
-		#####         SPRITE ACTIONS		  #####
-		###########################################
+
+	
+	/*
+	=====================
+	SpriteAction::Activate
+	=====================
 	*/
-	/* Sprite Action */
-	void SpriteAction::activate()
-	{
-		PimAssert(getParent() != NULL, "Action is orphan");
-		PimAssert(dynamic_cast<Sprite*>(getParent()) != NULL, 
-			"Cannot add a Sprite-action to a non-sprite node!");
+	void SpriteAction::Activate() {
+		PimAssert(GetParent() != NULL, "Action is orphan");
+		PimAssert(dynamic_cast<Sprite*>(GetParent()) != NULL,
+				  "Cannot add a Sprite-action to a non-sprite node!");
 
-		listenFrame();
+		ListenFrame();
 
-		if (!notificationCallback)
-		{
-			notificationCallback = getParent();
+		if (!notificationCallback) {
+			notificationCallback = GetParent();
 		}
 	}
 
-	/* Tint Action */
+	
+
+	/*
+	=====================
+	TintAction::TintAction
+	=====================
+	*/
 	TintAction::TintAction(Color fadeTo, float duration)
-		: SpriteAction(duration)
-	{
+		: SpriteAction(duration) {
 		dest	= fadeTo;
 	}
-	void TintAction::activate()
-	{
-		SpriteAction::activate();
-		source = ((Sprite*)getParent())->color;
+
+	/*
+	=====================
+	TintAction::Activate
+	=====================
+	*/
+	void TintAction::Activate() {
+		SpriteAction::Activate();
+		source = ((Sprite*)GetParent())->color;
 	}
-	void TintAction::update(float dt)
-	{
+
+	/*
+	=====================
+	TintAction::Update
+	=====================
+	*/
+	void TintAction::Update(float dt) {
 		ACTION_UPDATE_STATIC(
 			Sprite,
 			color,
@@ -241,19 +315,34 @@ namespace Pim
 		);
 	}
 
-	/* Scale To Action */
+	
+
+	/*
+	=====================
+	ScaleToAction::ScaleToAction
+	=====================
+	*/
 	ScaleToAction::ScaleToAction(Vec2 factor, float duration)
-		: SpriteAction(duration)
-	{
+		: SpriteAction(duration) {
 		dest = factor;
 	}
-	void ScaleToAction::activate()
-	{
-		SpriteAction::activate();
-		source = ((Sprite*)getParent())->scale;
+
+	/*
+	=====================
+	ScaleToAction::Activate
+	=====================
+	*/
+	void ScaleToAction::Activate() {
+		SpriteAction::Activate();
+		source = ((Sprite*)GetParent())->scale;
 	}
-	void ScaleToAction::update(float dt)
-	{
+
+	/*
+	=====================
+	ScaleToAction::Update
+	=====================
+	*/
+	void ScaleToAction::Update(float dt) {
 		ACTION_UPDATE_STATIC(
 			Sprite,
 			scale,
@@ -265,31 +354,46 @@ namespace Pim
 		);
 	}
 
-	/* Scale By Action */
+
+
+
+	/*
+	=====================
+	ScaleByAction::ScaleByAction
+	=====================
+	*/
 	ScaleByAction::ScaleByAction(Vec2 factor, float duration)
-		: SpriteAction(duration)
-	{
+		: SpriteAction(duration) {
 		remainding = factor;
 	}
-	void ScaleByAction::activate()
-	{
-		SpriteAction::activate();
+
+	/*
+	=====================
+	ScaleByAction::Activate
+	=====================
+	*/
+	void ScaleByAction::Activate() {
+		SpriteAction::Activate();
 	}
-	void ScaleByAction::update(float dt)
-	{
+
+	/*
+	=====================
+	ScaleByAction::Update
+	=====================
+	*/
+	void ScaleByAction::Update(float dt) {
 		ACTION_UPDATE_RELATIVE(Sprite, scale, remainding);
 	}
 
 
-	/*	
-		###########################################
-		#####          ACTION QUEUE	 	      #####
-		###########################################
+
+	/*
+	=====================
+	ActionQueue::ActionQueue
+	=====================
 	*/
-	/* Action Queue */
 	ActionQueue::ActionQueue(int numAct, BaseAction *act1, ...)
-		: Action(0.f)
-	{
+		: Action(0.f) {
 		PimAssert(numAct != 0, "No actions / invalid num provided to ActionQueue");
 		PimAssert(numAct < 32, "ActionQueues does not support more than 32 actions");
 
@@ -302,8 +406,7 @@ namespace Pim
 		va_list	argp;
 		va_start(argp, act1);
 
-		for (int i=1; i<numAct; i++)
-		{
+		for (int i=1; i<numAct; i++) {
 			actions.push_back(va_arg(argp, BaseAction*));
 			actions[i]->inQueue = true;
 			actions[i]->queue = this;
@@ -311,68 +414,85 @@ namespace Pim
 
 		va_end(argp);
 	}
-	ActionQueue::~ActionQueue()
-	{
+
+	/*
+	=====================
+	ActionQueue::~ActionQueue
+	=====================
+	*/
+	ActionQueue::~ActionQueue() {
 		// Delete unplayed actions
-		for (int i=0; i<actions.size(); i++)
-		{
+		for (unsigned i=0; i<actions.size(); i++) {
 			delete actions[i];
 		}
 
 		actions.clear();
 	}
-	void ActionQueue::activate()
-	{
-		PimAssert(getParent() != NULL, "Action is orphan");
 
-		listenFrame();
-		activateNext();
+	/*
+	=====================
+	ActionQueue::Activate
+	=====================
+	*/
+	void ActionQueue::Activate() {
+		PimAssert(GetParent() != NULL, "Action is orphan");
+
+		ListenFrame();
+		ActivateNext();
 	}
-	void ActionQueue::update(float dt)
-	{
-		if (done)
-		{
-			getParent()->removeChild(this);
+
+	/*
+	=====================
+	ActionQueue::Update
+	=====================
+	*/
+	void ActionQueue::Update(float dt) {
+		if (done) {
+			GetParent()->RemoveChild(this);
 		}
 	}
-	void ActionQueue::activateNext()
-	{
-		if (actions.size() != 0)
-		{
+
+	/*
+	=====================
+	ActionQueue::ActivateNext
+	=====================
+	*/
+	void ActionQueue::ActivateNext() {
+		if (actions.size() != 0) {
 			float excess = 0.f;
 
-			if (curAct)
-			{
+			if (curAct) {
 				excess = curAct->timer;
 
-				if (parent)
-				{
-					parent->removeChild(curAct);
+				if (parent) {
+					parent->RemoveChild(curAct);
 				}
 			}
 
 			curAct = actions[0];
 			actions.pop_front();
-			
+
 			curAct->dur += excess;
 			curAct->timer += excess;
 
-			if (parent)
-			{
-				parent->addChild(curAct);
-				curAct->activate();
+			if (parent) {
+				parent->AddChild(curAct);
+				curAct->Activate();
 			}
-		}
-		else
-		{
+		} else {
 			curAct = NULL;
 			done = true;
 		}
 	}
 
-	/* Action Queue Repeat */
-	ActionQueueRepeat::ActionQueueRepeat(unsigned int repNum, int numAct, BaseAction *act1, ...)
-	{
+
+
+	/*
+	=====================
+	ActionQueueRepeat::ActionQueueRepeat
+	=====================
+	*/
+	ActionQueueRepeat::ActionQueueRepeat(unsigned int repNum, int numAct, BaseAction *act1, ...) {
 		// Code duplication from ActionQueue::ActionQueue(...).
 		// Variable arguments proved difficult to pass on.
 		PimAssert(numAct != 0, "No actions / invalid num provided to ActionQueue");
@@ -387,8 +507,7 @@ namespace Pim
 		va_list	argp;
 		va_start(argp, act1);
 
-		for (int i=1; i<numAct; i++)
-		{
+		for (int i=1; i<numAct; i++) {
 			actions.push_back(va_arg(argp, BaseAction*));
 			actions[i]->inQueue = true;
 			actions[i]->queue = this;
@@ -401,57 +520,58 @@ namespace Pim
 		remaindingLoops = repNum;
 		infinite		= false;
 	}
-	ActionQueueRepeat::~ActionQueueRepeat()
-	{
-		if (curAct)
-		{
-			// Everything in the actions-deque is deleted in ActionQueue's 
+
+	/*
+	=====================
+	ActionQueueRepeat::~ActionQueueRepeat
+	=====================
+	*/
+	ActionQueueRepeat::~ActionQueueRepeat() {
+		if (curAct) {
+			// Everything in the actions-deque is deleted in ActionQueue's
 			// destructor - to avoid the ActionQueue AND the parent of curAct
 			// attempting to delete it, it's removed from the actions-deque.
-			for (int i=0; i<actions.size(); i++)
-			{
-				if (actions[i] == curAct)
-				{
+			for (unsigned i=0; i<actions.size(); i++) {
+				if (actions[i] == curAct) {
 					actions.erase(actions.begin() + i);
-					
-					if (parent)
-					{
-						parent->removeChild(curAct);
+
+					if (parent) {
+						parent->RemoveChild(curAct);
 					}
 				}
 			}
 		}
 	}
-	void ActionQueueRepeat::activateNext()
-	{
+
+	/*
+	=====================
+	ActionQueueRepeat::ActivateNext
+	=====================
+	*/
+	void ActionQueueRepeat::ActivateNext() {
 		if (willDelete) return;
 
 		// Update the action counters
-		if (++actionIdx >= actions.size())
-		{
+		if (unsigned(++actionIdx) >= actions.size()) {
 			actionIdx = 0;
 
-			if (!infinite)
-			{
+			if (!infinite) {
 				remaindingLoops--;
 			}
-		}	
+		}
 
-		if (infinite || remaindingLoops > 0)
-		{
+		if (infinite || remaindingLoops > 0) {
 			float excess = 0.f;
 
-			if (curAct)
-			{
+			if (curAct) {
 				excess = curAct->timer;
 
 				// The action is not deleted.
-				if (parent)
-				{
-					getParent()->removeChild(curAct, false);
+				if (parent) {
+					GetParent()->RemoveChild(curAct, false);
 				}
 
-				curAct->unlistenFrame();
+				curAct->UnlistenFrame();
 			}
 
 			// Prepare the next action
@@ -462,16 +582,13 @@ namespace Pim
 			curAct->done	= false;
 
 			// Run the next action
-			if (parent)
-			{
-				getParent()->addChild(curAct);
-				curAct->activate();
+			if (parent) {
+				GetParent()->AddChild(curAct);
+				curAct->Activate();
 			}
 
-			//curAct->update(-excess);
-		}
-		else
-		{
+			curAct->Update(-excess);
+		} else {
 			done = true;
 		}
 	}

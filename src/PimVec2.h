@@ -2,96 +2,177 @@
 
 #include "PimInternal.h"
 
-namespace Pim
-{
-	class Vec2
-	{
+namespace Pim {
+	class Vec2 {
 	public:
-		Vec2(float px, float py);
-		Vec2(void);
+		float				x;
+		float				y;
 
-		// Create a unit vector pointing in degree-angle 'a'
-		static Vec2 unitD(float a);
-
-		// Create a unit vector pointing in radian-angle 'a'
-		static Vec2 unitR(float a);
-
-		// [DOES NOT MODIFY THIS VECTOR]
-		// Returns this vector, rotated around pt, a degrees
-		Vec2 rotateAroundPoint(Vec2 &pt, float a);	
-
-		// [DOES NOT MODIFY THIS VECTOR]
-		// Same as rotateAroundPoint, but defaults to (0,0)
-		Vec2 rotateDegrees(float a);				
-		
-		// Returns the difference in the range 0.0 to 360.0
-		float angleBetween360(const Vec2 &other);
-
-		// Returns the difference in the range -180.0 to 180.0
-		float angleBetween(Vec2 &other);
-
-		// Returns the dot product between this vector and the passed vector
-		float dot(const Vec2 &other);
-
-		// Returns the cross product between this vector and the passed vector
-		float cross(const Vec2 &other);
-
-		// Returns the unit length vector without altering any current values.
-		Vec2 normalize();
-
-		// Returns the length of this vector
-		float length();
-
-		float x, y;
-	
-
-		// Operator overloading
-		bool operator==(const Vec2 &other);
-		bool operator!=(const Vec2 &other);
-
-		Vec2 operator+(const Vec2 &other);
-		Vec2 operator-(const Vec2 &other);
-		Vec2 operator*(const Vec2 &other);
-		Vec2 operator/(const Vec2 &other);
-
-		void operator+=(const Vec2 &other);
-		void operator-=(const Vec2 &other);
-		void operator*=(const Vec2 &other);
-		void operator/=(const Vec2 &other);
-
-		Vec2 operator*(const float &fac);
-		Vec2 operator/(float den);
-		void operator*=(const float &fac);
-		void operator/=(float den);
+							Vec2(const float px, const float py);
+							Vec2(void);
+		static Vec2			UnitDegree(const float angle);
+		static Vec2			UnitRadian(const float angle);
+		Vec2				RotateAroundPoint(const Vec2 &pt, const float a) const;
+		Vec2				RotateDegrees(const float a) const;
+		float				AngleBetween360(const Vec2 &other) const;	// Return range [0-360]
+		float				AngleBetween(const Vec2 &other) const;		// Return range [-180-180]
+		float				Dot(const Vec2 &other) const;
+		float				Cross(const Vec2 &other) const;
+		Vec2				Normalize() const;
+		float				Length() const;
+		bool				operator==(const Vec2 &other) const;
+		bool				operator!=(const Vec2 &other) const;
+		Vec2				operator+(const Vec2 &other) const;
+		Vec2				operator-(const Vec2 &other) const;
+		Vec2				operator*(const Vec2 &other) const;
+		Vec2				operator/(const Vec2 &other) const;
+		void				operator+=(const Vec2 &other);
+		void				operator-=(const Vec2 &other);
+		void				operator*=(const Vec2 &other);
+		void				operator/=(const Vec2 &other);
+		Vec2				operator*(const float &fac) const;
+		Vec2				operator/(float den) const;
+		void				operator*=(const float &fac);
+		void				operator/=(float den);
 	};
 
-	struct Rect
-	{
-		Rect(png_uint_32 xx, png_uint_32 yy, png_uint_32 w, png_uint_32 h) 
-			: x(xx), y(yy), width(w), height(h){}
 
-		Rect() 
-			: x(0), y(0), width(0), height(0){}
+	struct Color {
+		float				r;
+		float				g;
+		float				b;
+		float				a;
 
-		bool contains(Pim::Vec2 &vec);
+							Color(const float rr, const float gg, 
+								  const float bb, const float aa);
+							Color();
+	};
 
-		png_int_32 x, y, width, height;
 
-		// Operator overloading
-		bool operator==(const Rect &other)
-		{
-			return x == other.x 
-				&& y == other.y
-				&& width == other.width
-				&& height == other.height;
+	/*
+	===============================
+	Class Rect_t
+
+	The class is defined in the header for the sake of templating.
+	By default, all rects used internally is <int>.
+	===============================
+	*/
+	template <typename T>
+	struct Rect_t {
+		T 			x;
+		T			y;
+		T			width;
+		T			height;
+
+		
+		Rect_t(T xpos, T ypos, T w, T h) {
+			x		= xpos;
+			y		= ypos;
+			width	= w;
+			height	= h;
+		}
+
+		Rect_t() {
+			x		= T(0);
+			y		= T(0);
+			width	= T(0);
+			height	= T(0);
+		}
+
+		template <typename Y>
+		Rect_t(const Rect_t<Y> &other) {
+			x		= T(other.x);
+			y		= T(other.y);
+			width	= T(other.width);
+			height	= T(other.height);
+		}
+
+		template <typename Y>
+		Rect_t(Y xpos, Y ypos, Y w, Y h) {
+			x		= T(xpos);
+			y		= T(ypos);
+			width	= T(w);
+			height	= T(h);
+		}
+
+		bool Contains(const Vec2 &vec) {
+			return		vec.x > float(x) 
+				&&		vec.x < float(x + width)
+				&&		vec.y > float(y) 
+				&&		vec.y < float(y + height);
+		}
+
+		template <typename Y>
+		bool operator==(const Rect_t<Y> &other) {
+			return		x		== T(other.x) 
+				&&		y		== T(other.y) 
+				&&		width	== T(other.width)
+				&&		height	== T(other.height);
+		}
+
+		template <typename Y>
+		bool operator!=(const Rect_t<Y> &other) {
+			return		x		!= T(other.x) 
+				||		y		!= T(other.y) 
+				||		width	!= T(other.width)
+				||		height	!= T(other.height);
+		}
+
+		template <typename Y>
+		Rect_t<T> operator=(const Rect_t<Y> &other) {
+			return Rect_t<T>(
+				T(other.x), 
+				T(other.y), 
+				T(other.width),
+				T(other.height)
+			);
 		}
 	};
 
-	struct Color
-	{
-		Color(float rr, float gg, float bb, float aa) : r(rr), g(gg), b(bb), a(aa) {}
-		Color() : r(1.f), g(1.f), b(1.f), a(1.f) {}
+	typedef Rect_t<int>		Rect;		// Rect_t<int> is used internally by default
+	typedef Rect_t<float>	Rectf;
 
-		float r, g, b, a;
+	/*
+	struct Rect {
+		int			x;
+		int			y;
+		int			width;
+		int			height;
+
+		Rect(int xx, int yy, int ww, int hh) {
+			x		= xx;
+			y		= yy;
+			width	= ww;
+			height	= hh;
+		}
+
+		Rect() {
+			x		= 0;
+			y		= 0;
+			width	= 0;
+			height	= 0;
+		}
+
+		bool Contains(const Vec2 &vec) {
+			return		vec.x > float(x) 
+				&&		vec.x < float(x + width)
+				&&		vec.y > float(y) 
+				&&		vec.y < float(y + height);
+		}
+
+		bool operator==(const Rect &o) {
+			return	x == o.x 
+				&&  y == o.y
+				&&  width == o.width 
+				&& height == o.height;
+		}
+
+		bool operator!=(const Rect &o) {
+			return	x != o.x
+				&&  y != o.y
+				&& width != o.width
+				&& height != o.height;
+		}
 	};
+	*/
 }

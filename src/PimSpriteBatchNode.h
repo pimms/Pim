@@ -7,7 +7,7 @@
 	The batch node loads the sprite sheet into memory once, and all (sprite) children
 	attached to it will only be able to use cutouts / all of the batch node texture.
 
-	Note that granchildren of a batch node also are required to use the batch node 
+	Note that granchildren of a batch node also are required to use the batch node
 	texture. They cannot load a texture of their own. Use a separate batch node
 	for this.
 
@@ -19,22 +19,14 @@
 	it's not officially supported. At all.
 */
 
-namespace Pim
-{
-
-	class SpriteBatchNode : public Sprite
-	{
+namespace Pim {
+	class SpriteBatchNode : public Sprite {
 	public:
-		SpriteBatchNode(std::string file);
-		SpriteBatchNode();
-		~SpriteBatchNode(void);
-
-		void addChild(GameNode *ch);
-
-		void draw();
-		void batchDraw();
-
-	private:
+					SpriteBatchNode(string file);
+					SpriteBatchNode();
+					~SpriteBatchNode(void);
+		void		AddChild(GameNode *ch);
+		void		Draw();
+		void		BatchDraw();
 	};
-
 }

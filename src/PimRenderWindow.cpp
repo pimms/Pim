@@ -8,41 +8,66 @@
 
 #include <stdlib.h>
 
-namespace Pim
-{
+namespace Pim {
 
-	// Function is defined in GameControl.cpp
+	/* Defined in GameControl.cpp */
 	LRESULT	CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);
 
-	RenderWindow::RenderWindow(WinStyle::CreationData &data)
-	{
+	/*
+	=====================
+	RenderWindow::RenderWindow
+	=====================
+	*/
+	RenderWindow::RenderWindow(WinStyle::CreationData &data) {
 		hDC			= NULL;
 		hRC			= NULL;
 		hWnd		= NULL;
 		hInstance	= NULL;
 		winData		= data;
 	}
-	RenderWindow::~RenderWindow()
-	{
-		killWindow();
+
+	/*
+	=====================
+	RenderWindow::~RenderWindow
+	=====================
+	*/
+	RenderWindow::~RenderWindow() {
+		KillWindow();
 	}
 
-	Vec2 RenderWindow::getOrtho()
-	{
+	/*
+	=====================
+	RenderWindow::GetOrtho
+	=====================
+	*/
+	Vec2 RenderWindow::GetOrtho() const {
 		return ortho;
 	}
-	Vec2 RenderWindow::getOrthoOffset()
-	{
+
+	/*
+	=====================
+	RenderWindow::GetOrthoOffset
+	=====================
+	*/
+	Vec2 RenderWindow::GetOrthoOffset() const {
 		return orthoOff;
 	}
 
-	HWND RenderWindow::getHwnd()
-	{
+	/*
+	=====================
+	RenderWindow::GetHwnd
+	=====================
+	*/
+	HWND RenderWindow::GetHwnd() const {
 		return hWnd;
 	}
 
-	bool RenderWindow::createWindow(WinStyle::CreationData &data)
-	{
+	/*
+	=====================
+	RenderWindow::SetupWindow
+	=====================
+	*/
+	bool RenderWindow::SetupWindow(WinStyle::CreationData &data) {
 		winData = data;
 
 		GLuint		pixelFormat;
@@ -67,9 +92,8 @@ namespace Pim
 		wc.lpszMenuName		= NULL;									// No menu please
 		wc.lpszClassName	= "pim";								// Set the class name
 
-		if (!RegisterClass(&wc))
-		{
-			throw new std::exception("Failed to register the window class.");
+		if (!RegisterClass(&wc)) {
+			throw new exception("Failed to register the window class.");
 			return false;
 		}
 
@@ -79,7 +103,7 @@ namespace Pim
 		dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
 		dwStyle	  = WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
 
-		// Gibberish values. 
+		// Gibberish values.
 		winRect.left   = 0;
 		winRect.right  = 1;
 		winRect.top	   = 0;
@@ -93,19 +117,17 @@ namespace Pim
 									0, 0,
 									winRect.right,
 									winRect.bottom,
-									NULL, 
+									NULL,
 									NULL,
 									hInstance,
-									NULL)))
-		{
-			killWindow();
-			throw new std::exception("Window creation error.");
+									NULL))) {
+			KillWindow();
+			throw new exception("Window creation error.");
 			return false;
 		}
 
 		// Prepare the pixel format
-		static	PIXELFORMATDESCRIPTOR pfd=				// pfd Tells Windows How We Want Things To Be
-		{
+		static	PIXELFORMATDESCRIPTOR pfd= {			// pfd Tells Windows How We Want Things To Be
 			sizeof(PIXELFORMATDESCRIPTOR),				// Size Of This Pixel Format Descriptor
 			1,											// Version Number
 			PFD_DRAW_TO_WINDOW |						// Format Must Support Window
@@ -118,7 +140,7 @@ namespace Pim
 			0,											// Shift Bit Ignored
 			0,											// No Accumulation Buffer
 			0, 0, 0, 0,									// Accumulation Bits Ignored
-			16,											// 16Bit Z-Buffer (Depth Buffer)  
+			16,											// 16Bit Z-Buffer (Depth Buffer)
 			1,											// Stencil buffer is required
 			0,											// No Auxiliary Buffer
 			PFD_MAIN_PLANE,								// Main Drawing Layer
@@ -127,98 +149,91 @@ namespace Pim
 		};
 
 		// Get the device context
-		if (!(hDC = GetDC(hWnd)))
-		{
-			killWindow();
-			throw new std::exception("Could not create a GL device context.");
+		if (!(hDC = GetDC(hWnd))) {
+			KillWindow();
+			throw new exception("Could not create a GL device context.");
 			return false;
 		}
 
 		// Choose the pixel format
-		if (!(pixelFormat = ChoosePixelFormat(hDC, &pfd)))
-		{
-			killWindow();
-			throw new std::exception("Can't find a suitable pixel format.");
+		if (!(pixelFormat = ChoosePixelFormat(hDC, &pfd))) {
+			KillWindow();
+			throw new exception("Can't find a suitable pixel format.");
 			return false;
 		}
 
 		// Set the pixel format
-		if (!SetPixelFormat(hDC,pixelFormat,&pfd))
-		{
-			killWindow();
-			throw new std::exception("Can't set the pixel format.");
+		if (!SetPixelFormat(hDC,pixelFormat,&pfd)) {
+			KillWindow();
+			throw new exception("Can't set the pixel format.");
 			return false;
 		}
 
 		// Create the rendering context
-		if (!(hRC = wglCreateContext(hDC)))
-		{
-			killWindow();
-			throw new std::exception("Can't create a rendering context.");
+		if (!(hRC = wglCreateContext(hDC))) {
+			KillWindow();
+			throw new exception("Can't create a rendering context.");
 			return false;
 		}
 
 		// Make the rendering context active
-		if (!wglMakeCurrent(hDC,hRC))
-		{
-			killWindow();
-			throw new std::exception("Can't activate the GL rendering context.");
+		if (!wglMakeCurrent(hDC,hRC)) {
+			KillWindow();
+			throw new exception("Can't activate the GL rendering context.");
 			return false;
 		}
 
 		// Custom init of OpenGL
-		if (!initOpenGL())
-		{
-			killWindow();
-			throw new std::exception("Initialization of OpenGL failed.");
+		if (!InitOpenGL()) {
+			KillWindow();
+			throw new exception("Initialization of OpenGL failed.");
 			return false;
 		}
 
 		// Initate GLEW
 		GLenum res = glewInit();
-		if (res != GLEW_OK)
-		{
-			std::cout<<"ERROR INITATING GLEW:\n" <<glewGetErrorString(res) <<"\n";
+		if (res != GLEW_OK) {
+			cout<<"ERROR INITATING GLEW:\n" <<glewGetErrorString(res) <<"\n";
 			system("PAUSE");
 			return false;
 		}
 
 		// Set the window style
-		setWindowStyle(winData.winStyle);
+		SetWindowStyle(winData.winStyle);
 
 		return true;
 	}
-	void RenderWindow::resizeWindow(int nw, int nh)
-	{
-		if (nh == 0)
+
+	/*
+	=====================
+	RenderWindow::ResizeWindow
+	=====================
+	*/
+	void RenderWindow::ResizeWindow(int nw, int nh) {
+		if (nh == 0) {
 			nh = 1;
+		}
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
 		glViewport(0,0,nw,nh);
 
-		if (winData.forcedAspectRatio)
-		{
+		if (winData.forcedAspectRatio) {
 			float rap = (float)nw/(float)nh;		// real aspect ratio
 
 			float rw = (float)nw, rh = (float)nh;
 
-			if (abs(rap - winData.aspectRatio) < 0.02f) // 0.02
-			{
+			if (abs(rap - winData.aspectRatio) < 0.02f) { // 0.02
 				bpos = NONE;
 				bdim = 0;
-			}
-			else if (rap > winData.aspectRatio)			// Too wide
-			{
+			} else if (rap > winData.aspectRatio) {		// Too wide
 				rw = nh * winData.aspectRatio;
 
 				bpos = VER;
 				bdim = (int)ceil((nw-rw)/2.f);
 				orthoOff = Vec2((float)bdim, 0.f);
-			}
-			else if (rap < winData.aspectRatio)	// Too tall
-			{
+			} else if (rap < winData.aspectRatio) {	// Too tall
 				rh = nw / winData.aspectRatio;
 
 				bpos = HOR;
@@ -229,9 +244,7 @@ namespace Pim
 			glOrtho((nw-rw)/-2.f, rw+(nw-rw)/2.f, (nh-rh)/-2.f, rh+(nh-rh)/2.f, 0, 1);
 			ortho = Vec2(rw,rh);
 
-		}
-		else
-		{
+		} else {
 			glOrtho(0, nw, 0, nh, 0, 1);
 			ortho = Vec2((float)nw,(float)nh);
 			orthoOff = Vec2(0.f, 0.f);
@@ -241,14 +254,19 @@ namespace Pim
 		glMatrixMode(GL_MODELVIEW);
 		glDisable(GL_DEPTH_TEST);
 
-		GameControl::getSingleton()->actualWinWidth  = nw;
-		GameControl::getSingleton()->actualWinHeight = nh;
+		GameControl::GetSingleton()->actualWinWidth  = nw;
+		GameControl::GetSingleton()->actualWinHeight = nh;
 
 		scale = ortho / winData.renderResolution;
 
 	}
-	bool RenderWindow::initOpenGL()
-	{
+
+	/*
+	=====================
+	RenderWindow::InitOpenGL
+	=====================
+	*/
+	bool RenderWindow::InitOpenGL() {
 		glEnable(GL_TEXTURE_2D);
 		glShadeModel(GL_SMOOTH);
 		glClearColor(0.f, 0.f, 0.f, 0.f);
@@ -259,21 +277,23 @@ namespace Pim
 
 		return true;
 	}
-	void RenderWindow::killWindow()
-	{
-		if (hRC)
-		{
+
+	/*
+	=====================
+	RenderWindow::KillWindow
+	=====================
+	*/
+	void RenderWindow::KillWindow() {
+		if (hRC) {
 			wglMakeCurrent(NULL,NULL);
 			wglDeleteContext(hRC);
 			hRC = NULL;
 		}
-		if (hDC)
-		{
+		if (hDC) {
 			ReleaseDC(hWnd,hDC);
 			hDC = NULL;
 		}
-		if (hWnd)
-		{
+		if (hWnd) {
 			DestroyWindow(hWnd);
 			hWnd = NULL;
 		}
@@ -282,26 +302,33 @@ namespace Pim
 		hInstance = NULL;
 	}
 
-	void RenderWindow::setCreationData(WinStyle::CreationData &data)
-	{
-		if (data.winStyle != winData.winStyle)
-		{
+	/*
+	=====================
+	RenderWindow::SetCreationData
+	=====================
+	*/
+	void RenderWindow::SetCreationData(WinStyle::CreationData &data) {
+		if (data.winStyle != winData.winStyle) {
 			winData = data;
-			setWindowStyle(data.winStyle);
+			SetWindowStyle(data.winStyle);
 		}
 
 		if (data.forcedAspectRatio != winData.forcedAspectRatio ||
-			data.aspectRatio != winData.aspectRatio ||
-			data.renderResolution != winData.renderResolution)
-		{
-			resizeWindow((int)data.resolution.x, (int)data.resolution.y);
+				data.aspectRatio != winData.aspectRatio ||
+				data.renderResolution != winData.renderResolution) {
+			ResizeWindow((int)data.resolution.x, (int)data.resolution.y);
 			winData = data;
 		}
 
 		//winData = data;
 	}
-	void RenderWindow::setWindowStyle(WinStyle::WinStyle style)
-	{
+
+	/*
+	=====================
+	RenderWindow::SetWindowStyle
+	=====================
+	*/
+	void RenderWindow::SetWindowStyle(WinStyle::WinStyle style) {
 		DWORD dwExStyle;
 		DWORD dwStyle;
 		RECT winRect;
@@ -309,8 +336,7 @@ namespace Pim
 		LONG scrnw = GetSystemMetrics(SM_CXSCREEN);
 		LONG scrnh = GetSystemMetrics(SM_CYSCREEN);
 
-		if (style == WinStyle::BORDERLESS_WINDOWED)
-		{
+		if (style == WinStyle::BORDERLESS_WINDOWED) {
 			winRect.right	= scrnw;
 			winRect.bottom	= scrnh;
 			winRect.left	= 0;
@@ -327,12 +353,10 @@ namespace Pim
 
 			SetWindowLongPtr(hWnd, GWL_EXSTYLE,	dwExStyle);
 			SetWindowLongPtr(hWnd, GWL_STYLE,	dwStyle);
-			SetWindowPos(hWnd, HWND_TOP, winRect.left, winRect.top, 
-										 winRect.right, winRect.bottom, 
-								SWP_NOMOVE | SWP_FRAMECHANGED | SWP_SHOWWINDOW);
-		}
-		else if (style == WinStyle::WINDOWED)
-		{
+			SetWindowPos(hWnd, HWND_TOP, winRect.left, winRect.top,
+						 winRect.right, winRect.bottom,
+						 SWP_NOMOVE | SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+		} else if (style == WinStyle::WINDOWED) {
 			dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
 			dwStyle	  = WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
 
@@ -345,9 +369,9 @@ namespace Pim
 
 			SetWindowLongPtr(hWnd, GWL_EXSTYLE,	dwExStyle);
 			SetWindowLongPtr(hWnd, GWL_STYLE,	dwStyle);
-			SetWindowPos(hWnd, HWND_TOP, winRect.left, winRect.top, 
-										 winRect.right, winRect.bottom, 
-								SWP_NOMOVE | SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+			SetWindowPos(hWnd, HWND_TOP, winRect.left, winRect.top,
+						 winRect.right, winRect.bottom,
+						 SWP_NOMOVE | SWP_FRAMECHANGED | SWP_SHOWWINDOW);
 			MoveWindow(hWnd, winRect.left, winRect.top, 0, 0, FALSE);
 
 			// Adjust the size to the edges of the window
@@ -357,8 +381,8 @@ namespace Pim
 			GetWindowRect(hWnd, &rcWind);
 			ptDiff.x = (rcWind.right - rcWind.left) - rcClient.right;
 			ptDiff.y = (rcWind.bottom - rcWind.top) - rcClient.bottom;
-			MoveWindow(hWnd,rcWind.left, rcWind.top, 
-				winRect.right + ptDiff.x, winRect.bottom + ptDiff.y, TRUE);
+			MoveWindow(hWnd,rcWind.left, rcWind.top,
+					   winRect.right + ptDiff.x, winRect.bottom + ptDiff.y, TRUE);
 		}
 
 		// Just in case, set focus and enable the window
@@ -366,13 +390,18 @@ namespace Pim
 		EnableWindow(hWnd, true);
 	}
 
-	void RenderWindow::renderFrame()
-	{
-#ifdef _DEBUG
-		printOpenGLErrors("PRERENDER FRAME (something has gone quite wrong)");
-#endif
+	/*
+	=====================
+	RenderWindow::RenderFrame
+	=====================
+	*/
+	void RenderWindow::RenderFrame() {
+		#ifdef _DEBUG
+		PrintOpenGLErrors("PRERENDER FRAME (something has gone quite wrong)");
+		#endif /* _DEBUG */
+
 		// Clear screen with the top layer's color
-		Scene *s = GameControl::getScene();
+		Scene *s = GameControl::GetScene();
 
 		glClearColor(s->color.r,s->color.g,s->color.b,s->color.a);
 		glClear(GL_COLOR_BUFFER_BIT);		// Clear the screen
@@ -382,20 +411,20 @@ namespace Pim
 
 		glLoadIdentity();					// Reset The Current view Matrix
 
-		s->drawScene();						// Render the scene
+		s->DrawScene();						// Render the scene
 
-		if (bpos == VER)
-		{
+		if (bpos == VER) {
 			glColor4ub(0,0,0,255);
-			int ww = GameControl::getSingleton()->actualWinWidth;
-			int wh = GameControl::getSingleton()->actualWinHeight;
+			int ww = GameControl::GetSingleton()->actualWinWidth;
+			int wh = GameControl::GetSingleton()->actualWinHeight;
 
 			glDisable(GL_TEXTURE_2D);
 			glBegin(GL_QUADS);
+
 				// Left
-				glVertex2i(-bdim-5, 0);
+				glVertex2i(-bdim-5, 0);		
 				glVertex2i(0, 0);
-				glVertex2i(0, wh);
+				glVertex2i(0, wh);			
 				glVertex2i(-bdim-5, wh);
 
 				// Right
@@ -403,17 +432,17 @@ namespace Pim
 				glVertex2i(ww-bdim-bdim, 0);
 				glVertex2i(ww-bdim-bdim, wh);
 				glVertex2i(ww-bdim+5, wh);
+
 			glEnd();
 			glEnable(GL_TEXTURE_2D);
-		}
-		else if (bpos == HOR)
-		{
+		} else if (bpos == HOR) {
 			glColor4ub(0,0,0,255);
-			int ww = GameControl::getSingleton()->actualWinWidth;
-			int wh = GameControl::getSingleton()->actualWinHeight;
+			int ww = GameControl::GetSingleton()->actualWinWidth;
+			int wh = GameControl::GetSingleton()->actualWinHeight;
 
 			glDisable(GL_TEXTURE_2D);
 			glBegin(GL_QUADS);
+
 				// Top
 				glVertex2i(0,wh-bdim+5);
 				glVertex2i(ww,wh-bdim+5);
@@ -425,50 +454,52 @@ namespace Pim
 				glVertex2i(ww,-bdim-5);
 				glVertex2i(ww,0);
 				glVertex2i(0,0);
+
 			glEnd();
 			glEnable(GL_TEXTURE_2D);
 		}
 
 		SwapBuffers(hDC);				// Swap the buffers to draw to screen
 
-#ifdef _DEBUG
-		printOpenGLErrors("POSTRENDER FRAME");
-#endif
+		#ifdef _DEBUG
+		PrintOpenGLErrors("POSTRENDER FRAME");
+		#endif /* _DEBUG */
 	}
 
-	void RenderWindow::printOpenGLErrors(std::string identifier)
-	{
+	/*
+	=====================
+	RenderWindow::PrintOpenGLErrors
+	=====================
+	*/
+	void RenderWindow::PrintOpenGLErrors(string identifier) {
 		GLenum en = glGetError();
-		if (en != GL_NO_ERROR)
-		{
-			std::cout<<"OpenGL error (" <<identifier <<"): ";
+		if (en != GL_NO_ERROR) {
+			cout<<"OpenGL error (" <<identifier <<"): ";
 
-			switch (en)
-			{
-				case GL_INVALID_ENUM:
-					std::cout<<"GL_INVALID_ENUM";
-					break;
-				case GL_INVALID_VALUE:
-					std::cout<<"GL_INVALID_VALUE";
-					break;
-				case GL_INVALID_OPERATION:
-					std::cout<<"GL_INVALID_OPERATION";
-					break;
-				case GL_OUT_OF_MEMORY:
-					std::cout<<"GL_OUT_OF_MEMORY";
-					break;
-				case GL_STACK_UNDERFLOW:
-					std::cout<<"GL_STACK_UNDERFLOW";
-					break;
-				case GL_STACK_OVERFLOW:
-					std::cout<<"GL_STACK_OVERFLOW";
-					break;
-				default:
-					std::cout<<"UNDEFINED GL ERROR";
+			switch (en) {
+			case GL_INVALID_ENUM:
+				cout<<"GL_INVALID_ENUM";
+				break;
+			case GL_INVALID_VALUE:
+				cout<<"GL_INVALID_VALUE";
+				break;
+			case GL_INVALID_OPERATION:
+				cout<<"GL_INVALID_OPERATION";
+				break;
+			case GL_OUT_OF_MEMORY:
+				cout<<"GL_OUT_OF_MEMORY";
+				break;
+			case GL_STACK_UNDERFLOW:
+				cout<<"GL_STACK_UNDERFLOW";
+				break;
+			case GL_STACK_OVERFLOW:
+				cout<<"GL_STACK_OVERFLOW";
+				break;
+			default:
+				cout<<"UNDEFINED GL ERROR";
 			}
 
-			std::cout<<"\n";
+			cout<<"\n";
 		}
 	}
-
 }

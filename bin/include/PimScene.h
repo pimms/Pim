@@ -8,44 +8,32 @@
 	limited to the handling of layers.
 */
 
-namespace Pim
-{
-	// Forward declarations
+namespace Pim {
 	class RenderWindow;
 	class GameControl;
 	class Layer;
 
-	class Scene
-	{
-	public:
-		Scene();
-		virtual ~Scene();
-
-		void addLayer(Layer *layer);
-		void removeLayer(Layer *layer);
-
-		// The update calls are made automatically on the currently active
-		// scene object. 
-		virtual void update(float dt) {}
-
-		virtual void loadResources() {}
-
-		// Called from the GameController when GameControl::pause() is called. If this
-		// method returns NULL, the game is not paused.
-		virtual Layer* pauseLayer();
-
-		bool	dirtyZOrder;
-
-		Color	color;
-
+	class Scene {
 	protected:
 		friend class GameControl;
 		friend class RenderWindow;
 
-		void drawScene();		// Called from RenderWindow's renderFrame().
+	public:
+		bool					dirtyZOrder;
+		Color					color;
 
-		void orderLayers();		// Duplicate of GameNode::orderChildren.
+								Scene();
+		virtual					~Scene();
+		virtual void			Update(float dt){}	
+		virtual void			LoadResources() {}	// Load your layers here
+		virtual Layer*			PauseLayer();		// Return your pause layer here
+		void					AddLayer(Layer *layer);
+		void					RemoveLayer(Layer *layer);
 
-		std::vector<Layer*>		layers;
+	protected:
+		vector<Layer*>			layers;
+
+		void					DrawScene();
+		void					OrderLayers();
 	};
 }

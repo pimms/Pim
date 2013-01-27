@@ -1,154 +1,300 @@
 #include "PimInternal.h"
 #include "PimVec2.h"
 
-namespace Pim
-{
-	////		RECT			////
-	bool Rect::contains(Pim::Vec2 &vec)
-	{
-		return (vec.x >= x && vec.x <= x+width &&
-				vec.y >= y && vec.y <= y+height);
+namespace Pim {
+
+	/*
+	=====================
+	Color::Color
+	=====================
+	*/
+	Color::Color(const float rr, const float gg, const float bb, const float aa) {
+		r	= rr;
+		g	= gg;
+		b	= bb;
+		a	= aa;
+	}
+	
+	/*
+	=====================
+	Color::Color
+	=====================
+	*/
+	Color::Color() {
+		r	= 0.f;
+		g	= 0.f;
+		b	= 0.f;
+		a	= 0.f;
 	}
 
 
-	////		VEC2			////
-	Vec2::Vec2(float px, float py)
-	{
-		x=px; y=py;
-	}
-	Vec2::Vec2(void)
-	{
-		x=0; y=0;
+
+
+
+
+
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	Vec2::Vec2(const float px, const float py) {
+		x	= px;
+		y	= py;
 	}
 
-	Vec2 Vec2::unitD(float a)
-	{
-		return unitR(a * (M_PI/180.f));
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	Vec2::Vec2(void) {
+		x	= 0.f;
+		y	= 0.f;
 	}
-	Vec2 Vec2::unitR(float a)
-	{
+
+	/*
+	=====================
+	STATIC Vec2::UnitDegree
+	=====================
+	*/
+	Vec2 Vec2::UnitDegree(const float a) {
+		return UnitRadian(a * (float(M_PI)/180.f));
+	}
+
+	/*
+	=====================
+	STATIC Vec2::UnitRadian
+	=====================
+	*/
+	Vec2 Vec2::UnitRadian(const float a) {
 		return Vec2(cosf(a), sinf(a));
 	}
 
-	Vec2 Vec2::rotateAroundPoint(Vec2 &pt, float a)
-	{
-		return rotateDegrees(a) + pt;
-	}
-	Vec2 Vec2::rotateDegrees(float a)
-	{
-		float r = a * (M_PI / 180.f);
-		return Vec2( x*cosf(r) - y*sinf(r),
-					 y*cosf(r) + x*sinf(r)
-					 );
+	/*
+	=====================
+	Vec2::RotateAroundPoint
+	=====================
+	*/
+	Vec2 Vec2::RotateAroundPoint(const Vec2 &pt, const float a) const {
+		return RotateDegrees(a) + pt;
 	}
 
-	float Vec2::angleBetween360(const Vec2 &other)
-	{
-		float a = (atan2f(other.y, other.x) - atan2f(y, x)) * (180.f / (float)M_PI);
-		if (a < 0.f)
+	/*
+	=====================
+	Vec2::RotateDegrees
+	=====================
+	*/
+	Vec2 Vec2::RotateDegrees(const float a) const {
+		float r = a * (float(M_PI) / 180.f);
+		return Vec2( x*cosf(r) - y*sinf(r),
+					 y*cosf(r) + x*sinf(r)
+				   );
+	}
+
+	/*
+	=====================
+	Vec2::AngleBetween360
+	=====================
+	*/
+	float Vec2::AngleBetween360(const Vec2 &other) const {
+		float a = (atan2f(other.y, other.x) - atan2f(y, x)) * (180.f / M_PI);
+
+		if (a < 0.f) {
 			a += 360.f;
+		}
 
 		return a;
 	}
-	float Vec2::angleBetween(Vec2 &other)
-	{
-		float dot = normalize().dot(other.normalize());
+
+	/*
+	=====================
+	Vec2::AngleBetween
+	=====================
+	*/
+	float Vec2::AngleBetween(const Vec2 &other) const {
+		float dot = Normalize().Dot(other.Normalize());
 		float angle = acosf(dot) * (180.f / M_PI);
 
 		Vec2 diff = Vec2(x,y) - other;
-		if (diff.dot(Vec2(0.f,1.f)) < 0.f)
+		if (diff.Dot(Vec2(0.f,1.f)) < 0.f) {
 			angle = -angle;
+		}
 
 		return angle;
 	}
 
-	float Vec2::dot(const Vec2 &other)
-	{
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	float Vec2::Dot(const Vec2 &other) const {
 		return x * other.x + y * other.y;
 	}
-	float Vec2::cross(const Vec2 &other)
-	{
+
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	float Vec2::Cross(const Vec2 &other) const {
 		return x*other.y - y*other.x;
 	}
 
-	Vec2 Vec2::normalize()
-	{
-		return Vec2(x,y) / length();
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	Vec2 Vec2::Normalize() const {
+		return Vec2(x,y) / Length();
 	}
 
-	float Vec2::length()
-	{
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	float Vec2::Length() const {
 		return sqrt(x*x + y*y);
 	}
 
-	// Operator overloading
-	bool Vec2::operator==(const Vec2 &other)
-	{
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	bool Vec2::operator==(const Vec2 &other) const  {
 		return x == other.x && y == other.y;
 	}
-	bool Vec2::operator!=(const Vec2 &other)
-	{
+
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	bool Vec2::operator!=(const Vec2 &other) const  {
 		return x != other.x || y != other.y;
 	}
 
-	Vec2 Vec2::operator+(const Vec2 &other)
-	{
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	Vec2 Vec2::operator+(const Vec2 &other) const  {
 		return Vec2(x+other.x, y+other.y);
 	}
-	Vec2 Vec2::operator-(const Vec2 &other)
-	{
+
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	Vec2 Vec2::operator-(const Vec2 &other) const  {
 		return Vec2(x-other.x, y-other.y);
 	}
-	Vec2 Vec2::operator*(const Vec2 &other)
-	{
+
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	Vec2 Vec2::operator*(const Vec2 &other) const {
 		return Vec2(x*other.x, y*other.y);
 	}
-	Vec2 Vec2::operator/(const Vec2 &other)
-	{
-		return Vec2(x/(other.x==0.f?0.000001f:other.x), 
-					 y/(other.y==0.f?0.000001f:other.y));
+
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	Vec2 Vec2::operator/(const Vec2 &other) const {
+		return Vec2(x/(other.x==0.f?0.000001f:other.x),
+					y/(other.y==0.f?0.000001f:other.y));
 	}
 
-	void Vec2::operator+=(const Vec2 &other)
-	{
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	void Vec2::operator+=(const Vec2 &other) {
 		x += other.x;
 		y += other.y;
 	}
-	void Vec2::operator-=(const Vec2 &other)
-	{
+
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	void Vec2::operator-=(const Vec2 &other) {
 		x -= other.x;
 		y -= other.y;
 	}
-	void Vec2::operator*=(const Vec2 &other)
-	{
+
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	void Vec2::operator*=(const Vec2 &other) {
 		x *= other.x;
 		y *= other.y;
 	}
-	void Vec2::operator/=(const Vec2 &other)
-	{
+
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	void Vec2::operator/=(const Vec2 &other) {
 		x /= other.x==0.f?0.000001f:other.x;
 		y /= other.y==0.f?0.000001f:other.y;
 	}
 
-	Vec2 Vec2::operator*(const float &fac)
-	{
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	Vec2 Vec2::operator*(const float &fac) const {
 		return Vec2(x*fac, y*fac);
 	}
-	Vec2 Vec2::operator/(float den)
-	{
-		if (den == 0.f) den = 0.000001f;
+
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	Vec2 Vec2::operator/(float den) const {
+		if (den == 0.f) {
+			den = 0.000001f;
+		}
+
 		return Vec2(x/den, y/den);
 	}
-	void Vec2::operator*=(const float &fac)
-	{
+
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	void Vec2::operator*=(const float &fac) {
 		x *= fac;
 		y *= fac;
 	}
-	void Vec2::operator/=(float den)
-	{
+
+	/*
+	=====================
+	Vec2::Vec2
+	=====================
+	*/
+	void Vec2::operator/=(float den) {
 		if (den == 0.f) den = 0.000001f;
 		x /= den;
 		y /= den;
 	}
-
 }

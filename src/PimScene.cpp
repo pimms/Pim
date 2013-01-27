@@ -3,67 +3,93 @@
 #include "PimGameControl.h"
 #include "PimRenderWindow.h"
 
-namespace Pim
-{
-	Scene::Scene()
-	{
+namespace Pim {
+	/*
+	=====================
+	Scene::Scene
+	=====================
+	*/
+	Scene::Scene() {
 		dirtyZOrder = true;
 	}
-	Scene::~Scene()
-	{
-		for each (Layer *layer in layers)
-		{
-			GameControl::getSingleton()->addNodeToDelete(layer);
+
+	/*
+	=====================
+	Scene::~Scene
+	=====================
+	*/
+	Scene::~Scene() {
+		for each (Layer *layer in layers) {
+			GameControl::GetSingleton()->AddNodeToDelete(layer);
 		}
 	}
 
-	void Scene::addLayer(Layer *l)
-	{
+	/*
+	=====================
+	Scene::AddLayer
+	=====================
+	*/
+	void Scene::AddLayer(Layer *l) {
 		layers.push_back(l);
 		l->parentScene = this;
-		l->loadResources();
+		l->LoadResources();
 
 		dirtyZOrder = true;
 	}
-	void Scene::removeLayer(Layer *l)
-	{
-		for (unsigned int i=0; i<layers.size(); i++)
-		{
-			if (layers[i] == l)
-			{
+
+	/*
+	=====================
+	Scene::RemoveLayer
+	=====================
+	*/
+	void Scene::RemoveLayer(Layer *l) {
+		for (unsigned int i=0; i<layers.size(); i++) {
+			if (layers[i] == l) {
 				layers.erase(layers.begin() + i);
 				delete l;
 			}
 		}
 	}
 
-	Layer* Scene::pauseLayer()
-	{
+	/*
+	=====================
+	Scene::PauseLayer
+	=====================
+	*/
+	Layer* Scene::PauseLayer() {
 		// Return NULL by default. This will not pause the game.
 		return NULL;
 	}
 
-	void Scene::drawScene()
-	{
-		orderLayers();
+	/*
+	=====================
+	Scene::DrawScene
+	=====================
+	*/
+	void Scene::DrawScene() {
+		OrderLayers();
 
-		for (unsigned int i=0; i<layers.size(); i++)
-			layers[i]->draw();
+		for (unsigned int i=0; i<layers.size(); i++) {
+			layers[i]->Draw();
+		}
 	}
 
-	void Scene::orderLayers()
-	{
-		if (!dirtyZOrder)
+	/*
+	=====================
+	Scene::OrderLayers
+	=====================
+	*/
+	void Scene::OrderLayers() {
+		if (!dirtyZOrder) {
 			return;
+		}
 
 		// Insertion sorting - the layers should be somewhat sorted already.
-		for (unsigned int j=1; j<layers.size(); j++)
-		{
+		for (unsigned int j=1; j<layers.size(); j++) {
 			Layer *key = layers[j];
 			int i = j - 1;
 
-			while (i >= 0 && layers[i]->zOrder > key->zOrder)
-			{
+			while (i >= 0 && layers[i]->zOrder < key->zOrder) {
 				layers[i+1] = layers[i];
 				i--;
 			}
@@ -72,4 +98,4 @@ namespace Pim
 
 		dirtyZOrder = false;
 	}
-} 
+}

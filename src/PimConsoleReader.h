@@ -9,11 +9,11 @@
 	Any arguments following "player" in the command line will be issued to
 	the listeners, which must handle these messages individually.
 
-	All ConsoleListener subclasses may listen for commands. GameNode (and all 
+	All ConsoleListener subclasses may listen for commands. GameNode (and all
 	it's subclasses) already inherit this class.
 
 	Example of listening:
-	
+
 	Listen for "player" commands:
 		player->listenCommand("player");
 
@@ -22,86 +22,51 @@
 	listened keyword.
 */
 
-namespace Pim
-{
-	// Forward declarations
-	class GameControl;
+namespace Pim {
 	class ConsoleListener;
+	class GameControl;
 
-	typedef std::vector<std::string>& ConsoleCommand;
-	
-	// The ConsoleReader class
-	class ConsoleReader
-	{
-	public:
-		// Called from the gameloop
-		static void dispatch();
+	typedef vector<string>& ConsoleCommand;
 
-		static ConsoleReader* getSingleton() { return singleton; }
-		static void addListener(ConsoleListener*, const char *cmd);
-		static void removeListener(ConsoleListener*);
-
+	class ConsoleReader {
 	private:
 		friend class GameControl;
 
-		ConsoleReader();
-		~ConsoleReader();
+	public:
+		static void								Dispatch();
+		static ConsoleReader*					GetSingleton() { return singleton; }
+		static void								AddListener(ConsoleListener*, 
+															const char *cmd);
+		static void								RemoveListener(ConsoleListener*);
 
-		// In order to multithread in an object, it must be called from a static method.
-		static void beginLoop(void*);
+	private:
+		HANDLE									thread;
+		HANDLE									mutex;
+		bool									quit;
+		map<string, vector<ConsoleListener*>>	listeners;
+		vector<string>							command;
+		static ConsoleReader					*singleton;
 
-		// The main loop our console thread will work in.
-		void consoleLoop();
-
-		// When a command has been read, it must be prepared for dispatchment
-		void prepareCommand(const char *cmd);
-
-		void dispatchCommand();
-
-		// Begin instantiates the singleton, and starts the loop in a new thread.
-		static void begin();
-
-		// Shutdown tells the thread to quit, and waits for it to die.
-		static void shutDown();
-		
-		// Our thread handle
-		HANDLE					thread;
-
-		// Our mutex handle
-		HANDLE					mutex;
-
-		// Flagged to true when "shutDown()" is called
-		bool					quit;
-
-		// The listener objects, ordered by the commands to which they listen.
-		std::map<std::string, std::vector<ConsoleListener*>> listeners;
-
-		// Once a command has been prepared, the main thread needs to 
-		// dispatch it in order to prevent funky behaviour.
-		std::vector<std::string>	command;
-
-		// The singleton object.
-		static ConsoleReader	*singleton;
+												ConsoleReader();
+												~ConsoleReader();
+		static void								BeginLoop(void*);
+		void									ConsoleLoop();
+		void									PrepareCommand(const char *cmd);
+		void									DispatchCommand();
+		static void								Begin();
+		static void								ShutDown();
 	};
 
-
-	// The ConsoleListener class
-	class ConsoleListener
-	{
-	public: 
-		virtual ~ConsoleListener()	
-		{
-			ConsoleReader::removeListener(this);
+	class ConsoleListener {
+	public:
+		virtual ~ConsoleListener() {
+			ConsoleReader::RemoveListener(this);
 		}
-
-		virtual void handleCommand(ConsoleCommand cmd)	
-		{
+		virtual void HandleCommand(ConsoleCommand cmd) {
 			// ...
 		}
-
-		void listenCommand(const char *cmd)
-		{
-			ConsoleReader::addListener(this, cmd);
+		void ListenCommand(const char *cmd) {
+			ConsoleReader::AddListener(this, cmd);
 		}
 	};
 }

@@ -5,21 +5,22 @@
 #include "PimRenderWindow.h"
 #include "PimLayer.h"
 
-// Macro used to check whether one or both of the keys are down.
-// It multiplies the boolean value of the available buttons with 
-// the return value of whether the buttons are pressed or not.
 #define MOUSE_DOWN	\
-	(	(evt.isKeyDown(MouseEvent::MBTN_LEFT) && allowLeftClick)	||	\
-		(evt.isKeyDown(MouseEvent::MBTN_RIGHT) && allowRightClick)		)
+	(	(evt.IsKeyDown(MouseEvent::MBTN_LEFT) && allowLeftClick)	||	\
+		(evt.IsKeyDown(MouseEvent::MBTN_RIGHT) && allowRightClick)		)
 #define MOUSE_FRESH \
-	(	(evt.isKeyFresh(MouseEvent::MBTN_LEFT) && allowLeftClick)	||	\
-		(evt.isKeyFresh(MouseEvent::MBTN_RIGHT) && allowRightClick)		)
+	(	(evt.IsKeyFresh(MouseEvent::MBTN_LEFT) && allowLeftClick)	||	\
+		(evt.IsKeyFresh(MouseEvent::MBTN_RIGHT) && allowRightClick)		)
 
-namespace Pim
-{
-	Button::Button(Sprite* normal, Sprite* hovered, Sprite* pressed, Sprite* deactivated)
-	{
-		listenMouse();
+namespace Pim {
+
+	/*
+	=====================
+	Button::Button
+	=====================
+	*/
+	Button::Button(Sprite* normal, Sprite* hovered, Sprite* pressed, Sprite* deactivated) {
+		ListenMouse();
 
 		activated			= true;
 		allowLeftClick		= true;
@@ -33,185 +34,222 @@ namespace Pim
 
 		current = normal;
 		sprites[NORMAL] = normal;
-		addChild(sprites[NORMAL]);
+		AddChild(sprites[NORMAL]);
 
-		if (hovered)
-		{
+		if (hovered) {
 			sprites[HOVERED] = hovered;
 			sprites[HOVERED]->hidden = true;
-			addChild(sprites[HOVERED]);
+			AddChild(sprites[HOVERED]);
 		}
 
-		if (pressed)
-		{
+		if (pressed) {
 			sprites[PRESSED] = pressed;
 			sprites[PRESSED]->hidden = true;
-			addChild(sprites[PRESSED]);
+			AddChild(sprites[PRESSED]);
 		}
 
-		if (deactivated)
-		{
+		if (deactivated) {
 			sprites[DEACTIVATED] = deactivated;
 			sprites[DEACTIVATED]->hidden = true;
-			addChild(sprites[DEACTIVATED]);
+			AddChild(sprites[DEACTIVATED]);
 		}
 	}
 
-	void Button::mouseEvent(MouseEvent &evt)
-	{
-		if (activated) 
-		{
-			if (isHovered(evt.getPosition()))
-			{
-				if (!mouseHoverLastFrame)
-				{
+	/*
+	=====================
+	Button::MouseEvent
+	=====================
+	*/
+	void Button::OnMouseEvent(MouseEvent &evt) {
+		if (activated) {
+			if (IsHovered(evt.GetPosition())) {
+				if (!mouseHoverLastFrame) {
 					// The mouse was hovered over
-					if (mouseDownLastFrame)
+					if (mouseDownLastFrame) {
 						mouseDownLastFrame = MOUSE_DOWN;
-					if (!mouseDownLastFrame)
+					} else {
 						mouseFreshWhileHover = false;
+					}
 
-					makeHoveredCurrent();
+					MakeHoveredCurrent();
 					if (callback)
-						callback->buttonHoverBegin(this); 
+						callback->ButtonHoverBegin(this);
 				}
 
-				if (mouseFreshWhileHover && mouseDownLastFrame && !MOUSE_DOWN)
-				{
+				if (mouseFreshWhileHover && mouseDownLastFrame && !MOUSE_DOWN) {
 					mouseDownLastFrame = false;
 					mouseFreshWhileHover = false;
 
 					// The mouse was released over the button
-					makeHoveredCurrent();
+					MakeHoveredCurrent();
 
-					if (callback)
-						callback->buttonReleased(this);
+					if (callback) {
+						callback->ButtonReleased(this);
+					}
 				}
-				
-				if (MOUSE_FRESH || (mouseFreshWhileHover && !mouseHoverLastFrame))
-				{
+
+				if (MOUSE_FRESH || (mouseFreshWhileHover && !mouseHoverLastFrame)) {
 					// The mouse was pressed over the button
 					mouseDownLastFrame = true;
 					mouseFreshWhileHover = true;
-					makePressedCurrent();
+					MakePressedCurrent();
 					if (callback)
-						callback->buttonPressed(this);
+						callback->ButtonPressed(this);
 				}
 
 				mouseHoverLastFrame = true;
-			}
-			else if (mouseHoverLastFrame)
-			{
+			} else if (mouseHoverLastFrame) {
 				// The button is no longer hovered
-				if (mouseDownLastFrame)
+				if (mouseDownLastFrame) {
 					mouseDownLastFrame = MOUSE_DOWN;
-				if (!mouseDownLastFrame)
+				} else {
 					mouseFreshWhileHover = false;
+				}
 
 				mouseHoverLastFrame = false;
 
-				makeNormalCurrent();
-				if (callback)
-					callback->buttonHoverEnd(this);
-			}
-			else
-			{
-				if (mouseDownLastFrame)
+				MakeNormalCurrent();
+				if (callback) {
+					callback->ButtonHoverEnd(this);
+				}
+			} else {
+				if (mouseDownLastFrame) {
 					mouseDownLastFrame = MOUSE_DOWN;
-				if (!mouseDownLastFrame)
+				} else {
 					mouseFreshWhileHover = false;
+				}
 
-				if (current != sprites[NORMAL])
-					makeNormalCurrent();
+				if (current != sprites[NORMAL]) {
+					MakeNormalCurrent();
+				}
 			}
 		}
 	}
 
-	bool Button::isHovered(Pim::Vec2 mousePos)
-	{
-		Vec2 cFac = GameControl::getSingleton()->coordinateFactor();
-		Vec2 wFac = GameControl::getSingleton()->windowScale();
+	/*
+	=====================
+	Button::ReplaceSprite
+	=====================
+	*/
+	void Button::ReplaceSprite(ButtonState state, Sprite *spr) {
+		if (sprites[state]) {
+			RemoveChild(sprites[state], true);
+		}
+
+		sprites[state] = spr;
+		sprites[state]->hidden = true;
+		AddChild(sprites[state]);
+	}
+
+	/*
+	=====================
+	Button::SetActiveState
+	=====================
+	*/
+	void Button::SetActiveState(ButtonState state) {
+		if (state == NORMAL) {
+			MakeNormalCurrent();
+		} else if (state == HOVERED) {
+			MakeHoveredCurrent();
+		} else if (state == PRESSED) {
+			MakePressedCurrent();
+		} else {
+			MakeDeactivatedCurrent();
+		}
+	}
+
+	/*
+	=====================
+	Button::SetActive
+	=====================
+	*/
+	void Button::SetActive(bool flag) {
+		activated = flag;
+
+		if (!activated) {
+			MakeDeactivatedCurrent();
+		} else {
+			MakeNormalCurrent();
+		}
+	}
+
+	/*
+	=====================
+	Button::SetCallback
+	=====================
+	*/
+	void Button::SetCallback(ButtonCallback *cb) {
+		callback = cb;
+	}
+
+	/*
+	=====================
+	Button::IsHovered
+	=====================
+	*/
+	bool Button::IsHovered(const Pim::Vec2 mousePos) const {
+		Vec2 cFac = GameControl::GetSingleton()->GetCoordinateFactor();
+		Vec2 wFac = GameControl::GetSingleton()->GetWindowScale();
 
 		Rect temp = current->rect;
 		temp.width *= cFac.x * wFac.x * abs(current->scale.x);
 		temp.height *= cFac.y * wFac.y * abs(current->scale.y);
-		
-		Vec2 p = current->getLayerPosition();
+
+		Vec2 p = current->GetLayerPosition();
 		temp.x = p.x - (temp.width * current->anchor.x);
 		temp.y = p.y - (temp.height * current->anchor.y);
 
-		return temp.contains(mousePos - current->getParentLayer()->position);
+		return temp.Contains(mousePos - current->GetParentLayer()->position);
 	}
 
-	void Button::setActive(bool flag)
-	{
-		activated = flag;
-
-		if (!activated)
-			makeDeactivatedCurrent();
-		else
-			makeNormalCurrent();
-	}
-
-	void Button::setCallback(ButtonCallback *cb)
-	{
-		callback = cb;
-	}
-
-	void Button::replaceSprite(ButtonState state, Sprite *spr)
-	{
-		if (sprites[state])
-			removeChild(sprites[state], true);
-
-		sprites[state] = spr;
-		sprites[state]->hidden = true;
-		addChild(sprites[state]);
-	}
-
-	void Button::setActiveState(ButtonState state)
-	{
-		if (state == NORMAL) 
-			makeNormalCurrent();
-		else if (state == HOVERED)
-			makeHoveredCurrent();
-		else if (state == PRESSED)
-			makePressedCurrent();
-		else 
-			makeDeactivatedCurrent();
-	}
-	void Button::makeNormalCurrent()
-	{
-		if (sprites[NORMAL])
-		{
+	/*
+	=====================
+	Button::MakeNormalCurrent
+	=====================
+	*/
+	void Button::MakeNormalCurrent() {
+		if (sprites[NORMAL]) {
 			current->hidden = true;
 			current = sprites[NORMAL];
 			current->hidden = false;
 		}
 	}
-	void Button::makeHoveredCurrent()
-	{
-		if (sprites[HOVERED])
-		{
+
+	/*
+	=====================
+	Button::MakeHoveredCurrent
+	=====================
+	*/
+	void Button::MakeHoveredCurrent() {
+		if (sprites[HOVERED]) {
 			current->hidden = true;
 			current = sprites[HOVERED];
 			current->hidden = false;
+		} else {
+			MakeNormalCurrent();
 		}
-		else
-			makeNormalCurrent();
 	}
-	void Button::makePressedCurrent()
-	{
-		if (sprites[PRESSED])
-		{
+
+	/*
+	=====================
+	Button::MakePressedCurrent
+	=====================
+	*/
+	void Button::MakePressedCurrent() {
+		if (sprites[PRESSED]) {
 			current->hidden = true;
 			current = sprites[PRESSED];
 			current->hidden = false;
 		}
 	}
-	void Button::makeDeactivatedCurrent()
-	{
-		if (sprites[DEACTIVATED])
-		{
+
+	/*
+	=====================
+	Button::MakeDeactivatedCurrent
+	=====================
+	*/
+	void Button::MakeDeactivatedCurrent() {
+		if (sprites[DEACTIVATED]) {
 			current->hidden = true;
 			current = sprites[DEACTIVATED];
 			current->hidden = false;

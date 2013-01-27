@@ -7,112 +7,119 @@
 #include "PimGameControl.h"
 #include "PimLayer.h"
 #include "PimPolygonShape.h"
-#include "PimCollisionManager.h"
 #include "PimScene.h"
 #include "PimLightingSystem.h"
 #include "PimAction.h"
 
 #include <iostream>
 
-namespace Pim
-{
-
-	GameNode::GameNode()
-	{
+namespace Pim {
+	/*
+	=====================
+	GameNode::GameNode
+	=====================
+	*/
+	GameNode::GameNode() {
 		parent					= NULL;
 		rotation				= 0.f;
-		allowMidPixelPosition	= true;
 		zOrder					= 0;
 		dirtyZOrder				= false;
 		willDelete				= false;
-
-		shadowShape		= NULL;
-		dbgShadowShape	= false;
-
-		//colShape				= NULL;
-		//dbgColShape				= false;
-
-		//colGroup				= 1|2|4|8;
-		//colFilter				= 1|2|4|8;
-
+		shadowShape				= NULL;
+		dbgShadowShape			= false;
 		userData				= NULL;
 	}
-	GameNode::~GameNode()
-	{
-		if (!willDelete)
-		{
-			prepareDeletion();
+
+	/*
+	=====================
+	GameNode::~GameNode
+	=====================
+	*/
+	GameNode::~GameNode() {
+		if (!willDelete) {
+			PrepareDeletion();
 		}
 
-		removeAllChildren();
+		RemoveAllChildren();
 
-		unlistenFrame();
-		unlistenInput();
-		unlistenController();
+		UnlistenFrame();
+		UnlistenInput();
+		UnlistenController();
 	}
-	void GameNode::prepareDeletion()
-	{
-		if (getParentLayer())
-		{
-			getParentLayer()->removeLight(this);
+
+	/*
+	=====================
+	GameNode::PrepareDeletion
+	=====================
+	*/
+	void GameNode::PrepareDeletion() {
+		if (GetParentLayer()) {
+			GetParentLayer()->RemoveLight(this);
+			GetParentLayer()->RemoveShadowCaster(this);
 		}
 
-		if (shadowShape)
-		{
+		if (shadowShape) {
 			delete shadowShape;
 		}
 
-		removeAllChildren();
+		RemoveAllChildren();
 
-		unlistenInput();
-		unlistenController();
+		UnlistenInput();
+		UnlistenController();
 
 		parent = NULL;
 		willDelete = true;
 	}
 
-	void GameNode::addChild(GameNode *ch)
-	{
-		PimAssert(!ch->getParent(), "Node already has a parent");
+	/*
+	=====================
+	GameNode::AddChild
+	=====================
+	*/
+	void GameNode::AddChild(GameNode *ch) {
+		PimAssert(!ch->GetParent(), "Node already has a parent");
+
+		Layer *layer = dynamic_cast<Layer*>(ch);
+		if (layer) {
+			layer->LoadResources();
+		}
 
 		ch->parent = this;
 		children.push_back(ch);
 
 		dirtyZOrder = true;
 	}
-	void GameNode::removeChild(GameNode *ch, bool cleanup)
-	{
-		for (unsigned int i=0; i<children.size(); i++)
-		{
-			if (children[i] == ch)
-			{
+
+	/*
+	=====================
+	GameNode::RemoveChild
+	=====================
+	*/
+	void GameNode::RemoveChild(GameNode *ch, const bool cleanup) {
+		for (unsigned int i=0; i<children.size(); i++) {
+			if (children[i] == ch) {
 				children.erase(children.begin() + i);
 
-				if (cleanup) 
-				{
-					//delete ch;
-					GameControl::getSingleton()->addNodeToDelete(ch);
-				}
-				else
-				{
+				if (cleanup) {
+					GameControl::GetSingleton()->AddNodeToDelete(ch);
+				} else {
 					ch->parent = NULL;
 				}
-				return;
 			}
 		}
 	}
-	void GameNode::removeAllChildren(bool cleanup)
-	{
+
+	/*
+	=====================
+	GameNode::RemoveAllChildren
+	=====================
+	*/
+	void GameNode::RemoveAllChildren(const bool cleanup) {
 		// Delete all if required
-		for each (GameNode *child in children)
-		{
-			if (cleanup) 
-			{
-				//delete child;
-				GameControl::getSingleton()->addNodeToDelete(child);
-			}
-			else
-			{
+		for each (GameNode *child in children) {
+			if (cleanup) {
+				GameControl::GetSingleton()->AddNodeToDelete(child);
+			} else {
 				child->parent = NULL;
 			}
 		}
@@ -121,114 +128,273 @@ namespace Pim
 		children.clear();
 	}
 
-	GameNode* GameNode::getParent()
-	{
+	/*
+	=====================
+	GameNode::GetParent
+	===================== 
+	*/
+	GameNode* GameNode::GetParent() const {
 		return parent;
 	}
-	Scene* GameNode::getParentScene()
-	{
-		if (parent)
-		{
-			return parent->getParentScene();
+
+	/*
+	=====================
+	GameNode::GetParentScene
+	=====================
+	*/
+	Scene* GameNode::GetParentScene() const {
+		if (parent) {
+			return parent->GetParentScene();
 		}
 		return NULL;
 	}
-	Layer* GameNode::getParentLayer()
-	{
-		if (parent)
-		{
-			return parent->getParentLayer();
+
+	/*
+	=====================
+	GameNode::GetParentLayer
+	=====================
+	*/
+	Layer* GameNode::GetParentLayer() {
+		if (parent) {
+			return parent->GetParentLayer();
 		}
 		return NULL;
 	}
-	
-	void GameNode::listenInput()
-	{
-		GameControl::getSingleton()->addKeyListener(this);
-		GameControl::getSingleton()->addMouseListener(this);
-	}
-	void GameNode::unlistenInput()
-	{
-		GameControl::getSingleton()->removeKeyListener(this);
-		GameControl::getSingleton()->removeMouseListener(this);
+
+
+	/*
+	=====================
+	GameNode::ListenInput
+	=====================
+	*/
+	void GameNode::ListenInput() {
+		GameControl::GetSingleton()->AddKeyListener(this);
+		GameControl::GetSingleton()->AddMouseListener(this);
 	}
 
-	void GameNode::listenKeys()
-	{
-		GameControl::getSingleton()->addKeyListener(this);
-	}
-	void GameNode::unlistenKeys()
-	{
-		GameControl::getSingleton()->removeKeyListener(this);
-	}
-
-	void GameNode::listenMouse()
-	{
-		GameControl::getSingleton()->addMouseListener(this);
-	}
-	void GameNode::unlistenMouse()
-	{
-		GameControl::getSingleton()->removeMouseListener(this);
+	/*
+	=====================
+	GameNode::UnlistenInput
+	=====================
+	*/
+	void GameNode::UnlistenInput() {
+		GameControl::GetSingleton()->RemoveKeyListener(this);
+		GameControl::GetSingleton()->RemoveMouseListener(this);
 	}
 
-	void GameNode::listenController()
-	{
-		GameControl::getSingleton()->addControlListener(this);
-	}
-	void GameNode::unlistenController()
-	{
-		GameControl::getSingleton()->removeControlListener(this);
-	}
-
-	void GameNode::listenFrame()
-	{
-		GameControl::getSingleton()->addFrameListener(this);
-	}
-	void GameNode::unlistenFrame()
-	{
-		GameControl::getSingleton()->removeFrameListener(this);
+	/*
+	=====================
+	GameNode::ListenKeys
+	=====================
+	*/
+	void GameNode::ListenKeys() {
+		GameControl::GetSingleton()->AddKeyListener(this);
 	}
 
-	Vec2 GameNode::getWorldPosition()
-	{
-		if (parent)
-		{
-			return position + parent->getWorldPosition();
+	/*
+	=====================
+	GameNode::UnlistenKeys
+	=====================
+	*/
+	void GameNode::UnlistenKeys() {
+		GameControl::GetSingleton()->RemoveKeyListener(this);
+	}
+
+	/*
+	=====================
+	GameNode::ListenMouse
+	=====================
+	*/
+	void GameNode::ListenMouse() {
+		GameControl::GetSingleton()->AddMouseListener(this);
+	}
+
+	/*
+	=====================
+	GameNode::UnlistenMouse
+	=====================
+	*/
+	void GameNode::UnlistenMouse() {
+		GameControl::GetSingleton()->RemoveMouseListener(this);
+	}
+
+	/*
+	=====================
+	GameNode::ListenController
+	=====================
+	*/
+	void GameNode::ListenController() {
+		GameControl::GetSingleton()->AddControlListener(this);
+	}
+
+	/*
+	=====================
+	GameNode::UnlistenController
+	=====================
+	*/
+	void GameNode::UnlistenController() {
+		GameControl::GetSingleton()->RemoveControlListener(this);
+	}
+
+	/*
+	=====================
+	GameNode::ListenFrame
+	=====================
+	*/
+	void GameNode::ListenFrame() {
+		GameControl::GetSingleton()->AddFrameListener(this);
+	}
+
+	/*
+	=====================
+	GameNode::UnlistenFrame
+	=====================
+	*/
+	void GameNode::UnlistenFrame() {
+		GameControl::GetSingleton()->RemoveFrameListener(this);
+	}
+
+	/*
+	=====================
+	GameNode::GetWorldPosition
+	=====================
+	*/
+	Vec2 GameNode::GetWorldPosition() const {
+		if (parent) {
+			return position + parent->GetWorldPosition();
 		}
 		return position;
 	}
-	float GameNode::getWorldRotation()
-	{
-		if (parent)
-		{
-			return rotation + parent->getWorldRotation();
+
+	/*
+	=====================
+	GameNode::GetWorldRotation
+	=====================
+	*/
+	float GameNode::GetWorldRotation() const {
+		if (parent) {
+			return rotation + parent->GetWorldRotation();
 		}
 		return rotation;
 	}
 
-	Vec2 GameNode::getLayerPosition()
-	{
-		if (parent)
-		{
-			return position + parent->getLayerPosition();
+	/*
+	=====================
+	GameNode::GetLayerPosition
+	=====================
+	*/
+	Vec2 GameNode::GetLayerPosition() const {
+		if (parent) {
+			return position + parent->GetLayerPosition();
 		}
-		
+
 		return position;
 	}
 
-	void GameNode::orderChildren()
-	{
-		if (!dirtyZOrder || children.size() <= 1)
+	/*
+	=====================
+	GameNode::Draw
+	=====================
+	*/
+	void GameNode::Draw() {
+		glPushMatrix();
+		Vec2 fac = GameControl::GetSingleton()->GetCoordinateFactor();
+
+		glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
+		glRotatef(rotation, 0.f, 0.f, 1.f);
+
+		if (shadowShape && dbgShadowShape) {
+			glPushMatrix();
+
+			fac = GameControl::GetSingleton()->GetWindowScale();
+			glScalef(fac.x, fac.y, 1.f);
+
+			shadowShape->DebugDraw();
+
+			glPopMatrix();
+		}
+
+		OrderChildren();
+
+		for (unsigned int i=0; i<children.size(); i++) {
+			children[i]->Draw();
+		}
+
+		glPopMatrix();
+	}
+
+	/*
+	=====================
+	GameNode::BatchDraw
+	=====================
+	*/
+	void GameNode::BatchDraw() {
+		glPushMatrix();
+		Vec2 fac = GameControl::GetSingleton()->GetCoordinateFactor();
+
+		glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
+		glRotatef(rotation, 0.f, 0.f, 1.f);
+
+		if (shadowShape && dbgShadowShape) {
+			glPushMatrix();
+
+			fac = GameControl::GetSingleton()->GetWindowScale();
+			glScalef(fac.x, fac.y, 1.f);
+
+			shadowShape->DebugDraw();
+
+			glPopMatrix();
+		}
+
+		OrderChildren();
+
+		for (unsigned int i=0; i<children.size(); i++) {
+			// This is the only difference from GameNode::draw(): batchDraw is called
+			// on the node's children.
+			children[i]->BatchDraw();
+		}
+
+		glPopMatrix();
+	}
+
+	/*
+	=====================
+	GameNode::SetZOrder
+	=====================
+	*/
+	void GameNode::SetZOrder(const int z) {
+		if (parent) {
+			parent->dirtyZOrder = true;
+		}
+
+		zOrder = z;
+	}
+
+	/*
+	=====================
+	GameNode::GetZOrder
+	=====================
+	*/
+	int GameNode::GetZOrder() const {
+		return zOrder;
+	}
+
+	/*
+	=====================
+	GameNode::OrderChildren
+	=====================
+	*/
+	void GameNode::OrderChildren() {
+		if (!dirtyZOrder || children.size() <= 1) {
 			return;
-		
+		}
+
 		// Insertion sorting - the children should be somewhat sorted already.
-		for (unsigned int j=1; j<children.size(); j++)
-		{
+		for (unsigned int j=1; j<children.size(); j++) {
 			GameNode *key = children[j];
 			int i = j - 1;
 
-			while (i >= 0 && children[i]->zOrder > key->zOrder)
-			{
+			while (i >= 0 && children[i]->zOrder < key->zOrder) {
 				children[i+1] = children[i];
 				i--;
 			}
@@ -238,135 +404,54 @@ namespace Pim
 		dirtyZOrder = false;
 	}
 
-	void GameNode::draw()
-	{
-		glPushMatrix();
-		Vec2 fac = GameControl::getSingleton()->coordinateFactor();
-
-		if (allowMidPixelPosition)
-		{
-			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
-		}
-		else
-		{
-			glTranslatef(floor(position.x) / fac.x, floor(position.y) / fac.y, 0.f);
-		}
-
-		glRotatef(rotation, 0.f, 0.f, 1.f);
-
-		// Debug draw shadow shape if flagged to do so
-		if (shadowShape && dbgShadowShape)
-		{
-			glPushMatrix();
-
-			fac = GameControl::getSingleton()->windowScale();
-			glScalef(fac.x, fac.y, 1.f);
-
-			shadowShape->debugDraw();
-
-			glPopMatrix();
-		}
-
-		orderChildren();
-		for (unsigned int i=0; i<children.size(); i++)
-		{
-			children[i]->draw();
-		}
-
-		glPopMatrix();
-	}
-	void GameNode::batchDraw()
-	{
-		glPushMatrix();
-		Vec2 fac = GameControl::getSingleton()->coordinateFactor();
-
-		// Translate
-		if (allowMidPixelPosition)
-		{
-			glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
-		}
-		else
-		{
-			glTranslatef(floor(position.x) / fac.x, floor(position.y) / fac.y, 0.f);
-		}
-
-		// Rotate
-		glRotatef(rotation, 0.f, 0.f, 1.f);
-
-		// Debug draw shadow shape if flagged to do so
-		if (shadowShape && dbgShadowShape)
-		{
-			glPushMatrix();
-
-			fac = GameControl::getSingleton()->windowScale();
-			glScalef(fac.x, fac.y, 1.f);
-
-			shadowShape->debugDraw();
-
-			glPopMatrix();
-		}
-
-		orderChildren();
-		for (unsigned int i=0; i<children.size(); i++)
-		{
-			// This is the only difference from GameNode::draw(): batchDraw is called
-			// on the node's children.
-			children[i]->batchDraw();
-		}
-
-		glPopMatrix();
-	}
-
-	void GameNode::setZOrder(int z)
-	{
-		if (parent)
-			parent->dirtyZOrder = true;
-		zOrder = z;
-	}
-
-	void GameNode::runAction(Action *a)
-	{
-		addChild(a);
-		a->activate();
-	}
-	void GameNode::runActionQueue(ActionQueue *aq)
-	{
-		addChild(aq);
-		aq->activate();
-	}
-
-	void GameNode::setShadowShape(Vec2 vertices[], int vertexCount)
-	{
-		if (shadowShape)
-			delete shadowShape;
-
-		shadowShape = new PolygonShape(vertices, vertexCount, this);
-	}
-	void GameNode::setShadowShapeDebugDraw(bool flag)
-	{
-		dbgShadowShape = flag;
-	}
-	PolygonShape* GameNode::getShadowShape()
-	{
-		return shadowShape;
+	/*
+	=====================
+	GameNode::RunAction
+	=====================
+	*/
+	void GameNode::RunAction(Action *a) {
+		AddChild(a);
+		a->Activate();
 	}
 
 	/*
-	void GameNode::setCollisionShape(Vec2 vertices[], int vertexCount)
-	{
-		if (colShape)
-			delete colShape;
-
-		colShape = new PolygonShape(vertices, vertexCount, this);
-	}
-	void GameNode::setCollisionShapeDebugDraw(bool flag)
-	{
-		dbgColShape = flag;
-	}
-
-	Vec2 GameNode::validateMovement(Vec2 &o, Vec2 &n)
-	{
-		return CollisionManager::validateMovement(this, o, n);
-	}
+	=====================
+	GameNode::RunActionQueue
+	=====================
 	*/
+	void GameNode::RunActionQueue(ActionQueue *aq) {
+		AddChild(aq);
+		aq->Activate();
+	}
+
+	/*
+	=====================
+	GameNode::SetShadowShape
+	=====================
+	*/
+	void GameNode::SetShadowShape(Vec2 vertices[], const int vertexCount) {
+		if (shadowShape) {
+			delete shadowShape;
+		}
+
+		shadowShape = new PolygonShape(vertices, vertexCount, this);
+	}
+
+	/*
+	=====================
+	GameNode::SetShadowShapeDebugDraw
+	=====================
+	*/
+	void GameNode::SetShadowShapeDebugDraw(const bool flag) {
+		dbgShadowShape = flag;
+	}
+
+	/*
+	=====================
+	GameNode::GetShadowShape
+	=====================
+	*/
+	PolygonShape* GameNode::GetShadowShape() const {
+		return shadowShape;
+	}
 }

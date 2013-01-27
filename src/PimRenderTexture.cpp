@@ -1,9 +1,12 @@
 #include "PimRenderTexture.h"
 
-namespace Pim
-{
-	RenderTexture::RenderTexture(Vec2 resolution, bool renderBuffer)
-	{
+namespace Pim {
+	/*
+	=====================
+	RenderTexture::RenderTexture
+	=====================
+	*/
+	RenderTexture::RenderTexture(const Vec2 resolution, const bool renderBuffer) {
 		res				= resolution;
 		fbo				= 0;
 		rbo				= 0;
@@ -16,8 +19,8 @@ namespace Pim
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, (GLsizei)res.x, (GLsizei)res.y, 
-						0, GL_RGBA, GL_FLOAT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, (GLsizei)res.x, (GLsizei)res.y,
+					 0, GL_RGBA, GL_FLOAT, NULL);
 
 		// Create the main framebuffer
 		glGenFramebuffers(1, &fbo);
@@ -25,17 +28,16 @@ namespace Pim
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
 
-		if (renderBuffer)
-		{
+		if (renderBuffer) {
 			// Create the renderbuffer
 			glGenRenderbuffers(1, &rbo);
 			glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 
-						(GLsizei)res.x, (GLsizei)res.y);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8,
+								  (GLsizei)res.x, (GLsizei)res.y);
 
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-						GL_RENDERBUFFER, rbo);
+									  GL_RENDERBUFFER, rbo);
 
 			glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		}
@@ -43,18 +45,32 @@ namespace Pim
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-	RenderTexture::~RenderTexture()
-	{
-		if (fbo)
+
+	/*
+	=====================
+	RenderTexture::~RenderTexture
+	=====================
+	*/
+	RenderTexture::~RenderTexture() {
+		if (fbo) {
 			glDeleteFramebuffers(1, &fbo);
-		if (rbo)
+		}
+
+		if (rbo) {
 			glDeleteRenderbuffers(1, &rbo);
-		if (tex && !retainTexture)
+		}
+
+		if (tex && !retainTexture) {
 			glDeleteTextures(1, &tex);
+		}
 	}
 
-	void RenderTexture::bindFBO()
-	{
+	/*
+	=====================
+	RenderTexture::BindFBO
+	=====================
+	*/
+	void RenderTexture::BindFBO() const {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 		glMatrixMode(GL_PROJECTION);
@@ -69,8 +85,13 @@ namespace Pim
 		glViewport(0,0, (GLsizei)res.x, (GLsizei)res.y);
 		glOrtho(0, res.x, 0, res.y, 0, 1);
 	}
-	void RenderTexture::unbindFBO()
-	{
+
+	/*
+	=====================
+	RenderTexture::UnbindFBO
+	=====================
+	*/
+	void RenderTexture::UnbindFBO() const {
 		glMatrixMode(GL_PROJECTION);
 		glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);
@@ -81,22 +102,39 @@ namespace Pim
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void RenderTexture::clear(GLenum additional)
-	{
+	/*
+	=====================
+	RenderTexture::Clear
+	=====================
+	*/
+	void RenderTexture::Clear(const GLenum additional) const {
 		glClear(GL_COLOR_BUFFER_BIT | additional);
 	}
 
-	void RenderTexture::bindTex()
-	{
+	/*
+	=====================
+	RenderTexture::BindTex
+	=====================
+	*/
+	void RenderTexture::BindTex() const {
 		glBindTexture(GL_TEXTURE_2D, tex);
 	}
-	void RenderTexture::unbindTex()
-	{
+
+	/*
+	=====================
+	RenderTexture::UnbindTex
+	=====================
+	*/
+	void RenderTexture::UnbindTex() const {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	GLuint RenderTexture::getTex()
-	{
+	/*
+	=====================
+	RenderTexture::GetTex
+	=====================
+	*/
+	GLuint RenderTexture::GetTex() const {
 		return tex;
 	}
 }

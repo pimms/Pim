@@ -4,143 +4,75 @@
 #include "PimVec2.h"
 #include "PimWinStyle.h"
 
-namespace Pim
-{
-	// Forward declarations
+namespace Pim {
 	class RenderWindow;
 	class GameNode;
 	class Layer;
 	class Scene;
 
-	class GameControl
-	{
-	public:
-		// Public access methods
-		static GameControl* getSingleton()	
-					{ return singleton; }
-		static RenderWindow* getRenderWindow()
-					{ return singleton->renderWindow; }
-		static const std::string& getWindowTitle()	
-					{ return singleton->winData.winTitle; }
-		static int getWindowWidth()					
-					{ return singleton->actualWinWidth; }
-		static int getWindowHeight()				
-					{ return singleton->actualWinHeight; }
-		static Vec2 getWindowSize()				
-					{ return Vec2((float)getWindowWidth(),(float)getWindowHeight()); }
-		static const WinStyle::CreationData getCreationData()
-					{ return singleton->winData; }
-		static Scene* getScene()
-					{ return singleton->scene; }
-		static std::string getModulePath();	
-
-		GameControl();
-		~GameControl();
-
-		// Parameters: 
-		// Scene *s:
-		//		Pointer to a scene object. Cannot be nil. Deleted automatically.
-		// CreationData:
-		//		The structure describing how the window should behave.
-		// commandline:
-		//		Flag indicating whether or not the console should create a new thread
-		//		which reads input from the command line. 
-		void go(Scene *s, WinStyle::CreationData data, bool commandline=true);
-
-		void addKeyListener(GameNode* n);
-		void removeKeyListener(GameNode* n);
-
-		void addMouseListener(GameNode* n);
-		void removeMouseListener(GameNode* n);
-
-		void addControlListener(GameNode *n);
-		void removeControlListener(GameNode *n);
-
-		void addFrameListener(GameNode* n);
-		void removeFrameListener(GameNode* n);
-
-		// Quit the game here and now
-		void exit();
-
-		// Limit the framerate to the passed value. Pass 0 as a parameter to set no limit.
-		void limitFrame(unsigned int maxfps);
-
-		// Pause the game. The currently active scene is queried for a 
-		// pause layer through the "Scene::pauseLayer()" method. All children of
-		// the returned layer will receive input and frame-updates. 
-		void pause();
-
-		// Unpause the game. The currently active pauseLayer is cleaned up, and the
-		// game continues as normal.
-		void unpause();
-
-		// Change the window methods. Never ever deal with the render window
-		// by yourself. That's a stupid thang to do.
-		void setWindowCreationData(WinStyle::CreationData data);
-		void setWindowStyle(WinStyle::WinStyle style);
-		void setWindowResolution(int w, int h);
-
-		// Returns the position of GLPoint (0,0) - adjusted by the black borders
-		Vec2 lowerLeftCorner();
-
-		// As the resolution shifts, the app is scaled accordingly. This is that scale.
-		Vec2 windowScale();
-
-		// In case of forced coordinates, this is the factor a position in pixel coordinates
-		// must be multiplied by in order to achieve the expected result.
-		// The method's main application is converting mouse screen coordinates to fit the 
-		// forced coordinate system.
-		// Returns [1,1] if forcedCoordinateSystem is false.
-		Vec2 coordinateFactor();
-
-		// Deletes the old layer, replaces it with the passed.
-		void setScene(Scene *newScene);
-
-		// Adds a node to the delete queue - called internally when a node is called
-		// to remove either one or all children
-		void addNodeToDelete(GameNode *node);
-
+	class GameControl {
 	private:
 		friend class RenderWindow;
 
-		static GameControl* singleton;
+	public:
+								GameControl();
+								~GameControl();
+		static string			GetModulePath();
+		static GameControl*		GetSingleton();
+		static RenderWindow*	GetRenderWindow();
+		static const string&	GetWindowTitle();
+		static int				GetWindowWidth();
+		static int				GetWindowHeight();
+		static Vec2				GetWindowSize();
+		static Scene*			GetScene();
+		WinStyle::CreationData	GetCreationData() const;
+		void					Go(Scene *s, WinStyle::CreationData data, bool commandline=true);
+		void					AddKeyListener(GameNode* n);
+		void					RemoveKeyListener(GameNode* n);
+		void					AddMouseListener(GameNode* n);
+		void					RemoveMouseListener(GameNode* n);
+		void					AddControlListener(GameNode *n);
+		void					RemoveControlListener(GameNode *n);
+		void					AddFrameListener(GameNode* n);
+		void					RemoveFrameListener(GameNode* n);
+		void					Exit();
+		void					LimitFrame(unsigned int maxfps);	// Pass 0 to set unlimited
+		void					Pause();	// You must return a pause layer from your Scene
+		void					Unpause();
+		void					SetWindowCreationData(WinStyle::CreationData data);
+		void					SetWindowStyle(WinStyle::WinStyle style);
+		void					SetWindowResolution(int w, int h);
+		Vec2					LowerLeftCorner();
+		Vec2					GetWindowScale();
+		Vec2					GetCoordinateFactor();
+		void					SetScene(Scene *newScene);
+		void					AddNodeToDelete(GameNode *node);
 
-		void gameLoop();
-		void dispatchPrerender(float dt);
-
-		void clearDeleteQueue();
-
-		void sceneTransition();
-
-		void dispatchPausedPreRender(float dt);
-		void recursivePreRender(GameNode *n, float dt);
-
+	private:
+		static GameControl		*singleton;
+		RenderWindow			*renderWindow;
+		Scene					*scene;
+		Scene					*newScene;
+		vector<GameNode*>		frameListeners;
+		vector<GameNode*>		delQueue;
+		string					modulePath;
+		bool					quit;
+		bool					paused;
+		Layer					*pauseLayer;
+		float					maxDelta;
+		bool					sleepNextFrame;
+		float					sleepTime;
+		long long unsigned int	ticks;
 		WinStyle::CreationData	winData;
 		int						actualWinWidth;		// The values in winData does NOT apply if
 		int						actualWinHeight;	// the window style is BFS. Hence, these two.
 
-		RenderWindow			*renderWindow;
-		Scene					*scene;
-		Scene					*newScene;
-
-		std::vector<GameNode*>	frameListeners;
-
-		std::vector<GameNode*>	delQueue;
-
-		std::string				modulePath;
-
-		bool					quit;
-		bool					paused;
-		Layer					*pauseLayer;
-
-		// The frametime for the highest allowed FPS 
-		float					maxDelta;
-		bool					sleepNextFrame;
-		float					sleepTime;
-
-		// Used to calculate delta time
-		long long unsigned int ticks;
-		float calculateDeltaTime();
+		void					GameLoop();
+		void					DispatchPrerender(float dt);
+		void					DispatchPausedPreRender(float dt);
+		void					DispatchPreRender_r(GameNode *n, float dt);
+		float					CalculateDeltaTime();
+		void					ClearDeleteQueue();
+		void					SceneTransition();
 	};
-
 }

@@ -1,6 +1,8 @@
 #pragma once
 
-#define PIM_VERSION "0.7.1"
+using namespace std;
+
+#define PIM_VERSION "0.8"
 
 // memory-leak tracing for debug builds
 #ifdef _DEBUG
@@ -20,7 +22,8 @@
 #include <math.h>
 
 // Threading
-#include <process.h>
+#include <process.h>	// To be removed in the future
+//#include <omp.h>
 
 // windows and OpenGL (glew)
 #include <Windows.h>
@@ -31,7 +34,7 @@
 #include FT_FREETYPE_H
 
 // libpng
-#include "png.h"	
+#include "png.h"
 
 // Direct sound
 #include <mmsystem.h>
@@ -44,3 +47,9 @@
 // Custom defines
 #define DEGTORAD ((float)M_PI/180.f)
 #define RADTODEG (180.f/(float)M_PI)
+
+// Redefine M_PI as float
+#ifdef M_PI
+	#undef M_PI
+	#define M_PI			3.14159265358979323846f
+#endif

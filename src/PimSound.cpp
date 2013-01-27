@@ -2,10 +2,13 @@
 #include "PimAudioManager.h"
 #include "PimAssert.h"
 
-namespace Pim
-{
-	Sound::Sound(std::string file)
-	{		
+namespace Pim {
+	/*
+	=====================
+	Sound::Sound
+	=====================
+	*/
+	Sound::Sound(string file) {
 		oggFile			= NULL;
 		buffer			= NULL;
 		isLoop			= false;
@@ -16,10 +19,15 @@ namespace Pim
 		deleteWhenDone	= false;
 		cachePosition	= 0;
 
-		loadFile(file);
+		LoadFile(file);
 	}
-	Sound::Sound()
-	{
+
+	/*
+	=====================
+	Sound::Sound
+	=====================
+	*/
+	Sound::Sound() {
 		oggFile			= NULL;
 		buffer			= NULL;
 		isLoop			= false;
@@ -30,72 +38,67 @@ namespace Pim
 		deleteWhenDone	= false;
 		cachePosition	= 0;
 	}
-	Sound::~Sound()
-	{
-		if (buffer)
-		{
+
+	/*
+	=====================
+	Sound::~Sound
+	=====================
+	*/
+	Sound::~Sound() {
+		if (buffer) {
 			buffer->Release();
 		}
-		if (oggFile && !isParallel)
-		{
+
+		if (oggFile && !isParallel) {
 			ov_clear(oggFile);
 			delete oggFile;
 		}
 
 		// No matter what happens, unschedule to be safe.
-		AudioManager::getSingleton()->unscheduleOggUpdate(this);
+		AudioManager::GetSingleton()->UnscheduleOggUpdate(this);
 	}
 
-	void Sound::loadFile(std::string file)
-	{
+	/*
+	=====================
+	Sound::LoadFile
+	=====================
+	*/
+	void Sound::LoadFile(const string file) {
 		PimAssert(file.length() >= 4, "Error: invalid file");
-		
+
 		filename = file;
 
-		std::string format = file.substr(file.length()-4, 4);
-		
-		/* THE WAVE FORMAT IS NO LONGER SUPPORTED */
-		/*
-		if (format == ".wav")
-		{
-			if (!AudioManager::getSingleton()->loadWav(file.c_str(), this))
-			{
-				std::cout<<"ERROR: Failed to load file: " <<file <<"\n";
-			}
-		}
-		*/
+		string format = file.substr(file.length()-4, 4);
 
-		if (format == ".ogg")
-		{
+		if (format == ".ogg") {
 			oggFile = new OggVorbis_File;
 			curSection = 0;
 			lastSection = 1;
 			audioStream = true;
 
-			if (!AudioManager::getSingleton()->loadOgg(file.c_str(), this))
-			{
-				std::cout<<"ERROR: Failed to load file: " <<file <<"\n";
+			if (!AudioManager::GetSingleton()->LoadOgg(file.c_str(), this)) {
+				cout<<"ERROR: Failed to load file: " <<file <<"\n";
+			} else {
+				AudioManager::GetSingleton()->ScheduleOggUpdate(this);
 			}
-			else
-			{
-				AudioManager::getSingleton()->scheduleOggUpdate(this);
-			}
-		}
-		else
-		{
-			std::cout<<"ERROR! PIM DOES NOT SUPPORT THE FOLLOWING AUDIO FORMAT: "
+		} else {
+			cout<<"ERROR! PIM DOES NOT SUPPORT THE FOLLOWING AUDIO FORMAT: "
 					 <<file <<"\n";
 		}
 	}
-	void Sound::useCache(std::string id)
-	{
-		PimAssert(AudioManager::getSingleton()->cache.count(id) != 0,
-			"Error: file is not cached!");
-			
-		cache = AudioManager::getSingleton()->cache[id];
 
-		curSection = 0;
-		lastSection = 1;
+	/*
+	=====================
+	Sound::UseCache
+	=====================
+	*/
+	void Sound::UseCache(const string id) {
+		PimAssert(AudioManager::GetSingleton()->cache.count(id) != 0,
+				  "Error: file is not cached!");
+
+		cache				= AudioManager::GetSingleton()->cache[id];
+		curSection			= 0;
+		lastSection			= 1;
 
 		memset(&wfm, 0, sizeof(wfm));
 		wfm.cbSize			= sizeof(wfm);
@@ -112,103 +115,129 @@ namespace Pim
 		desc.lpwfxFormat	= &wfm;
 		desc.dwReserved		= 0;
 		desc.dwBufferBytes	= BUFFER_SIZE * 2;
-		
-		buffer = AudioManager::getSingleton()->createBuffer(&wfm, &desc);
 
-		AudioManager::getSingleton()->scheduleOggUpdate(this);
-		AudioManager::getSingleton()->fillBuffer(this, 0);
+		buffer = AudioManager::GetSingleton()->CreateBuffer(&wfm, &desc);
+
+		AudioManager::GetSingleton()->ScheduleOggUpdate(this);
+		AudioManager::GetSingleton()->FillBuffer(this, 0);
 	}
 
-	void Sound::play()
-	{
-		if (done)
-		{
-			replay();
-		}
-		else
-		{
+	/*
+	=====================
+	Sound::Play
+	=====================
+	*/
+	void Sound::Play() {
+		if (done) {
+			Replay();
+		} else {
 			buffer->Play(0,0,DSBPLAY_LOOPING);
 		}
 	}
-	void Sound::replay()
-	{
-		if (audioStream)
-		{
-			AudioManager::getSingleton()->rewindOgg(this);
-		}
-		else
-		{
+
+	/*
+	=====================
+	Sound::Replay
+	=====================
+	*/
+	void Sound::Replay() {
+		if (audioStream) {
+			AudioManager::GetSingleton()->RewindOgg(this);
+		} else {
 			cachePosition = 0;
 			buffer->SetCurrentPosition(0);
-			
+
 			curSection = 0;
 			lastSection = 0;
 
-			AudioManager::getSingleton()->fillBuffer(this, 0);
+			AudioManager::GetSingleton()->FillBuffer(this, 0);
 		}
-			
-		play();
+
+		Play();
 	}
 
-	void Sound::loop()
-	{
+	/*
+	=====================
+	Sound::Loop
+	=====================
+	*/
+	void Sound::Loop() {
 		buffer->Play(0,0,DSBPLAY_LOOPING);
 		isLoop = true;
 	}
-	void Sound::reloop()
-	{
-		if (audioStream)
-		{
-			AudioManager::getSingleton()->rewindOgg(this);
-		}
-		else
-		{
+
+	/*
+	=====================
+	Sound::Reloop
+	=====================
+	*/
+	void Sound::Reloop() {
+		if (audioStream) {
+			AudioManager::GetSingleton()->RewindOgg(this);
+		} else {
 			cachePosition = 0;
 			buffer->SetCurrentPosition(0);
-			
+
 			curSection = 0;
 			lastSection = 0;
 
-			AudioManager::getSingleton()->fillBuffer(this, 0);
+			AudioManager::GetSingleton()->FillBuffer(this, 0);
 		}
 
-		loop();
+		Loop();
 	}
 
-	void Sound::pause()
-	{
+	/*
+	=====================
+	Sound::Pause
+	=====================
+	*/
+	void Sound::Pause() {
 		buffer->Stop();
 	}
-
-	void Sound::setVolume(float vol)
-	{
-		buffer->SetVolume(-8000 * (1.f-vol));
+	
+	/*
+	=====================
+	Sound::SetVolume
+	=====================
+	*/
+	void Sound::SetVolume(float vol) {
+		buffer->SetVolume(LONG(-8000 * (1.f-vol)));
 	}
-	void Sound::setPan(float pan)
-	{
-		buffer->SetPan(pan * 3500);
+
+	/*
+	=====================
+	Sound::SetPan
+	=====================
+	*/
+	void Sound::SetPan(float pan) {
+		buffer->SetPan(LONG(pan * 3500.f));
 	}
 
-	float Sound::position()
-	{
-		if (audioStream)
-		{
+	/*
+	=====================
+	Sound::Position
+	=====================
+	*/
+	float Sound::Position() {
+		if (audioStream) {
 			return (float)ov_time_tell(oggFile);
-		}
-		else
-		{
-			return cachePosition / cache->rate;
+		} else {
+			return (float)cachePosition / (float)cache->rate;
 		}
 	}
-	int Sound::position(float time)
-	{
-		if (audioStream)
-		{
+
+	/*
+	=====================
+	Sound::Position
+	=====================
+	*/
+	int Sound::Position(float time) {
+		if (audioStream) {
 			int ret = ov_time_seek(oggFile, (double)time);
 
-			if (!ret)
-			{
-				AudioManager::getSingleton()->fillBuffer(this, 0);
+			if (!ret) {
+				AudioManager::GetSingleton()->FillBuffer(this, 0);
 				buffer->SetCurrentPosition(0);
 			}
 
@@ -217,12 +246,25 @@ namespace Pim
 
 		return 1;
 	}
-
-	Sound* Sound::playParallel(bool delWhenDone)
-	{
+	
+	/*
+	=====================
+	Sound::PlayParallel
+	=====================
+	*/
+	Sound* Sound::PlayParallel(bool delWhenDone) {
 		Sound *s = new Sound(filename);
 		s->deleteWhenDone = delWhenDone;
-		s->play();
+		s->Play();
 		return s;
+	}
+
+	/*
+	=====================
+	Sound::GetBuffer
+	=====================
+	*/
+	const IDirectSoundBuffer8* Sound::GetBuffer() const {
+		return buffer;
 	}
 }

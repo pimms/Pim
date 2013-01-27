@@ -3,9 +3,7 @@
 #include "PimGameNode.h"
 #include <queue>
 
-namespace Pim
-{
-	// Forward declarations
+namespace Pim {
 	class ActionQueue;
 	class ActionQueueRepeat;
 
@@ -15,45 +13,40 @@ namespace Pim
 	   GameNode (or any subclass). The node then calls "action->activate()",
 	   which initializes the action. The action receives update(float) calls
 	   until it's criteria of completion is met, at which point it is removed
-	   from the parent and deleted. 
-	   
-	   ActionQueueRepeat does not delete the actions until it's own deletion, as 
+	   from the parent and deleted.
+
+	   ActionQueueRepeat does not delete the actions until it's own deletion, as
 	   the actions are needed several times.									*/
-	class BaseAction : public GameNode
-	{
-	public:
-		BaseAction(float duration);
-		virtual void update(float)	= 0;
-
-		// If true, the node running the action will be notified via the
-		// GameNode::actionCompleted(BaseAction*) overrideable method.
-		bool			notifyOnCompletion;
-
-		// By default, the parent of the action is notified.
-		// You may override this by setting a callback-node yourself.
-		GameNode		*notificationCallback;
-
+	class BaseAction : public GameNode {
 	protected:
 		friend class ActionQueueInfinite;
 		friend class ActionQueueRepeat;
 		friend class ActionQueue;
 		friend class GameNode;
 
-		virtual void activate()		= 0;
-		void cleanup();
+	public:
+		// If true, the node running the action will be notified via the
+		// GameNode::actionCompleted(BaseAction*) overrideable method.
+		bool					notifyOnCompletion;
 
-		bool			done;
+		// By default, the parent of the action is notified.
+		// You may override this by setting a callback-node yourself.
+		GameNode*				notificationCallback;
+		
+								BaseAction(float duration);
+		virtual void			Update(float)	= 0;
+		float					TimeRemaining() { return timer; }
 
-		bool			inQueue;
-		ActionQueue		*queue;
+	protected:
+		bool					done;
+		bool					inQueue;
+		ActionQueue*			queue;
+		float					dur;
+		float					timer;
+		float					initialDur;  // Initial value of timer
 
-		float			dur;
-		float			timer;
-
-		// Used by ActionQueueRepeat and ActionQueueInfinite, as the
-		// dur and timer-variables are adjusted for preceeding actions exceeding
-		// their original timer
-		float			initialDur;
+		virtual void			Activate() = 0;
+		void					Cleanup();
 	};
 
 
@@ -64,75 +57,71 @@ namespace Pim
 			- MoveByAction			Moves the node relatively by a vector
 			- RotateByAction		Rotates the node a certain amount
 			- DelayAction			Wait for X seconds						*/
-	class Action : public BaseAction
-	{ 
-	public:
-		Action(float duration) : BaseAction(duration){}
+	class Action : public BaseAction {
 	protected:
 		friend class GameNode;
-		virtual void update(float)	{}
-		virtual void activate();
+	public:
+								Action(float duration) : BaseAction(duration) {}
+	protected:
+		virtual void			Update(float) {}
+		virtual void			Activate();
 	};
 
-	/*	
+	/*
 		###########################################
 		#####          NODE ACTIONS		      #####
 		###########################################
 	*/
 	/* Move To Action */
-	class MoveToAction : public Action
-	{
+	class MoveToAction : public Action {
 	public:
-		MoveToAction(Vec2 destination, float duration);
-		void update(float dt);
+								MoveToAction(Vec2 destination, float duration);
+		void					Update(float dt);
 
 	protected:
-		void activate();
+		Vec2					start;
+		Vec2					dest;
 
-		Vec2	start;
-		Vec2	dest;
+		void					Activate();
 	};
 
 	/* Move By Action */
-	class MoveByAction : public Action
-	{
+	class MoveByAction : public Action {
 	public:
-		MoveByAction(Vec2 relative, float duration);
-		void update(float dt);
+								MoveByAction(Vec2 relative, float duration);
+		void					Update(float dt);
 
 	protected:
-		void activate();
+		Vec2					rel;
 
-		Vec2  rel;
+		void					Activate();
 	};
 
 	/* Rotate By Action */
-	class RotateByAction : public Action
-	{
+	class RotateByAction : public Action {
 	public:
-		RotateByAction(float angle, float duration);
-		void update(float dt);
+								RotateByAction(float angle, float duration);
+		void					Update(float dt);
 
 	protected:
-		void activate();
+		float					total;
+		float					remainding;
+		float					dir;
 
-		float	total;
-		float	remainding;
-		float	dir;
+		void					Activate();
 	};
 
 	/* Delay Action */
-	class DelayAction : public Action
-	{
+	class DelayAction : public Action {
 	public:
-		DelayAction(float duration);
-		void update(float dt);
+								DelayAction(float duration);
+		void					Update(float dt);
 
 	protected:
-		void activate();
+		void					Activate();
 	};
 
-	/*	
+	/*
 		###########################################
 		#####         SPRITE ACTIONS		  #####
 		###########################################
@@ -143,86 +132,85 @@ namespace Pim
 			- TintAction			Tints the sprite to a certain color over time
 			- ScaleToAction			Scales the sprite to a provided value
 			- ScaleByAction			Scales the sprite relatively to the provided factors  */
-	class SpriteAction : public BaseAction
-	{ 
-	public:
-		SpriteAction(float duration) : BaseAction(duration){}
+	class SpriteAction : public BaseAction {
 	protected:
 		friend class Sprite;
-		virtual void update(float)	{}
-		virtual void activate();
+
+	public:
+								SpriteAction(float duration) : BaseAction(duration) {}
+
+	protected:
+		virtual void			Update(float) {}
+		virtual void			Activate();
 	};
 
 	/* Tint Action */
-	class TintAction : public SpriteAction
-	{
+	class TintAction : public SpriteAction {
 	public:
-		TintAction(Color fadeTo, float duration);
-		void update(float dt);
+								TintAction(Color fadeTo, float duration);
+		void					Update(float dt);
 
 	protected:
-		void activate();
+		Color					source;		// Initial color of parent sprite
+		Color					dest;		// The color to which we're tinting
 
-		Color	source;		// Initial color of parent sprite
-		Color	dest;		// The color to which we're tinting
+		void					Activate();
 	};
 
 	/* Scale To Action */
-	class ScaleToAction : public SpriteAction
-	{
+	class ScaleToAction : public SpriteAction {
 	public:
-		ScaleToAction(Vec2 factor, float duration);
-		void update(float);
+								ScaleToAction(Vec2 factor, float duration);
+		void					Update(float);
 
 	protected:
-		void activate();
+		Vec2					source;		// Initial scale of the sprite
+		Vec2					dest;		// The scale destination
 
-		Vec2	source;		// Initial scale of the sprite
-		Vec2	dest;		// The scale destination
+		void					Activate();
 	};
 
 	/* Scale By Action */
-	class ScaleByAction : public SpriteAction
-	{
+	class ScaleByAction : public SpriteAction {
 	public:
-		ScaleByAction(Vec2 factor, float duration);
-		void update(float);
+								ScaleByAction(Vec2 factor, float duration);
+		void					Update(float);
 
 	protected:
-		void activate();
+		Vec2					remainding;
 
-		Vec2	remainding;	
+		void					Activate();
 	};
 
 
-	/*	
+	/*
 		###########################################
 		#####          ACTION QUEUES	 	  #####
 		###########################################
 	*/
-	/* Run several actions in succession 
+	/* Run several actions in succession
 	   There's a limit of 32 actions.	*/
-	class ActionQueue : public Action
-	{
-	public:
-		ActionQueue(int numActions, BaseAction *action1, ...);
-		~ActionQueue();
-
-		void update(float);
-
+	class ActionQueue : public Action {
 	protected:
 		friend class BaseAction;
 		friend class GameNode;
 		friend class Sprite;
 
-		// Declared for subclassing purposes only
-		ActionQueue() : Action(0.f) {}
+	public:
+								ActionQueue(int numActions, BaseAction *action1, ...);
+								~ActionQueue();
+		void					Update(float);
+		BaseAction*				GetCurrentAction() {
+			return curAct;
+		}
 
-		void activate();
-		virtual void activateNext();
+	protected:
+		deque<BaseAction*>		actions;
+		BaseAction*				curAct;
 
-		std::deque<BaseAction*>		actions;
-		BaseAction					*curAct;
+								ActionQueue() : Action(0.f) {}
+		void					Activate();
+		virtual void			ActivateNext();
 	};
 
 	/* ActionQueueRepeat */
@@ -231,18 +219,18 @@ namespace Pim
 	   sequence indefinitely. Also note that the uint 'remaindingLoops' is public,
 	   so the amount of loops to run can be altered. As with all actions, the
 	   ActionQueueRepeat and all it's actions are deleted upon completion.		*/
-	class ActionQueueRepeat : public ActionQueue
-	{
+	class ActionQueueRepeat : public ActionQueue {
 	public:
-		ActionQueueRepeat(unsigned int repeatNum, int numActions, BaseAction *action1, ...);
-		~ActionQueueRepeat();
+		unsigned int			remaindingLoops; // Initialized at n, decremented for each loop
+		bool					infinite;
 
-		unsigned int	remaindingLoops;	// Initialized at n, decremented for each loop
-		bool			infinite;
+								ActionQueueRepeat(unsigned int repeatNum, 
+											int numActions, BaseAction *action1, ...);
+								~ActionQueueRepeat();
 
 	private:
-		void activateNext();
+		int						actionIdx; // The index of the running action
 
-		int				actionIdx;			// The index of the running action
+		void					ActivateNext();
 	};
 }

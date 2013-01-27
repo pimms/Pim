@@ -3,39 +3,29 @@
 #include "PimInternal.h"
 #include "PimVec2.h"
 
-namespace Pim
-{
-	// Forward declarations
+namespace Pim {
 	class Vec2;
 
-	class RenderTexture
-	{
+	class RenderTexture {
 	public:
-		RenderTexture(Vec2 resolution, bool renderBuffer=false);
-		~RenderTexture();
+		bool			retainTexture;	// Retain texture after object's death?
 
-		void bindFBO();
-		void unbindFBO();
-
-		void clear(GLenum additional=0);
-
-		void bindTex();
-		void unbindTex();
-
-		GLuint getTex();
-
-		// If this is true, the texture will not be deleted 
-		// with the RenderTexture.
-		bool retainTexture;	
+						RenderTexture(const Vec2 resolution, const bool renderBuffer=false);
+						~RenderTexture();
+		void			BindFBO() const;
+		void			UnbindFBO() const;
+		void			Clear(const GLenum additional=0) const;
+		void			BindTex() const;
+		void			UnbindTex() const;
+		GLuint			GetTex() const;
 
 	private:
-		RenderTexture() {}
-		RenderTexture(const RenderTexture&) {}
+		Vec2			res;
+		GLuint			fbo;
+		GLuint			rbo;
+		GLuint			tex;
 
-		Vec2		res;
-
-		GLuint		fbo;
-		GLuint		rbo;
-		GLuint		tex;
+						RenderTexture() {}
+						RenderTexture(const RenderTexture&) {}
 	};
 }

@@ -5,45 +5,71 @@
 
 #include <functional>
 
-namespace Pim
-{
-	SpriteBatchNode::SpriteBatchNode(std::string file)
-		: Sprite(file)
-	{
+namespace Pim {
+	/*
+	=====================
+	SpriteBatchNode::SpriteBatchNode
+	=====================
+	*/
+	SpriteBatchNode::SpriteBatchNode(string file)
+		: Sprite(file) {
 		// Using Pim::Sprite's init method
 	}
+
+	/*
+	=====================
+	SpriteBatchNode::SpriteBatchNode
+	=====================
+	*/
 	SpriteBatchNode::SpriteBatchNode()
-		: Sprite()
-	{
+		: Sprite() {
 		// Using Pim::Sprite's default init method
 	}
-	SpriteBatchNode::~SpriteBatchNode(void)
-	{
+
+	/*
+	=====================
+	SpriteBatchNode::~SpriteBatchNode
+	=====================
+	*/
+	SpriteBatchNode::~SpriteBatchNode(void) {
 		// Using Pim::Sprite's destruction method
 	}
 
-	void SpriteBatchNode::addChild(GameNode *ch)
-	{
-		GameNode::addChild(ch);
+	/*
+	=====================
+	SpriteBatchNode::AddChild
+	=====================
+	*/
+	void SpriteBatchNode::AddChild(GameNode *ch) {
+		GameNode::AddChild(ch);
 
-		if (Sprite *s = dynamic_cast<Sprite*>(ch))
-			s->useBatchNode(this);
+		if (Sprite *s = dynamic_cast<Sprite*>(ch)) {
+			s->UseBatchNode(this);
+		}
 	}
 
-	void SpriteBatchNode::draw()
-	{
-		batchDraw();
+	/*
+	=====================
+	SpriteBatchNode::Draw
+	=====================
+	*/
+	void SpriteBatchNode::Draw() {
+		BatchDraw();
 	}
-	void SpriteBatchNode::batchDraw()
-	{
+
+	/*
+	=====================
+	SpriteBatchNode::BatchDraw
+	=====================
+	*/
+	void SpriteBatchNode::BatchDraw() {
 		glPushMatrix();
-
 		glBindTexture(GL_TEXTURE_2D, texID);
 
-		orderChildren();
-		for (unsigned int i=0; i<children.size(); i++)
-		{
-			children[i]->batchDraw();
+		OrderChildren();
+
+		for (unsigned int i=0; i<children.size(); i++) {
+			children[i]->BatchDraw();
 		}
 
 		glPopMatrix();

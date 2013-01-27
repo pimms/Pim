@@ -3,70 +3,68 @@
 #include "PimAssert.h"
 #include "PimInternal.h"
 
-namespace Pim
-{
-	// Forward declarations
-	struct Color;
-	class Vec2;
+namespace Pim {
+// Forward declarations
+struct Color;
+class Vec2;
 
-	// The particle struct
-	struct Particle
-	{
-		Vec2 position;
+// The particle struct
+struct Particle {
+    Vec2 position;
 
-		float timeToLive;
+    float timeToLive;
 
-		float rotation;
-		float deltaRotation;
+    float rotation;
+    float deltaRotation;
 
-		Color color;
-		Color deltaColor;
-	};
+    Color color;
+    Color deltaColor;
+};
 
 
-	// The particle system
-	class ParticleSystem : public Sprite
-	{
-	public:
-		ParticleSystem();
-		ParticleSystem(std::string particleFile);
-		~ParticleSystem();
-		
-		void loadFromParticleFile(std::string particleFile);
-		void initVbo();
-		void initVao();
+// The particle system
+class ParticleSystem : public Sprite {
+public:
+    ParticleSystem();
+    ParticleSystem(string particleFile);
+    ~ParticleSystem();
 
-		void update(float dt);
+    void loadFromParticleFile(string particleFile);
+    void initVbo();
+    void initVao();
 
-	private:
-		void addChild(GameNode *n) 
-			{ PimAssert(false, "Error: cannot add child to particle system!"); }
+    void update(float dt);
 
-	protected:
-		void draw();
-		void batchDraw();
+private:
+    void addChild(GameNode *n) {
+        PimAssert(false, "Error: cannot add child to particle system!");
+    }
 
-		Particle	*parts;
-		GLuint		*indices;
-		GLuint		*vaoID;		// Vertex array 
-		GLuint		*vboID[2];	// Vertex buffer, indices 
+protected:
+    void draw();
+    void batchDraw();
+
+    Particle	*parts;
+    GLuint		*indices;
+    GLuint		*vaoID;		// Vertex array
+    GLuint		*vboID[2];	// Vertex buffer, indices
 
 
-		float speed;
-		float speedVar;
+    float speed;
+    float speedVar;
 
-		float size;
-		float sizeVar;
+    float size;
+    float sizeVar;
 
-		float endSize;
-		float endSizeVar;
+    float endSize;
+    float endSizeVar;
 
-		float lifetime;
-		float lifetimeVar;
+    float lifetime;
+    float lifetimeVar;
 
-		float emissionRate;
+    float emissionRate;
 
-		int count;
-		int maxParticles;
-	};
+    int count;
+    int maxParticles;
+};
 }

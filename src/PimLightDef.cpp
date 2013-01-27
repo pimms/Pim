@@ -1,10 +1,13 @@
 #include "PimLightDef.h"
 #include "PimLightingSystem.h"
 
-namespace Pim
-{
-	LightDef::LightDef()
-	{
+namespace Pim {
+	/*
+	=====================
+	LightDef::LightDef
+	=====================
+	*/
+	LightDef::LightDef() {
 		innerColor		= Color(1.f, 1.f, 1.f, 1.f);
 		outerColor		= Color(0.2f, 0.2f, 0.2f, 0.0f);
 		castShadows		= true;
@@ -15,44 +18,52 @@ namespace Pim
 
 		isPreloaded		= false;
 	}
-	LightDef::~LightDef()
-	{
-		if (lTex && !isPreloaded)
-		{
+
+	/*
+	=====================
+	LightDef::~LightDef
+	=====================
+	*/
+	LightDef::~LightDef() {
+		if (lTex && !isPreloaded) {
 			glDeleteTextures(1, &lTex);
 		}
 	}
 
-	GLuint LightDef::getTexID()
-	{
+	/*
+	=====================
+	LightDef::GetTexID
+	=====================
+	*/
+	GLuint LightDef::GetTexID() const {
 		return lTex;
 	}
 
-	
-	// -------------------------------
-
-
-	FlatLightDef::FlatLightDef()
-	{
+	/*
+	=====================
+	FlatLightDef::FlatLightDef
+	=====================
+	*/
+	FlatLightDef::FlatLightDef() {
 		lightType = 0;
 	}
 
-
-	// -------------------------------
-
-
-	SmoothLightDef::SmoothLightDef()
-	{
+	/*
+	=====================
+	SmoothLightDef::SmoothLightDef
+	=====================
+	*/
+	SmoothLightDef::SmoothLightDef() {
 		lightType = 1;
 		innerPasses = 3;
 	}
 
-
-	// -------------------------------
-
-
-	PreloadLightDef::PreloadLightDef()
-	{
+	/*
+	=====================
+	PreloadLightDef::PreloadLightDef
+	=====================
+	*/
+	PreloadLightDef::PreloadLightDef() {
 		isPreloaded = true;
 		lightType	= 2;
 	}

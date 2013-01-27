@@ -9,139 +9,254 @@
 
 #include <iostream>
 
-namespace Pim
-{
+namespace Pim {
 	// --- KeyEvent ---
-	KeyEvent::KeyEvent()
-	{ 
+
+	/*
+	=====================
+	KeyEvent::KeyEvent:
+	=====================
+	*/
+	KeyEvent::KeyEvent() {
 		activePrevFrame = false;
-		_reset(); 
-	}
-	KeyEvent::KeyEvent(const KeyEvent&)
-	{ 
-		_reset(); 
-	}
-	void KeyEvent::_reset()
-	{ 
-		count=0; 
-		for (int i=0; i<256; i++) 
-		{
-			keys[i]=false; fresh[i]=false; 
-		}
-	}
-	void KeyEvent::_unfresh()
-	{ 
-		for (int i=0; i<256; i++) 
-			fresh[i]=false; 
+		_Reset();
 	}
 
-	bool KeyEvent::isKeyDown(KeyCode k)
-	{ 
-		return keys[k]; 
+	/*
+	=====================
+	KeyEvent::KeyEvent
+	=====================
+	*/
+	KeyEvent::KeyEvent(const KeyEvent&) {
+		_Reset();
 	}
-	bool KeyEvent::isKeyFresh(KeyCode k)
-	{ 
-		return keys[k] && fresh[k]; 
+
+	/*
+	=====================
+	KeyEvent::_Reset
+	=====================
+	*/
+	void KeyEvent::_Reset() {
+		count=0;
+		for (int i=0; i<256; i++) {
+			keys[i]=false;
+			fresh[i]=false;
+		}
 	}
-	bool KeyEvent::isKeyDown(std::string str)
-	{ 
-		return keys[binds[str]]; 
+
+	/*
+	=====================
+	KeyEvent::_Unfresh
+	=====================
+	*/
+	void KeyEvent::_Unfresh() {
+		for (int i=0; i<256; i++) {
+			fresh[i]=false;
+		}
 	}
-	bool KeyEvent::isKeyFresh(std::string str)
-	{ 
-		return keys[binds[str]] && fresh[binds[str]]; 
+
+	/*
+	=====================
+	KeyEvent::IsKeyDown
+	=====================
+	*/
+	bool KeyEvent::IsKeyDown(const KeyCode k) const {
+		return keys[k];
 	}
-	int KeyEvent::keyCount()
-	{ 
-		return count; 
+
+	/*
+	=====================
+	KeyEvent::IsKeyFresh
+	=====================
+	*/
+	bool KeyEvent::IsKeyFresh(const KeyCode k) const {
+		return keys[k] && fresh[k];
 	}
-	void KeyEvent::bindKey(std::string &str, KeyCode k)
-	{ 
-		binds[str] = k; 
+
+	/*
+	=====================
+	KeyEvent::IsKeyDown
+	=====================
+	*/
+	bool KeyEvent::IsKeyDown(const string str) const {
+		return keys[binds.find(str)->second];
 	}
-	void KeyEvent::unbindKey(std::string &str)
-	{
-		binds.erase(str); 
+
+	/*
+	=====================
+	KeyEvent::IsKeyFresh
+	=====================
+	*/
+	bool KeyEvent::IsKeyFresh(const string str) const {
+		return keys[binds.find(str)->second] && fresh[binds.find(str)->second];
+	}
+
+	/*
+	=====================
+	KeyEvent::KeyCount
+	=====================
+	*/
+	int KeyEvent::KeyCount() const {
+		return count;
+	}
+
+	/*
+	=====================
+	KeyEvent::BindKey
+	=====================
+	*/
+	void KeyEvent::BindKey(const string &str, const KeyCode k) {
+		binds[str] = k;
+	}
+
+	/*
+	=====================
+	KeyEvent::UnbindKey
+	=====================
+	*/
+	void KeyEvent::UnbindKey(const string &str) {
+		binds.erase(str);
 	}
 
 
 	// --- MouseEvent ---
-	MouseEvent::MouseEvent()
-	{ 
-		_reset(); 
+
+	/*
+	=====================
+	MouseEvent::MouseEvent
+	=====================
+	*/
+	MouseEvent::MouseEvent() {
+		_Reset();
 	}
-	MouseEvent::MouseEvent(const MouseEvent&)
-	{ 
-		_reset(); 
+
+	/*
+	=====================
+	MouseEvent::MouseEvent
+	=====================
+	*/
+	MouseEvent::MouseEvent(const MouseEvent&) {
+		_Reset();
 	}
-	void MouseEvent::_reset()
-	{ 
-		position = Vec2(0.f,0.f); 
-		relPosition = Vec2(0.f,0.f); 
-		dirty=false; 
+
+	/*
+	=====================
+	MouseEvent::_Reset
+	=====================
+	*/
+	void MouseEvent::_Reset() {
+		position = Vec2(0.f,0.f);
+		relPosition = Vec2(0.f,0.f);
+		dirty=false;
 		keys[0]=false;
-		keys[1]=false; 
+		keys[1]=false;
 		fresh[0]=false;
-		fresh[0]=false; 
+		fresh[0]=false;
 	}
-	void MouseEvent::_unfresh()
-	{ 
-		dirty		= keys[0] || keys[1]; 
+
+	/*
+	=====================
+	MouseEvent::_Unfresh
+	=====================
+	*/
+	void MouseEvent::_Unfresh() {
+		dirty		= keys[0] || keys[1];
 		fresh[0]	= false;
 		fresh[1]	= false;
 	}
-	void MouseEvent::_mouseMoved(Vec2 pos)
-	{ 
-		relPosition = pos; 
-		position = pos; 
+
+	/*
+	=====================
+	MouseEvent::_MouseMoved
+	=====================
+	*/
+	void MouseEvent::_MouseMoved(Vec2 pos) {
+		relPosition = pos;
+		position = pos;
 	}
 
-	bool MouseEvent::isKeyDown(MouseButton mb)
-	{ 
-		return keys[mb]; 
+	/*
+	=====================
+	MouseEvent::IsKeyDown
+	=====================
+	*/
+	bool MouseEvent::IsKeyDown(MouseButton mb) const {
+		return keys[mb];
 	}
-	bool MouseEvent::isKeyFresh(MouseButton mb)
-	{
-		return keys[mb] && fresh[mb]; 
+
+	/*
+	=====================
+	MouseEvent::IsKeyFresh
+	=====================
+	*/
+	bool MouseEvent::IsKeyFresh(MouseButton mb) const {
+		return keys[mb] && fresh[mb];
 	}
-	Vec2 MouseEvent::getPosition()
-	{
-		return (Vec2(position.x, GameControl::getWindowHeight()-position.y)
-				- GameControl::getSingleton()->lowerLeftCorner())
-				* GameControl::getSingleton()->coordinateFactor(); 
+
+	/*
+	=====================
+	MouseEvent::GetPosition
+	=====================
+	*/
+	Vec2 MouseEvent::GetPosition() const {
+		return (Vec2(position.x, GameControl::GetWindowHeight()-position.y)
+				- GameControl::GetSingleton()->LowerLeftCorner())
+			   * GameControl::GetSingleton()->GetCoordinateFactor();
 	}
-	Vec2 MouseEvent::getRelative()
-	{
+
+	/*
+	=====================
+	MouseEvent::GetRelative
+	=====================
+	*/
+	Vec2 MouseEvent::GetRelative() const {
 		return relPosition;
 	}
 
 
 	// --- ControllerEvent ---
-	ControllerEvent::ControllerEvent()
-	{
+
+	/*
+	=====================
+	ControllerEvent::ControllerEvent
+	=====================
+	*/
+	ControllerEvent::ControllerEvent() {
 		curBtnState = 0;
 		prevBtnState = 0;
 
-		if (connected())
-		{
-			getStates();
+		if (Connected()) {
+			GetStates();
 		}
 	}
 
-	bool ControllerEvent::connected()
-	{
+	/*
+	=====================
+	ControllerEvent::Connected
+	=====================
+	*/
+	bool ControllerEvent::Connected() {
 		ZeroMemory(&xinputState, sizeof(XINPUT_STATE));
 		return !XInputGetState(0, &xinputState);
 	}
-	void ControllerEvent::getStates()
-	{
+
+	/*
+	=====================
+	ControllerEvent::GetStates
+	=====================
+	*/
+	void ControllerEvent::GetStates() {
 		prevBtnState = curBtnState;
 		curBtnState = xinputState.Gamepad.wButtons;
 	}
-	void ControllerEvent::vibrate(float l, float r)
-	{
-		if (connected())
-		{
+
+	/*
+	=====================
+	ControllerEvent::Vibrate
+	=====================
+	*/
+	void ControllerEvent::Vibrate(float l, float r) {
+		if (Connected()) {
 			// Create a Vibraton State
 			XINPUT_VIBRATION vibration;
 
@@ -149,259 +264,381 @@ namespace Pim
 			ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
 
 			// Set the Vibration Values
-			vibration.wLeftMotorSpeed = l * 65535;
-			vibration.wRightMotorSpeed = r * 65535;
+			vibration.wLeftMotorSpeed = WORD(l * 65535);
+			vibration.wRightMotorSpeed = WORD(r * 65535);
 
 			// Vibrate the controller
 			XInputSetState(0, &vibration);
 		}
 	}
 
-	bool ControllerEvent::isKeyDown(Xbox x)
-	{
-		return (bool)(curBtnState & x);
+	/*
+	=====================
+	ControllerEvent::IsKeyDown
+	=====================
+	*/
+	bool ControllerEvent::IsKeyDown(Xbox x) const {
+		return (curBtnState & x) != 0;
 	}
-	bool ControllerEvent::isKeyFresh(Xbox x)
-	{
-		return (bool)(curBtnState & x) && !(bool)(prevBtnState & x);
+
+	/*
+	=====================
+	ControllerEvent::IsKeyFresh
+	=====================
+	*/
+	bool ControllerEvent::IsKeyFresh(Xbox x) const {
+		return ((curBtnState & x) != 0) && ((prevBtnState & x) == 0);
 	}
-	Vec2 ControllerEvent::leftStick()
-	{
+
+	/*
+	=====================
+	ControllerEvent::LeftStick
+	=====================
+	*/
+	Vec2 ControllerEvent::LeftStick() const {
 		SHORT lx = xinputState.Gamepad.sThumbLX;
-		if (abs(lx) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
-		{
+		if (abs(lx) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) {
 			lx = 0;
 		}
 
 		SHORT ly = xinputState.Gamepad.sThumbLY;
-		if (abs(ly) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
-		{
+		if (abs(ly) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) {
 			ly = 0;
 		}
 
 		return Pim::Vec2((float)lx/32767.f, (float)ly/32767.f);
 	}
-	Vec2 ControllerEvent::rightStick()
-	{
+
+	/*
+	=====================
+	ControllerEvent::RightStick
+	=====================
+	*/
+	Vec2 ControllerEvent::RightStick() const {
 		SHORT rx = xinputState.Gamepad.sThumbRX;
-		if (abs(rx) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
-		{
+		if (abs(rx) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) {
 			rx = 0;
 		}
 
 		SHORT ry = xinputState.Gamepad.sThumbRY;
-		if (abs(ry) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
-		{
+		if (abs(ry) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) {
 			ry = 0;
 		}
 
 		return Pim::Vec2((float)rx/32767.f, (float)ry/32767.f);
 	}
-	float ControllerEvent::leftTrigger()
-	{
+
+	/*
+	=====================
+	ControllerEvent::LeftTrigger
+	=====================
+	*/
+	float ControllerEvent::LeftTrigger() const {
 		return (float)xinputState.Gamepad.bLeftTrigger / 255.f;
 	}
-	float ControllerEvent::rightTrigger()
-	{
+
+	/*
+	=====================
+	ControllerEvent::RightTrigger
+	=====================
+	*/
+	float ControllerEvent::RightTrigger() const {
 		return (float)xinputState.Gamepad.bRightTrigger / 255.f;
 	}
 
 
 	// --- Input ---
 	Input* Input::singleton = NULL;
-	
-	Input::Input()
-	{
+
+	/*
+	=====================
+	Input::GetSingleton
+	=====================
+	*/
+	Input* Input::GetSingleton() {
+		return singleton;
+	}
+
+	/*
+	=====================
+	Input::Input
+	=====================
+	*/
+	Input::Input() {
 		PimAssert(singleton == NULL, "Input singleton is already initialized");
 	}
-	void Input::instantiateSingleton()
-	{
+
+	/*
+	=====================
+	Input::InstantiateSingleton
+	=====================
+	*/
+	void Input::InstantiateSingleton() {
 		singleton = new Input;
 	}
-	void Input::clearSingleton()
-	{
-		if (singleton)
-		{
+
+	/*
+	=====================
+	Input::ClearSingleton
+	=====================
+	*/
+	void Input::ClearSingleton() {
+		if (singleton) {
 			delete singleton;
 			singleton = NULL;
 		}
 	}
 
-	void Input::bindKey(std::string id, KeyEvent::KeyCode key)
-	{
+	/*
+	=====================
+	Input::BindKey
+	=====================
+	*/
+	void Input::BindKey(string id, KeyEvent::KeyCode key) {
 		PimAssert(key >= 0 && key < 256, "Key out of range.");
-		keyEvent.bindKey(id, key);
+		keyEvent.BindKey(id, key);
 
-#ifdef _DEBUG
-		std::cout<<"Bound key - " <<id <<": " <<keyEvent.binds[id] <<"\n";
-#endif
-	}
-	void Input::unbindKey(std::string id)
-	{
-		keyEvent.unbindKey(id);
+		#ifdef _DEBUG
+		cout<<"Bound key - " <<id <<": " <<keyEvent.binds[id] <<"\n";
+		#endif /* _DEBUG */
 	}
 
-	// Called by GameControl upon registration. Use GameControl::add__listener.
-	void Input::addKeyListener(GameNode *node)
-	{
+	/*
+	=====================
+	Input::UnbindKey
+	=====================
+	*/
+	void Input::UnbindKey(string id) {
+		keyEvent.UnbindKey(id);
+	}
+
+	/*
+	=====================
+	Input::AddKeyListener
+	=====================
+	*/
+	void Input::AddKeyListener(GameNode *node) {
 		kl.push_back(node);
 	}
-	void Input::removeKeyListener(GameNode *node)
-	{
-		for (unsigned int i=0; i<kl.size(); i++)
-			if (kl[i] == node)
+
+	/*
+	=====================
+	Input::RemoveKeyListener
+	=====================
+	*/
+	void Input::RemoveKeyListener(GameNode *node) {
+		for (unsigned int i=0; i<kl.size(); i++) {
+			if (kl[i] == node) {
 				kl.erase(kl.begin() + i);
+			}
+		}
 	}
 
-	void Input::addMouseListener(GameNode *node)
-	{
+	/*
+	=====================
+	Input::AddMouseListener
+	=====================
+	*/
+	void Input::AddMouseListener(GameNode *node) {
 		ml.push_back(node);
 	}
-	void Input::removeMouseListener(GameNode *node)
-	{
-		for (unsigned int i=0; i<ml.size(); i++)
-		{
-			if (ml[i] == node)
-			{
+
+	/*
+	=====================
+	Input::RemoveMouseListener
+	=====================
+	*/
+	void Input::RemoveMouseListener(GameNode *node) {
+		for (unsigned int i=0; i<ml.size(); i++) {
+			if (ml[i] == node) {
 				ml.erase(ml.begin() + i);
 			}
 		}
 	}
 
-	void Input::addControlListener(GameNode *node)
-	{
+	/*
+	=====================
+	Input::AddControlListener
+	=====================
+	*/
+	void Input::AddControlListener(GameNode *node) {
 		cl.push_back(node);
 	}
-	void Input::removeControlListener(GameNode *node)
-	{
-		for (unsigned int i=0; i<cl.size(); i++)
-		{
-			if (cl[i] == node)
-			{
+
+	/*
+	=====================
+	Input::RemoveControlListener
+	=====================
+	*/
+	void Input::RemoveControlListener(GameNode *node) {
+		for (unsigned int i=0; i<cl.size(); i++) {
+			if (cl[i] == node) {
 				cl.erase(cl.begin() + i);
 			}
 		}
 	}
 
-	void Input::vibrateXbox(float leftVib, float rightVib)
-	{
-		contEvent.vibrate(leftVib, rightVib);
+	/*
+	=====================
+	Input::VibrateXbox
+	=====================
+	*/
+	void Input::VibrateXbox(float leftVib, float rightVib) {
+		contEvent.Vibrate(leftVib, rightVib);
 	}
-	
-	// DO NOT CALL THESE METHODS MANUALLY. I'M SERIOUS YO. DON'T.
-	void Input::_lostFocus()
-	{
-		// TODO: Dispatch a NULL message to all
-		keyEvent._reset();
-		mouseEvent._reset();
-		dispatch();
-	}
-	void Input::_gainedFocus()
-	{
 
+	// DO NOT CALL THE UNDERLINED METHODS MANUALLY. I'M SERIOUS YO. DON'T.
+
+	/*
+	=====================
+	Input::_LostFocus
+	=====================
+	*/
+	void Input::_LostFocus() {
+		keyEvent._Reset();
+		mouseEvent._Reset();
+		Dispatch();
 	}
-	void Input::_keyPressed(int key)
-	{
-		if (!keyEvent.keys[key])
-		{
+
+	/*
+	=====================
+	Input::_GainedFocus
+	=====================
+	*/
+	void Input::_GainedFocus() {
+		// TODO: Dispatch a NULL message to all listeners
+	}
+
+	/*
+	=====================
+	Input::_KeyPressed
+	=====================
+	*/
+	void Input::_KeyPressed(int key) {
+		if (!keyEvent.keys[key]) {
 			keyEvent.keys[key] = true;
 			keyEvent.fresh[key] = true;
 			keyEvent.count++;
 		}
 	}
-	void Input::_keyReleased(int key)
-	{
+
+	/*
+	=====================
+	Input::_KeyReleased
+	=====================
+	*/
+	void Input::_KeyReleased(int key) {
 		keyEvent.keys[key] = false;
 		keyEvent.count--;
 		keyEvent.activePrevFrame = true;
 	}
-	void Input::_mouseMoved(int x, int y)
-	{
-		mouseEvent._mouseMoved(Vec2((float)x, (float)y));
+
+	/*
+	=====================
+	Input::_MouseMoved
+	=====================
+	*/
+	void Input::_MouseMoved(int x, int y) {
+		mouseEvent._MouseMoved(Vec2((float)x, (float)y));
 		mouseEvent.dirty = true;
 	}
-	void Input::_mousePressed(int id)
-	{
+
+	/*
+	=====================
+	Input::_MousePressed
+	=====================
+	*/
+	void Input::_MousePressed(int id) {
 		mouseEvent.keys[id] = true;
 		mouseEvent.fresh[id] = true;
 		mouseEvent.dirty = true;
 	}
-	void Input::_mouseReleased(int id)
-	{
+
+	/*
+	=====================
+	Input::_MouseReleased
+	=====================
+	*/
+	void Input::_MouseReleased(int id) {
 		mouseEvent.keys[id] = false;
 		mouseEvent.dirty = true;
 	}
 
-	void Input::dispatch()
-	{
+
+	/*
+	=====================
+	Input::Dispatch
+	=====================
+	*/
+	void Input::Dispatch() {
 		// dispatch keys..
-		if (keyEvent.count || keyEvent.activePrevFrame)
-		{
-			for (unsigned int i=0; i<kl.size(); i++)
-			{
-				kl[i]->keyEvent(keyEvent);
+		if (keyEvent.count || keyEvent.activePrevFrame) {
+			for (unsigned int i=0; i<kl.size(); i++) {
+				kl[i]->OnKeyEvent(keyEvent);
 			}
 
 			keyEvent.activePrevFrame = false;
 		}
-		keyEvent._unfresh();
+		keyEvent._Unfresh();
 
 		// dispatch mouse..
-		if (mouseEvent.dirty)
-		{
+		if (mouseEvent.dirty) {
 			mouseEvent.relPosition = mouseEvent.position - mouseEvent.lastPosition;
 			mouseEvent.lastPosition = mouseEvent.position;
 
-			for (unsigned int i=0; i<ml.size(); i++)
-			{
-				ml[i]->mouseEvent(mouseEvent);
+			for (unsigned int i=0; i<ml.size(); i++) {
+				ml[i]->OnMouseEvent(mouseEvent);
 			}
 		}
-		mouseEvent._unfresh();
+		mouseEvent._Unfresh();
 
 		// dispatch control...
-		if (cl.size() && contEvent.connected())
-		{
-			contEvent.getStates();
+		if (cl.size() && contEvent.Connected()) {
+			contEvent.GetStates();
 
-			for (unsigned int i=0; i<cl.size(); i++)
-			{
-				cl[i]->controllerEvent(contEvent);
+			for (unsigned int i=0; i<cl.size(); i++) {
+				cl[i]->OnControllerEvent(contEvent);
 			}
 		}
 	}
-	
-	void Input::dispatchPaused(GameNode *n)
-	{
+
+	/*
+	=====================
+	Input::DispatchPaused
+	=====================
+	*/
+	void Input::DispatchPaused(GameNode *n) {
 		mouseEvent.relPosition = mouseEvent.position - mouseEvent.lastPosition;
 		mouseEvent.lastPosition = mouseEvent.position;
 
-		bool cont = contEvent.connected();
-		if (cont)
-		{
-			contEvent.getStates();
+		bool cont = contEvent.Connected();
+		if (cont) {
+			contEvent.GetStates();
 		}
 
 		// Dispatch to the pause-layer regardless of what has occured
-		recursiveDispatch(n, cont);
+		Dispatch_r(n, cont);
 
 		keyEvent.activePrevFrame = false;
-		keyEvent._unfresh();
-		mouseEvent._unfresh();
+		keyEvent._Unfresh();
+		mouseEvent._Unfresh();
 	}
-	void Input::recursiveDispatch(GameNode *n, bool controller)
-	{
-		n->keyEvent(keyEvent);
-		n->mouseEvent(mouseEvent);
 
-		if (controller)
-		{
-			n->controllerEvent(contEvent);
+	/*
+	=====================
+	Input::Dispatch_r
+	=====================
+	*/
+	void Input::Dispatch_r(GameNode *n, bool controller) {
+		n->OnKeyEvent(keyEvent);
+		n->OnMouseEvent(mouseEvent);
+
+		if (controller) {
+			n->OnControllerEvent(contEvent);
 		}
 
-		for each (GameNode *child in n->children)
-		{
-			recursiveDispatch(child, controller);
+		for (unsigned int i=0; i<n->children.size(); i++) {
+			Dispatch_r(n->children[i], controller);
 		}
 	}
 }

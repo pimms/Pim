@@ -56,7 +56,7 @@ namespace Pim
 		if (!l) return o;
 
 		unsigned short cntA = moveNode->colShape->lines.size();
-		
+
 		Vec2 d = n-o;
 
 		bool inter = true;
@@ -67,7 +67,7 @@ namespace Pim
 		for each (GameNode *node in moveNode->getParentLayer()->collisionNodes)
 		{
 			unsigned short cntB = node->colShape->lines.size();
-			
+
 
 			for (int i=0; i<cntA+cntB; i++)
 			{
@@ -103,7 +103,7 @@ namespace Pim
 					maxA += velProjection;
 
 				float intDist = intervalDistance(minA,maxA,minB,maxB);
-				if (intDist > 0) 
+				if (intDist > 0)
 				{
 					willInter = false;
 					continue;
@@ -139,7 +139,7 @@ namespace Pim
 	bool CollisionManager::intersect(GameNode *na, GameNode *nb)
 	{
 #ifdef _DEBUG
-		PimAssert(na->getParentLayer() == nb->getParentLayer(), 
+		PimAssert(na->getParentLayer() == nb->getParentLayer(),
 			"Error: only siblings can intersect.");
 #endif
 
@@ -179,6 +179,6 @@ namespace Pim
 			return minA - maxB;
 		}
 	}
-} 
+}
 
 */

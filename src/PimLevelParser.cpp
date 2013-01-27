@@ -8,17 +8,16 @@
 #include "PimVec2.h"
 #include "PimLightDef.h"
 
-namespace Pim
-{	
-	// --------------------------------------------------------------
-
-
-	std::string LevelParser::getResourcePath(std::string path)
-	{
-		TiXmlDocument doc( path.c_str() );
-		if (!doc.LoadFile())
-		{
-			std::string desc = "Could not open file for parsing:\n";
+namespace Pim {
+	/*
+	=====================
+	LevelParser::GetResourcePath
+	=====================
+	*/
+	string LevelParser::GetResourcePath(const string path) {
+		TiXmlDocument doc(path.c_str());
+		if (!doc.LoadFile()) {
+			string desc = "Could not open file for parsing:\n";
 			desc.append(path);
 			MessageBoxA(NULL, desc.c_str(), "Error!", MB_OK | MB_ICONEXCLAMATION);
 			return NULL;
@@ -26,20 +25,23 @@ namespace Pim
 
 		TiXmlElement *root = NULL;
 		root = doc.FirstChildElement("meta");
-	
-		if (root)
-		{
+
+		if (root) {
 			resPath = root->Attribute("res", (double*)NULL);
 		}
 
 		return resPath;
 	}
-	void LevelParser::setResourcePath(std::string file, std::string path)
-	{
-		TiXmlDocument doc( file.c_str() );
-		if (!doc.LoadFile())
-		{
-			std::string desc = "Could not open file for writing:\n";
+
+	/*
+	=====================
+	LevelParser::SetResourcePath
+	=====================
+	*/
+	void LevelParser::SetResourcePath(const string file, const string path) {
+		TiXmlDocument doc(file.c_str());
+		if (!doc.LoadFile()) {
+			string desc = "Could not open file for writing:\n";
 			desc.append(file);
 			MessageBoxA(NULL, desc.c_str(), "Error!", MB_OK | MB_ICONEXCLAMATION);
 			return;
@@ -47,26 +49,28 @@ namespace Pim
 
 		TiXmlElement *root = NULL;
 		root = doc.FirstChildElement("meta");
-		if (root)
-		{
+		if (root) {
 			root->SetAttribute("res", path.c_str());
 			resPath = path;
 			doc.SaveFile();
 		}
 	}
 
-	bool LevelParser::parse(std::string path, Layer *layer)
-	{
+	/*
+	=====================
+	LevelParser::Parse
+	=====================
+	*/
+	bool LevelParser::Parse(const string path, Layer *layer) {
 		PimAssert(layer != NULL, "Error: must pass a non-nil layer to LevelParser::parse()!");
 
-#ifdef PIMEDIT
-		resPath				= getResourcePath(path);
-#endif
+	#ifdef PIMEDIT
+		resPath	= GetResourcePath(path);
+	#endif
 
 		TiXmlDocument doc( path.c_str() );
-		if (!doc.LoadFile())
-		{
-			std::string desc = "Could not open file for parsing:\n";
+		if (!doc.LoadFile()) {
+			string desc = "Could not open file for parsing:\n";
 			desc.append(path);
 			MessageBoxA(NULL, desc.c_str(), "Parser error", MB_OK | MB_ICONEXCLAMATION);
 			return false;
@@ -74,57 +78,56 @@ namespace Pim
 
 		TiXmlElement *root;
 		root = doc.FirstChildElement("layer");
-		if (root)
-		{
+		if (root) {
 			data.layer = layer;
 			data.layer->identifier = "layer";
 
 			// Parse all childless batch nodes (defined at root level in the XML)
-			parseRootBatchNodes(&doc);
+			ParseRootBatchNodes(&doc);
 
 			// Parse polygons
-			parsePoly(&doc);
-		
-			setLayerAttributes(root, data.layer);
-			parseNode(root, data.layer);
-		}
-		else
-		{
+			ParsePoly(&doc);
+
+			SetLayerAttributes(root, data.layer);
+			ParseNode(root, data.layer);
+		} else {
 			return false;
 		}
 
 		return true;
 	}
-	
-
-	// --------------------------------------------------------------
 
 
-	void LevelParser::parsePoly(TiXmlDocument *doc)
-	{
-		TiXmlElement *root;
+	/*
+	=====================
+	LevelParser::ParsePoly
+	=====================
+	*/
+	void LevelParser::ParsePoly(TiXmlDocument *doc) {
+		TiXmlElement *root = NULL;
 
 		// Parse the physics vertices
 		root = doc->FirstChildElement("physic");
-		if (root)
-		{
+		if (root) {
 			TiXmlElement *cur;
-			for (cur = root->FirstChildElement("poly"); cur; cur = cur->NextSiblingElement("poly"))
-			{
+			for (cur = root->FirstChildElement("poly"); cur; cur = cur->NextSiblingElement("poly")) {
 				const char *attr;
-				std::vector<Vec2> vec;
+				vector<Vec2> vec;
 
-				attr = cur->Attribute("p1", (double*)NULL);
-				if (attr)
-					vec.push_back(vecFromString(attr));
-			
-				attr = cur->Attribute("p2", (double*)NULL);
-				if (attr)
-					vec.push_back(vecFromString(attr));
+				attr = cur->Attribute("p1");
+				if (attr) {
+					vec.push_back(VecFromString(attr));
+				}
 
-				attr = cur->Attribute("p3", (double*)NULL);
-				if (attr)
-					vec.push_back(vecFromString(attr));
+				attr = cur->Attribute("p2");
+				if (attr) {
+					vec.push_back(VecFromString(attr));
+				}
+
+				attr = cur->Attribute("p3");
+				if (attr) {
+					vec.push_back(VecFromString(attr));
+				}
 
 				data.physics.push_back(vec);
 			}
@@ -132,159 +135,186 @@ namespace Pim
 
 		// Parse the shadow-vertices
 		root = doc->FirstChildElement("shadows");
-		if (root)
-		{
+		if (root) {
 			TiXmlElement *cur;
-			for (cur = root->FirstChildElement("poly"); cur; cur = cur->NextSiblingElement("poly"))
-			{
+			for (cur = root->FirstChildElement("poly"); cur; cur = cur->NextSiblingElement("poly")) {
 				const char *attr;
-				std::vector<Vec2> vec;
+				vector<Vec2> vec;
 
-				attr = cur->Attribute("p1", (double*)NULL);
-				if (attr)
-					vec.push_back(vecFromString(attr));
-			
-				attr = cur->Attribute("p2", (double*)NULL);
-				if (attr)
-					vec.push_back(vecFromString(attr));
+				attr = cur->Attribute("p1");
+				if (attr) {
+					vec.push_back(VecFromString(attr));
+				}
 
-				attr = cur->Attribute("p3", (double*)NULL);
-				if (attr)
-					vec.push_back(vecFromString(attr));
+				attr = cur->Attribute("p2");
+				if (attr) {
+					vec.push_back(VecFromString(attr));
+				}
+
+				attr = cur->Attribute("p3");
+				if (attr) {					
+					vec.push_back(VecFromString(attr));
+				}
 
 				data.shadows.push_back(vec);
 			}
 		}
 	}
-	void LevelParser::parseRootBatchNodes(TiXmlDocument *doc)
-	{
+
+	/*
+	=====================
+	LevelParser::ParseRootBatchNodes
+	=====================
+	*/
+	void LevelParser::ParseRootBatchNodes(TiXmlDocument *doc) {
 		TiXmlElement *cur;
 
 		// Batch nodes
-		for (cur = doc->FirstChildElement("batchnode"); cur; cur = cur->NextSiblingElement("batchnode"))
-		{
+		for (cur = doc->FirstChildElement("batchnode"); cur; 
+			cur = cur->NextSiblingElement("batchnode")) {
 			SpriteBatchNode *sbn = new SpriteBatchNode;
-			data.layer->addChild(sbn);
+			data.layer->AddChild(sbn);
 
-			parseIdentifier(cur, sbn);
-			parseImage(cur, sbn);
+			ParseIdentifier(cur, sbn);
+			ParseImage(cur, sbn);
 
 			batchNodes[sbn->identifier] = sbn;
 		}
 	}
-	void LevelParser::parseNode(TiXmlElement *elem, GameNode *node)
-	{
+
+	/*
+	=====================
+	LevelParser::ParseNode
+	=====================
+	*/
+	void LevelParser::ParseNode(TiXmlElement *elem, GameNode *node) {
 		TiXmlElement *cur;
 
 		// Custom
-		parseCustom(elem, node);
+		ParseCustom(elem, node);
 
 		// Nodes
-		for (cur = elem->FirstChildElement("node"); cur; cur = cur->NextSiblingElement("node"))
-		{
+		for (cur = elem->FirstChildElement("node"); cur; cur = cur->NextSiblingElement("node")) {
 			GameNode *child = new GameNode;
-			node->addChild(child);
+			node->AddChild(child);
 
-			setNodeAttributes(cur, node);
-			parseNode(cur, node);
+			SetNodeAttributes(cur, node);
+			ParseNode(cur, node);
 		}
 
 		// Sprites
-		for (cur = elem->FirstChildElement("sprite"); cur; cur = cur->NextSiblingElement("sprite"))
-		{
+		for (cur = elem->FirstChildElement("sprite"); cur; cur = cur->NextSiblingElement("sprite")) {
 			Sprite *sprite = new Sprite;
-			node->addChild(sprite);
+			node->AddChild(sprite);
 
-			setSpriteAttributes(cur, sprite);
-			parseNode(cur, sprite);
+			SetSpriteAttributes(cur, sprite);
+			ParseNode(cur, sprite);
 		}
 
 		// Layers
-		for (cur = elem->FirstChildElement("layer"); cur; cur->NextSiblingElement("layer"))
-		{
+		for (cur = elem->FirstChildElement("layer"); cur; cur->NextSiblingElement("layer")) {
 			Layer *layer = new Layer;
-			node->addChild(layer);
+			node->AddChild(layer);
 
-			setLayerAttributes(cur, layer);
-			parseNode(cur, layer);
+			SetLayerAttributes(cur, layer);
+			ParseNode(cur, layer);
 		}
 	}
 
 
-	// --------------------------------------------------------------
 
-
-	void LevelParser::setNodeAttributes(TiXmlElement *elem, GameNode *node)
-	{
+	/*
+	=====================
+	LevelParser::SetNodeAttributes
+	=====================
+	*/
+	void LevelParser::SetNodeAttributes(TiXmlElement *elem, GameNode *node) {
 		// Common
-		parsePosition(elem, node);
-		parseRotation(elem, node);
-		parseIdentifier(elem, node);
+		ParsePosition(elem, node);
+		ParseRotation(elem, node);
+		ParseIdentifier(elem, node);
 
 		// Sprite & GameNode attribute
-		parseLight(elem, node);
+		ParseLight(elem, node);
 	}
-	void LevelParser::setLayerAttributes(TiXmlElement *elem, Layer *layer)
-	{
+
+	/*
+	=====================
+	LevelParser::SetLayerAttributes
+	=====================
+	*/
+	void LevelParser::SetLayerAttributes(TiXmlElement *elem, Layer *layer) {
 		// Common
-		parsePosition(elem, layer);
-		parseRotation(elem, layer);
-		parseIdentifier(elem, layer);
+		ParsePosition(elem, layer);
+		ParseRotation(elem, layer);
+		ParseIdentifier(elem, layer);
 
 		// Custom
-		parseLightingSystem(elem, layer);
-		parseColor(elem, layer);
-		parseImmovable(elem, layer);
-		parseScale(elem, layer);
+		ParseLightingSystem(elem, layer);
+		ParseColor(elem, layer);
+		ParseImmovable(elem, layer);
+		ParseScale(elem, layer);
 	}
-	void LevelParser::setSpriteAttributes(TiXmlElement *elem, Sprite *sprite)
-	{
+
+	/*
+	=====================
+	LevelParser::SetSpriteAttributes
+	=====================
+	*/
+	void LevelParser::SetSpriteAttributes(TiXmlElement *elem, Sprite *sprite) {
 		// Common
-		parsePosition(elem, sprite);
-		parseRotation(elem, sprite);
-		parseIdentifier(elem, sprite);
-
-		// Sprite & GameNode attribute
-		parseLight(elem, sprite);
+		ParsePosition(elem, sprite);
+		ParseRotation(elem, sprite);
+		ParseIdentifier(elem, sprite);
 	
+		// Sprite & GameNode attribute
+		ParseLight(elem, sprite);
+
 		// Custom for sprites
-		parseAnchor(elem, sprite);
-		parseImage(elem, sprite);
-		parseColor(elem, sprite);
-		parseScale(elem, sprite);
-		parseRect(elem, sprite);
-		parseBatch(elem, sprite);
+		ParseAnchor(elem, sprite);
+		ParseImage(elem, sprite);
+		ParseColor(elem, sprite);
+		ParseScale(elem, sprite);
+		ParseRect(elem, sprite);
+		ParseBatch(elem, sprite);
 	}
 
 
-	// --------------------------------------------------------------
 
-
-	Vec2 LevelParser::vecFromString(const char *str)
-	{
+	/*
+	=====================
+	LevelParser::VecFromString
+	=====================
+	*/
+	Vec2 LevelParser::VecFromString(const char *str) {
 		const char *x = str;
 		const char *y = str;
 
-		for (int i=0; i<strlen(str); i++)
-		{
-			if (str[i] == ' ')
+		for (unsigned i=0; i<strlen(str); i++) {
+			if (str[i] == ' ') {
 				y = str+i;
+			}
 		}
 
-		return Vec2( 
-			(float)atof(x), 
-			(float)atof(y) 
+		return Vec2(
+			(float)atof(x),
+			(float)atof(y)
 		);
 	}
-	Color LevelParser::colorFromString(const char *str)
-	{
+
+	/*
+	=====================
+	LevelParser::ColorFromString
+	=====================
+	*/
+	Color LevelParser::ColorFromString(const char *str) {
 		const char *rgba[4] = {str};
 
 		int idx = 1;
-		for (int i=0; i<strlen(str); i++)
-		{
-			if (str[i] == ' ')
+		for (unsigned i=0; i<strlen(str); i++) {
+			if (str[i] == ' ') {
 				rgba[idx++] = str+i;
+			}
 		}
 
 		return Color(
@@ -294,309 +324,394 @@ namespace Pim
 			(float)atof(rgba[3])
 		);
 	}
-	Rect LevelParser::rectFromString(const char *str)
-	{
+
+	/*
+	=====================
+	LevelParser::RectFromString
+	=====================
+	*/
+	Rect LevelParser::RectFromString(const char *str) {
 		// Rect and color are both just 4D vectors.
-		Color c = colorFromString(str);
+		Color c = ColorFromString(str);
 		return Rect(c.r, c.g, c.b, c.a);
 	}
 
 
-	// --------------------------------------------------------------
-
 
 	/* COMMON */
-	void LevelParser::parsePosition(TiXmlElement *elem, GameNode *node)
-	{
+
+	/*
+	=====================
+	LevelParser::ParsePosition
+	=====================
+	*/
+	void LevelParser::ParsePosition(TiXmlElement *elem, GameNode *node) {
 		const char *attr = elem->Attribute("position", (double*)NULL);
 
-		if (attr != NULL)
-		{
-			node->position = vecFromString(attr);
+		if (attr != NULL) {
+			node->position = VecFromString(attr);
 		}
 	}
-	void LevelParser::parseRotation(TiXmlElement *elem, GameNode *node)
-	{
+
+	/*
+	=====================
+	LevelParser::ParseRotation
+	=====================
+	*/
+	void LevelParser::ParseRotation(TiXmlElement *elem, GameNode *node) {
 		double attr = 0;
 		elem->Attribute("rotation", &attr);
 
-		if (attr != NULL)
-		{
-			node->rotation = attr;
+		if (attr != 0.0) {
+			node->rotation = float(attr);
 		}
 	}
-	void LevelParser::parseIdentifier(TiXmlElement *elem, GameNode *node)
-	{
-		const char *attr = elem->Attribute("identifier", (double*)NULL);
-		
-		if (attr != NULL)
-		{
+
+	/*
+	=====================
+	LevelParser::ParseIdentifier
+	=====================
+	*/
+	void LevelParser::ParseIdentifier(TiXmlElement *elem, GameNode *node) {
+		const char *attr = elem->Attribute("identifier");
+
+		if (attr != NULL) {
 			node->identifier = attr;
 		}
 	}
 
+
 	/* SPRITE */
-	void LevelParser::parseAnchor(TiXmlElement *elem, Sprite *sprite)
-	{
-		const char *attr = elem->Attribute("anchor", (double*)NULL);
-	
-		if (attr != NULL)
-		{
-			sprite->anchor = vecFromString(attr);
+
+	/*
+	=====================
+	LevelParser::ParseAnchor
+	=====================
+	*/
+	void LevelParser::ParseAnchor(TiXmlElement *elem, Sprite *sprite) {
+		const char *attr = elem->Attribute("anchor");
+
+		if (attr != NULL) {
+			sprite->anchor = VecFromString(attr);
 		}
 	}
-	void LevelParser::parseImage(TiXmlElement *elem, Sprite *sprite)
-	{
-		const char *attr = elem->Attribute("img", (double*)NULL);
 
-		if (attr != NULL)
-		{
-			std::string res;
+	/*
+	=====================
+	LevelParser::ParseImage
+	=====================
+	*/
+	void LevelParser::ParseImage(TiXmlElement *elem, Sprite *sprite) {
+		const char *attr = elem->Attribute("img");
 
-			if (attr[0] != 'C')
-			{
+		if (attr != NULL) {
+			string res;
+
+			if (attr[0] != 'C') {
 				res = resPath;
 				res.append(attr);
-			}
-			else
-			{
+			} else {
 				res = attr;
 			}
 
-			sprite->loadSprite(res);
+			sprite->LoadSprite(res);
 		}
 	}
-	void LevelParser::parseColor(TiXmlElement *elem, Sprite *sprite)
-	{
-		const char *attr = elem->Attribute("color", (double*)NULL);
 
-		if (attr != NULL)
-		{
-			sprite->color = colorFromString(attr);
+	/*
+	=====================
+	LevelParser::ParseColor
+	=====================
+	*/
+	void LevelParser::ParseColor(TiXmlElement *elem, Sprite *sprite) {
+		const char *attr = elem->Attribute("color");
+
+		if (attr != NULL) {
+			sprite->color = ColorFromString(attr);
 		}
 	}
-	void LevelParser::parseScale(TiXmlElement *elem, Sprite *sprite)
-	{
-		const char *attr = elem->Attribute("scale", (double*)NULL);
 
-		if (attr != NULL)
-		{
-			sprite->scale = vecFromString(attr);
+	/*
+	=====================
+	LevelParser::ParseScale
+	=====================
+	*/
+	void LevelParser::ParseScale(TiXmlElement *elem, Sprite *sprite) {
+		const char *attr = elem->Attribute("scale");
+
+		if (attr != NULL) {
+			sprite->scale = VecFromString(attr);
 		}
 	}
-	void LevelParser::parseRect(TiXmlElement *elem, Sprite *sprite)
-	{
-		const char *attr = elem->Attribute("rect", (double*)NULL);
 
-		if (attr != NULL)
-		{
-			sprite->rect = rectFromString(attr);
+	/*
+	=====================
+	LevelParser::ParseRect
+	=====================
+	*/
+	void LevelParser::ParseRect(TiXmlElement *elem, Sprite *sprite) {
+		const char *attr = elem->Attribute("rect");
+
+		if (attr != NULL) {
+			sprite->rect = RectFromString(attr);
 		}
 	}
-	void LevelParser::parseBatch(TiXmlElement *elem, Sprite *sprite)
-	{
-		const char *attr = elem->Attribute("batchnode", (double*)NULL);
 
-		if (attr != NULL)
-		{
-			if (batchNodes.count(attr))
-			{
-				sprite->useBatchNode(batchNodes[attr]);
+	/*
+	=====================
+	LevelParser::ParseBatch
+	=====================
+	*/
+	void LevelParser::ParseBatch(TiXmlElement *elem, Sprite *sprite) {
+		const char *attr = elem->Attribute("batchnode");
+
+		if (attr != NULL) {
+			if (batchNodes.count(attr)) {
+				sprite->UseBatchNode(batchNodes[attr]);
+			} else {
+				
+				string desc = "ERROR:\nReferences batchnode does not exist:\n";
+				desc.append(attr);
+				MessageBoxA(NULL, desc.c_str(), "Parser error", MB_OK | MB_ICONEXCLAMATION);
 			}
-			else
-			{
-				char *desc = "ERROR:\nReferences batchnode does not exist:\n";
-				strcat(desc, attr);
-				MessageBoxA(NULL, desc, "Parser error", MB_OK | MB_ICONEXCLAMATION);
-			}
 		}
 	}
+
 
 	/* SPRITE AND GAMENODE */
-	void LevelParser::parseLight(TiXmlElement *elem, GameNode *node)
-	{
+
+	/*
+	=====================
+	LevelParser::ParseLight
+	=====================
+	*/
+	void LevelParser::ParseLight(TiXmlElement *elem, GameNode *node) {
 		TiXmlElement *light = elem->FirstChildElement("light");
-		
-		if (light)
-		{
+
+		if (light) {
 			LightDef *ldef;
 
-			const char *type = light->Attribute("type", (double*)NULL);
-			if (type != NULL)
-			{
-				if (!strcmp(type, "smooth"))
-				{
-					ldef = new SmoothLightDef;	
-				}
-				else if (!strcmp(type, "flat"))
-				{
+			const char *type = light->Attribute("type");
+			if (type != NULL) {
+				if (!strcmp(type, "smooth")) {
+					ldef = new SmoothLightDef;
+				} else if (!strcmp(type, "flat")) {
 					ldef = new FlatLightDef;
-				}
-				else
-				{
+				} else {
 					MessageBoxA(NULL,
-						"Error:\nBad type specified (flat/smooth) for light.",
-						"Parser error", MB_OK | MB_ICONEXCLAMATION
-					);
+								"Error:\nBad type specified (flat/smooth) for light.",
+								"Parser error", MB_OK | MB_ICONEXCLAMATION
+							   );
 					return;
 				}
-			}
-			else
-			{
+			} else {
 				MessageBoxA(NULL,
-					"Error:\nBad type specified (flat/smooth) for light.",
-					"Parser error", MB_OK | MB_ICONEXCLAMATION
-				);
+							"Error:\nBad type specified (flat/smooth) for light.",
+							"Parser error", MB_OK | MB_ICONEXCLAMATION
+						   );
 				return;
 			}
 
-			parseLightRadius(light, ldef);
-			parseLightInnerColor(light, ldef);
-			parseLightOuterColor(light, ldef);
-			parseLightFalloff(light, ldef);
-			parseLightPosition(light, ldef);
+			ParseLightRadius(light, ldef);
+			ParseLightInnerColor(light, ldef);
+			ParseLightOuterColor(light, ldef);
+			ParseLightFalloff(light, ldef);
+			ParseLightPosition(light, ldef);
 
-			node->getParentLayer()->addLight(node, ldef);
+			node->GetParentLayer()->AddLight(node, ldef);
 		}
 	}
-	void LevelParser::parseLightRadius(TiXmlElement *elem, LightDef *ldef)
-	{
-		const char *attr = elem->Attribute("radius", (double*)NULL);
-		
-		if (attr != NULL)
-		{
-			ldef->radius = atof(attr);
-		}
-	}
-	void LevelParser::parseLightInnerColor(TiXmlElement *elem, LightDef *ldef)
-	{
-		const char *attr = elem->Attribute("innercolor", (double*)NULL);
 
-		if (attr != NULL)
-		{
-			ldef->innerColor = colorFromString(attr);
-		}
-	}
-	void LevelParser::parseLightOuterColor(TiXmlElement *elem, LightDef *ldef)
-	{
-		const char *attr = elem->Attribute("outercolor", (double*)NULL);
+	/*
+	=====================
+	LevelParser::ParseLightRadius
+	=====================
+	*/
+	void LevelParser::ParseLightRadius(TiXmlElement *elem, LightDef *ldef) {
+		const char *attr = elem->Attribute("radius");
 
-		if (attr != NULL)
-		{
-			ldef->outerColor = colorFromString(attr);
+		if (attr != NULL) {
+			ldef->radius = (float)atof(attr);
 		}
 	}
-	void LevelParser::parseLightFalloff(TiXmlElement *elem, LightDef *ldef)
-	{
-		const char *attr = elem->Attribute("falloff", (double*)NULL);
-		
-		if (attr != NULL)
-		{
-			ldef->falloff = atof(attr);
+
+	/*
+	=====================
+	LevelParser::ParseLightInnerColor
+	=====================
+	*/
+	void LevelParser::ParseLightInnerColor(TiXmlElement *elem, LightDef *ldef) {
+		const char *attr = elem->Attribute("innercolor");
+
+		if (attr != NULL) {
+			ldef->innerColor = ColorFromString(attr);
 		}
 	}
-	void LevelParser::parseLightPosition(TiXmlElement *elem, LightDef *ldef)
-	{
-		const char *attr = elem->Attribute("position", (double*)NULL);
-		
-		if (attr != NULL)
-		{
-			ldef->position = vecFromString(attr);
+
+	/*
+	=====================
+	LevelParser::ParseLightOuterColor
+	=====================
+	*/
+	void LevelParser::ParseLightOuterColor(TiXmlElement *elem, LightDef *ldef) {
+		const char *attr = elem->Attribute("outercolor");
+
+		if (attr != NULL) {
+			ldef->outerColor = ColorFromString(attr);
 		}
 	}
+	
+	/*
+	=====================
+	LevelParser::ParseLightFalloff
+	=====================
+	*/
+	void LevelParser::ParseLightFalloff(TiXmlElement *elem, LightDef *ldef) {
+		const char *attr = elem->Attribute("falloff");
+
+		if (attr != NULL) {
+			ldef->falloff = (float)atof(attr);
+		}
+	}
+	
+	/*
+	=====================
+	LevelParser::ParseLightPosition
+	=====================
+	*/
+	void LevelParser::ParseLightPosition(TiXmlElement *elem, LightDef *ldef) {
+		const char *attr = elem->Attribute("position");
+
+		if (attr != NULL) {
+			ldef->position = VecFromString(attr);
+		}
+	}
+
 
 	/* LAYER */
-	void LevelParser::parseColor(TiXmlElement *elem, Layer *layer)
-	{
-		const char *attr = elem->Attribute("color", (double*)NULL);
+	
 
-		if (attr != NULL)
-		{
-			layer->color = colorFromString(attr);
+	/*
+	=====================
+	LevelParser::ParseColor
+	=====================
+	*/
+	void LevelParser::ParseColor(TiXmlElement *elem, Layer *layer) {
+		const char *attr = elem->Attribute("color");
+
+		if (attr != NULL) {
+			layer->color = ColorFromString(attr);
 		}
 	}
-	void LevelParser::parseImmovable(TiXmlElement *elem, Layer *layer)
-	{
+
+	/*
+	=====================
+	LevelParser::ParseImmovable
+	=====================
+	*/
+	void LevelParser::ParseImmovable(TiXmlElement *elem, Layer *layer) {
 		double attr = 0;
 		elem->Attribute("immovable", &attr);
 
-		if (attr != 0)
-		{
-			layer->immovable = (bool)attr;
-		}
-	}
-	void LevelParser::parseScale(TiXmlElement *elem, Layer *layer)
-	{
-		const char *attr = elem->Attribute("scale", (double*)NULL);
-
-		if (attr != NULL)
-		{
-			layer->scale = vecFromString(attr);
-		}
+		layer->immovable = (attr != 0.0);
 	}
 
-	void LevelParser::parseLightingSystem(TiXmlElement *elem, Layer *layer)
-	{
+	/*
+	=====================
+	LevelParser::ParseScale
+	=====================
+	*/
+	void LevelParser::ParseScale(TiXmlElement *elem, Layer *layer) {
+		const char *attr = elem->Attribute("scale");
+
+		if (attr != NULL) {
+			layer->scale = VecFromString(attr);
+		}
+	}
+
+	/*
+	=====================
+	LevelParser::ParseLightingSystem
+	=====================
+	*/
+	void LevelParser::ParseLightingSystem(TiXmlElement *elem, Layer *layer) {
 		TiXmlElement *lightSys = elem->FirstChildElement("lightsys");
 
-		if (lightSys)
-		{
-			Vec2 resolution(800.f, 600.f); 
+		if (lightSys) {
+			Vec2 resolution(800.f, 600.f);
 
-			const char *attr = lightSys->Attribute("resolution", (double*)NULL);
-			if (attr != NULL)
-			{
-				resolution = vecFromString(attr);
+			const char *attr = lightSys->Attribute("resolution");
+			if (attr != NULL) {
+				resolution = VecFromString(attr);
 			}
-#ifdef _DEBUG
-			else
-			{
+			#ifdef _DEBUG
+			else {
 				// Show a warning message
-				MessageBoxA(NULL, 
-					"ERROR:\nA lighting system was defined, but no resolution was given.", 
+				MessageBoxA(NULL,
+					"ERROR:\nA lighting system was defined, but no resolution was given.",
 					"Level Error", MB_OK | MB_ICONEXCLAMATION
-				);
+					);
 			}
-#endif
+			#endif
 
-			layer->createLightingSystem(resolution);
+			layer->CreateLightingSystem(resolution);
 
-			parseLSUnlitColor(lightSys, layer);
-			parseLSLightAlpha(lightSys, layer);
-			parseLSCastShadows(lightSys, layer);
-			parseLSSmoothShadows(lightSys, layer);
+			ParseLSUnlitColor(lightSys, layer);
+			ParseLSLightAlpha(lightSys, layer);
+			ParseLSCastShadows(lightSys, layer);
+			ParseLSSmoothShadows(lightSys, layer);
 		}
 	}
-	void LevelParser::parseLSUnlitColor(TiXmlElement *elem, Layer *layer)
-	{
-		const char *attr = elem->Attribute("color", (double*)NULL);
-		if (attr != NULL)
-		{
-			layer->setLightingUnlitColor(colorFromString(attr));
+
+	/*
+	=====================
+	LevelParser::ParseLSUnlitColor
+	=====================
+	*/
+	void LevelParser::ParseLSUnlitColor(TiXmlElement *elem, Layer *layer) {
+		const char *attr = elem->Attribute("color");
+
+		if (attr != NULL) {
+			layer->SetLightingUnlitColor(ColorFromString(attr));
 		}
 	}
-	void LevelParser::parseLSLightAlpha(TiXmlElement *elem, Layer *layer)
-	{
-		const char *attr = elem->Attribute("lightalpha", (double*)NULL);
-		if (attr != NULL)
-		{
-			layer->setLightAlpha(atof(attr));
+
+	/*
+	=====================
+	LevelParser::ParseLSLightAlpha
+	=====================
+	*/
+	void LevelParser::ParseLSLightAlpha(TiXmlElement *elem, Layer *layer) {
+		const char *attr = elem->Attribute("lightalpha");
+
+		if (attr != NULL) {
+			layer->SetLightAlpha((float)atof(attr));
 		}
 	}
-	void LevelParser::parseLSCastShadows(TiXmlElement *elem, Layer *layer)
-	{
-		const char *attr = elem->Attribute("castshadows", (double*)NULL);
-		if (attr != NULL)
-		{
-			layer->setCastShadows( (bool)atoi(attr) );
-		}
+	
+	/*
+	=====================
+	LevelParser::ParseLSCastShadows
+	=====================
+	*/
+	void LevelParser::ParseLSCastShadows(TiXmlElement *elem, Layer *layer) {
+		double attr;
+		elem->Attribute("castshadows", &attr);
+
+		layer->SetCastShadows(attr != 0.0);
 	}
-	void LevelParser::parseLSSmoothShadows(TiXmlElement *elem, Layer *layer)
-	{
-		const char *attr = elem->Attribute("smoothshadows", (double*)NULL);
-		if (attr != NULL)
-		{
-			layer->setSmoothShadows( (bool)atoi(attr) );
+
+	/*
+	=====================
+	LevelParser::ParseLSSmoothShadows
+	=====================
+	*/
+	void LevelParser::ParseLSSmoothShadows(TiXmlElement *elem, Layer *layer) {
+		double attr;
+		elem->Attribute("smoothshadows", &attr);
+
+		if (attr != NULL) {
+			layer->SetSmoothShadows(attr != 0.0);
 		}
 	}
 }
