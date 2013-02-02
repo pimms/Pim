@@ -2,6 +2,7 @@
 
 #include "PimInternal.h"
 #include "PimVec2.h"
+#include "PimGameControl.h"
 
 /*
 	The Scene class does not derive from GameNode, as it's functionality is strictly
@@ -9,14 +10,15 @@
 */
 
 namespace Pim {
-	class RenderWindow;
-	class GameControl;
 	class Layer;
 
 	class Scene {
 	protected:
 		friend class GameControl;
-		friend class RenderWindow;
+		friend class RenderWindowBase;
+#ifdef WIN32
+		friend class RenderWindowWIN;
+#endif
 
 	public:
 		bool					dirtyZOrder;

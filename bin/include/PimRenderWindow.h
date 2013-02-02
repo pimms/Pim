@@ -2,39 +2,41 @@
 
 #include "PimWinStyle.h"
 
-#include <Windows.h>
 #include <gl/GL.h>
 #include <string>
 #include <functional>
+
+#ifdef WIN32
+	#include <Windows.h>
+	typedef HDC			DeviceContext;
+	typedef HGLRC		RenderingContext;
+#endif /* WIN32 */
 
 namespace Pim {
 	class GameControl;
 	class LightingSystem;
 
-	class RenderWindow {
-	private:
+	class RenderWindowBase {
+	protected:
 		friend class GameControl;
 		friend class LightingSystem;
 
 	public:
-									RenderWindow(WinStyle::CreationData &data);
-									~RenderWindow();
+									RenderWindowBase(WinStyle::CreationData &data);
+									~RenderWindowBase();
 		Vec2						GetOrtho() const;
 		Vec2						GetOrthoOffset() const;
-		HWND						GetHwnd() const;
 		void						PrintOpenGLErrors(string identifier);
 
-	private:
+	protected:
 		enum BORDERPOS {
 			NONE,
 			VER,
 			HOR,
 		};
 
-		HDC							hDC;		// Private device context
-		HGLRC						hRC;		// Rendering context
-		HWND						hWnd;		// Window handle
-		HINSTANCE					hInstance;	// Application instance
+		DeviceContext				devCtx;		// Handle for device context
+		RenderingContext			renCtx;		// Rendering context
 		WinStyle::CreationData		winData;
 		Vec2						scale;
 		Vec2						ortho;		// Screen pixel dimension
@@ -42,12 +44,12 @@ namespace Pim {
 		BORDERPOS					bpos;		// Border position
 		int							bdim;		// Border dimensions
 
-		bool						SetupWindow(WinStyle::CreationData &data);
+		virtual bool				SetupWindow(WinStyle::CreationData &data)	= 0;
+		virtual void				KillWindow()								= 0;
+		virtual void				SetWindowStyle(WinStyle::WinStyle style)	= 0;
 		void						ResizeWindow(int wnew, int hnew);
 		bool						InitOpenGL();
-		void						KillWindow();
 		void						SetCreationData(WinStyle::CreationData &data);
-		void						SetWindowStyle(WinStyle::WinStyle style);
 		void						RenderFrame(); 
 	};
 }

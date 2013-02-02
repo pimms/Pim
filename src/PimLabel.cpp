@@ -205,11 +205,11 @@ namespace Pim {
 		for (unsigned int i=0; (unsigned)i<lines.size(); i++) {
 			glPushMatrix();
 
-			float x = -(anchor.x) * lineWidth[i];
-			float y = i*(font->size+linePadding);
-			y *= -1;
+			float listX = -(anchor.x) * lineWidth[i];
+			float listY = i*(font->size+linePadding);
+			listY *= -1.0f;
 
-			glTranslatef(x, y, 0.f);
+			glTranslatef(listX, listY, 0.f);
 			glCallLists(lines[i].length(), GL_UNSIGNED_BYTE, lines[i].c_str());
 			glPopMatrix();
 		}

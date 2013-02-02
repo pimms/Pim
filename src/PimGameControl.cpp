@@ -26,6 +26,7 @@ namespace Pim {
 	Window callback function
 	=====================
 	*/
+#ifdef WIN32
 	LRESULT	CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		switch (msg) {
 		case WM_ACTIVATE:
@@ -101,8 +102,10 @@ namespace Pim {
 
 		return DefWindowProc(hWnd,msg,wParam,lParam);
 	}
+#endif /* WIN32 */
 
 	GameControl* GameControl::singleton = NULL;
+
 
 	/*
 	=====================

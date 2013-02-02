@@ -4,15 +4,25 @@
 #include "PimVec2.h"
 #include "PimWinStyle.h"
 
+#ifdef WIN32
+	#include "PimRenderWindowWIN.h"
+	namespace Pim {
+		typedef RenderWindowWIN RenderWindow;
+	}
+#endif 
+
 namespace Pim {
-	class RenderWindow;
 	class GameNode;
 	class Layer;
 	class Scene;
 
+
 	class GameControl {
 	private:
-		friend class RenderWindow;
+		friend class RenderWindowBase;
+#ifdef WIN32
+		friend class RenderWindowWIN;
+#endif
 
 	public:
 								GameControl();

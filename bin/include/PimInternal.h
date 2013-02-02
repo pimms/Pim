@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define PIM_VERSION "0.8"
+#define PIM_VERSION "0.8.1"
 
 // memory-leak tracing for debug builds
 #ifdef _DEBUG
@@ -21,13 +21,19 @@ using namespace std;
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-// Threading
-#include <process.h>	// To be removed in the future
-//#include <omp.h>
+#ifdef WIN32
+	// Threading
+	#include <process.h>	// To be removed in the future
+	//#include <omp.h>
 
-// windows and OpenGL (glew)
-#include <Windows.h>
-#include <GL\glew.h>
+	// windows and OpenGL (glew)
+	#include <Windows.h>
+	#include <GL\glew.h>
+
+	// Direct sound
+	#include <mmsystem.h>
+	#include <dsound.h>
+#endif /* WIN32 */
 
 // freetype
 #include "ft2build.h"
@@ -35,10 +41,6 @@ using namespace std;
 
 // libpng
 #include "png.h"
-
-// Direct sound
-#include <mmsystem.h>
-#include <dsound.h>
 
 // Ogg Vorbis
 #include "vorbis\codec.h"
