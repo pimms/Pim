@@ -1,10 +1,15 @@
 #include "PimInternal.h"
-#include <thread>
-#include <conio.h>
+
+#ifdef WIN32
+    #include <thread>
+    #include <conio.h>
+#endif
 
 #include "PimConsoleReader.h"
 #include "PimGameControl.h"
 #include "PimAssert.h"
+
+#ifdef WIN32
 
 namespace Pim {
 ConsoleReader* ConsoleReader::singleton = NULL;
@@ -191,3 +196,5 @@ ConsoleReader* ConsoleReader::singleton = NULL;
 		delete singleton;
 	}
 }
+
+#endif

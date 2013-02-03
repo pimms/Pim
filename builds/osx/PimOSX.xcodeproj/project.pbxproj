@@ -30,7 +30,6 @@
 		191B935D16BE672400AB317D /* PimButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 191B931E16BE672400AB317D /* PimButton.h */; };
 		191B935E16BE672400AB317D /* PimConsoleReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 191B931F16BE672400AB317D /* PimConsoleReader.cpp */; };
 		191B935F16BE672400AB317D /* PimConsoleReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 191B932016BE672400AB317D /* PimConsoleReader.h */; };
-		191B936016BE672400AB317D /* PimException.h in Headers */ = {isa = PBXBuildFile; fileRef = 191B932116BE672400AB317D /* PimException.h */; };
 		191B936116BE672400AB317D /* PimFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 191B932216BE672400AB317D /* PimFont.cpp */; };
 		191B936216BE672400AB317D /* PimFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 191B932316BE672400AB317D /* PimFont.h */; };
 		191B936316BE672400AB317D /* PimGameControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 191B932416BE672400AB317D /* PimGameControl.cpp */; };
@@ -38,8 +37,6 @@
 		191B936516BE672400AB317D /* PimGameNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 191B932616BE672400AB317D /* PimGameNode.cpp */; };
 		191B936616BE672400AB317D /* PimGameNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 191B932716BE672400AB317D /* PimGameNode.h */; };
 		191B936716BE672400AB317D /* PimHelperFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 191B932816BE672400AB317D /* PimHelperFunctions.h */; };
-		191B936816BE672400AB317D /* PimHUDLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 191B932916BE672400AB317D /* PimHUDLayer.cpp */; };
-		191B936916BE672400AB317D /* PimHUDLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 191B932A16BE672400AB317D /* PimHUDLayer.h */; };
 		191B936A16BE672400AB317D /* PimInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 191B932B16BE672400AB317D /* PimInput.cpp */; };
 		191B936B16BE672400AB317D /* PimInput.h in Headers */ = {isa = PBXBuildFile; fileRef = 191B932C16BE672400AB317D /* PimInput.h */; };
 		191B936C16BE672400AB317D /* PimInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 191B932D16BE672400AB317D /* PimInternal.h */; };
@@ -80,8 +77,6 @@
 		191B938F16BE672400AB317D /* PimVec2.h in Headers */ = {isa = PBXBuildFile; fileRef = 191B935016BE672400AB317D /* PimVec2.h */; };
 		191B939016BE672400AB317D /* PimWinStyle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 191B935116BE672400AB317D /* PimWinStyle.cpp */; };
 		191B939116BE672400AB317D /* PimWinStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 191B935216BE672400AB317D /* PimWinStyle.h */; };
-		191B939216BE672400AB317D /* resource.h in Headers */ = {isa = PBXBuildFile; fileRef = 191B935316BE672400AB317D /* resource.h */; };
-		191B939316BE672400AB317D /* Stdafx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 191B935416BE672400AB317D /* Stdafx.cpp */; };
 		191B939A16BE675000AB317D /* libpng15.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 191B939616BE675000AB317D /* libpng15.framework */; };
 		191B939B16BE675000AB317D /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 191B939716BE675000AB317D /* Vorbis.framework */; };
 		191B939C16BE675000AB317D /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 191B939816BE675000AB317D /* libfreetype.a */; };
@@ -119,7 +114,6 @@
 		191B931E16BE672400AB317D /* PimButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimButton.h; path = ../../../src/PimButton.h; sourceTree = "<group>"; };
 		191B931F16BE672400AB317D /* PimConsoleReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimConsoleReader.cpp; path = ../../../src/PimConsoleReader.cpp; sourceTree = "<group>"; };
 		191B932016BE672400AB317D /* PimConsoleReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimConsoleReader.h; path = ../../../src/PimConsoleReader.h; sourceTree = "<group>"; };
-		191B932116BE672400AB317D /* PimException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimException.h; path = ../../../src/PimException.h; sourceTree = "<group>"; };
 		191B932216BE672400AB317D /* PimFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimFont.cpp; path = ../../../src/PimFont.cpp; sourceTree = "<group>"; };
 		191B932316BE672400AB317D /* PimFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimFont.h; path = ../../../src/PimFont.h; sourceTree = "<group>"; };
 		191B932416BE672400AB317D /* PimGameControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimGameControl.cpp; path = ../../../src/PimGameControl.cpp; sourceTree = "<group>"; };
@@ -127,8 +121,6 @@
 		191B932616BE672400AB317D /* PimGameNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimGameNode.cpp; path = ../../../src/PimGameNode.cpp; sourceTree = "<group>"; };
 		191B932716BE672400AB317D /* PimGameNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimGameNode.h; path = ../../../src/PimGameNode.h; sourceTree = "<group>"; };
 		191B932816BE672400AB317D /* PimHelperFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimHelperFunctions.h; path = ../../../src/PimHelperFunctions.h; sourceTree = "<group>"; };
-		191B932916BE672400AB317D /* PimHUDLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimHUDLayer.cpp; path = ../../../src/PimHUDLayer.cpp; sourceTree = "<group>"; };
-		191B932A16BE672400AB317D /* PimHUDLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimHUDLayer.h; path = ../../../src/PimHUDLayer.h; sourceTree = "<group>"; };
 		191B932B16BE672400AB317D /* PimInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimInput.cpp; path = ../../../src/PimInput.cpp; sourceTree = "<group>"; };
 		191B932C16BE672400AB317D /* PimInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimInput.h; path = ../../../src/PimInput.h; sourceTree = "<group>"; };
 		191B932D16BE672400AB317D /* PimInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimInternal.h; path = ../../../src/PimInternal.h; sourceTree = "<group>"; };
@@ -169,8 +161,6 @@
 		191B935016BE672400AB317D /* PimVec2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimVec2.h; path = ../../../src/PimVec2.h; sourceTree = "<group>"; };
 		191B935116BE672400AB317D /* PimWinStyle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimWinStyle.cpp; path = ../../../src/PimWinStyle.cpp; sourceTree = "<group>"; };
 		191B935216BE672400AB317D /* PimWinStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimWinStyle.h; path = ../../../src/PimWinStyle.h; sourceTree = "<group>"; };
-		191B935316BE672400AB317D /* resource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = resource.h; path = ../../../src/resource.h; sourceTree = "<group>"; };
-		191B935416BE672400AB317D /* Stdafx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Stdafx.cpp; path = ../../../src/Stdafx.cpp; sourceTree = "<group>"; };
 		191B939616BE675000AB317D /* libpng15.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libpng15.framework; sourceTree = "<group>"; };
 		191B939716BE675000AB317D /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Vorbis.framework; sourceTree = "<group>"; };
 		191B939816BE675000AB317D /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfreetype.a; sourceTree = "<group>"; };
@@ -295,7 +285,6 @@
 				191B931E16BE672400AB317D /* PimButton.h */,
 				191B931F16BE672400AB317D /* PimConsoleReader.cpp */,
 				191B932016BE672400AB317D /* PimConsoleReader.h */,
-				191B932116BE672400AB317D /* PimException.h */,
 				191B932216BE672400AB317D /* PimFont.cpp */,
 				191B932316BE672400AB317D /* PimFont.h */,
 				191B932416BE672400AB317D /* PimGameControl.cpp */,
@@ -303,8 +292,6 @@
 				191B932616BE672400AB317D /* PimGameNode.cpp */,
 				191B932716BE672400AB317D /* PimGameNode.h */,
 				191B932816BE672400AB317D /* PimHelperFunctions.h */,
-				191B932916BE672400AB317D /* PimHUDLayer.cpp */,
-				191B932A16BE672400AB317D /* PimHUDLayer.h */,
 				191B932B16BE672400AB317D /* PimInput.cpp */,
 				191B932C16BE672400AB317D /* PimInput.h */,
 				191B932D16BE672400AB317D /* PimInternal.h */,
@@ -345,8 +332,6 @@
 				191B935016BE672400AB317D /* PimVec2.h */,
 				191B935116BE672400AB317D /* PimWinStyle.cpp */,
 				191B935216BE672400AB317D /* PimWinStyle.h */,
-				191B935316BE672400AB317D /* resource.h */,
-				191B935416BE672400AB317D /* Stdafx.cpp */,
 				191B939E16BE6CD400AB317D /* PimWarning.h */,
 			);
 			name = PIM;
@@ -368,12 +353,10 @@
 				191B935B16BE672400AB317D /* PimAudioManager.h in Headers */,
 				191B935D16BE672400AB317D /* PimButton.h in Headers */,
 				191B935F16BE672400AB317D /* PimConsoleReader.h in Headers */,
-				191B936016BE672400AB317D /* PimException.h in Headers */,
 				191B936216BE672400AB317D /* PimFont.h in Headers */,
 				191B936416BE672400AB317D /* PimGameControl.h in Headers */,
 				191B936616BE672400AB317D /* PimGameNode.h in Headers */,
 				191B936716BE672400AB317D /* PimHelperFunctions.h in Headers */,
-				191B936916BE672400AB317D /* PimHUDLayer.h in Headers */,
 				191B936B16BE672400AB317D /* PimInput.h in Headers */,
 				191B936C16BE672400AB317D /* PimInternal.h in Headers */,
 				191B936E16BE672400AB317D /* PimLabel.h in Headers */,
@@ -395,7 +378,6 @@
 				191B938D16BE672400AB317D /* PimSpriteBatchNode.h in Headers */,
 				191B938F16BE672400AB317D /* PimVec2.h in Headers */,
 				191B939116BE672400AB317D /* PimWinStyle.h in Headers */,
-				191B939216BE672400AB317D /* resource.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,7 +458,6 @@
 				191B936116BE672400AB317D /* PimFont.cpp in Sources */,
 				191B936316BE672400AB317D /* PimGameControl.cpp in Sources */,
 				191B936516BE672400AB317D /* PimGameNode.cpp in Sources */,
-				191B936816BE672400AB317D /* PimHUDLayer.cpp in Sources */,
 				191B936A16BE672400AB317D /* PimInput.cpp in Sources */,
 				191B936D16BE672400AB317D /* PimLabel.cpp in Sources */,
 				191B936F16BE672400AB317D /* PimLayer.cpp in Sources */,
@@ -496,7 +477,6 @@
 				191B938C16BE672400AB317D /* PimSpriteBatchNode.cpp in Sources */,
 				191B938E16BE672400AB317D /* PimVec2.cpp in Sources */,
 				191B939016BE672400AB317D /* PimWinStyle.cpp in Sources */,
-				191B939316BE672400AB317D /* Stdafx.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

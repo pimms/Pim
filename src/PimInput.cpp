@@ -215,7 +215,7 @@ namespace Pim {
 
 
 	// --- ControllerEvent ---
-
+#ifdef WIN32
 	/*
 	=====================
 	ControllerEvent::ControllerEvent
@@ -345,6 +345,7 @@ namespace Pim {
 	float ControllerEvent::RightTrigger() const {
 		return (float)xinputState.Gamepad.bRightTrigger / 255.f;
 	}
+#endif /* WIN32 */
 
 
 	// --- Input ---
@@ -484,7 +485,9 @@ namespace Pim {
 	=====================
 	*/
 	void Input::VibrateXbox(float leftVib, float rightVib) {
+#ifdef WIN32
 		contEvent.Vibrate(leftVib, rightVib);
+#endif
 	}
 
 	// DO NOT CALL THE UNDERLINED METHODS MANUALLY. I'M SERIOUS YO. DON'T.
@@ -592,6 +595,7 @@ namespace Pim {
 		}
 		mouseEvent._Unfresh();
 
+#ifdef WIN32
 		// dispatch control...
 		if (cl.size() && contEvent.Connected()) {
 			contEvent.GetStates();
@@ -600,6 +604,7 @@ namespace Pim {
 				cl[i]->OnControllerEvent(contEvent);
 			}
 		}
+#endif /* WIN32 */
 	}
 
 	/*
@@ -611,13 +616,17 @@ namespace Pim {
 		mouseEvent.relPosition = mouseEvent.position - mouseEvent.lastPosition;
 		mouseEvent.lastPosition = mouseEvent.position;
 
-		bool cont = contEvent.Connected();
-		if (cont) {
+#ifdef WIN32
+		bool controller = contEvent.Connected();
+		if (controller) {
 			contEvent.GetStates();
 		}
+#else
+        bool controller = false;
+#endif
 
 		// Dispatch to the pause-layer regardless of what has occured
-		Dispatch_r(n, cont);
+		Dispatch_r(n, controller);
 
 		keyEvent.activePrevFrame = false;
 		keyEvent._Unfresh();
@@ -633,9 +642,11 @@ namespace Pim {
 		n->OnKeyEvent(keyEvent);
 		n->OnMouseEvent(mouseEvent);
 
+#ifdef WIN32
 		if (controller) {
 			n->OnControllerEvent(contEvent);
 		}
+#endif /* WIN32 */
 
 		for (unsigned int i=0; i<n->children.size(); i++) {
 			Dispatch_r(n->children[i], controller);
