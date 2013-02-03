@@ -127,7 +127,6 @@ namespace Pim {
 		sleepNextFrame	= false;
 		sleepTime		= 0.f;
 
-#ifdef WIN32
 		// Get the module path
 		char path[260] = { '\0' };
 		GetModuleFileName(NULL, path, 260);
@@ -142,12 +141,9 @@ namespace Pim {
 		for (int i=lastSlash+1; i<260; i++) {
 			path[i] = '\0';
 		}
-        
-        modulePath = path;
-#else
-        modulePath = "<NOT YET SUPPORTED>";
-#endif
-        printf("Working directory: %s\n", modulePath.c_str());
+
+		modulePath = path;
+		printf("Working directory: %s\n", modulePath);
 	}
 
 	/*
@@ -258,11 +254,9 @@ namespace Pim {
 			renderWindow->SetupWindow(data);
 
 			#ifdef _DEBUG
-            #ifdef WIN32
 			if (commandline) {
 				ConsoleReader::Begin();
 			}
-            #endif /* WIN32 */
 			printf("\n[PIM-version %s]\n", PIM_VERSION);
 			printf("[OpenGL-version %s]\n\n", glGetString(GL_VERSION));
 			#endif /* _DEBUG */
@@ -294,11 +288,11 @@ namespace Pim {
 		ShaderManager::ClearSingleton();
 		AudioManager::ClearSingleton();
 
-		#ifdef WIN32
+		#ifdef _DEBUG
 		if (commandline) {
 			ConsoleReader::ShutDown();
 		}
-		#endif /* WIN32 */
+		#endif /* _DEBUG */
 
 		renderWindow->KillWindow();
 	}
@@ -550,15 +544,11 @@ namespace Pim {
 	=====================
 	*/
 	void GameControl::GameLoop() {
-#ifdef WIN32
-        MSG  msg;
-#endif
-        
+		MSG  msg;
 		quit = false;
 		ticks = clock();
 
 		while (!quit) {
-#ifdef WIN32
 			while (PeekMessage(&msg,NULL,0,0,PM_REMOVE)) {
 				if (msg.message == WM_QUIT) {
 					quit = true;
@@ -567,7 +557,6 @@ namespace Pim {
 					DispatchMessage(&msg);
 				}
 			}
-#endif /* WIN32 */
 
 			if (winHasMoved) {
 				// Discard the delta time
@@ -578,7 +567,7 @@ namespace Pim {
 			// Get the DT
 			float dt = CalculateDeltaTime();
 			if (dt < maxDelta) {
-				Sleep(ceil((maxDelta-dt)*1000.f));
+				Sleep(DWORD(ceil((maxDelta-dt)*1000.f)));
 				dt += CalculateDeltaTime();
 			}
 

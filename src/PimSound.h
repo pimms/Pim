@@ -19,7 +19,7 @@ namespace Pim {
 		friend class AudioManager;
 
 	public:
-		bool						deleteWhenDone;			// Cleanup when audio is done?
+		bool						deleteWhenDone;				// Cleanup when audio is done?
 
 									Sound(const string file);
 									Sound();
@@ -27,14 +27,14 @@ namespace Pim {
 		void						LoadFile(const string file);// OGG format ONLY!
 		void						UseCache(const string id);	// Load cache
 		void						Play();					
-		void						Replay();				// Rewind and play
-		void						Loop();					// Infinite loop
-		void						Reloop();				// Rewind and loop
+		void						Replay();					// Rewind and play
+		void						Loop();						// Infinite loop
+		void						Reloop();					// Rewind and loop
 		void						Pause();
-		void						SetVolume(float volume);// In the range [0 to 1]
-		void						SetPan(float pan);		// In the range [-1 to 1]
-		float						Position();				// Current position in seconds
-		int							Position(float time);	// Go to position in seconds
+		void						SetVolume(float volume);	// In the range [0 to 1]
+		void						SetPan(float pan);			// In the range [-1 to 1]
+		float						Position();					// Current position in seconds
+		int							Position(float time);		// Go to position in seconds
 		Sound*						PlayParallel(const bool deleteWhenDone = false);
 		const IDirectSoundBuffer8*	GetBuffer() const;
 

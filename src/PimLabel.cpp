@@ -3,7 +3,6 @@
 #include "PimFont.h"
 #include "PimGameControl.h"
 #include "PimAssert.h"
-#include <cstdarg>
 
 namespace Pim {
 	/*
@@ -95,7 +94,7 @@ namespace Pim {
 		} else {
 			// Get the arguments, write to the text
 			va_start(ap,ptext);
-			vsprintf(text, ptext, ap);
+			vsprintf_s(text, ptext, ap);
 			va_end(ap);
 		}
 
@@ -154,9 +153,7 @@ namespace Pim {
 		lineWidth.clear();
 
 		int lon = -1;
-        for (unsigned i=0; i<lines.size(); i++) {
-            string line = lines[i];
-            
+		for each (string line in lines) {
 			int cur = 0;
 			for (unsigned int i=0; i<line.length(); i++) {
 				cur += font->GetCharacterWidth(line[i]);
@@ -209,7 +206,7 @@ namespace Pim {
 			glPushMatrix();
 
 			float listX = -(anchor.x) * lineWidth[i];
-			float listY = i*(font->size+linePadding);
+			float listY = float(i*(font->size+linePadding));
 			listY *= -1.0f;
 
 			glTranslatef(listX, listY, 0.f);

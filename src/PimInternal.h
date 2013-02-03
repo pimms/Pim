@@ -18,12 +18,8 @@ using namespace std;
 #include <iostream>
 #include <fstream>
 #include <map>
-#include <cmath>
-
 #define _USE_MATH_DEFINES
 #include <math.h>
-
-#include "PimWarning.h"
 
 #ifdef WIN32
 	// Threading
@@ -37,32 +33,18 @@ using namespace std;
 	// Direct sound
 	#include <mmsystem.h>
 	#include <dsound.h>
+#endif /* WIN32 */
 
-    // freetype
-    #include "ft2build.h"
-    #include FT_FREETYPE_H
+// freetype
+#include "ft2build.h"
+#include FT_FREETYPE_H
 
-    // libpng
-    #include "png.h"
+// libpng
+#include "png.h"
 
-    // Ogg Vorbis
-    #include "vorbis\codec.h"
-    #include "vorbis\vorbisfile.h"
-#elif defined __APPLE__
-    // OpenGL
-    #include <OpenGL/gl.h>
-
-    // Freetype
-    #include "ft2build.h"
-    #include <freetype/freetype.h>
-
-    // libpng
-    #include <libpng15/png.h>
-
-    // Vorbis
-    #include <Vorbis/codec.h>
-    #include <Vorbis/vorbisfile.h>
-#endif
+// Ogg Vorbis
+#include "vorbis\codec.h"
+#include "vorbis\vorbisfile.h"
 
 // Custom defines
 #define DEGTORAD ((float)M_PI/180.f)

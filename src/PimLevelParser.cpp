@@ -19,7 +19,7 @@ namespace Pim {
 		if (!doc.LoadFile()) {
 			string desc = "Could not open file for parsing:\n";
 			desc.append(path);
-            PimWarning(desc.c_str(), "Error!");            
+			MessageBoxA(NULL, desc.c_str(), "Error!", MB_OK | MB_ICONEXCLAMATION);
 			return NULL;
 		}
 
@@ -43,7 +43,7 @@ namespace Pim {
 		if (!doc.LoadFile()) {
 			string desc = "Could not open file for writing:\n";
 			desc.append(file);
-			PimWarning(desc.c_str(), "Error!");
+			MessageBoxA(NULL, desc.c_str(), "Error!", MB_OK | MB_ICONEXCLAMATION);
 			return;
 		}
 
@@ -72,7 +72,7 @@ namespace Pim {
 		if (!doc.LoadFile()) {
 			string desc = "Could not open file for parsing:\n";
 			desc.append(path);
-            PimWarning(desc.c_str(), "Parser error");
+			MessageBoxA(NULL, desc.c_str(), "Parser error", MB_OK | MB_ICONEXCLAMATION);
 			return false;
 		}
 
@@ -472,7 +472,7 @@ namespace Pim {
 				
 				string desc = "ERROR:\nReferences batchnode does not exist:\n";
 				desc.append(attr);
-                PimWarning(desc.c_str(), "Parser error");
+				MessageBoxA(NULL, desc.c_str(), "Parser error", MB_OK | MB_ICONEXCLAMATION);
 			}
 		}
 	}
@@ -498,11 +498,17 @@ namespace Pim {
 				} else if (!strcmp(type, "flat")) {
 					ldef = new FlatLightDef;
 				} else {
-                    PimWarning("Error:\nBad type specified (flat/smooth) for light.","Parser error");
+					MessageBoxA(NULL,
+								"Error:\nBad type specified (flat/smooth) for light.",
+								"Parser error", MB_OK | MB_ICONEXCLAMATION
+							   );
 					return;
 				}
 			} else {
-                PimWarning("Error:\nBad type specified (flat/smooth) for light.","Parser error");
+				MessageBoxA(NULL,
+							"Error:\nBad type specified (flat/smooth) for light.",
+							"Parser error", MB_OK | MB_ICONEXCLAMATION
+						   );
 				return;
 			}
 

@@ -12,13 +12,6 @@ namespace Pim {
 		rbo				= 0;
 		tex				= 0;
 		retainTexture	= false;
-        
-        GLuint colorFormat;
-#ifdef WIN32
-        colorFormat = GL_RGBA32F;
-#elif defined __APPLE__
-        colorFormat = GL_RGBA32F_ARB;
-#endif
 
 		glGenTextures(1, &tex);
 		glBindTexture(GL_TEXTURE_2D, tex);
@@ -26,7 +19,7 @@ namespace Pim {
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, colorFormat, (GLsizei)res.x, (GLsizei)res.y,
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, (GLsizei)res.x, (GLsizei)res.y,
 					 0, GL_RGBA, GL_FLOAT, NULL);
 
 		// Create the main framebuffer

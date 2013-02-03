@@ -191,7 +191,7 @@ namespace Pim {
 		Vec2 cFac = GameControl::GetSingleton()->GetCoordinateFactor();
 		Vec2 wFac = GameControl::GetSingleton()->GetWindowScale();
 
-		Rect temp = current->rect;
+		Rect_t<float> temp = current->rect;
 		temp.width *= cFac.x * wFac.x * abs(current->scale.x);
 		temp.height *= cFac.y * wFac.y * abs(current->scale.y);
 

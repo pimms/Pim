@@ -198,11 +198,9 @@ namespace Pim {
 	=====================
 	*/
 	RotateByAction::RotateByAction(float angle, float duration)
-    : Action(duration) {
+		: Action(duration) {
 		total		= angle;
-    
-        float absangle = angle * ((angle < 0.f)?(-1.f):(1.f));
-		dir			= angle / absangle;
+		dir			= angle / abs(angle);
 	}
 
 	/*

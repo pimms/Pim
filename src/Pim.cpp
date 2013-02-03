@@ -3,7 +3,7 @@
 #include "pim.h"
 #include "PimAssert.h"
 #include "PimVec2.h"
-#include "PimWarning.h"
+
 
 
 int nextPow2(int a) {
@@ -32,13 +32,4 @@ void windCCW(Pim::Polygons *polygons) {
             }
         }
     }
-}
-
-
-void PimWarning(const char *description, const char *title) {
-#ifdef WIN32
-    MessageBox(NULL, descrption, title, MB_ICONEXCLAMATION|MB_OK);
-#elif defined __APPLE__
-    
-#endif
 }

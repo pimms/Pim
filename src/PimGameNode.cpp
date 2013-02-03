@@ -116,8 +116,7 @@ namespace Pim {
 	*/
 	void GameNode::RemoveAllChildren(const bool cleanup) {
 		// Delete all if required
-        for (unsigned i=0; i<children.size(); i++) {
-            GameNode *child = children[i];
+		for each (GameNode *child in children) {
 			if (cleanup) {
 				GameControl::GetSingleton()->AddNodeToDelete(child);
 			} else {

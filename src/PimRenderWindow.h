@@ -2,12 +2,7 @@
 
 #include "PimWinStyle.h"
 
-#ifdef WIN32
-    #include <gl/GL.h>
-#elif defined __APPLE__
-    #include <OpenGL/OpenGL.h>
-#endif
-
+#include <gl/GL.h>
 #include <string>
 #include <functional>
 
@@ -15,9 +10,7 @@
 	#include <Windows.h>
 	typedef HDC			DeviceContext;
 	typedef HGLRC		RenderingContext;
-#elif defined __APPLE__
-    
-#endif
+#endif /* WIN32 */
 
 namespace Pim {
 	class GameControl;
@@ -42,8 +35,8 @@ namespace Pim {
 			HOR,
 		};
 
-		//DeviceContext				devCtx;		// Handle for device context
-		//RenderingContext			renCtx;		// Rendering context
+		DeviceContext				devCtx;		// Handle for device context
+		RenderingContext			renCtx;		// Rendering context
 		WinStyle::CreationData		winData;
 		Vec2						scale;
 		Vec2						ortho;		// Screen pixel dimension
