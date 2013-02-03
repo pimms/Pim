@@ -64,7 +64,7 @@ namespace Pim {
 		unsigned int	sig_read = 0;
 		FILE *fp;
 
-		fopen_s(&fp, file.c_str(), "rb");
+		fp = fopen(file.c_str(), "rb");
 		PimAssert(fp != NULL, file.append(": Does not exist!").c_str());
 
 		png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -110,7 +110,7 @@ namespace Pim {
 		}
 
 		// Allocate the texture
-		unsigned int row_bytes = png_get_rowbytes(png_ptr, info_ptr);
+		unsigned long row_bytes = png_get_rowbytes(png_ptr, info_ptr);
 		GLubyte *texture = (GLubyte*)malloc(_th * row_bytes);
 
 		// Read the image into the texture

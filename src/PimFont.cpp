@@ -60,11 +60,7 @@ namespace Pim {
 
 		error = FT_Init_FreeType(&libFT);
 		if (error) {
-			MessageBox(
-				NULL,
-				"Could not initialize FreeType.",
-				"FreeType error!",
-				MB_ICONEXCLAMATION|MB_OK);
+            PimWarning("Could not initialize FreeType.", "FreeType error!");
 			return;
 		}
 
@@ -74,11 +70,7 @@ namespace Pim {
 
 			string errstr = "Could not recognize format of file:\n";
 			errstr.append(font);
-			MessageBox(
-				NULL,
-				errstr.c_str(),
-				"FreeType error!",
-				MB_ICONEXCLAMATION|MB_OK);
+            PimWarning(errstr.c_str(), "FreeType error!");
 			return;
 		} else if (error) {
 			FT_Done_FreeType(libFT);
@@ -90,11 +82,7 @@ namespace Pim {
 			errstr.append( ss.str() );
 			errstr.append("):\n");
 			errstr.append(font);
-			MessageBox(
-				NULL,
-				errstr.c_str(),
-				"FreeType error!",
-				MB_ICONEXCLAMATION|MB_OK);
+            PimWarning(errstr.c_str(), "FreeType error!");
 			return;
 		}
 
@@ -105,11 +93,7 @@ namespace Pim {
 					96,
 					96 );
 		if (error) {
-			MessageBox(
-				NULL,
-				"Unable to set the character size.",
-				"Freetype error!",
-				MB_ICONEXCLAMATION | MB_OK);
+            PimWarning("Unable to set the character size.", "FreeType error!");
 			return;
 		}
 
@@ -148,11 +132,7 @@ namespace Pim {
 	void Font::CreateDisplayList(FT_Face face, char ch) {
 		if (FT_Load_Glyph(face, FT_Get_Char_Index(face, ch), 
 			FT_LOAD_DEFAULT | FT_LOAD_MONOCHROME)) {
-			MessageBox(
-				NULL,
-				"Error: FT_Load_Glyph failed!",
-				"FreeType error!",
-				MB_ICONEXCLAMATION | MB_OK );
+            PimWarning("Error: FT_Load_GLyph failed!", "FreeType error!");
 			return;
 		}
 

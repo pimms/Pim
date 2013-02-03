@@ -15,7 +15,6 @@ namespace Pim {
 		lTex			= 0;
 		falloff			= 0.2f;
 		lightType		= -1;
-
 		isPreloaded		= false;
 	}
 

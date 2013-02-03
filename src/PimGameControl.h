@@ -9,7 +9,12 @@
 	namespace Pim {
 		typedef RenderWindowWIN RenderWindow;
 	}
-#endif 
+#elif defined __APPLE__
+    #include "PimRenderWindowOSX.h"
+    namespace Pim {
+        typedef RenderWindowOSX RenderWindow;
+    }
+#endif
 
 namespace Pim {
 	class GameNode;
@@ -22,6 +27,8 @@ namespace Pim {
 		friend class RenderWindowBase;
 #ifdef WIN32
 		friend class RenderWindowWIN;
+#elif defined __APPLE__
+        friend class RenderWindowOSX;
 #endif
 
 	public:

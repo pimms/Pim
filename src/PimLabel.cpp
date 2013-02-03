@@ -3,6 +3,7 @@
 #include "PimFont.h"
 #include "PimGameControl.h"
 #include "PimAssert.h"
+#include <cstdarg>
 
 namespace Pim {
 	/*
@@ -94,7 +95,7 @@ namespace Pim {
 		} else {
 			// Get the arguments, write to the text
 			va_start(ap,ptext);
-			vsprintf_s(text, ptext, ap);
+			vsprintf(text, ptext, ap);
 			va_end(ap);
 		}
 
@@ -153,7 +154,9 @@ namespace Pim {
 		lineWidth.clear();
 
 		int lon = -1;
-		for each (string line in lines) {
+        for (unsigned i=0; i<lines.size(); i++) {
+            string line = lines[i];
+            
 			int cur = 0;
 			for (unsigned int i=0; i<line.length(); i++) {
 				cur += font->GetCharacterWidth(line[i]);

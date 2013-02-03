@@ -2,10 +2,11 @@
 
 #pragma once
 
-// Standard headers (Windows, OpenGL, std...)
+// Standard headers (OpenGL, std...)
 #include "PimInternal.h"
 
 // Engine headers
+#include "PimWarning.h"
 #include "PimVec2.h"
 #include "PimPolygonShape.h"
 #include "PimWinStyle.h"

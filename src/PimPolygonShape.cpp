@@ -182,12 +182,12 @@ namespace Pim {
 	*/
 	Vec2 PolygonShape::GetCenter() const {
 		Vec2 c(0.f, 0.f);
-
-		int i=0;
-		for each (Line *line in lines) {
+        
+        unsigned i=0;
+        for (; i<lines.size(); i += 2) {
+            Line *line = lines[i];
 			c += line->GetP1();
 			c += line->GetP2();
-			i += 2;
 		}
 
 		return c / (float)i;

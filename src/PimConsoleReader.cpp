@@ -1,3 +1,5 @@
+#ifdef WIN32
+
 #include "PimInternal.h"
 #include <thread>
 #include <conio.h>
@@ -191,3 +193,5 @@ ConsoleReader* ConsoleReader::singleton = NULL;
 		delete singleton;
 	}
 }
+
+#endif /* WIN32 */
