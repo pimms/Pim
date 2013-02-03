@@ -35,6 +35,7 @@ using namespace std;
 	// Direct sound
 	#include <mmsystem.h>
 	#include <dsound.h>
+	#include "al.h"
 
     // freetype
     #include "ft2build.h"
