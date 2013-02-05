@@ -28,6 +28,7 @@ namespace Pim {
 
 	typedef vector<string>& ConsoleCommand;
 
+#ifdef WIN32
 	class ConsoleReader {
 	private:
 		friend class GameControl;
@@ -56,9 +57,11 @@ namespace Pim {
 		static void								Begin();
 		static void								ShutDown();
 	};
+#endif /* WIN32 */
 
 	class ConsoleListener {
 	public:
+#ifdef WIN32
 		virtual ~ConsoleListener() {
 			ConsoleReader::RemoveListener(this);
 		}
@@ -68,5 +71,10 @@ namespace Pim {
 		void ListenCommand(const char *cmd) {
 			ConsoleReader::AddListener(this, cmd);
 		}
+#elif defined __APPLE__
+        virtual ~ConsoleListener() { }
+		virtual void HandleCommand(ConsoleCommand cmd) { }
+		void ListenCommand(const char *cmd) { }
+#endif
 	};
 }

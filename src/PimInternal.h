@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define PIM_VERSION "0.8.1"
+#define PIM_VERSION "0.8.1c"
 
 // memory-leak tracing for debug builds
 #ifdef _DEBUG
@@ -36,6 +36,7 @@ using namespace std;
 	#include <mmsystem.h>
 	#include <dsound.h>
 	#include "al.h"
+	#include "alc.h"
 
     // freetype
     #include "ft2build.h"

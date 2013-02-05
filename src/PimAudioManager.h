@@ -10,40 +10,32 @@ namespace Pim {
 	class GameControl;
 	class Sound;
 
-	struct SoundCache {
-		vector<char>				buf;
-		long						size;
-		long						rate;
-		int							channels;
-	};
-
 	class AudioManager {
-	private:
+	protected:
 		friend class GameControl;
+
+	private:
 		friend class Sound;
 
 	public:
+		ALCdevice					*device;
+		ALCcontext					*context;
+		
 		static AudioManager*		GetSingleton();
-		bool						CacheOgg(const string id, char *file);
-		void						DeleteCache(const string id);
+		static void					PrintOpenALErrors(string preceeding);
 
-	private:
-		vector<Sound*>				oggSounds;
-		static AudioManager			*singleton;
-		IDirectSound8				*m_DirectSound;
-		map<string, SoundCache*>	cache;
-
+	protected:
 									AudioManager();
 									~AudioManager();
 		static void					InstantiateSingleton();
 		static void					ClearSingleton();
-		bool						LoadWav(const char *file, Sound*);
-		bool						LoadOgg(const char *file, Sound*);
-		void						FillBuffer(Sound *s, const int section);
-		void						OggUpdate();
-		void						ScheduleOggUpdate(Sound*);
-		void						UnscheduleOggUpdate(Sound*);
-		void						RewindOgg(Sound*);
-		IDirectSoundBuffer8*		CreateBuffer(WAVEFORMATEX*, DSBUFFERDESC*);
+		void						UpdateSoundBuffers();
+
+	private:
+		static AudioManager			*singleton;
+		vector<Sound*>				sounds;
+
+		void						AddSound(Sound *sound);
+		void						RemoveSound(Sound *sound);
 	};
 }

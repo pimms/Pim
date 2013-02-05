@@ -1,0 +1,33 @@
+=================
+===  PLAYING  ===
+=================
+
+Parameters which can be passed to functions in the Play-paragrah:
+	Keyword								Description
+	AUDIO_PAUSE_COMPATIBLE 				Will continue to play r
+
+Sound *music = AudioManager::Loop("music.ogg");
+Sound *music = AudioManager::Play("sound.ogg");		
+AudioManager::Play("gunfire.ogg", true);  				// Cache, deleted upon completion
+
+
+=================
+==    PAUSE    ==
+=================
+
+music->Pause();
+            		
+AudioManager::Pause("music.ogg");
+AudioManager::Pause(music);
+
+
+
+=================
+==    CLEAR    ==
+=================
+
+AudioManager::ClearSound("music.ogg");					// Stop & delete all instances of music.ogg
+AudioManager::ClearSound(music);						// Stop & delete a single instance
+
+AudioManager::ClearAll();								// Stop & delete all sounds
+

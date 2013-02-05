@@ -2,7 +2,6 @@
 
 #include "PimWinStyle.h"
 
-#include <gl/GL.h>
 #include <string>
 #include <functional>
 

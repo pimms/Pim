@@ -143,7 +143,7 @@ namespace Pim {
 		}
 
 		modulePath = path;
-		printf("Working directory: %s\n", modulePath);
+		printf("Working directory:\n%s\n\n", modulePath.c_str());
 	}
 
 	/*
@@ -593,7 +593,7 @@ namespace Pim {
 
 			renderWindow->RenderFrame();
 
-			AudioManager::GetSingleton()->OggUpdate();
+			AudioManager::GetSingleton()->UpdateSoundBuffers();
 
 			// Was the game recently unpaused?
 			if (pauseLayer && !paused) {

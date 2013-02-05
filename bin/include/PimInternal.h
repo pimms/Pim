@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define PIM_VERSION "0.8.1"
+#define PIM_VERSION "0.8.1c"
 
 // memory-leak tracing for debug builds
 #ifdef _DEBUG
@@ -18,8 +18,10 @@ using namespace std;
 #include <iostream>
 #include <fstream>
 #include <map>
+
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <cmath>
 
 #ifdef WIN32
 	// Threading
@@ -33,18 +35,34 @@ using namespace std;
 	// Direct sound
 	#include <mmsystem.h>
 	#include <dsound.h>
-#endif /* WIN32 */
+	#include "al.h"
+	#include "alc.h"
 
-// freetype
-#include "ft2build.h"
-#include FT_FREETYPE_H
+    // freetype
+    #include "ft2build.h"
+    #include FT_FREETYPE_H
 
-// libpng
-#include "png.h"
+    // libpng
+    #include "png.h"
 
-// Ogg Vorbis
-#include "vorbis\codec.h"
-#include "vorbis\vorbisfile.h"
+    // Ogg Vorbis
+    #include "vorbis\codec.h"
+    #include "vorbis\vorbisfile.h"
+
+#elif defined __APPLE__
+    #include <OpenGL/gl3.h>
+
+    // FreeType
+    #include "ft2build.h"
+    #include <freetype/freetype.h>
+
+    // LibPNG
+    #include <libpng15/png.h>
+
+    // Ogg Vorbis
+    #include <Vorbis/codec.h>
+    #include <Vorbis/vorbisfile.h>
+#endif
 
 // Custom defines
 #define DEGTORAD ((float)M_PI/180.f)
