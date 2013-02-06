@@ -5,7 +5,7 @@
 #include "PimRenderWindow.h"
 
 namespace Pim {
-	class RenderWindowOSX : public RenderWindowBase {
+	class RenderWindowOSX : public RenderWindow {
 	public:
 
 	protected:

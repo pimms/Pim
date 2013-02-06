@@ -15,10 +15,8 @@ namespace Pim {
 	class Scene {
 	protected:
 		friend class GameControl;
-		friend class RenderWindowBase;
-#ifdef WIN32
+		friend class RenderWindow;
 		friend class RenderWindowWIN;
-#endif
 
 	public:
 		bool					dirtyZOrder;

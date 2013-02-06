@@ -12,7 +12,7 @@ namespace Pim {
     ==================
     */
     RenderWindowOSX::RenderWindowOSX(WinStyle::CreationData &data)
-    : RenderWindowBase(data) {
+    : RenderWindow(data) {
         
     }
     

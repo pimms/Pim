@@ -23,46 +23,32 @@ using namespace std;
 #include <math.h>
 #include <cmath>
 
-#ifdef WIN32
-	// Threading
-	#include <process.h>	// To be removed in the future
-	//#include <omp.h>
 
-	// windows and OpenGL (glew)
-	#include <Windows.h>
-	#include <GL\glew.h>
+// Threading
+#include <process.h>	// To be removed in the future
+//#include <omp.h>
 
-	// Direct sound
-	#include <mmsystem.h>
-	#include <dsound.h>
-	#include "al.h"
-	#include "alc.h"
+// windows and OpenGL (glew)
+#include <Windows.h>
+#include <GL\glew.h>
 
-    // freetype
-    #include "ft2build.h"
-    #include FT_FREETYPE_H
+// Direct sound
+#include <mmsystem.h>
+#include <dsound.h>
+#include "al.h"
+#include "alc.h"
 
-    // libpng
-    #include "png.h"
+// freetype
+#include "ft2build.h"
+#include FT_FREETYPE_H
 
-    // Ogg Vorbis
-    #include "vorbis\codec.h"
-    #include "vorbis\vorbisfile.h"
+// libpng
+#include "png.h"
 
-#elif defined __APPLE__
-    #include <OpenGL/gl3.h>
+// Ogg Vorbis
+#include "vorbis\codec.h"
+#include "vorbis\vorbisfile.h"
 
-    // FreeType
-    #include "ft2build.h"
-    #include <freetype/freetype.h>
-
-    // LibPNG
-    #include <libpng15/png.h>
-
-    // Ogg Vorbis
-    #include <Vorbis/codec.h>
-    #include <Vorbis/vorbisfile.h>
-#endif
 
 // Custom defines
 #define DEGTORAD ((float)M_PI/180.f)

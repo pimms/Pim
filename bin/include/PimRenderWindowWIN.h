@@ -1,4 +1,4 @@
-#ifdef WIN32
+
 #pragma once
 
 #include "PimRenderWindow.h"
@@ -12,8 +12,7 @@ namespace Pim {
 		friend class GameControl;
 		friend class LightingSystem;
 
-		HINSTANCE					hInstance;
-		HWND						hWnd;
+		
 
 									RenderWindowWIN(WinStyle::CreationData &data);
 									~RenderWindowWIN();
@@ -22,4 +21,3 @@ namespace Pim {
 		void						SetWindowStyle(WinStyle::WinStyle style);
 	};
 }
-#endif /* WIN32 */

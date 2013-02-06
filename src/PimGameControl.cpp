@@ -26,8 +26,7 @@ namespace Pim {
 	Window callback function
 	=====================
 	*/
-#ifdef WIN32
-	LRESULT	CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	LRESULT	CALLBACK WndProc(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam) {
 		switch (msg) {
 		case WM_ACTIVATE:
 			if (wParam) {
@@ -48,7 +47,7 @@ namespace Pim {
 			if (wParam == 0xf012) {
 				winHasMoved = true;
 			}
-			return DefWindowProc(hWnd,msg,wParam,lParam);
+			return DefWindowProc(windowHandle,msg,wParam,lParam);
 
 		case WM_ENTERSIZEMOVE:
 		case WM_MOVE:
@@ -100,9 +99,10 @@ namespace Pim {
 			return 0;
 		}
 
-		return DefWindowProc(hWnd,msg,wParam,lParam);
+		return DefWindowProc(windowHandle,msg,wParam,lParam);
 	}
-#endif /* WIN32 */
+
+
 
 	GameControl* GameControl::singleton = NULL;
 

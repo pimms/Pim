@@ -21,9 +21,7 @@
 #include <string>
 #include <map>
 
-#ifdef WIN32
-    #include <Xinput.h>
-#endif
+#include <Xinput.h>
 
 namespace Pim {
 	class Input;
@@ -94,7 +92,6 @@ namespace Pim {
 		void							_MouseMoved(Vec2 pos);
 	};
 
-#ifdef WIN32
 	class ControllerEvent {
 	private:
 		friend class Input;
@@ -134,7 +131,6 @@ namespace Pim {
 		void						GetStates();
 		void						Vibrate(float l, float r);
 	};
-#endif /* WIN32 */
 
 	class Input {
 	private:
@@ -160,10 +156,7 @@ namespace Pim {
 		vector<GameNode*>			cl;				// control listeners
 		KeyEvent					keyEvent;
 		MouseEvent					mouseEvent;
-        
-#ifdef WIN32
 		ControllerEvent				contEvent;
-#endif
         
 									Input();
 									Input(const Input&) {}

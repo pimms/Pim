@@ -3,18 +3,7 @@
 #include "PimInternal.h"
 #include "PimVec2.h"
 #include "PimWinStyle.h"
-
-#ifdef WIN32
-	#include "PimRenderWindowWIN.h"
-	namespace Pim {
-		typedef RenderWindowWIN RenderWindow;
-	}
-#elif defined __APPLE__
-    #include "PimRenderWindowOSX.h"
-    namespace Pim {
-        typedef RenderWindowOSX RenderWindow;
-    }
-#endif
+#include "PimRenderWindow.h"
 
 namespace Pim {
 	class GameNode;
@@ -24,10 +13,7 @@ namespace Pim {
 
 	class GameControl {
 	private:
-		friend class RenderWindowBase;
-#ifdef WIN32
-		friend class RenderWindowWIN;
-#endif
+		friend class RenderWindow;
 
 	public:
 								GameControl();

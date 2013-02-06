@@ -5,27 +5,26 @@
 #include <string>
 #include <functional>
 
-#ifdef WIN32
-	#include <Windows.h>
-	typedef HDC			DeviceContext;
-	typedef HGLRC		RenderingContext;
-#endif /* WIN32 */
+#include <Windows.h>
+typedef HDC			DeviceContext;
+typedef HGLRC		RenderingContext;
 
 namespace Pim {
 	class GameControl;
 	class LightingSystem;
 
-	class RenderWindowBase {
+	class RenderWindow {
 	protected:
 		friend class GameControl;
 		friend class LightingSystem;
 
 	public:
-									RenderWindowBase(WinStyle::CreationData &data);
-									~RenderWindowBase();
+									RenderWindow(WinStyle::CreationData &data);
+									~RenderWindow();
 		Vec2						GetOrtho() const;
 		Vec2						GetOrthoOffset() const;
-		void						PrintOpenGLErrors(string identifier);
+		void						PrintOpenGLErrors(string identifier) const;
+		HWND						GetWindowHandle() const;
 
 	protected:
 		enum BORDERPOS {
@@ -42,10 +41,12 @@ namespace Pim {
 		Vec2						orthoOff;	// Border offset
 		BORDERPOS					bpos;		// Border position
 		int							bdim;		// Border dimensions
+		HINSTANCE					instanceHandle;
+		HWND						windowHandle;
 
-		virtual bool				SetupWindow(WinStyle::CreationData &data)	= 0;
-		virtual void				KillWindow()								= 0;
-		virtual void				SetWindowStyle(WinStyle::WinStyle style)	= 0;
+		virtual bool				SetupWindow(WinStyle::CreationData &data);
+		virtual void				KillWindow();
+		virtual void				SetWindowStyle(WinStyle::WinStyle style);
 		void						ResizeWindow(int wnew, int hnew);
 		bool						InitOpenGL();
 		void						SetCreationData(WinStyle::CreationData &data);
