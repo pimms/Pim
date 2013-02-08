@@ -4,8 +4,15 @@ namespace Pim {
 	class Polygons;
 }
 
+/*
+	All functions declared in this header is defined in Pim.cpp
+*/
+
 // Returns the next power of 2
-int nextPow2(int a);
+int NextPow2(int a);
 
 // Re-wind all the polygons in the Polygon-structure to be ordered CCW.
-void windCCW(Pim::Polygons *poly);
+void WindCCW(Pim::Polygons *poly);
+
+// Returns a random float in range
+float RandF(float min, float max);

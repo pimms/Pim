@@ -6,13 +6,13 @@
 
 
 
-int nextPow2(int a) {
+int NextPow2(int a) {
     int ret = 1;
     while (ret<a) ret <<= 1;
     return ret;
 }
 
-void windCCW(Pim::Polygons *polygons) {
+void WindCCW(Pim::Polygons *polygons) {
     // Ensure that all polygons are wound CCW
     for each (auto poly in *polygons) {
         for (int i=0; i<3; i++) {
@@ -32,4 +32,9 @@ void windCCW(Pim::Polygons *polygons) {
             }
         }
     }
+}
+
+float RandF(float min, float max) {
+	return ((float)rand()/(float)RAND_MAX) * (max-min) + min;
+
 }

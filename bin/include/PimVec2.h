@@ -12,6 +12,7 @@ namespace Pim {
 							Vec2(void);
 		static Vec2			UnitDegree(const float angle);
 		static Vec2			UnitRadian(const float angle);
+		static Vec2			Interpolate(Vec2 source, Vec2 dest, float factor);
 		Vec2				RotateAroundPoint(const Vec2 &pt, const float a) const;
 		Vec2				RotateDegrees(const float a) const;
 		float				AngleBetween360(const Vec2 &other) const;	// Return range [0-360]
@@ -20,6 +21,7 @@ namespace Pim {
 		float				Cross(const Vec2 &other) const;
 		Vec2				Normalize() const;
 		float				Length() const;
+		void				GLVertex() const; 
 		bool				operator==(const Vec2 &other) const;
 		bool				operator!=(const Vec2 &other) const;
 		Vec2				operator+(const Vec2 &other) const;
@@ -42,7 +44,8 @@ namespace Pim {
 		float				g;
 		float				b;
 		float				a;
-
+		
+		static Color		Interpolate(const Color &source, const Color &dest, float factor);
 							Color(const float rr, const float gg, 
 								  const float bb, const float aa);
 							Color();

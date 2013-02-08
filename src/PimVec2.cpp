@@ -5,6 +5,25 @@ namespace Pim {
 
 	/*
 	=====================
+	Color::Interpolate
+
+	Given two colors A and B and a factor F, the returned color is:
+	A - ((A-B) * F)
+
+	Color source and Color dest should be valid colors, and factor should be between 0 and 1.
+	=====================
+	*/
+	Color Color::Interpolate(const Color &source, const Color &dest, float factor) {
+		return Color(
+			source.r - (source.r-dest.r) * factor,
+			source.g - (source.g-dest.g) * factor,
+			source.b - (source.b-dest.b) * factor,
+			source.a - (source.a-dest.a) * factor
+			);
+	}
+
+	/*
+	=====================
 	Color::Color
 	=====================
 	*/
@@ -55,7 +74,7 @@ namespace Pim {
 
 	/*
 	=====================
-	STATIC Vec2::UnitDegree
+	Vec2::UnitDegree
 	=====================
 	*/
 	Vec2 Vec2::UnitDegree(const float a) {
@@ -64,11 +83,27 @@ namespace Pim {
 
 	/*
 	=====================
-	STATIC Vec2::UnitRadian
+	Vec2::UnitRadian
 	=====================
 	*/
 	Vec2 Vec2::UnitRadian(const float a) {
 		return Vec2(cosf(a), sinf(a));
+	}
+
+	/*
+	=====================
+	STATIC Vec2::Interpolate
+
+	Given two vectors A and B, the method returns:
+		A - ((A-B) * factor)
+	The factor should be a value between 0 and 1
+	=====================
+	*/
+	Vec2 Vec2::Interpolate(Vec2 source, Vec2 dest, float factor) {
+		return Vec2( 
+			source.x - ((source.x-dest.x) * factor),
+			source.y - ((source.y-dest.y) * factor)
+			);
 	}
 
 	/*
@@ -158,6 +193,15 @@ namespace Pim {
 	*/
 	float Vec2::Length() const {
 		return sqrt(x*x + y*y);
+	}
+
+	/*
+	=====================
+	Vec2::GLVertex
+	=====================
+	*/
+	void Vec2::GLVertex() const {
+		glVertex2f(x, y);
 	}
 
 	/*

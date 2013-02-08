@@ -159,8 +159,8 @@ namespace Pim {
 		FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
 		FT_Bitmap bitmap = face->glyph->bitmap;
 
-		int width = nextPow2(bitmap.width);
-		int height = nextPow2(bitmap.rows);
+		int width = NextPow2(bitmap.width);
+		int height = NextPow2(bitmap.rows);
 
 		GLubyte *expandedData = new GLubyte[2 * width * height];
 

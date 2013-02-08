@@ -102,9 +102,11 @@ namespace Pim {
 		case PNG_COLOR_TYPE_RGB:
 			_a = false;
 			break;
+
 		case PNG_COLOR_TYPE_RGBA:
 			_a = true;
 			break;
+
 		default:
 			PimAssert(false,"Image format not supported");
 		}
