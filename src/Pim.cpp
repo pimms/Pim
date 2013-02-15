@@ -8,7 +8,11 @@
 
 int NextPow2(int a) {
     int ret = 1;
-    while (ret<a) ret <<= 1;
+	
+    while (ret<a) {
+		ret <<= 1;
+	}
+	
     return ret;
 }
 
