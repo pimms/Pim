@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define PIM_VERSION "0.8.1c"
+#define PIM_VERSION "0.9 alpha"
 
 // memory-leak tracing for debug builds
 #ifdef _DEBUG
@@ -32,9 +32,11 @@ using namespace std;
 #include <Windows.h>
 #include <GL\glew.h>
 
+// SDL
+#include "SDL\SDL.h"
+#include "SDL\SDL_main.h"
+
 // Direct sound
-#include <mmsystem.h>
-#include <dsound.h>
 #include "al.h"
 #include "alc.h"
 

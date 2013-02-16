@@ -16,93 +16,6 @@
 #include <ctime>
 
 namespace Pim {
-	bool hasFocus		= false;	// The window has focus
-	bool winHasMoved	= false;	// The window has been moved or resized
-
-	/*
-	=====================
-	WndProc
-
-	Window callback function
-	=====================
-	*/
-	LRESULT	CALLBACK WndProc(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam) {
-		switch (msg) {
-		case WM_ACTIVATE:
-			if (wParam) {
-				printf("gained focus\n");
-				hasFocus = true;
-				if (Input::GetSingleton())
-					Input::GetSingleton()->_GainedFocus();
-			} else {
-				printf("lost focus\n");
-				hasFocus = false;
-				if (Input::GetSingleton())
-					Input::GetSingleton()->_LostFocus();
-			}
-			return 0;
-
-
-		case WM_SYSCOMMAND:
-			if (wParam == 0xf012) {
-				winHasMoved = true;
-			}
-			return DefWindowProc(windowHandle,msg,wParam,lParam);
-
-		case WM_ENTERSIZEMOVE:
-		case WM_MOVE:
-		case WM_MOVING:
-			winHasMoved = true;
-			return 0;
-
-		case WM_EXITSIZEMOVE:
-			//winHasMoved = false;
-			return 0;
-
-		case WM_CLOSE:
-			GameControl::GetSingleton()->Exit();
-			return 0;
-
-		case WM_KEYDOWN:
-			//cout<<"Key: " <<wParam <<"\n";
-			Input::GetSingleton()->_KeyPressed(wParam);
-			return 0;
-
-		case WM_KEYUP:
-			Input::GetSingleton()->_KeyReleased(wParam);
-			return 0;
-
-			// MOUSE MOVE
-		case WM_MOUSEMOVE:
-			//cout<<"Move: " <<LOWORD(lParam) <<", " <<HIWORD(lParam) <<"\n";
-			Input::GetSingleton()->_MouseMoved(LOWORD(lParam),HIWORD(lParam));
-			return 0;
-
-			// LEFT MOUSE
-		case WM_LBUTTONDOWN:
-			Input::GetSingleton()->_MousePressed(0);
-			return 0;
-		case WM_LBUTTONUP:
-			Input::GetSingleton()->_MouseReleased(0);
-			return 0;
-
-			// RIGHT MOUSE
-		case WM_RBUTTONDOWN:
-			Input::GetSingleton()->_MousePressed(1);
-			return 0;
-		case WM_RBUTTONUP:
-			Input::GetSingleton()->_MouseReleased(1);
-			return 0;
-
-		case WM_SIZE:
-			GameControl::GetSingleton()->SetWindowResolution(LOWORD(lParam),HIWORD(lParam));
-			return 0;
-		}
-
-		return DefWindowProc(windowHandle,msg,wParam,lParam);
-	}
-
-
 
 	GameControl* GameControl::singleton = NULL;
 
@@ -544,20 +457,13 @@ namespace Pim {
 	=====================
 	*/
 	void GameControl::GameLoop() {
-		MSG  msg;
-		quit = false;
+		bool appRunning = true;
 		ticks = clock();
 
-		while (!quit) {
-			while (PeekMessage(&msg,NULL,0,0,PM_REMOVE)) {
-				if (msg.message == WM_QUIT) {
-					quit = true;
-				} else {
-					TranslateMessage(&msg);
-					DispatchMessage(&msg);
-				}
-			}
+		while (appRunning) {
+			appRunning = HandleEvents();
 
+			bool winHasMoved = false;
 			if (winHasMoved) {
 				// Discard the delta time
 				CalculateDeltaTime();
@@ -606,6 +512,81 @@ namespace Pim {
 		}
 
 		ClearDeleteQueue();
+	}
+
+	/*
+	=====================
+	GameControl::HandleEvents
+
+	Reads and dispatches SDL events.
+	If the event SDL_QUIT is raised, 'false' is returned - otherwise, 
+	true is returned.
+	=====================
+	*/
+	bool GameControl::HandleEvents() {
+		SDL_Event event;
+
+		bool keepRunning = true;
+
+		while (SDL_PollEvent(&event)) {
+
+			switch (event.type) {
+				case SDL_QUIT:
+					keepRunning = false;
+					break;
+
+				case SDL_KEYDOWN:
+					Input::GetSingleton()->_KeyPressed(
+						event.key.keysym.sym 
+					);
+					break;
+
+				case SDL_KEYUP:
+					Input::GetSingleton()->_KeyReleased(
+						event.key.keysym.sym
+					);
+					break;
+
+				case SDL_MOUSEMOTION:
+					Input::GetSingleton()->_MouseMoved(
+						event.motion.x, event.motion.y
+					);
+					break;
+
+				case SDL_MOUSEBUTTONDOWN:
+				{
+					char mIdx = event.button.button;
+					if (mIdx == 1 || mIdx == 3) {
+						mIdx = (mIdx == 1) ? (0) : (1);
+						Input::GetSingleton()->_MousePressed(
+							mIdx
+						);
+					}
+					break;
+				}
+
+				case SDL_MOUSEBUTTONUP:
+				{
+					char mIdx = event.button.button;
+					if (mIdx == 1 || mIdx == 3) {
+						mIdx = (mIdx == 1) ? (0) : (1);
+						Input::GetSingleton()->_MouseReleased(
+							mIdx
+						);
+					}
+					break;
+				}
+
+				case SDL_VIDEORESIZE:
+					renderWindow->ResizeWindow(
+						event.resize.w,
+						event.resize.h
+					);
+					break;
+			}
+		}
+
+		return keepRunning;
 	}
 
 	/*

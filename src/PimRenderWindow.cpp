@@ -10,20 +10,13 @@
 
 namespace Pim {
 
-	/* Defined in GameControl.cpp */
-	LRESULT	CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);
-
 	/*
 	=====================
 	RenderWindow::RenderWindow
 	=====================
 	*/
 	RenderWindow::RenderWindow(WinStyle::CreationData &data) {
-		devCtx			= NULL;
-		renCtx			= NULL;
-		winData			= data;
-		windowHandle	= NULL;
-		instanceHandle	= NULL;
+		surface		= NULL;
 	}
 
 	/*
@@ -32,7 +25,7 @@ namespace Pim {
 	=====================
 	*/
 	RenderWindow::~RenderWindow() {
-		KillWindow();
+		
 	}
 
 	/*
@@ -92,19 +85,63 @@ namespace Pim {
 
 	/*
 	=====================
-	RenderWindow::GetWindowHandle
-	=====================
-	*/
-	HWND RenderWindow::GetWindowHandle() const {
-		return windowHandle;
-	}
-
-	/*
-	=====================
 	RenderWindow::SetupWindow
 	=====================
 	*/
 	bool RenderWindow::SetupWindow(WinStyle::CreationData &data) {
+		const SDL_VideoInfo *video;
+		
+		if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+			printf("Failed to initialize video\n");
+			return false;
+		}
+
+		video = SDL_GetVideoInfo();
+		if (!video) {
+			printf("Could not retreive video info\n");
+			return false;
+		}
+
+		SDL_GL_SetAttribute(SDL_GL_RED_SIZE,            8);
+		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,          8);
+		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,           8);
+		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,          8);
+ 
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,          16);
+		SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,         32);
+ 
+		SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,      8);
+		SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,    8);
+		SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,     8);
+		SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,    8);
+ 
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,  1);
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  2);
+
+	    if (SDL_SetVideoMode(
+			data.resolution.x, 
+			data.resolution.y, data.bits, 
+			SDL_OPENGL | SDL_HWSURFACE | SDL_RESIZABLE) == 0) {
+		   printf("Failed to setup video mode\n");
+		   return false;
+		}
+
+	    // Initate GLEW
+		GLenum res = glewInit();
+		if (res != GLEW_OK) {
+			cout<<"ERROR INITATING GLEW:\n" <<glewGetErrorString(res) <<"\n";
+			system("PAUSE");
+			return false;
+		}
+
+		SDL_WM_SetCaption(data.winTitle.c_str(), NULL);
+		winData = data;
+
+		ResizeWindow((int)winData.resolution.x, (int)winData.resolution.y);
+
+	    return InitOpenGL();
+
+		/*
 		winData = data;
 
 		GLuint		pixelFormat;
@@ -238,6 +275,7 @@ namespace Pim {
 		SetWindowStyle(data.winStyle);
 		
 		return true;
+		*/
 	}
 
 	/*
@@ -246,6 +284,10 @@ namespace Pim {
 	=====================
 	*/
 	void RenderWindow::KillWindow() {
+		surface = NULL;
+		SDL_Quit();
+
+		/*
 		if (renCtx) {
 			wglMakeCurrent(NULL,NULL);
 			wglDeleteContext(renCtx);
@@ -262,6 +304,7 @@ namespace Pim {
 
 		UnregisterClass("pim", instanceHandle);
 		instanceHandle = NULL;
+		*/
 	}
 
 	/*
@@ -270,6 +313,9 @@ namespace Pim {
 	=====================
 	*/
 	void RenderWindow::SetWindowStyle(WinStyle::WinStyle style) {
+
+
+		/*
 		DWORD dwExStyle;
 		DWORD dwStyle;
 		RECT winRect;
@@ -329,6 +375,7 @@ namespace Pim {
 		// Just in case, set focus and enable the window
 		SetFocus(windowHandle);
 		EnableWindow(windowHandle, true);
+		*/
 	}
 	
 	/*
@@ -368,6 +415,7 @@ namespace Pim {
 				orthoOff = Vec2(0.f, (float)bdim);
 			}
 
+			// TODO: Include black borders in the orthographic projection
 			glOrtho((nw-rw)/-2.f, rw+(nw-rw)/2.f, (nh-rh)/-2.f, rh+(nh-rh)/2.f, 0, 1);
 			ortho = Vec2(rw,rh);
 
@@ -379,13 +427,11 @@ namespace Pim {
 		}
 
 		glMatrixMode(GL_MODELVIEW);
-		glDisable(GL_DEPTH_TEST);
 
 		GameControl::GetSingleton()->actualWinWidth  = nw;
 		GameControl::GetSingleton()->actualWinHeight = nh;
 
 		scale = ortho / winData.renderResolution;
-
 	}
 
 	/*
@@ -401,6 +447,12 @@ namespace Pim {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glDisable(GL_DEPTH_TEST);
+
+		glMatrixMode(GL_PROJECTION);
+		glViewport(0, 0, winData.resolution.x, winData.resolution.y);
+		glOrtho(0, winData.resolution.x, 0, winData.resolution.y, 1.f, -1.f);
+
+		glMatrixMode(GL_MODELVIEW);
 
 		return true;
 	}
@@ -495,7 +547,8 @@ namespace Pim {
 			glEnable(GL_TEXTURE_2D);
 		}
 
-		SwapBuffers(devCtx);				// Swap the buffers to draw to screen
+		//SwapBuffers(devCtx);				// Swap the buffers to draw to screen
+		SDL_GL_SwapBuffers();
 
 		#ifdef _DEBUG
 		PrintOpenGLErrors("POSTRENDER FRAME");
