@@ -91,10 +91,12 @@ namespace Pim {
 	bool RenderWindow::SetupWindow(WinStyle::CreationData &data) {
 		const SDL_VideoInfo *video;
 		
-		if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) {
 			printf("Failed to initialize video\n");
 			return false;
 		}
+
+		SDL_JoystickEventState(SDL_ENABLE);
 
 		video = SDL_GetVideoInfo();
 		if (!video) {

@@ -21,8 +21,6 @@
 #include <string>
 #include <map>
 
-#include <Xinput.h>
-
 namespace Pim {
 	class Input;
 	class Vec2;
@@ -56,8 +54,8 @@ namespace Pim {
 
 										KeyEvent();
 										KeyEvent(const KeyEvent&);
-		void							_Reset();
-		void							_Unfresh();
+		void							Reset();
+		void							Unfresh();
 		void							BindKey(const string &str, const KeyCode k);
 		void							UnbindKey(const string &str);
 	};
@@ -67,9 +65,15 @@ namespace Pim {
 		friend class Input;
 
 	public:
-		enum MouseButton {
-										MBTN_LEFT,
-										MBTN_RIGHT,
+		enum MouseButton {				MBTN_LEFT		= 0,
+										MBTN_MIDDLE		= 1,
+										MBTN_RIGHT		= 2,
+										MBTN_WHEEL_UP	= 3,
+										MBTN_WHEEL_DOWN = 4,
+										MBTN_BACK		= 5,
+										MBTN_FORWARD	= 6,
+
+
 		};
 
 		bool							IsKeyDown(const MouseButton mb) const;
@@ -79,17 +83,17 @@ namespace Pim {
 
 	private:
 		bool							dirty;
-		bool							keys[2];
-		bool							fresh[2];
+		bool							keys[7];
+		bool							fresh[7];
 		Vec2							position;
 		Vec2							relPosition;
 		Vec2							lastPosition;
 
 										MouseEvent();
 										MouseEvent(const MouseEvent&);
-		void							_Reset();
-		void							_Unfresh();
-		void							_MouseMoved(Vec2 pos);
+		void							Reset();
+		void							Unfresh();
+		void							MouseMoved(Vec2 pos);
 	};
 
 	class ControllerEvent {
@@ -98,38 +102,50 @@ namespace Pim {
 
 	public:
 		enum Xbox {
-			X_A						= XINPUT_GAMEPAD_A,
-			X_B						= XINPUT_GAMEPAD_B,
-			X_X						= XINPUT_GAMEPAD_X,
-			X_Y						= XINPUT_GAMEPAD_Y,
-			X_DUP					= XINPUT_GAMEPAD_DPAD_UP,
-			X_DRIGHT				= XINPUT_GAMEPAD_DPAD_RIGHT,
-			X_DDOWN					= XINPUT_GAMEPAD_DPAD_DOWN,
-			X_DLEFT					= XINPUT_GAMEPAD_DPAD_LEFT,
-			X_BACK					= XINPUT_GAMEPAD_BACK,
-			X_START					= XINPUT_GAMEPAD_START,
-			X_LB					= XINPUT_GAMEPAD_LEFT_SHOULDER,
-			X_RB					= XINPUT_GAMEPAD_RIGHT_SHOULDER,
-			X_LS					= XINPUT_GAMEPAD_LEFT_THUMB,
-			X_RS					= XINPUT_GAMEPAD_RIGHT_THUMB
+			X_A			= 1 << 1,		
+			X_B			= 1 << 2,		
+			X_X			= 1 << 3,		
+			X_Y			= 1 << 4,
+			X_LBUMP		= 1 << 5,	
+			X_RBUMP		= 1 << 6,
+			X_BACK		= 1 << 7,			
+			X_START		= 1 << 8,
+			X_LSTICK	= 1 << 9,	
+			X_RSTICK	= 1 << 10,
+
+			X_DUP		= 1 << 11,		
+			X_DRIGHT	= 1 << 12,	
+			X_DDOWN		= 1 << 13,	
+			X_DLEFT		= 1 << 14,
 		};
 
-		bool						IsKeyDown(Xbox x) const;
-		bool						IsKeyFresh(Xbox x) const;
-		Vec2						LeftStick() const;		// Returns a unit vector of the stick
-		Vec2						RightStick() const;		// Returns a unit vector of the stick
-		float						LeftTrigger() const;		// Returns the presedness of LT (0.0 - 1.0)
-		float						RightTrigger() const;		// Returns the pressedness of RT (0.0 - 1.0)
-		bool						Connected();
+		enum XboxAxes {
+			XAXIS_LEFT_X,		XAXIS_LEFT_Y,		XAXIS_LEFT_TRIGGER,
+			XAXIS_RIGHT_X,		XAXIS_RIGHT_Y,		XAXIS_RIGHT_TRIGGER,
+			XAXIS_AXIS_MAX		= 32768,	
+			XAXIS_AXIS_MIN		= 8000,
+		};
+
+		bool							IsKeyDown(Xbox x) const;
+		bool							IsKeyFresh(Xbox x) const;
+
+		Vec2							LeftStick() const;		// Unit vector
+		Vec2							RightStick() const;		// Unit vector
+		float							LeftTrigger() const;	// 0.0  -  1.0
+		float							RightTrigger() const;	// 0.0  -  1.0
 
 	private:
-		WORD						curBtnState;
-		WORD						prevBtnState;
-		XINPUT_STATE				xinputState;
+		SDL_Joystick					*joystick;
+		bool							dirty;
+		short							prevButtons;
+		short							buttons;				// Bitfield 
+		float							axes[6];				// LS(2), RS(2), LT, RT
 
-									ControllerEvent();
-		void						GetStates();
-		void						Vibrate(float l, float r);
+										ControllerEvent();
+		void							Reset();
+		void							Unfresh();
+		bool							IsConnected();
+		void							Vibrate(float l, float r);
 	};
 
 	class Input {
@@ -137,39 +153,42 @@ namespace Pim {
 		friend class GameControl;
 
 	public:
-		static Input*				GetSingleton();
-		void						BindKey(const string id, const KeyEvent::KeyCode key);
-		void						UnbindKey(const string id);
-		void						VibrateXbox(float leftVib, float rightVib);
-		void						_LostFocus();	
-		void						_GainedFocus();		
-		void						_KeyPressed(int);		
-		void						_KeyReleased(int);		
-		void						_MouseMoved(int,int);	
-		void						_MousePressed(int);			
-		void						_MouseReleased(int);			
+		static Input*					GetSingleton();
+		void							BindKey(const string id, const KeyEvent::KeyCode key);
+		void							UnbindKey(const string id);
+		void							VibrateXbox(float leftVib, float rightVib);		
 
 	private:
-		static Input				*singleton;
-		vector<GameNode*>			kl;				// key listeners
-		vector<GameNode*>			ml;				// mouse listeners
-		vector<GameNode*>			cl;				// control listeners
-		KeyEvent					keyEvent;
-		MouseEvent					mouseEvent;
-		ControllerEvent				contEvent;
+		static Input					*singleton;
+		vector<GameNode*>				kl;						// key listeners
+		vector<GameNode*>				ml;						// mouse listeners
+		vector<GameNode*>				cl;						// control listeners
+		KeyEvent						keyEvent;
+		MouseEvent						mouseEvent;
+		ControllerEvent					contEvent;
         
-									Input();
-									Input(const Input&) {}
-		static void					InstantiateSingleton();
-		static void					ClearSingleton();
-		void						AddKeyListener(GameNode* n);
-		void						RemoveKeyListener(GameNode* n);
-		void						AddMouseListener(GameNode* n);
-		void						RemoveMouseListener(GameNode* n);
-		void						AddControlListener(GameNode *n);
-		void						RemoveControlListener(GameNode *n);
-		void						DispatchPaused(GameNode *l);
-		void						Dispatch();
-		void						Dispatch_r(GameNode *n, bool controller);
+										Input();
+										Input(const Input&) {}
+	
+		void							KeyPressed(int button);		
+		void							KeyReleased(int button);		
+		void							MouseMoved(int xpos, int ypos);	
+		void							MousePressed(int button);				
+		void							MouseReleased(int button);	
+		void							ControllerButtonPressed(int button);
+		void							ControllerButtonReleased(int button);
+		void							ControllerAxisMoved(int axis, int value);
+
+		static void						InstantiateSingleton();
+		static void						ClearSingleton();
+		void							AddKeyListener(GameNode* n);
+		void							RemoveKeyListener(GameNode* n);
+		void							AddMouseListener(GameNode* n);
+		void							RemoveMouseListener(GameNode* n);
+		void							AddControlListener(GameNode *n);
+		void							RemoveControlListener(GameNode *n);
+		void							DispatchPaused(GameNode *l);
+		void							Dispatch();
+		void							Dispatch_r(GameNode *n, bool controller);
 	};
 }

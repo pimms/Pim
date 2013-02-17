@@ -19,7 +19,7 @@ namespace Pim {
 	*/
 	KeyEvent::KeyEvent() {
 		activePrevFrame = false;
-		_Reset();
+		Reset();
 	}
 
 	/*
@@ -28,15 +28,15 @@ namespace Pim {
 	=====================
 	*/
 	KeyEvent::KeyEvent(const KeyEvent&) {
-		_Reset();
+		Reset();
 	}
 
 	/*
 	=====================
-	KeyEvent::_Reset
+	KeyEvent::Reset
 	=====================
 	*/
-	void KeyEvent::_Reset() {
+	void KeyEvent::Reset() {
 		count=0;
 		for (int i=0; i<256; i++) {
 			keys[i]=false;
@@ -46,10 +46,10 @@ namespace Pim {
 
 	/*
 	=====================
-	KeyEvent::_Unfresh
+	KeyEvent::Unfresh
 	=====================
 	*/
-	void KeyEvent::_Unfresh() {
+	void KeyEvent::Unfresh() {
 		for (int i=0; i<256; i++) {
 			fresh[i]=false;
 		}
@@ -127,7 +127,7 @@ namespace Pim {
 	=====================
 	*/
 	MouseEvent::MouseEvent() {
-		_Reset();
+		Reset();
 	}
 
 	/*
@@ -136,41 +136,47 @@ namespace Pim {
 	=====================
 	*/
 	MouseEvent::MouseEvent(const MouseEvent&) {
-		_Reset();
+		Reset();
 	}
 
 	/*
 	=====================
-	MouseEvent::_Reset
+	MouseEvent::Reset
 	=====================
 	*/
-	void MouseEvent::_Reset() {
-		position = Vec2(0.f,0.f);
+	void MouseEvent::Reset() {
+		position	= Vec2(0.f,0.f);
 		relPosition = Vec2(0.f,0.f);
-		dirty=false;
-		keys[0]=false;
-		keys[1]=false;
-		fresh[0]=false;
-		fresh[0]=false;
+		dirty		= false;
+		
+		for (int i=0; i<7; i++) {
+			keys[i]		= false;
+			fresh[i]	= false;
+		}
 	}
 
 	/*
 	=====================
-	MouseEvent::_Unfresh
+	MouseEvent::Unfresh
 	=====================
 	*/
-	void MouseEvent::_Unfresh() {
-		dirty		= keys[0] || keys[1];
-		fresh[0]	= false;
-		fresh[1]	= false;
+	void MouseEvent::Unfresh() {
+		
+		for (int i=0; i<7; i++) {
+			fresh[i] = false;
+
+			if (keys[i]) {
+				dirty = true;
+			}
+		}
 	}
 
 	/*
 	=====================
-	MouseEvent::_MouseMoved
+	MouseEvent::MouseMoved
 	=====================
 	*/
-	void MouseEvent::_MouseMoved(Vec2 pos) {
+	void MouseEvent::MouseMoved(Vec2 pos) {
 		relPosition = pos;
 		position = pos;
 	}
@@ -201,7 +207,7 @@ namespace Pim {
 	Vec2 MouseEvent::GetPosition() const {
 		return (Vec2(position.x, GameControl::GetWindowHeight()-position.y)
 				- GameControl::GetSingleton()->LowerLeftCorner())
-			   * GameControl::GetSingleton()->GetCoordinateFactor();
+			    * GameControl::GetSingleton()->GetCoordinateFactor();
 	}
 
 	/*
@@ -221,54 +227,8 @@ namespace Pim {
 	=====================
 	*/
 	ControllerEvent::ControllerEvent() {
-		curBtnState = 0;
-		prevBtnState = 0;
-
-		if (Connected()) {
-			GetStates();
-		}
-	}
-
-	/*
-	=====================
-	ControllerEvent::Connected
-	=====================
-	*/
-	bool ControllerEvent::Connected() {
-		ZeroMemory(&xinputState, sizeof(XINPUT_STATE));
-		return !XInputGetState(0, &xinputState);
-	}
-
-	/*
-	=====================
-	ControllerEvent::GetStates
-	=====================
-	*/
-	void ControllerEvent::GetStates() {
-		prevBtnState = curBtnState;
-		curBtnState = xinputState.Gamepad.wButtons;
-	}
-
-	/*
-	=====================
-	ControllerEvent::Vibrate
-	=====================
-	*/
-	void ControllerEvent::Vibrate(float l, float r) {
-		if (Connected()) {
-			// Create a Vibraton State
-			XINPUT_VIBRATION vibration;
-
-			// Zeroise the Vibration
-			ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
-
-			// Set the Vibration Values
-			vibration.wLeftMotorSpeed = WORD(l * 65535);
-			vibration.wRightMotorSpeed = WORD(r * 65535);
-
-			// Vibrate the controller
-			XInputSetState(0, &vibration);
-		}
+		joystick = NULL;
+		Reset();
 	}
 
 	/*
@@ -277,7 +237,7 @@ namespace Pim {
 	=====================
 	*/
 	bool ControllerEvent::IsKeyDown(Xbox x) const {
-		return (curBtnState & x) != 0;
+		return (buttons & x) != 0;
 	}
 
 	/*
@@ -286,7 +246,7 @@ namespace Pim {
 	=====================
 	*/
 	bool ControllerEvent::IsKeyFresh(Xbox x) const {
-		return ((curBtnState & x) != 0) && ((prevBtnState & x) == 0);
+		return ((buttons & x) & (prevButtons & x)) == 0;
 	}
 
 	/*
@@ -295,17 +255,10 @@ namespace Pim {
 	=====================
 	*/
 	Vec2 ControllerEvent::LeftStick() const {
-		SHORT lx = xinputState.Gamepad.sThumbLX;
-		if (abs(lx) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) {
-			lx = 0;
-		}
-
-		SHORT ly = xinputState.Gamepad.sThumbLY;
-		if (abs(ly) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) {
-			ly = 0;
-		}
-
-		return Pim::Vec2((float)lx/32767.f, (float)ly/32767.f);
+		return Vec2(
+			(axes[XAXIS_LEFT_X] < XAXIS_AXIS_MIN) ? 0.f : axes[XAXIS_LEFT_X],
+			(axes[XAXIS_LEFT_Y] < XAXIS_AXIS_MIN) ? 0.f : axes[XAXIS_LEFT_Y]
+		);
 	}
 
 	/*
@@ -314,17 +267,10 @@ namespace Pim {
 	=====================
 	*/
 	Vec2 ControllerEvent::RightStick() const {
-		SHORT rx = xinputState.Gamepad.sThumbRX;
-		if (abs(rx) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) {
-			rx = 0;
-		}
-
-		SHORT ry = xinputState.Gamepad.sThumbRY;
-		if (abs(ry) < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE) {
-			ry = 0;
-		}
-
-		return Pim::Vec2((float)rx/32767.f, (float)ry/32767.f);
+		return Vec2(
+			(axes[XAXIS_RIGHT_X] < XAXIS_AXIS_MIN) ? 0.f : axes[XAXIS_RIGHT_X],
+			(axes[XAXIS_RIGHT_Y] < XAXIS_AXIS_MIN) ? 0.f : axes[XAXIS_RIGHT_Y]
+		);
 	}
 
 	/*
@@ -333,7 +279,7 @@ namespace Pim {
 	=====================
 	*/
 	float ControllerEvent::LeftTrigger() const {
-		return (float)xinputState.Gamepad.bLeftTrigger / 255.f;
+		return axes[XAXIS_LEFT_TRIGGER];
 	}
 
 	/*
@@ -342,7 +288,64 @@ namespace Pim {
 	=====================
 	*/
 	float ControllerEvent::RightTrigger() const {
-		return (float)xinputState.Gamepad.bRightTrigger / 255.f;
+		return axes[XAXIS_RIGHT_TRIGGER];
+	}
+
+	/*
+	=====================
+	ControllerEvent::Reset
+	=====================
+	*/
+	void ControllerEvent::Reset() {
+		dirty = false;
+
+		prevButtons = 0;
+		buttons		= 0;
+
+		for (int i=0; i<6; i++) {
+			axes[i] = 0.f;
+		}
+	}
+
+	/*
+	=====================
+	ControllerEvent::Unfresh
+	=====================
+	*/
+	void ControllerEvent::Unfresh() {
+		prevButtons = buttons;
+		
+		if (buttons != 0) {
+			dirty = true;
+		} else {
+			for (int i=0; i<6; i++) {
+				if (axes[i] < XAXIS_AXIS_MIN) {
+					dirty = true;
+				}
+			}
+		}
+	}
+
+	/*
+	=====================
+	ControllerEvent::IsConnected
+	=====================
+	*/
+	bool ControllerEvent::IsConnected() {
+		if (!joystick) {
+			joystick = SDL_JoystickOpen(0);
+		}
+
+		return (joystick != NULL);
+	}
+
+	/*
+	=====================
+	ControllerEvent::Vibrate
+	=====================
+	*/
+	void ControllerEvent::Vibrate(float l, float r) {
+		
 	}
 
 
@@ -486,34 +489,12 @@ namespace Pim {
 		contEvent.Vibrate(leftVib, rightVib);
 	}
 
-	// DO NOT CALL THE UNDERLINED METHODS MANUALLY. I'M SERIOUS YO. DON'T.
-
 	/*
 	=====================
-	Input::_LostFocus
+	Input::KeyPressed
 	=====================
 	*/
-	void Input::_LostFocus() {
-		keyEvent._Reset();
-		mouseEvent._Reset();
-		Dispatch();
-	}
-
-	/*
-	=====================
-	Input::_GainedFocus
-	=====================
-	*/
-	void Input::_GainedFocus() {
-		// TODO: Dispatch a NULL message to all listeners
-	}
-
-	/*
-	=====================
-	Input::_KeyPressed
-	=====================
-	*/
-	void Input::_KeyPressed(int key) {
+	void Input::KeyPressed(int key) {
 		if (!keyEvent.keys[key]) {
 			keyEvent.keys[key] = true;
 			keyEvent.fresh[key] = true;
@@ -523,10 +504,10 @@ namespace Pim {
 
 	/*
 	=====================
-	Input::_KeyReleased
+	Input::KeyReleased
 	=====================
 	*/
-	void Input::_KeyReleased(int key) {
+	void Input::KeyReleased(int key) {
 		keyEvent.keys[key] = false;
 		keyEvent.count--;
 		keyEvent.activePrevFrame = true;
@@ -534,20 +515,20 @@ namespace Pim {
 
 	/*
 	=====================
-	Input::_MouseMoved
+	Input::MouseMoved
 	=====================
 	*/
-	void Input::_MouseMoved(int x, int y) {
-		mouseEvent._MouseMoved(Vec2((float)x, (float)y));
+	void Input::MouseMoved(int x, int y) {
+		mouseEvent.MouseMoved(Vec2((float)x, (float)y));
 		mouseEvent.dirty = true;
 	}
 
 	/*
 	=====================
-	Input::_MousePressed
+	Input::MousePressed
 	=====================
 	*/
-	void Input::_MousePressed(int id) {
+	void Input::MousePressed(int id) {
 		mouseEvent.keys[id] = true;
 		mouseEvent.fresh[id] = true;
 		mouseEvent.dirty = true;
@@ -555,14 +536,48 @@ namespace Pim {
 
 	/*
 	=====================
-	Input::_MouseReleased
+	Input::MouseReleased
 	=====================
 	*/
-	void Input::_MouseReleased(int id) {
+	void Input::MouseReleased(int id) {
 		mouseEvent.keys[id] = false;
 		mouseEvent.dirty = true;
 	}
 
+	/*
+	=====================
+	Input::ControllerButtonPressed
+
+	=====================
+	*/
+	void Input::ControllerButtonPressed(int button) {
+		contEvent.buttons |= 1 << button;
+		contEvent.dirty = true;
+	}
+
+	/*
+	=====================
+	Input::ControllerButtonReleased
+	=====================
+	*/
+	void Input::ControllerButtonReleased(int button) {
+		contEvent.buttons &= ~(1 << button);
+		contEvent.dirty = true;
+	}
+
+	/*
+	=====================
+	Input::ControllerAxisMoved
+	=====================
+	*/
+	void Input::ControllerAxisMoved(int axis, int value) {
+		contEvent.axes[axis] = value / ControllerEvent::XAXIS_AXIS_MAX;
+
+		if (contEvent.axes[axis] > ControllerEvent::XAXIS_AXIS_MIN) {
+			contEvent.dirty = true;
+		}
+	}
+	
 
 	/*
 	=====================
@@ -578,7 +593,7 @@ namespace Pim {
 
 			keyEvent.activePrevFrame = false;
 		}
-		keyEvent._Unfresh();
+		keyEvent.Unfresh();
 
 		// dispatch mouse..
 		if (mouseEvent.dirty) {
@@ -589,16 +604,15 @@ namespace Pim {
 				ml[i]->OnMouseEvent(mouseEvent);
 			}
 		}
-		mouseEvent._Unfresh();
+		mouseEvent.Unfresh();
 
 		// dispatch control...
-		if (cl.size() && contEvent.Connected()) {
-			contEvent.GetStates();
-
+		if (cl.size() && contEvent.IsConnected()) {
 			for (unsigned int i=0; i<cl.size(); i++) {
 				cl[i]->OnControllerEvent(contEvent);
 			}
 		}
+		contEvent.Unfresh();
 	}
 
 	/*
@@ -610,17 +624,15 @@ namespace Pim {
 		mouseEvent.relPosition = mouseEvent.position - mouseEvent.lastPosition;
 		mouseEvent.lastPosition = mouseEvent.position;
 
-		bool controller = contEvent.Connected();
-		if (controller) {
-			contEvent.GetStates();
-		}
+		bool controller = contEvent.IsConnected();
 
 		// Dispatch to the pause-layer regardless of what has occured
 		Dispatch_r(n, controller);
 
 		keyEvent.activePrevFrame = false;
-		keyEvent._Unfresh();
-		mouseEvent._Unfresh();
+		keyEvent.Unfresh();
+		mouseEvent.Unfresh();
+		contEvent.Unfresh();
 	}
 
 	/*

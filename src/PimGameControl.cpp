@@ -524,8 +524,21 @@ namespace Pim {
 	=====================
 	*/
 	bool GameControl::HandleEvents() {
-		SDL_Event event;
 
+		/*	Window movement-events are NOT dispatched in SDL 1.2.15.
+		 *  When the window is moved, the app freezes and is unresponsive
+		 *	until the window is released. 
+		 *  
+		 *	The app does not freeze until the application polls for events.
+		 *	The current workaround is thus to measure the time it takes to
+		 *	poll for events. If the polling takes more than 3 milliseconds, 
+		 *  (normalky at 0.5-1.5ms) the "drag-time" is deducted from the 
+		 *  next delta time.
+		 */
+
+		clock_t prepoll = clock();
+
+		SDL_Event event;
 		bool keepRunning = true;
 
 		while (SDL_PollEvent(&event)) {
@@ -536,29 +549,31 @@ namespace Pim {
 					break;
 
 				case SDL_KEYDOWN:
-					Input::GetSingleton()->_KeyPressed(
+					Input::GetSingleton()->KeyPressed(
 						event.key.keysym.sym 
 					);
 					break;
 
 				case SDL_KEYUP:
-					Input::GetSingleton()->_KeyReleased(
+					Input::GetSingleton()->KeyReleased(
 						event.key.keysym.sym
 					);
 					break;
 
 				case SDL_MOUSEMOTION:
-					Input::GetSingleton()->_MouseMoved(
+					Input::GetSingleton()->MouseMoved(
 						event.motion.x, event.motion.y
 					);
 					break;
 
 				case SDL_MOUSEBUTTONDOWN:
 				{
+					printf("MOUSE: %i\n", event.button.button);
+
 					char mIdx = event.button.button;
 					if (mIdx == 1 || mIdx == 3) {
 						mIdx = (mIdx == 1) ? (0) : (1);
-						Input::GetSingleton()->_MousePressed(
+						Input::GetSingleton()->MousePressed(
 							mIdx
 						);
 					}
@@ -570,7 +585,7 @@ namespace Pim {
 					char mIdx = event.button.button;
 					if (mIdx == 1 || mIdx == 3) {
 						mIdx = (mIdx == 1) ? (0) : (1);
-						Input::GetSingleton()->_MouseReleased(
+						Input::GetSingleton()->MouseReleased(
 							mIdx
 						);
 					}
@@ -583,7 +598,51 @@ namespace Pim {
 						event.resize.h
 					);
 					break;
+
+				case SDL_JOYAXISMOTION:
+					Input::GetSingleton()->ControllerAxisMoved(
+						event.jaxis.axis,
+						event.jaxis.value
+					);
+					break;
+
+				case SDL_JOYBUTTONDOWN:
+					Input::GetSingleton()->ControllerButtonPressed(
+						event.jbutton.button
+					);
+					break;
+
+				case SDL_JOYBUTTONUP:
+					Input::GetSingleton()->ControllerButtonReleased(
+						event.jbutton.button
+					);
+					break;
+
+				case SDL_JOYHATMOTION:
+					/* The D-pad on the 360-controller is treated by SDL as a 
+					 * "Joystick Hat", and the 'value' field in the event is a
+					 * bitfield. As such, the bit values in 'value' are shifted
+					 * 11 bits left (See ControllerEvent::Xbox enum). 
+					 */
+					short val = event.jhat.value << 11;
+					for (int i=11; i<=14; i++) {
+						if (val & 1 << i != 0) {
+							Input::GetSingleton()->ControllerButtonPressed(
+								val
+							);
+						} else {
+							Input::GetSingleton()->ControllerButtonReleased(
+								val
+							);
+						}
+					}
+					break;
 			}
+		}
+
+		clock_t postpoll = clock();
+		if (postpoll - prepoll > 3) {
+			ticks += (postpoll - prepoll);
 		}
 
 		return keepRunning;
