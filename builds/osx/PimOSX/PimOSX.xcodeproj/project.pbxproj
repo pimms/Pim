@@ -1,0 +1,549 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		197E171816D0FE4500CEB184 /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 197E171316D0FE4500CEB184 /* libfreetype.a */; };
+		197E171916D0FE4500CEB184 /* libpng15.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 197E171416D0FE4500CEB184 /* libpng15.framework */; };
+		197E171A16D0FE4500CEB184 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 197E171516D0FE4500CEB184 /* Ogg.framework */; };
+		197E171B16D0FE4500CEB184 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 197E171616D0FE4500CEB184 /* SDL.framework */; };
+		197E171C16D0FE4500CEB184 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 197E171716D0FE4500CEB184 /* Vorbis.framework */; };
+		197E171E16D0FE4B00CEB184 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 197E171D16D0FE4B00CEB184 /* OpenGL.framework */; };
+		197E172016D0FE4E00CEB184 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 197E171F16D0FE4E00CEB184 /* OpenAL.framework */; };
+		197E172216D0FE5100CEB184 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 197E172116D0FE5100CEB184 /* Cocoa.framework */; };
+		197E172C16D0FE7B00CEB184 /* ft2build.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E172516D0FE7B00CEB184 /* ft2build.h */; };
+		197E172D16D0FE7B00CEB184 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E172616D0FE7B00CEB184 /* tinystr.cpp */; };
+		197E172E16D0FE7B00CEB184 /* tinystr.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E172716D0FE7B00CEB184 /* tinystr.h */; };
+		197E172F16D0FE7B00CEB184 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E172816D0FE7B00CEB184 /* tinyxml.cpp */; };
+		197E173016D0FE7B00CEB184 /* tinyxml.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E172916D0FE7B00CEB184 /* tinyxml.h */; };
+		197E173116D0FE7B00CEB184 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E172A16D0FE7B00CEB184 /* tinyxmlerror.cpp */; };
+		197E173216D0FE7B00CEB184 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E172B16D0FE7B00CEB184 /* tinyxmlparser.cpp */; };
+		197E176C16D0FED700CEB184 /* Pim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E173416D0FED700CEB184 /* Pim.cpp */; };
+		197E176D16D0FED700CEB184 /* Pim.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E173516D0FED700CEB184 /* Pim.h */; };
+		197E176E16D0FED700CEB184 /* PimAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E173616D0FED700CEB184 /* PimAction.cpp */; };
+		197E176F16D0FED700CEB184 /* PimAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E173716D0FED700CEB184 /* PimAction.h */; };
+		197E177016D0FED700CEB184 /* PimAssert.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E173816D0FED700CEB184 /* PimAssert.h */; };
+		197E177116D0FED700CEB184 /* PimAudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E173916D0FED700CEB184 /* PimAudioManager.cpp */; };
+		197E177216D0FED700CEB184 /* PimAudioManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E173A16D0FED700CEB184 /* PimAudioManager.h */; };
+		197E177316D0FED700CEB184 /* PimButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E173B16D0FED700CEB184 /* PimButton.cpp */; };
+		197E177416D0FED700CEB184 /* PimButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E173C16D0FED700CEB184 /* PimButton.h */; };
+		197E177516D0FED700CEB184 /* PimConsoleReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E173D16D0FED700CEB184 /* PimConsoleReader.cpp */; };
+		197E177616D0FED700CEB184 /* PimConsoleReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E173E16D0FED700CEB184 /* PimConsoleReader.h */; };
+		197E177716D0FED700CEB184 /* PimFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E173F16D0FED700CEB184 /* PimFont.cpp */; };
+		197E177816D0FED700CEB184 /* PimFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E174016D0FED700CEB184 /* PimFont.h */; };
+		197E177916D0FED700CEB184 /* PimGameControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E174116D0FED700CEB184 /* PimGameControl.cpp */; };
+		197E177A16D0FED700CEB184 /* PimGameControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E174216D0FED700CEB184 /* PimGameControl.h */; };
+		197E177B16D0FED700CEB184 /* PimGameNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E174316D0FED700CEB184 /* PimGameNode.cpp */; };
+		197E177C16D0FED700CEB184 /* PimGameNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E174416D0FED700CEB184 /* PimGameNode.h */; };
+		197E177D16D0FED700CEB184 /* PimHelperFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E174516D0FED700CEB184 /* PimHelperFunctions.h */; };
+		197E177E16D0FED700CEB184 /* PimInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E174616D0FED700CEB184 /* PimInput.cpp */; };
+		197E177F16D0FED700CEB184 /* PimInput.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E174716D0FED700CEB184 /* PimInput.h */; };
+		197E178016D0FED700CEB184 /* PimInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E174816D0FED700CEB184 /* PimInternal.h */; };
+		197E178116D0FED700CEB184 /* PimLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E174916D0FED700CEB184 /* PimLabel.cpp */; };
+		197E178216D0FED700CEB184 /* PimLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E174A16D0FED700CEB184 /* PimLabel.h */; };
+		197E178316D0FED700CEB184 /* PimLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E174B16D0FED700CEB184 /* PimLayer.cpp */; };
+		197E178416D0FED700CEB184 /* PimLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E174C16D0FED700CEB184 /* PimLayer.h */; };
+		197E178516D0FED700CEB184 /* PimLevelParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E174D16D0FED700CEB184 /* PimLevelParser.cpp */; };
+		197E178616D0FED700CEB184 /* PimLevelParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E174E16D0FED700CEB184 /* PimLevelParser.h */; };
+		197E178716D0FED700CEB184 /* PimLightDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E174F16D0FED700CEB184 /* PimLightDef.cpp */; };
+		197E178816D0FED700CEB184 /* PimLightDef.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E175016D0FED700CEB184 /* PimLightDef.h */; };
+		197E178916D0FED700CEB184 /* PimLightingSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E175116D0FED700CEB184 /* PimLightingSystem.cpp */; };
+		197E178A16D0FED700CEB184 /* PimLightingSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E175216D0FED700CEB184 /* PimLightingSystem.h */; };
+		197E178B16D0FED700CEB184 /* PimLightingSystemShaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E175316D0FED700CEB184 /* PimLightingSystemShaders.h */; };
+		197E178C16D0FED700CEB184 /* PimParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E175416D0FED700CEB184 /* PimParticleSystem.cpp */; };
+		197E178D16D0FED700CEB184 /* PimParticleSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E175516D0FED700CEB184 /* PimParticleSystem.h */; };
+		197E178E16D0FED700CEB184 /* PimPolygonShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E175616D0FED700CEB184 /* PimPolygonShape.cpp */; };
+		197E178F16D0FED700CEB184 /* PimPolygonShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E175716D0FED700CEB184 /* PimPolygonShape.h */; };
+		197E179016D0FED700CEB184 /* PimRenderTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E175816D0FED700CEB184 /* PimRenderTexture.cpp */; };
+		197E179116D0FED700CEB184 /* PimRenderTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E175916D0FED700CEB184 /* PimRenderTexture.h */; };
+		197E179216D0FED700CEB184 /* PimRenderWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E175A16D0FED700CEB184 /* PimRenderWindow.cpp */; };
+		197E179316D0FED700CEB184 /* PimRenderWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E175B16D0FED700CEB184 /* PimRenderWindow.h */; };
+		197E179416D0FED700CEB184 /* PimScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E175C16D0FED700CEB184 /* PimScene.cpp */; };
+		197E179516D0FED700CEB184 /* PimScene.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E175D16D0FED700CEB184 /* PimScene.h */; };
+		197E179616D0FED700CEB184 /* PimShaderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E175E16D0FED700CEB184 /* PimShaderManager.cpp */; };
+		197E179716D0FED700CEB184 /* PimShaderManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E175F16D0FED700CEB184 /* PimShaderManager.h */; };
+		197E179816D0FED700CEB184 /* PimSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E176016D0FED700CEB184 /* PimSlider.cpp */; };
+		197E179916D0FED700CEB184 /* PimSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E176116D0FED700CEB184 /* PimSlider.h */; };
+		197E179A16D0FED700CEB184 /* PimSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E176216D0FED700CEB184 /* PimSound.cpp */; };
+		197E179B16D0FED700CEB184 /* PimSound.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E176316D0FED700CEB184 /* PimSound.h */; };
+		197E179C16D0FED700CEB184 /* PimSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E176416D0FED700CEB184 /* PimSprite.cpp */; };
+		197E179D16D0FED700CEB184 /* PimSprite.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E176516D0FED700CEB184 /* PimSprite.h */; };
+		197E179E16D0FED700CEB184 /* PimSpriteBatchNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E176616D0FED700CEB184 /* PimSpriteBatchNode.cpp */; };
+		197E179F16D0FED700CEB184 /* PimSpriteBatchNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E176716D0FED700CEB184 /* PimSpriteBatchNode.h */; };
+		197E17A016D0FED700CEB184 /* PimVec2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E176816D0FED700CEB184 /* PimVec2.cpp */; };
+		197E17A116D0FED700CEB184 /* PimVec2.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E176916D0FED700CEB184 /* PimVec2.h */; };
+		197E17A216D0FED700CEB184 /* PimWinStyle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197E176A16D0FED700CEB184 /* PimWinStyle.cpp */; };
+		197E17A316D0FED700CEB184 /* PimWinStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 197E176B16D0FED700CEB184 /* PimWinStyle.h */; };
+		197E17A516D10B8700CEB184 /* libbz2.1.0.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 197E17A416D10B8700CEB184 /* libbz2.1.0.5.dylib */; };
+		197E17A716D10CC700CEB184 /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 197E17A616D10CC700CEB184 /* libz.1.1.3.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		197E170C16D0FE3500CEB184 /* libPimOSX.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libPimOSX.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		197E171316D0FE4500CEB184 /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreetype.a; path = ../libfreetype.a; sourceTree = "<group>"; };
+		197E171416D0FE4500CEB184 /* libpng15.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libpng15.framework; path = ../libpng15.framework; sourceTree = "<group>"; };
+		197E171516D0FE4500CEB184 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = ../Ogg.framework; sourceTree = "<group>"; };
+		197E171616D0FE4500CEB184 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ../SDL.framework; sourceTree = "<group>"; };
+		197E171716D0FE4500CEB184 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = ../Vorbis.framework; sourceTree = "<group>"; };
+		197E171D16D0FE4B00CEB184 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		197E171F16D0FE4E00CEB184 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		197E172116D0FE5100CEB184 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		197E172516D0FE7B00CEB184 /* ft2build.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ft2build.h; sourceTree = "<group>"; };
+		197E172616D0FE7B00CEB184 /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinystr.cpp; sourceTree = "<group>"; };
+		197E172716D0FE7B00CEB184 /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinystr.h; sourceTree = "<group>"; };
+		197E172816D0FE7B00CEB184 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
+		197E172916D0FE7B00CEB184 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
+		197E172A16D0FE7B00CEB184 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
+		197E172B16D0FE7B00CEB184 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		197E173416D0FED700CEB184 /* Pim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pim.cpp; path = ../../../src/Pim.cpp; sourceTree = "<group>"; };
+		197E173516D0FED700CEB184 /* Pim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pim.h; path = ../../../src/Pim.h; sourceTree = "<group>"; };
+		197E173616D0FED700CEB184 /* PimAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimAction.cpp; path = ../../../src/PimAction.cpp; sourceTree = "<group>"; };
+		197E173716D0FED700CEB184 /* PimAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimAction.h; path = ../../../src/PimAction.h; sourceTree = "<group>"; };
+		197E173816D0FED700CEB184 /* PimAssert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimAssert.h; path = ../../../src/PimAssert.h; sourceTree = "<group>"; };
+		197E173916D0FED700CEB184 /* PimAudioManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimAudioManager.cpp; path = ../../../src/PimAudioManager.cpp; sourceTree = "<group>"; };
+		197E173A16D0FED700CEB184 /* PimAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimAudioManager.h; path = ../../../src/PimAudioManager.h; sourceTree = "<group>"; };
+		197E173B16D0FED700CEB184 /* PimButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimButton.cpp; path = ../../../src/PimButton.cpp; sourceTree = "<group>"; };
+		197E173C16D0FED700CEB184 /* PimButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimButton.h; path = ../../../src/PimButton.h; sourceTree = "<group>"; };
+		197E173D16D0FED700CEB184 /* PimConsoleReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimConsoleReader.cpp; path = ../../../src/PimConsoleReader.cpp; sourceTree = "<group>"; };
+		197E173E16D0FED700CEB184 /* PimConsoleReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimConsoleReader.h; path = ../../../src/PimConsoleReader.h; sourceTree = "<group>"; };
+		197E173F16D0FED700CEB184 /* PimFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimFont.cpp; path = ../../../src/PimFont.cpp; sourceTree = "<group>"; };
+		197E174016D0FED700CEB184 /* PimFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimFont.h; path = ../../../src/PimFont.h; sourceTree = "<group>"; };
+		197E174116D0FED700CEB184 /* PimGameControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimGameControl.cpp; path = ../../../src/PimGameControl.cpp; sourceTree = "<group>"; };
+		197E174216D0FED700CEB184 /* PimGameControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimGameControl.h; path = ../../../src/PimGameControl.h; sourceTree = "<group>"; };
+		197E174316D0FED700CEB184 /* PimGameNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimGameNode.cpp; path = ../../../src/PimGameNode.cpp; sourceTree = "<group>"; };
+		197E174416D0FED700CEB184 /* PimGameNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimGameNode.h; path = ../../../src/PimGameNode.h; sourceTree = "<group>"; };
+		197E174516D0FED700CEB184 /* PimHelperFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimHelperFunctions.h; path = ../../../src/PimHelperFunctions.h; sourceTree = "<group>"; };
+		197E174616D0FED700CEB184 /* PimInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimInput.cpp; path = ../../../src/PimInput.cpp; sourceTree = "<group>"; };
+		197E174716D0FED700CEB184 /* PimInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimInput.h; path = ../../../src/PimInput.h; sourceTree = "<group>"; };
+		197E174816D0FED700CEB184 /* PimInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimInternal.h; path = ../../../src/PimInternal.h; sourceTree = "<group>"; };
+		197E174916D0FED700CEB184 /* PimLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimLabel.cpp; path = ../../../src/PimLabel.cpp; sourceTree = "<group>"; };
+		197E174A16D0FED700CEB184 /* PimLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimLabel.h; path = ../../../src/PimLabel.h; sourceTree = "<group>"; };
+		197E174B16D0FED700CEB184 /* PimLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimLayer.cpp; path = ../../../src/PimLayer.cpp; sourceTree = "<group>"; };
+		197E174C16D0FED700CEB184 /* PimLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimLayer.h; path = ../../../src/PimLayer.h; sourceTree = "<group>"; };
+		197E174D16D0FED700CEB184 /* PimLevelParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimLevelParser.cpp; path = ../../../src/PimLevelParser.cpp; sourceTree = "<group>"; };
+		197E174E16D0FED700CEB184 /* PimLevelParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimLevelParser.h; path = ../../../src/PimLevelParser.h; sourceTree = "<group>"; };
+		197E174F16D0FED700CEB184 /* PimLightDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimLightDef.cpp; path = ../../../src/PimLightDef.cpp; sourceTree = "<group>"; };
+		197E175016D0FED700CEB184 /* PimLightDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimLightDef.h; path = ../../../src/PimLightDef.h; sourceTree = "<group>"; };
+		197E175116D0FED700CEB184 /* PimLightingSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimLightingSystem.cpp; path = ../../../src/PimLightingSystem.cpp; sourceTree = "<group>"; };
+		197E175216D0FED700CEB184 /* PimLightingSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimLightingSystem.h; path = ../../../src/PimLightingSystem.h; sourceTree = "<group>"; };
+		197E175316D0FED700CEB184 /* PimLightingSystemShaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimLightingSystemShaders.h; path = ../../../src/PimLightingSystemShaders.h; sourceTree = "<group>"; };
+		197E175416D0FED700CEB184 /* PimParticleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimParticleSystem.cpp; path = ../../../src/PimParticleSystem.cpp; sourceTree = "<group>"; };
+		197E175516D0FED700CEB184 /* PimParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimParticleSystem.h; path = ../../../src/PimParticleSystem.h; sourceTree = "<group>"; };
+		197E175616D0FED700CEB184 /* PimPolygonShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimPolygonShape.cpp; path = ../../../src/PimPolygonShape.cpp; sourceTree = "<group>"; };
+		197E175716D0FED700CEB184 /* PimPolygonShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimPolygonShape.h; path = ../../../src/PimPolygonShape.h; sourceTree = "<group>"; };
+		197E175816D0FED700CEB184 /* PimRenderTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimRenderTexture.cpp; path = ../../../src/PimRenderTexture.cpp; sourceTree = "<group>"; };
+		197E175916D0FED700CEB184 /* PimRenderTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimRenderTexture.h; path = ../../../src/PimRenderTexture.h; sourceTree = "<group>"; };
+		197E175A16D0FED700CEB184 /* PimRenderWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimRenderWindow.cpp; path = ../../../src/PimRenderWindow.cpp; sourceTree = "<group>"; };
+		197E175B16D0FED700CEB184 /* PimRenderWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimRenderWindow.h; path = ../../../src/PimRenderWindow.h; sourceTree = "<group>"; };
+		197E175C16D0FED700CEB184 /* PimScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimScene.cpp; path = ../../../src/PimScene.cpp; sourceTree = "<group>"; };
+		197E175D16D0FED700CEB184 /* PimScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimScene.h; path = ../../../src/PimScene.h; sourceTree = "<group>"; };
+		197E175E16D0FED700CEB184 /* PimShaderManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimShaderManager.cpp; path = ../../../src/PimShaderManager.cpp; sourceTree = "<group>"; };
+		197E175F16D0FED700CEB184 /* PimShaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimShaderManager.h; path = ../../../src/PimShaderManager.h; sourceTree = "<group>"; };
+		197E176016D0FED700CEB184 /* PimSlider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimSlider.cpp; path = ../../../src/PimSlider.cpp; sourceTree = "<group>"; };
+		197E176116D0FED700CEB184 /* PimSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimSlider.h; path = ../../../src/PimSlider.h; sourceTree = "<group>"; };
+		197E176216D0FED700CEB184 /* PimSound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimSound.cpp; path = ../../../src/PimSound.cpp; sourceTree = "<group>"; };
+		197E176316D0FED700CEB184 /* PimSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimSound.h; path = ../../../src/PimSound.h; sourceTree = "<group>"; };
+		197E176416D0FED700CEB184 /* PimSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimSprite.cpp; path = ../../../src/PimSprite.cpp; sourceTree = "<group>"; };
+		197E176516D0FED700CEB184 /* PimSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimSprite.h; path = ../../../src/PimSprite.h; sourceTree = "<group>"; };
+		197E176616D0FED700CEB184 /* PimSpriteBatchNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimSpriteBatchNode.cpp; path = ../../../src/PimSpriteBatchNode.cpp; sourceTree = "<group>"; };
+		197E176716D0FED700CEB184 /* PimSpriteBatchNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimSpriteBatchNode.h; path = ../../../src/PimSpriteBatchNode.h; sourceTree = "<group>"; };
+		197E176816D0FED700CEB184 /* PimVec2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimVec2.cpp; path = ../../../src/PimVec2.cpp; sourceTree = "<group>"; };
+		197E176916D0FED700CEB184 /* PimVec2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimVec2.h; path = ../../../src/PimVec2.h; sourceTree = "<group>"; };
+		197E176A16D0FED700CEB184 /* PimWinStyle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimWinStyle.cpp; path = ../../../src/PimWinStyle.cpp; sourceTree = "<group>"; };
+		197E176B16D0FED700CEB184 /* PimWinStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimWinStyle.h; path = ../../../src/PimWinStyle.h; sourceTree = "<group>"; };
+		197E17A416D10B8700CEB184 /* libbz2.1.0.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.1.0.5.dylib; path = usr/lib/libbz2.1.0.5.dylib; sourceTree = SDKROOT; };
+		197E17A616D10CC700CEB184 /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		197E170916D0FE3500CEB184 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				197E17A716D10CC700CEB184 /* libz.1.1.3.dylib in Frameworks */,
+				197E17A516D10B8700CEB184 /* libbz2.1.0.5.dylib in Frameworks */,
+				197E172216D0FE5100CEB184 /* Cocoa.framework in Frameworks */,
+				197E172016D0FE4E00CEB184 /* OpenAL.framework in Frameworks */,
+				197E171E16D0FE4B00CEB184 /* OpenGL.framework in Frameworks */,
+				197E171816D0FE4500CEB184 /* libfreetype.a in Frameworks */,
+				197E171916D0FE4500CEB184 /* libpng15.framework in Frameworks */,
+				197E171A16D0FE4500CEB184 /* Ogg.framework in Frameworks */,
+				197E171B16D0FE4500CEB184 /* SDL.framework in Frameworks */,
+				197E171C16D0FE4500CEB184 /* Vorbis.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		197E170316D0FE3500CEB184 = {
+			isa = PBXGroup;
+			children = (
+				197E173316D0FEB100CEB184 /* Source */,
+				197E172416D0FE5C00CEB184 /* Supporting Files */,
+				197E172316D0FE5500CEB184 /* Frameworks */,
+				197E170D16D0FE3500CEB184 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		197E170D16D0FE3500CEB184 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				197E170C16D0FE3500CEB184 /* libPimOSX.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		197E172316D0FE5500CEB184 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				197E17A616D10CC700CEB184 /* libz.1.1.3.dylib */,
+				197E17A416D10B8700CEB184 /* libbz2.1.0.5.dylib */,
+				197E172116D0FE5100CEB184 /* Cocoa.framework */,
+				197E171F16D0FE4E00CEB184 /* OpenAL.framework */,
+				197E171D16D0FE4B00CEB184 /* OpenGL.framework */,
+				197E171316D0FE4500CEB184 /* libfreetype.a */,
+				197E171416D0FE4500CEB184 /* libpng15.framework */,
+				197E171516D0FE4500CEB184 /* Ogg.framework */,
+				197E171616D0FE4500CEB184 /* SDL.framework */,
+				197E171716D0FE4500CEB184 /* Vorbis.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		197E172416D0FE5C00CEB184 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				197E172516D0FE7B00CEB184 /* ft2build.h */,
+				197E172616D0FE7B00CEB184 /* tinystr.cpp */,
+				197E172716D0FE7B00CEB184 /* tinystr.h */,
+				197E172816D0FE7B00CEB184 /* tinyxml.cpp */,
+				197E172916D0FE7B00CEB184 /* tinyxml.h */,
+				197E172A16D0FE7B00CEB184 /* tinyxmlerror.cpp */,
+				197E172B16D0FE7B00CEB184 /* tinyxmlparser.cpp */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		197E173316D0FEB100CEB184 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				197E173416D0FED700CEB184 /* Pim.cpp */,
+				197E173516D0FED700CEB184 /* Pim.h */,
+				197E173616D0FED700CEB184 /* PimAction.cpp */,
+				197E173716D0FED700CEB184 /* PimAction.h */,
+				197E173816D0FED700CEB184 /* PimAssert.h */,
+				197E173916D0FED700CEB184 /* PimAudioManager.cpp */,
+				197E173A16D0FED700CEB184 /* PimAudioManager.h */,
+				197E173B16D0FED700CEB184 /* PimButton.cpp */,
+				197E173C16D0FED700CEB184 /* PimButton.h */,
+				197E173D16D0FED700CEB184 /* PimConsoleReader.cpp */,
+				197E173E16D0FED700CEB184 /* PimConsoleReader.h */,
+				197E173F16D0FED700CEB184 /* PimFont.cpp */,
+				197E174016D0FED700CEB184 /* PimFont.h */,
+				197E174116D0FED700CEB184 /* PimGameControl.cpp */,
+				197E174216D0FED700CEB184 /* PimGameControl.h */,
+				197E174316D0FED700CEB184 /* PimGameNode.cpp */,
+				197E174416D0FED700CEB184 /* PimGameNode.h */,
+				197E174516D0FED700CEB184 /* PimHelperFunctions.h */,
+				197E174616D0FED700CEB184 /* PimInput.cpp */,
+				197E174716D0FED700CEB184 /* PimInput.h */,
+				197E174816D0FED700CEB184 /* PimInternal.h */,
+				197E174916D0FED700CEB184 /* PimLabel.cpp */,
+				197E174A16D0FED700CEB184 /* PimLabel.h */,
+				197E174B16D0FED700CEB184 /* PimLayer.cpp */,
+				197E174C16D0FED700CEB184 /* PimLayer.h */,
+				197E174D16D0FED700CEB184 /* PimLevelParser.cpp */,
+				197E174E16D0FED700CEB184 /* PimLevelParser.h */,
+				197E174F16D0FED700CEB184 /* PimLightDef.cpp */,
+				197E175016D0FED700CEB184 /* PimLightDef.h */,
+				197E175116D0FED700CEB184 /* PimLightingSystem.cpp */,
+				197E175216D0FED700CEB184 /* PimLightingSystem.h */,
+				197E175316D0FED700CEB184 /* PimLightingSystemShaders.h */,
+				197E175416D0FED700CEB184 /* PimParticleSystem.cpp */,
+				197E175516D0FED700CEB184 /* PimParticleSystem.h */,
+				197E175616D0FED700CEB184 /* PimPolygonShape.cpp */,
+				197E175716D0FED700CEB184 /* PimPolygonShape.h */,
+				197E175816D0FED700CEB184 /* PimRenderTexture.cpp */,
+				197E175916D0FED700CEB184 /* PimRenderTexture.h */,
+				197E175A16D0FED700CEB184 /* PimRenderWindow.cpp */,
+				197E175B16D0FED700CEB184 /* PimRenderWindow.h */,
+				197E175C16D0FED700CEB184 /* PimScene.cpp */,
+				197E175D16D0FED700CEB184 /* PimScene.h */,
+				197E175E16D0FED700CEB184 /* PimShaderManager.cpp */,
+				197E175F16D0FED700CEB184 /* PimShaderManager.h */,
+				197E176016D0FED700CEB184 /* PimSlider.cpp */,
+				197E176116D0FED700CEB184 /* PimSlider.h */,
+				197E176216D0FED700CEB184 /* PimSound.cpp */,
+				197E176316D0FED700CEB184 /* PimSound.h */,
+				197E176416D0FED700CEB184 /* PimSprite.cpp */,
+				197E176516D0FED700CEB184 /* PimSprite.h */,
+				197E176616D0FED700CEB184 /* PimSpriteBatchNode.cpp */,
+				197E176716D0FED700CEB184 /* PimSpriteBatchNode.h */,
+				197E176816D0FED700CEB184 /* PimVec2.cpp */,
+				197E176916D0FED700CEB184 /* PimVec2.h */,
+				197E176A16D0FED700CEB184 /* PimWinStyle.cpp */,
+				197E176B16D0FED700CEB184 /* PimWinStyle.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		197E170A16D0FE3500CEB184 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				197E172C16D0FE7B00CEB184 /* ft2build.h in Headers */,
+				197E172E16D0FE7B00CEB184 /* tinystr.h in Headers */,
+				197E173016D0FE7B00CEB184 /* tinyxml.h in Headers */,
+				197E176D16D0FED700CEB184 /* Pim.h in Headers */,
+				197E176F16D0FED700CEB184 /* PimAction.h in Headers */,
+				197E177016D0FED700CEB184 /* PimAssert.h in Headers */,
+				197E177216D0FED700CEB184 /* PimAudioManager.h in Headers */,
+				197E177416D0FED700CEB184 /* PimButton.h in Headers */,
+				197E177616D0FED700CEB184 /* PimConsoleReader.h in Headers */,
+				197E177816D0FED700CEB184 /* PimFont.h in Headers */,
+				197E177A16D0FED700CEB184 /* PimGameControl.h in Headers */,
+				197E177C16D0FED700CEB184 /* PimGameNode.h in Headers */,
+				197E177D16D0FED700CEB184 /* PimHelperFunctions.h in Headers */,
+				197E177F16D0FED700CEB184 /* PimInput.h in Headers */,
+				197E178016D0FED700CEB184 /* PimInternal.h in Headers */,
+				197E178216D0FED700CEB184 /* PimLabel.h in Headers */,
+				197E178416D0FED700CEB184 /* PimLayer.h in Headers */,
+				197E178616D0FED700CEB184 /* PimLevelParser.h in Headers */,
+				197E178816D0FED700CEB184 /* PimLightDef.h in Headers */,
+				197E178A16D0FED700CEB184 /* PimLightingSystem.h in Headers */,
+				197E178B16D0FED700CEB184 /* PimLightingSystemShaders.h in Headers */,
+				197E178D16D0FED700CEB184 /* PimParticleSystem.h in Headers */,
+				197E178F16D0FED700CEB184 /* PimPolygonShape.h in Headers */,
+				197E179116D0FED700CEB184 /* PimRenderTexture.h in Headers */,
+				197E179316D0FED700CEB184 /* PimRenderWindow.h in Headers */,
+				197E179516D0FED700CEB184 /* PimScene.h in Headers */,
+				197E179716D0FED700CEB184 /* PimShaderManager.h in Headers */,
+				197E179916D0FED700CEB184 /* PimSlider.h in Headers */,
+				197E179B16D0FED700CEB184 /* PimSound.h in Headers */,
+				197E179D16D0FED700CEB184 /* PimSprite.h in Headers */,
+				197E179F16D0FED700CEB184 /* PimSpriteBatchNode.h in Headers */,
+				197E17A116D0FED700CEB184 /* PimVec2.h in Headers */,
+				197E17A316D0FED700CEB184 /* PimWinStyle.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		197E170B16D0FE3500CEB184 /* PimOSX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 197E171016D0FE3500CEB184 /* Build configuration list for PBXNativeTarget "PimOSX" */;
+			buildPhases = (
+				197E170816D0FE3500CEB184 /* Sources */,
+				197E170916D0FE3500CEB184 /* Frameworks */,
+				197E170A16D0FE3500CEB184 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PimOSX;
+			productName = PimOSX;
+			productReference = 197E170C16D0FE3500CEB184 /* libPimOSX.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		197E170416D0FE3500CEB184 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Joakim Stien";
+			};
+			buildConfigurationList = 197E170716D0FE3500CEB184 /* Build configuration list for PBXProject "PimOSX" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 197E170316D0FE3500CEB184;
+			productRefGroup = 197E170D16D0FE3500CEB184 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				197E170B16D0FE3500CEB184 /* PimOSX */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		197E170816D0FE3500CEB184 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				197E172D16D0FE7B00CEB184 /* tinystr.cpp in Sources */,
+				197E172F16D0FE7B00CEB184 /* tinyxml.cpp in Sources */,
+				197E173116D0FE7B00CEB184 /* tinyxmlerror.cpp in Sources */,
+				197E173216D0FE7B00CEB184 /* tinyxmlparser.cpp in Sources */,
+				197E176C16D0FED700CEB184 /* Pim.cpp in Sources */,
+				197E176E16D0FED700CEB184 /* PimAction.cpp in Sources */,
+				197E177116D0FED700CEB184 /* PimAudioManager.cpp in Sources */,
+				197E177316D0FED700CEB184 /* PimButton.cpp in Sources */,
+				197E177516D0FED700CEB184 /* PimConsoleReader.cpp in Sources */,
+				197E177716D0FED700CEB184 /* PimFont.cpp in Sources */,
+				197E177916D0FED700CEB184 /* PimGameControl.cpp in Sources */,
+				197E177B16D0FED700CEB184 /* PimGameNode.cpp in Sources */,
+				197E177E16D0FED700CEB184 /* PimInput.cpp in Sources */,
+				197E178116D0FED700CEB184 /* PimLabel.cpp in Sources */,
+				197E178316D0FED700CEB184 /* PimLayer.cpp in Sources */,
+				197E178516D0FED700CEB184 /* PimLevelParser.cpp in Sources */,
+				197E178716D0FED700CEB184 /* PimLightDef.cpp in Sources */,
+				197E178916D0FED700CEB184 /* PimLightingSystem.cpp in Sources */,
+				197E178C16D0FED700CEB184 /* PimParticleSystem.cpp in Sources */,
+				197E178E16D0FED700CEB184 /* PimPolygonShape.cpp in Sources */,
+				197E179016D0FED700CEB184 /* PimRenderTexture.cpp in Sources */,
+				197E179216D0FED700CEB184 /* PimRenderWindow.cpp in Sources */,
+				197E179416D0FED700CEB184 /* PimScene.cpp in Sources */,
+				197E179616D0FED700CEB184 /* PimShaderManager.cpp in Sources */,
+				197E179816D0FED700CEB184 /* PimSlider.cpp in Sources */,
+				197E179A16D0FED700CEB184 /* PimSound.cpp in Sources */,
+				197E179C16D0FED700CEB184 /* PimSprite.cpp in Sources */,
+				197E179E16D0FED700CEB184 /* PimSpriteBatchNode.cpp in Sources */,
+				197E17A016D0FED700CEB184 /* PimVec2.cpp in Sources */,
+				197E17A216D0FED700CEB184 /* PimWinStyle.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		197E170E16D0FE3500CEB184 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		197E170F16D0FE3500CEB184 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		197E171116D0FE3500CEB184 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				EXECUTABLE_PREFIX = lib;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/..\"",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"_DEBUG=1",
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../freetype2\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/..\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		197E171216D0FE3500CEB184 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				EXECUTABLE_PREFIX = lib;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/..\"",
+					"\"$(SRCROOT)/../freetype2\"",
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../freetype2\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/..\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		197E170716D0FE3500CEB184 /* Build configuration list for PBXProject "PimOSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				197E170E16D0FE3500CEB184 /* Debug */,
+				197E170F16D0FE3500CEB184 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		197E171016D0FE3500CEB184 /* Build configuration list for PBXNativeTarget "PimOSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				197E171116D0FE3500CEB184 /* Debug */,
+				197E171216D0FE3500CEB184 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 197E170416D0FE3500CEB184 /* Project object */;
+}

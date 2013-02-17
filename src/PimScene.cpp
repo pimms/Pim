@@ -19,8 +19,8 @@ namespace Pim {
 	=====================
 	*/
 	Scene::~Scene() {
-		for each (Layer *layer in layers) {
-			GameControl::GetSingleton()->AddNodeToDelete(layer);
+		for (unsigned i=0; i<layers.size(); i++) {
+			GameControl::GetSingleton()->AddNodeToDelete(layers[i]);
 		}
 	}
 

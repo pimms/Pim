@@ -19,7 +19,7 @@ namespace Pim {
 		if (!doc.LoadFile()) {
 			string desc = "Could not open file for parsing:\n";
 			desc.append(path);
-			MessageBoxA(NULL, desc.c_str(), "Error!", MB_OK | MB_ICONEXCLAMATION);
+			PimWarning(desc.c_str(), "Error!");
 			return NULL;
 		}
 
@@ -43,7 +43,7 @@ namespace Pim {
 		if (!doc.LoadFile()) {
 			string desc = "Could not open file for writing:\n";
 			desc.append(file);
-			MessageBoxA(NULL, desc.c_str(), "Error!", MB_OK | MB_ICONEXCLAMATION);
+			PimWarning(desc.c_str(), "Error!");
 			return;
 		}
 
@@ -72,7 +72,7 @@ namespace Pim {
 		if (!doc.LoadFile()) {
 			string desc = "Could not open file for parsing:\n";
 			desc.append(path);
-			MessageBoxA(NULL, desc.c_str(), "Parser error", MB_OK | MB_ICONEXCLAMATION);
+			PimWarning(desc.c_str(), "Parser error");
 			return false;
 		}
 
@@ -472,7 +472,7 @@ namespace Pim {
 				
 				string desc = "ERROR:\nReferences batchnode does not exist:\n";
 				desc.append(attr);
-				MessageBoxA(NULL, desc.c_str(), "Parser error", MB_OK | MB_ICONEXCLAMATION);
+				PimWarning(desc.c_str(), "Parser error");
 			}
 		}
 	}
@@ -498,17 +498,13 @@ namespace Pim {
 				} else if (!strcmp(type, "flat")) {
 					ldef = new FlatLightDef;
 				} else {
-					MessageBoxA(NULL,
-								"Error:\nBad type specified (flat/smooth) for light.",
-								"Parser error", MB_OK | MB_ICONEXCLAMATION
-							   );
+					PimWarning("Error:\nBad type specified (flat/smooth) for light.",
+							   "Parser error");
 					return;
 				}
 			} else {
-				MessageBoxA(NULL,
-							"Error:\nBad type specified (flat/smooth) for light.",
-							"Parser error", MB_OK | MB_ICONEXCLAMATION
-						   );
+				PimWarning("Error:\nBad type specified (flat/smooth) for light.",
+						   "Parser error");
 				return;
 			}
 
@@ -644,15 +640,12 @@ namespace Pim {
 			if (attr != NULL) {
 				resolution = VecFromString(attr);
 			}
-			#ifdef _DEBUG
+#ifdef _DEBUG
 			else {
-				// Show a warning message
-				MessageBoxA(NULL,
-					"ERROR:\nA lighting system was defined, but no resolution was given.",
-					"Level Error", MB_OK | MB_ICONEXCLAMATION
-					);
+				PimWarning("ERROR:\nA lighting system was defined, but no resolution was given.",
+						   "Level Error");
 			}
-			#endif
+#endif
 
 			layer->CreateLightingSystem(resolution);
 

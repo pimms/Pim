@@ -128,6 +128,7 @@ namespace Pim {
 		   return false;
 		}
 
+#ifdef WIN32
 	    // Initate GLEW
 		GLenum res = glewInit();
 		if (res != GLEW_OK) {
@@ -135,6 +136,7 @@ namespace Pim {
 			system("PAUSE");
 			return false;
 		}
+#endif
 
 		SDL_WM_SetCaption(data.winTitle.c_str(), NULL);
 		winData = data;

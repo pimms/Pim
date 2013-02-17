@@ -184,9 +184,9 @@ namespace Pim {
 		Vec2 c(0.f, 0.f);
 
 		int i=0;
-		for each (Line *line in lines) {
-			c += line->GetP1();
-			c += line->GetP2();
+		for (unsigned i=0; i<lines.size(); i++) {
+			c += lines[i]->GetP1();
+			c += lines[i]->GetP2();
 			i += 2;
 		}
 
@@ -259,15 +259,15 @@ namespace Pim {
 		min = dotProduct;
 		max = dotProduct;
 
-		for each (Line *line in lines) {
-			dotProduct = (line->GetP1()+offset).Dot(axis);
+		for (unsigned i=0; i<lines.size(); i++) {
+			dotProduct = (lines[i]->GetP1()+offset).Dot(axis);
 			if (dotProduct < min) {
 				min = dotProduct;
 			} else if (dotProduct > max) {
 				max = dotProduct;
 			}
 
-			dotProduct = (line->GetP2()+offset).Dot(axis);
+			dotProduct = (lines[i]->GetP2()+offset).Dot(axis);
 			if (dotProduct < min) {
 				min = dotProduct;
 			} else if (dotProduct > max) {

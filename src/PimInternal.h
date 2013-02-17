@@ -1,14 +1,12 @@
 #pragma once
 
-using namespace std;
-
 #define PIM_VERSION "0.9 alpha"
 
 // memory-leak tracing for debug builds
-#ifdef _DEBUG
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
+#if defined(_DEBUG) && defined(WIN32)
+	#define _CRTDBG_MAP_ALLOC
+	#include <stdlib.h>
+	#include <crtdbg.h>
 #endif
 
 // C++ standard library
@@ -24,33 +22,59 @@ using namespace std;
 #include <cmath>
 
 
-// Threading
-#include <process.h>	// To be removed in the future
-//#include <omp.h>
+#ifdef WIN32
+	// Threading
+	#include <process.h>	// To be removed in the future
+	//#include <omp.h>
 
-// windows and OpenGL (glew)
-#include <Windows.h>
-#include <GL\glew.h>
+	// windows and OpenGL (glew)
+	#include <Windows.h>
+	#include <GL\glew.h>
 
-// SDL
-#include "SDL\SDL.h"
-#include "SDL\SDL_main.h"
+	// SDL
+	#include "SDL\SDL.h"
+	#include "SDL\SDL_main.h"
 
-// Direct sound
-#include "al.h"
-#include "alc.h"
+	// OpenAL
+	#include "al.h"
+	#include "alc.h"
 
-// freetype
-#include "ft2build.h"
-#include FT_FREETYPE_H
+	// Freetype
+	#include "ft2build.h"
+	#include FT_FREETYPE_H
 
-// libpng
-#include "png.h"
+	// LibPNG
+	#include "png.h"
 
-// Ogg Vorbis
-#include "vorbis\codec.h"
-#include "vorbis\vorbisfile.h"
+	// Ogg Vorbis
+	#include "vorbis\codec.h"
+	#include "vorbis\vorbisfile.h"
+#elif defined __APPLE__
+	// OpenGL
+	#include <OpenGL/OpenGL.h>
+	#include <OpenGL/gl.h>
 
+	// SDL
+	#include <SDL/SDL.h>
+	#include <SDL/SDL_main.h>
+
+	// OpenAL
+	#include <OpenAL/al.h>
+	#include <OpenAL/alc.h>
+
+	// Freetype
+	#include "ft2build.h"
+	#include "freetype/freetype.h"
+
+	// LibPNG
+	#include <libpng15/png.h>
+
+	// Ogg Vorbis
+	#include <Vorbis/codec.h>
+	#include <Vorbis/vorbisfile.h>
+#endif
+
+using namespace std;
 
 // Custom defines
 #define DEGTORAD ((float)M_PI/180.f)

@@ -15,6 +15,10 @@
 #include <iostream>
 #include <ctime>
 
+#ifndef WIN32
+	#include <unistd.h>
+#endif
+
 namespace Pim {
 
 	GameControl* GameControl::singleton = NULL;
@@ -40,6 +44,7 @@ namespace Pim {
 		sleepNextFrame	= false;
 		sleepTime		= 0.f;
 
+#ifdef WIN32
 		// Get the module path
 		char path[260] = { '\0' };
 		GetModuleFileName(NULL, path, 260);
@@ -54,8 +59,13 @@ namespace Pim {
 		for (int i=lastSlash+1; i<260; i++) {
 			path[i] = '\0';
 		}
-
+		
 		modulePath = path;
+		
+#elif defined __APPLE__
+		modulePath = "/";
+#endif
+		
 		printf("Working directory:\n%s\n\n", modulePath.c_str());
 	}
 
@@ -166,13 +176,13 @@ namespace Pim {
 			renderWindow = new RenderWindow(data);
 			renderWindow->SetupWindow(data);
 
-			#ifdef _DEBUG
+#if defined(_DEBUG) && defined(WIN32)
 			if (commandline) {
 				ConsoleReader::Begin();
 			}
 			printf("\n[PIM-version %s]\n", PIM_VERSION);
 			printf("[OpenGL-version %s]\n\n", glGetString(GL_VERSION));
-			#endif /* _DEBUG */
+#endif /* _DEBUG && WIN32 */
 
 			Input::InstantiateSingleton();
 			ShaderManager::InstantiateSingleton();
@@ -184,10 +194,12 @@ namespace Pim {
 			GameLoop();
 
 		} catch (exception &e) {
-			MessageBox(NULL,e.what(),"Exception thrown", MB_OK | MB_ICONEXCLAMATION);
+			PimWarning(e.what(), "Exception Caught");
+		} catch (string &s) {
+			PimWarning(s.c_str(), "Exception Caught");
 		} catch (...) {
-			MessageBox(NULL,"Anonymous exception caught.\nNo information available.",
-					   "Exception thrown", MB_OK | MB_ICONEXCLAMATION);
+			PimWarning("Anonymous exception caught.\nNo information available.",
+					   "Exception thrown");
 		}
 
 		// Clean up the scene
@@ -201,11 +213,11 @@ namespace Pim {
 		ShaderManager::ClearSingleton();
 		AudioManager::ClearSingleton();
 
-		#ifdef _DEBUG
+#if defined(_DEBUG) && defined(WIN32)
 		if (commandline) {
 			ConsoleReader::ShutDown();
 		}
-		#endif /* _DEBUG */
+#endif /* _DEBUG && WIN32 */
 
 		renderWindow->KillWindow();
 	}
@@ -473,15 +485,19 @@ namespace Pim {
 			// Get the DT
 			float dt = CalculateDeltaTime();
 			if (dt < maxDelta) {
+#ifdef WIN32
 				Sleep(DWORD(ceil((maxDelta-dt)*1000.f)));
+#else
+				sleep(ceil((maxDelta-dt)*1000.f));
+#endif
 				dt += CalculateDeltaTime();
 			}
 
 			if (!paused) {
-				#ifdef _DEBUG
+#if defined(_DEBUG) && defined(WIN32)
 				ConsoleReader::GetSingleton()->Dispatch();
 				ClearDeleteQueue();
-				#endif /* _DEBUG */
+#endif /* _DEBUG && WIN32 */
 
 				Input::GetSingleton()->Dispatch();
 				ClearDeleteQueue();
@@ -681,8 +697,8 @@ namespace Pim {
 	=====================
 	*/
 	void GameControl::ClearDeleteQueue() {
-		for each (GameNode *node in delQueue) {
-			delete node;
+		for (unsigned i=0; i<delQueue.size(); i++) {
+			delete delQueue[i];
 		}
 
 		delQueue.clear();

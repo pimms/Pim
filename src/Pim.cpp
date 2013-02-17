@@ -4,7 +4,7 @@
 #include "PimAssert.h"
 #include "PimVec2.h"
 
-
+using namespace Pim;
 
 int NextPow2(int a) {
     int ret = 1;
@@ -16,20 +16,22 @@ int NextPow2(int a) {
     return ret;
 }
 
-void WindCCW(Pim::Polygons *polygons) {
+void WindCCW(Polygons *polygons) {
     // Ensure that all polygons are wound CCW
-    for each (auto poly in *polygons) {
+	for (unsigned j=0; j<polygons->size(); j++) {
+		vector<Vec2> poly = (*polygons)[j];
+		
         for (int i=0; i<3; i++) {
             int i2 = (i+1 < 3) ? (i+1) : (0);
-            Pim::Vec2 edge = poly[i2] - poly[i];
+            Vec2 edge = poly[i2] - poly[i];
 
             for (int j=0; j<3; j++) {
                 if (j == i || j == i2)
                     continue;
 
-                Pim::Vec2 r = poly[j] - poly[i];
+                Vec2 r = poly[j] - poly[i];
                 if (edge.Cross(r) <= 0.f) {
-                    Pim::Vec2 tmp = poly[j];
+                    Vec2 tmp = poly[j];
                     poly[j] = poly[i];
                     poly[i] = tmp;
                 }

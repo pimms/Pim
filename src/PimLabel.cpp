@@ -94,7 +94,7 @@ namespace Pim {
 		} else {
 			// Get the arguments, write to the text
 			va_start(ap,ptext);
-			vsprintf_s(text, ptext, ap);
+			vsprintf(text, ptext, ap);
 			va_end(ap);
 		}
 
@@ -153,10 +153,10 @@ namespace Pim {
 		lineWidth.clear();
 
 		int lon = -1;
-		for each (string line in lines) {
+		for (unsigned j=0; j<lines.size(); j++) {
 			int cur = 0;
-			for (unsigned int i=0; i<line.length(); i++) {
-				cur += font->GetCharacterWidth(line[i]);
+			for (unsigned int i=0; i<lines[j].length(); i++) {
+				cur += font->GetCharacterWidth(lines[j][i]);
 			}
 
 			if (cur > lon) {

@@ -314,8 +314,8 @@ namespace Pim {
 		shader->vert = glCreateShader(GL_VERTEX_SHADER);
 
 		// Prepare compilation
-		int flen = fragString.size();
-		int vlen = vertString.size();
+		GLint flen = (GLint)fragString.size();
+		GLint vlen = (GLint)vertString.size();
 		GLcharARB *ftmp = new GLcharARB[flen+1];
 		GLcharARB *vtmp = new GLcharARB[vlen+1];
 		copy(fragString.begin(), fragString.end(), ftmp);
@@ -328,20 +328,30 @@ namespace Pim {
 
 		glShaderSource(shader->frag, 1, &fstr, &flen);
 		glShaderSource(shader->vert, 1, &vstr, &vlen);
-
+		
 		// Compile the shaders (lambda ftw)
 		auto Compile_l = [](GLuint shader, string str) -> bool {
 			GLint status;
 
+#ifdef WIN32
 			glCompileShaderARB(shader);
 			glGetObjectParameterivARB(shader, GL_COMPILE_STATUS, &status);
+#elif defined __APPLE__
+			glCompileShaderARB(&shader);
+			glGetObjectParameterivARB(&shader, GL_COMPILE_STATUS, &status);
+#endif
 			if (!status) {
 				GLint blen=0, slen=0;
 
 				glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &blen);
 				if (blen > 0) {
 					GLchar *log = (GLchar*)malloc(blen);
+					
+#ifdef WIN32
 					glGetInfoLogARB(shader, blen, &slen, log);
+#elif defined __APPLE__
+					glGetInfoLogARB(&shader, blen, &slen, log);
+#endif
 					printf("Compile log:\n%s\n", log);
 					free(log);
 				}

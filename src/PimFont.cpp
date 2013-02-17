@@ -5,6 +5,7 @@
 #include "PimLabel.h"
 #include "PimGameControl.h"
 #include "PimHelperFunctions.h"
+#include "PimAssert.h"
 
 namespace Pim {
 	/*
@@ -41,9 +42,9 @@ namespace Pim {
 			return (int)charWidth[ch];
 		}
 
-		#ifdef _DEBUG
-		cout<<"WARNING: Font uninitalized!\n";
-		#endif /* _DEBUG */
+#ifdef _DEBUG
+		printf("WARNING: Font uninitalized!\n");
+#endif /* _DEBUG */
 
 		return 0;
 	}
@@ -60,25 +61,17 @@ namespace Pim {
 
 		error = FT_Init_FreeType(&libFT);
 		if (error) {
-			MessageBox(
-				NULL,
-				"Could not initialize FreeType.",
-				"FreeType error!",
-				MB_ICONEXCLAMATION|MB_OK);
+			PimWarning("Could not initialize FreeType.", "FreeType error!");
 			return;
 		}
 
 		error = FT_New_Face(libFT, font.c_str(), 0, &face);
 		if (error == FT_Err_Unknown_File_Format) {
 			FT_Done_FreeType(libFT);
-
 			string errstr = "Could not recognize format of file:\n";
 			errstr.append(font);
-			MessageBox(
-				NULL,
-				errstr.c_str(),
-				"FreeType error!",
-				MB_ICONEXCLAMATION|MB_OK);
+			
+			PimWarning(errstr.c_str(), "FreeType error!");
 			return;
 		} else if (error) {
 			FT_Done_FreeType(libFT);
@@ -90,11 +83,8 @@ namespace Pim {
 			errstr.append( ss.str() );
 			errstr.append("):\n");
 			errstr.append(font);
-			MessageBox(
-				NULL,
-				errstr.c_str(),
-				"FreeType error!",
-				MB_ICONEXCLAMATION|MB_OK);
+			
+			PimWarning(errstr.c_str(), "FreeType error!");
 			return;
 		}
 
@@ -105,11 +95,7 @@ namespace Pim {
 					96,
 					96 );
 		if (error) {
-			MessageBox(
-				NULL,
-				"Unable to set the character size.",
-				"Freetype error!",
-				MB_ICONEXCLAMATION | MB_OK);
+			PimWarning("Unable to set the character size.", "Freetype error!");
 			return;
 		}
 
@@ -148,11 +134,7 @@ namespace Pim {
 	void Font::CreateDisplayList(FT_Face face, char ch) {
 		if (FT_Load_Glyph(face, FT_Get_Char_Index(face, ch), 
 			FT_LOAD_DEFAULT | FT_LOAD_MONOCHROME)) {
-			MessageBox(
-				NULL,
-				"Error: FT_Load_Glyph failed!",
-				"FreeType error!",
-				MB_ICONEXCLAMATION | MB_OK );
+			PimWarning("Error: FT_Load_Glyph failed!", "FreeType error!");
 			return;
 		}
 

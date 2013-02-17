@@ -64,7 +64,7 @@ namespace Pim {
 		unsigned int	sig_read = 0;
 		FILE *fp;
 
-		fopen_s(&fp, file.c_str(), "rb");
+		fp = fopen(file.c_str(), "rb");
 		PimAssert(fp != NULL, file.append(": Does not exist!").c_str());
 
 		png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);

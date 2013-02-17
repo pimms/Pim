@@ -19,9 +19,13 @@ namespace Pim {
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+#ifdef WIN32
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, (GLsizei)res.x, (GLsizei)res.y,
 					 0, GL_RGBA, GL_FLOAT, NULL);
-
+#elif defined __APPLE__
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F_ARB, (GLsizei)res.x, (GLsizei)res.y,
+					 0, GL_RGBA, GL_FLOAT, NULL);
+#endif
 		// Create the main framebuffer
 		glGenFramebuffers(1, &fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
