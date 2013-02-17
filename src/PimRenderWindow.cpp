@@ -89,6 +89,7 @@ namespace Pim {
 	=====================
 	*/
 	bool RenderWindow::SetupWindow(WinStyle::CreationData &data) {
+		winData = data;
 		const SDL_VideoInfo *video;
 		
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) {
@@ -121,14 +122,10 @@ namespace Pim {
 		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  2);
 		
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 		1);
-
-	    if (SDL_SetVideoMode(
-			data.resolution.x, 
-			data.resolution.y, data.bits, 
-			SDL_OPENGL | SDL_HWSURFACE | SDL_RESIZABLE) == 0) {
-			PimWarning("Failed to setup video mode!", "SDL Error");
-		   return false;
-		}
+		
+		// Create the window and set up the viewport to
+		// match the resolution defined.
+		ResizeWindow((int)winData.resolution.x, (int)winData.resolution.y);
 
 #ifdef WIN32
 	    // Initate GLEW
@@ -140,9 +137,6 @@ namespace Pim {
 #endif
 
 		SDL_WM_SetCaption(data.winTitle.c_str(), NULL);
-		
-		winData = data;
-		ResizeWindow((int)winData.resolution.x, (int)winData.resolution.y);
 
 	    return InitOpenGL();
 
@@ -393,7 +387,13 @@ namespace Pim {
 			nh = 1;
 		}
 		
-		SDL_SetVideoMode(nw, nh, winData.bits, SDL_OPENGL | SDL_HWSURFACE | SDL_RESIZABLE);
+		surface = SDL_SetVideoMode(nw, nh, winData.bits, 
+			SDL_OPENGL | SDL_HWSURFACE | SDL_RESIZABLE 
+		);
+		if (!surface) {
+			PimWarning("Failed to set Video Mode","SDL Error");
+			return;
+		}
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
