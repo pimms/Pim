@@ -1,0 +1,519 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		193B456416D1232B008F6C4F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193B456316D1232B008F6C4F /* main.cpp */; };
+		193B456616D1232B008F6C4F /* Pim_osxtemplate.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 193B456516D1232B008F6C4F /* Pim_osxtemplate.1 */; };
+		193B45C616D12385008F6C4F /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C116D12385008F6C4F /* libfreetype.a */; };
+		193B45C716D12385008F6C4F /* libpng15.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C216D12385008F6C4F /* libpng15.framework */; };
+		193B45C816D12385008F6C4F /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C316D12385008F6C4F /* Ogg.framework */; };
+		193B45C916D12385008F6C4F /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C416D12385008F6C4F /* SDL.framework */; };
+		193B45CA16D12385008F6C4F /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C516D12385008F6C4F /* Vorbis.framework */; };
+		193B45D916D12487008F6C4F /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45D816D12487008F6C4F /* OpenGL.framework */; };
+		193B45DB16D1248B008F6C4F /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45DA16D1248B008F6C4F /* OpenAL.framework */; };
+		193B45DD16D1248E008F6C4F /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45DC16D1248E008F6C4F /* libz.1.1.3.dylib */; };
+		193B45DF16D12492008F6C4F /* libbz2.1.0.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45DE16D12492008F6C4F /* libbz2.1.0.5.dylib */; };
+		193B45E116D126F0008F6C4F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45E016D126F0008F6C4F /* Cocoa.framework */; };
+		193B45E416D1276C008F6C4F /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 193B45E316D1276C008F6C4F /* SDLMain.m */; settings = {COMPILER_FLAGS = "-fno-obj-arc"; }; };
+		19EB2D6016D12FCC0088B6B8 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5A16D12FCC0088B6B8 /* tinystr.cpp */; };
+		19EB2D6116D12FCC0088B6B8 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5C16D12FCC0088B6B8 /* tinyxml.cpp */; };
+		19EB2D6216D12FCC0088B6B8 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5E16D12FCC0088B6B8 /* tinyxmlerror.cpp */; };
+		19EB2D6316D12FCC0088B6B8 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5F16D12FCC0088B6B8 /* tinyxmlparser.cpp */; };
+		19EB2D9D16D132DE0088B6B8 /* Pim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D6516D132DE0088B6B8 /* Pim.cpp */; };
+		19EB2D9E16D132DE0088B6B8 /* PimAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D6716D132DE0088B6B8 /* PimAction.cpp */; };
+		19EB2D9F16D132DE0088B6B8 /* PimAudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D6A16D132DE0088B6B8 /* PimAudioManager.cpp */; };
+		19EB2DA016D132DE0088B6B8 /* PimButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D6C16D132DE0088B6B8 /* PimButton.cpp */; };
+		19EB2DA116D132DE0088B6B8 /* PimConsoleReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D6E16D132DE0088B6B8 /* PimConsoleReader.cpp */; };
+		19EB2DA216D132DE0088B6B8 /* PimFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D7016D132DE0088B6B8 /* PimFont.cpp */; };
+		19EB2DA316D132DE0088B6B8 /* PimGameControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D7216D132DE0088B6B8 /* PimGameControl.cpp */; };
+		19EB2DA416D132DE0088B6B8 /* PimGameNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D7416D132DE0088B6B8 /* PimGameNode.cpp */; };
+		19EB2DA516D132DE0088B6B8 /* PimInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D7716D132DE0088B6B8 /* PimInput.cpp */; };
+		19EB2DA616D132DE0088B6B8 /* PimLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D7A16D132DE0088B6B8 /* PimLabel.cpp */; };
+		19EB2DA716D132DE0088B6B8 /* PimLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D7C16D132DE0088B6B8 /* PimLayer.cpp */; };
+		19EB2DA816D132DE0088B6B8 /* PimLevelParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D7E16D132DE0088B6B8 /* PimLevelParser.cpp */; };
+		19EB2DA916D132DE0088B6B8 /* PimLightDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D8016D132DE0088B6B8 /* PimLightDef.cpp */; };
+		19EB2DAA16D132DE0088B6B8 /* PimLightingSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D8216D132DE0088B6B8 /* PimLightingSystem.cpp */; };
+		19EB2DAB16D132DE0088B6B8 /* PimParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D8516D132DE0088B6B8 /* PimParticleSystem.cpp */; };
+		19EB2DAC16D132DE0088B6B8 /* PimPolygonShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D8716D132DE0088B6B8 /* PimPolygonShape.cpp */; };
+		19EB2DAD16D132DE0088B6B8 /* PimRenderTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D8916D132DE0088B6B8 /* PimRenderTexture.cpp */; };
+		19EB2DAE16D132DE0088B6B8 /* PimRenderWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D8B16D132DE0088B6B8 /* PimRenderWindow.cpp */; };
+		19EB2DAF16D132DE0088B6B8 /* PimScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D8D16D132DE0088B6B8 /* PimScene.cpp */; };
+		19EB2DB016D132DE0088B6B8 /* PimShaderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D8F16D132DE0088B6B8 /* PimShaderManager.cpp */; };
+		19EB2DB116D132DE0088B6B8 /* PimSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D9116D132DE0088B6B8 /* PimSlider.cpp */; };
+		19EB2DB216D132DE0088B6B8 /* PimSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D9316D132DE0088B6B8 /* PimSound.cpp */; };
+		19EB2DB316D132DE0088B6B8 /* PimSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D9516D132DE0088B6B8 /* PimSprite.cpp */; };
+		19EB2DB416D132DE0088B6B8 /* PimSpriteBatchNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D9716D132DE0088B6B8 /* PimSpriteBatchNode.cpp */; };
+		19EB2DB516D132DE0088B6B8 /* PimVec2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D9916D132DE0088B6B8 /* PimVec2.cpp */; };
+		19EB2DB616D132DE0088B6B8 /* PimWinStyle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D9B16D132DE0088B6B8 /* PimWinStyle.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		193B455E16D1232B008F6C4F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				193B456616D1232B008F6C4F /* Pim_osxtemplate.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		193B456016D1232B008F6C4F /* Pim_osxtemplate */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Pim_osxtemplate; sourceTree = BUILT_PRODUCTS_DIR; };
+		193B456316D1232B008F6C4F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		193B456516D1232B008F6C4F /* Pim_osxtemplate.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Pim_osxtemplate.1; sourceTree = "<group>"; };
+		193B45C116D12385008F6C4F /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfreetype.a; sourceTree = "<group>"; };
+		193B45C216D12385008F6C4F /* libpng15.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libpng15.framework; sourceTree = "<group>"; };
+		193B45C316D12385008F6C4F /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Ogg.framework; sourceTree = "<group>"; };
+		193B45C416D12385008F6C4F /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SDL.framework; sourceTree = "<group>"; };
+		193B45C516D12385008F6C4F /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Vorbis.framework; sourceTree = "<group>"; };
+		193B45D816D12487008F6C4F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		193B45DA16D1248B008F6C4F /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		193B45DC16D1248E008F6C4F /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
+		193B45DE16D12492008F6C4F /* libbz2.1.0.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.1.0.5.dylib; path = usr/lib/libbz2.1.0.5.dylib; sourceTree = SDKROOT; };
+		193B45E016D126F0008F6C4F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		193B45E216D1276C008F6C4F /* SDLMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLMain.h; sourceTree = "<group>"; };
+		193B45E316D1276C008F6C4F /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = "<group>"; };
+		19EB2D5916D12FCC0088B6B8 /* ft2build.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ft2build.h; sourceTree = "<group>"; };
+		19EB2D5A16D12FCC0088B6B8 /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinystr.cpp; sourceTree = "<group>"; };
+		19EB2D5B16D12FCC0088B6B8 /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinystr.h; sourceTree = "<group>"; };
+		19EB2D5C16D12FCC0088B6B8 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
+		19EB2D5D16D12FCC0088B6B8 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
+		19EB2D5E16D12FCC0088B6B8 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
+		19EB2D5F16D12FCC0088B6B8 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		19EB2D6416D12FFD0088B6B8 /* freetype2 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = freetype2; sourceTree = "<group>"; };
+		19EB2D6516D132DE0088B6B8 /* Pim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pim.cpp; sourceTree = "<group>"; };
+		19EB2D6616D132DE0088B6B8 /* Pim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pim.h; sourceTree = "<group>"; };
+		19EB2D6716D132DE0088B6B8 /* PimAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimAction.cpp; sourceTree = "<group>"; };
+		19EB2D6816D132DE0088B6B8 /* PimAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimAction.h; sourceTree = "<group>"; };
+		19EB2D6916D132DE0088B6B8 /* PimAssert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimAssert.h; sourceTree = "<group>"; };
+		19EB2D6A16D132DE0088B6B8 /* PimAudioManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimAudioManager.cpp; sourceTree = "<group>"; };
+		19EB2D6B16D132DE0088B6B8 /* PimAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimAudioManager.h; sourceTree = "<group>"; };
+		19EB2D6C16D132DE0088B6B8 /* PimButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimButton.cpp; sourceTree = "<group>"; };
+		19EB2D6D16D132DE0088B6B8 /* PimButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimButton.h; sourceTree = "<group>"; };
+		19EB2D6E16D132DE0088B6B8 /* PimConsoleReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimConsoleReader.cpp; sourceTree = "<group>"; };
+		19EB2D6F16D132DE0088B6B8 /* PimConsoleReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimConsoleReader.h; sourceTree = "<group>"; };
+		19EB2D7016D132DE0088B6B8 /* PimFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimFont.cpp; sourceTree = "<group>"; };
+		19EB2D7116D132DE0088B6B8 /* PimFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimFont.h; sourceTree = "<group>"; };
+		19EB2D7216D132DE0088B6B8 /* PimGameControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimGameControl.cpp; sourceTree = "<group>"; };
+		19EB2D7316D132DE0088B6B8 /* PimGameControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimGameControl.h; sourceTree = "<group>"; };
+		19EB2D7416D132DE0088B6B8 /* PimGameNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimGameNode.cpp; sourceTree = "<group>"; };
+		19EB2D7516D132DE0088B6B8 /* PimGameNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimGameNode.h; sourceTree = "<group>"; };
+		19EB2D7616D132DE0088B6B8 /* PimHelperFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimHelperFunctions.h; sourceTree = "<group>"; };
+		19EB2D7716D132DE0088B6B8 /* PimInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimInput.cpp; sourceTree = "<group>"; };
+		19EB2D7816D132DE0088B6B8 /* PimInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimInput.h; sourceTree = "<group>"; };
+		19EB2D7916D132DE0088B6B8 /* PimInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimInternal.h; sourceTree = "<group>"; };
+		19EB2D7A16D132DE0088B6B8 /* PimLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimLabel.cpp; sourceTree = "<group>"; };
+		19EB2D7B16D132DE0088B6B8 /* PimLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimLabel.h; sourceTree = "<group>"; };
+		19EB2D7C16D132DE0088B6B8 /* PimLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimLayer.cpp; sourceTree = "<group>"; };
+		19EB2D7D16D132DE0088B6B8 /* PimLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimLayer.h; sourceTree = "<group>"; };
+		19EB2D7E16D132DE0088B6B8 /* PimLevelParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimLevelParser.cpp; sourceTree = "<group>"; };
+		19EB2D7F16D132DE0088B6B8 /* PimLevelParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimLevelParser.h; sourceTree = "<group>"; };
+		19EB2D8016D132DE0088B6B8 /* PimLightDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimLightDef.cpp; sourceTree = "<group>"; };
+		19EB2D8116D132DE0088B6B8 /* PimLightDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimLightDef.h; sourceTree = "<group>"; };
+		19EB2D8216D132DE0088B6B8 /* PimLightingSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimLightingSystem.cpp; sourceTree = "<group>"; };
+		19EB2D8316D132DE0088B6B8 /* PimLightingSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimLightingSystem.h; sourceTree = "<group>"; };
+		19EB2D8416D132DE0088B6B8 /* PimLightingSystemShaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimLightingSystemShaders.h; sourceTree = "<group>"; };
+		19EB2D8516D132DE0088B6B8 /* PimParticleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimParticleSystem.cpp; sourceTree = "<group>"; };
+		19EB2D8616D132DE0088B6B8 /* PimParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimParticleSystem.h; sourceTree = "<group>"; };
+		19EB2D8716D132DE0088B6B8 /* PimPolygonShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimPolygonShape.cpp; sourceTree = "<group>"; };
+		19EB2D8816D132DE0088B6B8 /* PimPolygonShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimPolygonShape.h; sourceTree = "<group>"; };
+		19EB2D8916D132DE0088B6B8 /* PimRenderTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimRenderTexture.cpp; sourceTree = "<group>"; };
+		19EB2D8A16D132DE0088B6B8 /* PimRenderTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimRenderTexture.h; sourceTree = "<group>"; };
+		19EB2D8B16D132DE0088B6B8 /* PimRenderWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimRenderWindow.cpp; sourceTree = "<group>"; };
+		19EB2D8C16D132DE0088B6B8 /* PimRenderWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimRenderWindow.h; sourceTree = "<group>"; };
+		19EB2D8D16D132DE0088B6B8 /* PimScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimScene.cpp; sourceTree = "<group>"; };
+		19EB2D8E16D132DE0088B6B8 /* PimScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimScene.h; sourceTree = "<group>"; };
+		19EB2D8F16D132DE0088B6B8 /* PimShaderManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimShaderManager.cpp; sourceTree = "<group>"; };
+		19EB2D9016D132DE0088B6B8 /* PimShaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimShaderManager.h; sourceTree = "<group>"; };
+		19EB2D9116D132DE0088B6B8 /* PimSlider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimSlider.cpp; sourceTree = "<group>"; };
+		19EB2D9216D132DE0088B6B8 /* PimSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimSlider.h; sourceTree = "<group>"; };
+		19EB2D9316D132DE0088B6B8 /* PimSound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimSound.cpp; sourceTree = "<group>"; };
+		19EB2D9416D132DE0088B6B8 /* PimSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimSound.h; sourceTree = "<group>"; };
+		19EB2D9516D132DE0088B6B8 /* PimSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimSprite.cpp; sourceTree = "<group>"; };
+		19EB2D9616D132DE0088B6B8 /* PimSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimSprite.h; sourceTree = "<group>"; };
+		19EB2D9716D132DE0088B6B8 /* PimSpriteBatchNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimSpriteBatchNode.cpp; sourceTree = "<group>"; };
+		19EB2D9816D132DE0088B6B8 /* PimSpriteBatchNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimSpriteBatchNode.h; sourceTree = "<group>"; };
+		19EB2D9916D132DE0088B6B8 /* PimVec2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimVec2.cpp; sourceTree = "<group>"; };
+		19EB2D9A16D132DE0088B6B8 /* PimVec2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimVec2.h; sourceTree = "<group>"; };
+		19EB2D9B16D132DE0088B6B8 /* PimWinStyle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PimWinStyle.cpp; sourceTree = "<group>"; };
+		19EB2D9C16D132DE0088B6B8 /* PimWinStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PimWinStyle.h; sourceTree = "<group>"; };
+		19EB2DB716D133940088B6B8 /* pimms.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pimms.png; path = ../pimms.png; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		193B455D16D1232B008F6C4F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				193B45E116D126F0008F6C4F /* Cocoa.framework in Frameworks */,
+				193B45DF16D12492008F6C4F /* libbz2.1.0.5.dylib in Frameworks */,
+				193B45DD16D1248E008F6C4F /* libz.1.1.3.dylib in Frameworks */,
+				193B45DB16D1248B008F6C4F /* OpenAL.framework in Frameworks */,
+				193B45D916D12487008F6C4F /* OpenGL.framework in Frameworks */,
+				193B45C616D12385008F6C4F /* libfreetype.a in Frameworks */,
+				193B45C716D12385008F6C4F /* libpng15.framework in Frameworks */,
+				193B45C816D12385008F6C4F /* Ogg.framework in Frameworks */,
+				193B45C916D12385008F6C4F /* SDL.framework in Frameworks */,
+				193B45CA16D12385008F6C4F /* Vorbis.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		193B455716D1232B008F6C4F = {
+			isa = PBXGroup;
+			children = (
+				193B456C16D12330008F6C4F /* Pim */,
+				193B456216D1232B008F6C4F /* Pim_osxtemplate */,
+				193B456116D1232B008F6C4F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		193B456116D1232B008F6C4F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				193B456016D1232B008F6C4F /* Pim_osxtemplate */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		193B456216D1232B008F6C4F /* Pim_osxtemplate */ = {
+			isa = PBXGroup;
+			children = (
+				19EB2DB816D133A20088B6B8 /* Resources */,
+				193B456316D1232B008F6C4F /* main.cpp */,
+				193B456516D1232B008F6C4F /* Pim_osxtemplate.1 */,
+			);
+			path = Pim_osxtemplate;
+			sourceTree = "<group>";
+		};
+		193B456C16D12330008F6C4F /* Pim */ = {
+			isa = PBXGroup;
+			children = (
+				19EB2D5816D12FB20088B6B8 /* Source */,
+				193B45CC16D123BA008F6C4F /* Other Dependencies */,
+				193B456D16D1233C008F6C4F /* Frameworks */,
+			);
+			name = Pim;
+			sourceTree = "<group>";
+		};
+		193B456D16D1233C008F6C4F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				193B45E016D126F0008F6C4F /* Cocoa.framework */,
+				193B45DE16D12492008F6C4F /* libbz2.1.0.5.dylib */,
+				193B45DC16D1248E008F6C4F /* libz.1.1.3.dylib */,
+				193B45DA16D1248B008F6C4F /* OpenAL.framework */,
+				193B45D816D12487008F6C4F /* OpenGL.framework */,
+				193B45C116D12385008F6C4F /* libfreetype.a */,
+				193B45C216D12385008F6C4F /* libpng15.framework */,
+				193B45C316D12385008F6C4F /* Ogg.framework */,
+				193B45C416D12385008F6C4F /* SDL.framework */,
+				193B45C516D12385008F6C4F /* Vorbis.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		193B45CC16D123BA008F6C4F /* Other Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				19EB2D6416D12FFD0088B6B8 /* freetype2 */,
+				19EB2D5916D12FCC0088B6B8 /* ft2build.h */,
+				19EB2D5A16D12FCC0088B6B8 /* tinystr.cpp */,
+				19EB2D5B16D12FCC0088B6B8 /* tinystr.h */,
+				19EB2D5C16D12FCC0088B6B8 /* tinyxml.cpp */,
+				19EB2D5D16D12FCC0088B6B8 /* tinyxml.h */,
+				19EB2D5E16D12FCC0088B6B8 /* tinyxmlerror.cpp */,
+				19EB2D5F16D12FCC0088B6B8 /* tinyxmlparser.cpp */,
+				193B45E216D1276C008F6C4F /* SDLMain.h */,
+				193B45E316D1276C008F6C4F /* SDLMain.m */,
+			);
+			name = "Other Dependencies";
+			sourceTree = "<group>";
+		};
+		19EB2D5816D12FB20088B6B8 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				19EB2D6516D132DE0088B6B8 /* Pim.cpp */,
+				19EB2D6616D132DE0088B6B8 /* Pim.h */,
+				19EB2D6716D132DE0088B6B8 /* PimAction.cpp */,
+				19EB2D6816D132DE0088B6B8 /* PimAction.h */,
+				19EB2D6916D132DE0088B6B8 /* PimAssert.h */,
+				19EB2D6A16D132DE0088B6B8 /* PimAudioManager.cpp */,
+				19EB2D6B16D132DE0088B6B8 /* PimAudioManager.h */,
+				19EB2D6C16D132DE0088B6B8 /* PimButton.cpp */,
+				19EB2D6D16D132DE0088B6B8 /* PimButton.h */,
+				19EB2D6E16D132DE0088B6B8 /* PimConsoleReader.cpp */,
+				19EB2D6F16D132DE0088B6B8 /* PimConsoleReader.h */,
+				19EB2D7016D132DE0088B6B8 /* PimFont.cpp */,
+				19EB2D7116D132DE0088B6B8 /* PimFont.h */,
+				19EB2D7216D132DE0088B6B8 /* PimGameControl.cpp */,
+				19EB2D7316D132DE0088B6B8 /* PimGameControl.h */,
+				19EB2D7416D132DE0088B6B8 /* PimGameNode.cpp */,
+				19EB2D7516D132DE0088B6B8 /* PimGameNode.h */,
+				19EB2D7616D132DE0088B6B8 /* PimHelperFunctions.h */,
+				19EB2D7716D132DE0088B6B8 /* PimInput.cpp */,
+				19EB2D7816D132DE0088B6B8 /* PimInput.h */,
+				19EB2D7916D132DE0088B6B8 /* PimInternal.h */,
+				19EB2D7A16D132DE0088B6B8 /* PimLabel.cpp */,
+				19EB2D7B16D132DE0088B6B8 /* PimLabel.h */,
+				19EB2D7C16D132DE0088B6B8 /* PimLayer.cpp */,
+				19EB2D7D16D132DE0088B6B8 /* PimLayer.h */,
+				19EB2D7E16D132DE0088B6B8 /* PimLevelParser.cpp */,
+				19EB2D7F16D132DE0088B6B8 /* PimLevelParser.h */,
+				19EB2D8016D132DE0088B6B8 /* PimLightDef.cpp */,
+				19EB2D8116D132DE0088B6B8 /* PimLightDef.h */,
+				19EB2D8216D132DE0088B6B8 /* PimLightingSystem.cpp */,
+				19EB2D8316D132DE0088B6B8 /* PimLightingSystem.h */,
+				19EB2D8416D132DE0088B6B8 /* PimLightingSystemShaders.h */,
+				19EB2D8516D132DE0088B6B8 /* PimParticleSystem.cpp */,
+				19EB2D8616D132DE0088B6B8 /* PimParticleSystem.h */,
+				19EB2D8716D132DE0088B6B8 /* PimPolygonShape.cpp */,
+				19EB2D8816D132DE0088B6B8 /* PimPolygonShape.h */,
+				19EB2D8916D132DE0088B6B8 /* PimRenderTexture.cpp */,
+				19EB2D8A16D132DE0088B6B8 /* PimRenderTexture.h */,
+				19EB2D8B16D132DE0088B6B8 /* PimRenderWindow.cpp */,
+				19EB2D8C16D132DE0088B6B8 /* PimRenderWindow.h */,
+				19EB2D8D16D132DE0088B6B8 /* PimScene.cpp */,
+				19EB2D8E16D132DE0088B6B8 /* PimScene.h */,
+				19EB2D8F16D132DE0088B6B8 /* PimShaderManager.cpp */,
+				19EB2D9016D132DE0088B6B8 /* PimShaderManager.h */,
+				19EB2D9116D132DE0088B6B8 /* PimSlider.cpp */,
+				19EB2D9216D132DE0088B6B8 /* PimSlider.h */,
+				19EB2D9316D132DE0088B6B8 /* PimSound.cpp */,
+				19EB2D9416D132DE0088B6B8 /* PimSound.h */,
+				19EB2D9516D132DE0088B6B8 /* PimSprite.cpp */,
+				19EB2D9616D132DE0088B6B8 /* PimSprite.h */,
+				19EB2D9716D132DE0088B6B8 /* PimSpriteBatchNode.cpp */,
+				19EB2D9816D132DE0088B6B8 /* PimSpriteBatchNode.h */,
+				19EB2D9916D132DE0088B6B8 /* PimVec2.cpp */,
+				19EB2D9A16D132DE0088B6B8 /* PimVec2.h */,
+				19EB2D9B16D132DE0088B6B8 /* PimWinStyle.cpp */,
+				19EB2D9C16D132DE0088B6B8 /* PimWinStyle.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		19EB2DB816D133A20088B6B8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				19EB2DB716D133940088B6B8 /* pimms.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		193B455F16D1232B008F6C4F /* Pim_osxtemplate */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 193B456916D1232B008F6C4F /* Build configuration list for PBXNativeTarget "Pim_osxtemplate" */;
+			buildPhases = (
+				193B455C16D1232B008F6C4F /* Sources */,
+				193B455D16D1232B008F6C4F /* Frameworks */,
+				193B455E16D1232B008F6C4F /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Pim_osxtemplate;
+			productName = Pim_osxtemplate;
+			productReference = 193B456016D1232B008F6C4F /* Pim_osxtemplate */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		193B455816D1232B008F6C4F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Joakim Stien";
+			};
+			buildConfigurationList = 193B455B16D1232B008F6C4F /* Build configuration list for PBXProject "Pim_osxtemplate" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 193B455716D1232B008F6C4F;
+			productRefGroup = 193B456116D1232B008F6C4F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				193B455F16D1232B008F6C4F /* Pim_osxtemplate */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		193B455C16D1232B008F6C4F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				193B456416D1232B008F6C4F /* main.cpp in Sources */,
+				193B45E416D1276C008F6C4F /* SDLMain.m in Sources */,
+				19EB2D6016D12FCC0088B6B8 /* tinystr.cpp in Sources */,
+				19EB2D6116D12FCC0088B6B8 /* tinyxml.cpp in Sources */,
+				19EB2D6216D12FCC0088B6B8 /* tinyxmlerror.cpp in Sources */,
+				19EB2D6316D12FCC0088B6B8 /* tinyxmlparser.cpp in Sources */,
+				19EB2D9D16D132DE0088B6B8 /* Pim.cpp in Sources */,
+				19EB2D9E16D132DE0088B6B8 /* PimAction.cpp in Sources */,
+				19EB2D9F16D132DE0088B6B8 /* PimAudioManager.cpp in Sources */,
+				19EB2DA016D132DE0088B6B8 /* PimButton.cpp in Sources */,
+				19EB2DA116D132DE0088B6B8 /* PimConsoleReader.cpp in Sources */,
+				19EB2DA216D132DE0088B6B8 /* PimFont.cpp in Sources */,
+				19EB2DA316D132DE0088B6B8 /* PimGameControl.cpp in Sources */,
+				19EB2DA416D132DE0088B6B8 /* PimGameNode.cpp in Sources */,
+				19EB2DA516D132DE0088B6B8 /* PimInput.cpp in Sources */,
+				19EB2DA616D132DE0088B6B8 /* PimLabel.cpp in Sources */,
+				19EB2DA716D132DE0088B6B8 /* PimLayer.cpp in Sources */,
+				19EB2DA816D132DE0088B6B8 /* PimLevelParser.cpp in Sources */,
+				19EB2DA916D132DE0088B6B8 /* PimLightDef.cpp in Sources */,
+				19EB2DAA16D132DE0088B6B8 /* PimLightingSystem.cpp in Sources */,
+				19EB2DAB16D132DE0088B6B8 /* PimParticleSystem.cpp in Sources */,
+				19EB2DAC16D132DE0088B6B8 /* PimPolygonShape.cpp in Sources */,
+				19EB2DAD16D132DE0088B6B8 /* PimRenderTexture.cpp in Sources */,
+				19EB2DAE16D132DE0088B6B8 /* PimRenderWindow.cpp in Sources */,
+				19EB2DAF16D132DE0088B6B8 /* PimScene.cpp in Sources */,
+				19EB2DB016D132DE0088B6B8 /* PimShaderManager.cpp in Sources */,
+				19EB2DB116D132DE0088B6B8 /* PimSlider.cpp in Sources */,
+				19EB2DB216D132DE0088B6B8 /* PimSound.cpp in Sources */,
+				19EB2DB316D132DE0088B6B8 /* PimSprite.cpp in Sources */,
+				19EB2DB416D132DE0088B6B8 /* PimSpriteBatchNode.cpp in Sources */,
+				19EB2DB516D132DE0088B6B8 /* PimVec2.cpp in Sources */,
+				19EB2DB616D132DE0088B6B8 /* PimWinStyle.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		193B456716D1232B008F6C4F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.7;
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		193B456816D1232B008F6C4F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx10.7;
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+		193B456A16D1232B008F6C4F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"_DEBUG=1",
+				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/freetype2\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		193B456B16D1232B008F6C4F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/freetype2\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		193B455B16D1232B008F6C4F /* Build configuration list for PBXProject "Pim_osxtemplate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				193B456716D1232B008F6C4F /* Debug */,
+				193B456816D1232B008F6C4F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		193B456916D1232B008F6C4F /* Build configuration list for PBXNativeTarget "Pim_osxtemplate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				193B456A16D1232B008F6C4F /* Debug */,
+				193B456B16D1232B008F6C4F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 193B455816D1232B008F6C4F /* Project object */;
+}
