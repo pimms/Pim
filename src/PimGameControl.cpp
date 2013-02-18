@@ -614,6 +614,9 @@ namespace Pim {
 						event.resize.w,
 						event.resize.h
 					);
+#ifndef WIN32
+					ReloadTextures();
+#endif
 					break;
 
 				case SDL_JOYAXISMOTION:
@@ -737,5 +740,24 @@ namespace Pim {
 		float dt = ((float)(clock() - ticks)) / CLOCKS_PER_SEC;
 		ticks = clock();
 		return dt;
+	}
+
+	/*
+	==================
+	GameControl::ReloadTextures
+	==================
+	*/
+	void GameControl::ReloadTextures() {
+		printf("\nReloading all textures...\n");
+		
+		if (scene) {
+			scene->ReloadTextures();
+		}
+
+		if (paused && pauseLayer) {
+			pauseLayer->ReloadTextures();
+		}
+
+		printf("Done!\n\n");
 	}
 }

@@ -59,6 +59,8 @@ namespace Pim {
 	=====================
 	*/
 	void Sprite::LoadSprite(string file) {
+		textureFile = file;
+
 		png_structp		png_ptr;
 		png_infop		info_ptr;
 		unsigned int	sig_read = 0;
@@ -343,5 +345,20 @@ namespace Pim {
 
 		_usebatch = true;
 		_batchNode = batch;
+	}
+
+	/*
+	==================
+	Sprite::ReloadTextures()
+	==================
+	*/
+	void Sprite::ReloadTextures() {
+		if (!_usebatch) {
+			LoadSprite(textureFile);
+		}
+
+		for (unsigned i=0; i<children.size(); i++) {
+			children[i]->ReloadTextures();
+		}
 	}
 }

@@ -86,7 +86,7 @@ namespace Pim {
 		void				SetShadowShape(Vec2 vertices[], const int vertexCount);
 		void				SetShadowShapeDebugDraw(const bool flag);
 		PolygonShape*		GetShadowShape() const;
-
+		virtual void		ReloadTextures();
 	protected:
 		bool				dirtyZOrder;
 		PolygonShape		*shadowShape;

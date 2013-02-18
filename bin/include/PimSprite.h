@@ -34,9 +34,11 @@ namespace Pim {
 		void					SetShader(Shader *s);
 		Shader*					GetShader() const;
 		void					UseBatchNode(const SpriteBatchNode* batch);
+		virtual void			ReloadTextures();
 
 	protected:
 
+		string					textureFile;
 		GLuint					texID;			// The texture ID
 		GLboolean				_a;				// Has the texture alpha?
 		png_uint_32				_tw;			// Texture width

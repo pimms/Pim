@@ -454,4 +454,15 @@ namespace Pim {
 	PolygonShape* GameNode::GetShadowShape() const {
 		return shadowShape;
 	}
+
+	/*
+	==================
+	GameNode::ReloadTextures
+	==================
+	*/
+	void GameNode::ReloadTextures() {
+		for (unsigned i=0; i<children.size(); i++) {
+			children[i]->ReloadTextures();
+		}
+	}
 }

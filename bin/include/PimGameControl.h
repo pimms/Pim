@@ -76,5 +76,6 @@ namespace Pim {
 		float					CalculateDeltaTime();
 		void					ClearDeleteQueue();
 		void					SceneTransition();
+		void					ReloadTextures();
 	};
 }

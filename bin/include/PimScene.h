@@ -29,6 +29,7 @@ namespace Pim {
 		virtual Layer*			PauseLayer();		// Return your pause layer here
 		void					AddLayer(Layer *layer);
 		void					RemoveLayer(Layer *layer);
+		virtual void			ReloadTextures();
 
 	protected:
 		vector<Layer*>			layers;

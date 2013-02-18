@@ -98,4 +98,15 @@ namespace Pim {
 
 		dirtyZOrder = false;
 	}
+
+	/*
+	==================
+	Scene::ReloadTextures
+	==================
+	*/
+	void Scene::ReloadTextures() {
+		for (unsigned i=0; i<layers.size(); i++) {
+			layers[i]->ReloadTextures();
+		}
+	}
 }

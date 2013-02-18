@@ -185,7 +185,7 @@ namespace Pim {
 	Color Layer::GetColor() const {
 		return color;
 	}
-	
+
 	// ---------- LIGHTING SYSTEM METHODS ----------
 
 
