@@ -38,9 +38,9 @@ namespace Pim {
 	*/
 	void KeyEvent::Reset() {
 		count=0;
-		for (int i=0; i<256; i++) {
-			keys[i]=false;
-			fresh[i]=false;
+		for (int i=0; i<16; i++) {
+			keyField[i]		= 0;
+			freshField[i]   = 0;
 		}
 	}
 
@@ -50,8 +50,8 @@ namespace Pim {
 	=====================
 	*/
 	void KeyEvent::Unfresh() {
-		for (int i=0; i<256; i++) {
-			fresh[i]=false;
+		for (int i=0; i<16; i++) {
+			freshField[i] = 0;
 		}
 	}
 
@@ -61,7 +61,11 @@ namespace Pim {
 	=====================
 	*/
 	bool KeyEvent::IsKeyDown(const KeyCode k) const {
-		return keys[k];
+		// Return the flag of the kth bit in keyField
+		char idx = k / 32;
+		char bit = k % 32;
+
+		return (keyField[idx] & (1 << bit)) != 0;
 	}
 
 	/*
@@ -70,7 +74,12 @@ namespace Pim {
 	=====================
 	*/
 	bool KeyEvent::IsKeyFresh(const KeyCode k) const {
-		return keys[k] && fresh[k];
+		// Return the flag of the kth bit in keyField AND freshField
+		char idx = k / 32;
+		char bit = k % 32;
+
+		return	(keyField[idx]	 & (1 << bit)) != 0 
+			&&	(freshField[idx] & (1 << bit)) != 0;
 	}
 
 	/*
@@ -79,7 +88,7 @@ namespace Pim {
 	=====================
 	*/
 	bool KeyEvent::IsKeyDown(const string str) const {
-		return keys[binds.find(str)->second];
+		return IsKeyDown(binds.find(str)->second);
 	}
 
 	/*
@@ -88,7 +97,7 @@ namespace Pim {
 	=====================
 	*/
 	bool KeyEvent::IsKeyFresh(const string str) const {
-		return keys[binds.find(str)->second] && fresh[binds.find(str)->second];
+		return IsKeyFresh(binds.find(str)->second);
 	}
 
 	/*
@@ -495,11 +504,21 @@ namespace Pim {
 	=====================
 	*/
 	void Input::KeyPressed(int key) {
-		if (!keyEvent.keys[key]) {
+		/*if (!keyEvent.keys[key]) {
 			keyEvent.keys[key] = true;
 			keyEvent.fresh[key] = true;
 			keyEvent.count++;
-		}
+		}*/
+
+		// Key is a number between 0 and 512. 
+		// The key-th bit in the bit fields should be flagged to 1.
+		char idx = key / 32;
+		char bit = key % 32;
+
+		keyEvent.keyField[idx]		|= (1 << bit);
+		keyEvent.freshField[idx]	|= (1 << bit);
+		
+		keyEvent.count++;
 	}
 
 	/*
@@ -508,7 +527,17 @@ namespace Pim {
 	=====================
 	*/
 	void Input::KeyReleased(int key) {
-		keyEvent.keys[key] = false;
+		/*keyEvent.keys[key] = false;
+		keyEvent.count--;
+		keyEvent.activePrevFrame = true;*/
+
+		// Key is a number between 0 and 512.
+		// the key-th bit in keyField should be flagged to 0.
+		char idx = key / 32;
+		char bit = key % 32;
+
+		keyEvent.keyField[idx]	&= ~(1 << bit);
+
 		keyEvent.count--;
 		keyEvent.activePrevFrame = true;
 	}

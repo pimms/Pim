@@ -662,7 +662,7 @@ namespace Pim {
 
 		clock_t postpoll = clock();
 		if (postpoll - prepoll > 3) {
-			//ticks += (postpoll - prepoll);
+			ticks += (postpoll - prepoll);
 		}
 
 		return keepRunning;
