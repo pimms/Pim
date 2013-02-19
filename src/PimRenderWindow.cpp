@@ -171,7 +171,7 @@ namespace Pim {
 		}
 		
 		surface = SDL_SetVideoMode(nw, nh, winData.bits, 
-			SDL_OPENGL | SDL_HWSURFACE | SDL_RESIZABLE 
+			SDL_OPENGL | SDL_SWSURFACE | SDL_RESIZABLE
 		);
 		if (!surface) {
 			PimWarning("Failed to set Video Mode","SDL Error");
