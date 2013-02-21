@@ -52,6 +52,8 @@
 #elif defined __APPLE__
 	// OpenGL
 	#include <OpenGL/OpenGL.h>
+	#include <OpenGL/gl3.h>
+	#include <OpenGL/gl3ext.h>
 	#include <OpenGL/gl.h>
 
 	// SDL

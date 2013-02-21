@@ -1,4 +1,4 @@
-
+/*
 #include "Pim.h"
 
 using namespace Pim;
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
-
+*/
 /*
 #include "SDL/SDL.h"
 #include "SDL/SDL_main.h"

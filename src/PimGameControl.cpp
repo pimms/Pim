@@ -180,9 +180,10 @@ namespace Pim {
 			if (commandline) {
 				ConsoleReader::Begin();
 			}
+#endif /* _DEBUG && WIN32 */
+			
 			printf("\n[PIM-version %s]\n", PIM_VERSION);
 			printf("[OpenGL-version %s]\n\n", glGetString(GL_VERSION));
-#endif /* _DEBUG && WIN32 */
 
 			Input::InstantiateSingleton();
 			ShaderManager::InstantiateSingleton();
@@ -487,11 +488,12 @@ namespace Pim {
 			if (dt < maxDelta) {
 #ifdef WIN32
 				Sleep(DWORD(ceil((maxDelta-dt)*1000.f)));
+				dt += CalculateDeltaTime();
 #else
 				// wat.jpg
 				//sleep(ceil((maxDelta-dt)*1000.f));
-#endif
 				//dt += CalculateDeltaTime();
+#endif
 			}
 
 			if (!paused) {

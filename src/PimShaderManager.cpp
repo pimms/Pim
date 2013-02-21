@@ -307,7 +307,7 @@ namespace Pim {
 	=====================
 	*/
 	Shader* ShaderManager::AddShader(string fragString, string vertString, string nm) {
-		printf("Creating shader %s...\n", nm.c_str());
+		printf("\nCreating shader %s...\n", nm.c_str());
 
 		Shader *shader = new Shader;
 		shader->frag = glCreateShader(GL_FRAGMENT_SHADER);
@@ -337,7 +337,7 @@ namespace Pim {
 			glCompileShaderARB(shader);
 			glGetObjectParameterivARB(shader, GL_COMPILE_STATUS, &status);
 #elif defined __APPLE__
-			glCompileShaderARB(&shader);
+			glCompileShader(shader);
 			glGetObjectParameterivARB(&shader, GL_COMPILE_STATUS, &status);
 #endif
 			if (!status) {
@@ -357,9 +357,8 @@ namespace Pim {
 				}
 
 				return false;
-			} else
-			{
-				printf("Compiled successfully!\n");
+			} else {				
+				printf("%s: Compiled successfully!\n", str.c_str());
 				return true;
 			}
 		};
@@ -381,8 +380,9 @@ namespace Pim {
 
 		glAttachShader(shader->program, shader->frag);
 		glAttachShader(shader->program, shader->vert);
-
+		
 		glLinkProgram(shader->program);
+		glValidateProgram(shader->program);
 
 		GLint status;
 		glGetProgramiv(shader->program, GL_LINK_STATUS, &status);
@@ -391,6 +391,12 @@ namespace Pim {
 		} else {
 			printf("WARNING: Failed to link vertex and fragment shader \"%s\"!\n",
 				   nm.c_str());
+			
+			char logBuf[1024];
+			int len;
+			glGetProgramInfoLog(shader->program, 1024, &len, logBuf);
+			printf("Program Info Log:\n%s\n", logBuf);
+			
 			delete shader;
 			return NULL;
 		}
