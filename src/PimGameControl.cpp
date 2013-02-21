@@ -476,13 +476,6 @@ namespace Pim {
 		while (appRunning) {
 			appRunning = HandleEvents();
 
-			bool winHasMoved = false;
-			if (winHasMoved) {
-				// Discard the delta time
-				CalculateDeltaTime();
-				winHasMoved = false;
-			}
-
 			// Get the DT
 			float dt = CalculateDeltaTime();
 			if (dt < maxDelta) {
@@ -490,9 +483,8 @@ namespace Pim {
 				Sleep(DWORD(ceil((maxDelta-dt)*1000.f)));
 				dt += CalculateDeltaTime();
 #else
-				// wat.jpg
-				//sleep(ceil((maxDelta-dt)*1000.f));
-				//dt += CalculateDeltaTime();
+				usleep(ceil((maxDelta-dt)*1000000.f));
+				dt += CalculateDeltaTime();
 #endif
 			}
 
@@ -739,8 +731,13 @@ namespace Pim {
 	=====================
 	*/
 	float GameControl::CalculateDeltaTime() {
-		float dt = ((float)(clock() - ticks)) / CLOCKS_PER_SEC;
-		ticks = clock();
+		clock_t  newTick = clock();
+		
+		float dt = ((float)(newTick - ticks)) / CLOCKS_PER_SEC;
+		ticks = newTick;
+		
+		printf("%0.1f\n", 1.f/dt);
+		
 		return dt;
 	}
 
