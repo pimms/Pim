@@ -5,21 +5,16 @@
 	GameNode in itself is not renderable. Use Pim::Sprite for images. GameNodes
 	can however draw natively using OpenGL by itself.
 
-	GameNodes can be created at will. However, for a GameNode to be rendered, it
+	GameNodes can be created at will. However, for a GameNode (sprite) to be rendered, it
 	MUST be added to a parent (another game node). Most nodes will be attached
 	directly to the Layer.
 
 	A node can only be attached to one parent at a time, and an exception will be
 	thrown if a node with a parent is attempted added to a node.
-
-	Nodes are deleted automatically if "true" is passed to removeChild(GameNode,bool),
-	or by passing "true" to removeAllChildren(bool), or upon the parent's deletion.
 */
 
 #include "PimInternal.h"
-
 #include "PimVec2.h"
-
 #include "PimConsoleReader.h"
 
 namespace Pim {

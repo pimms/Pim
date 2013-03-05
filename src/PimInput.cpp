@@ -11,7 +11,6 @@
 
 namespace Pim {
 	// --- KeyEvent ---
-
 	/*
 	=====================
 	KeyEvent::KeyEvent:
@@ -129,7 +128,6 @@ namespace Pim {
 
 
 	// --- MouseEvent ---
-
 	/*
 	=====================
 	MouseEvent::MouseEvent
@@ -504,12 +502,6 @@ namespace Pim {
 	=====================
 	*/
 	void Input::KeyPressed(int key) {
-		/*if (!keyEvent.keys[key]) {
-			keyEvent.keys[key] = true;
-			keyEvent.fresh[key] = true;
-			keyEvent.count++;
-		}*/
-
 		// Key is a number between 0 and 512. 
 		// The key-th bit in the bit fields should be flagged to 1.
 		char idx = key / 32;
@@ -527,10 +519,6 @@ namespace Pim {
 	=====================
 	*/
 	void Input::KeyReleased(int key) {
-		/*keyEvent.keys[key] = false;
-		keyEvent.count--;
-		keyEvent.activePrevFrame = true;*/
-
 		// Key is a number between 0 and 512.
 		// the key-th bit in keyField should be flagged to 0.
 		char idx = key / 32;
@@ -606,7 +594,6 @@ namespace Pim {
 			contEvent.dirty = true;
 		}
 	}
-	
 
 	/*
 	=====================

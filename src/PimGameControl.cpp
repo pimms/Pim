@@ -543,7 +543,7 @@ namespace Pim {
 		 *	The app does not freeze until the application polls for events.
 		 *	The current workaround is thus to measure the time it takes to
 		 *	poll for events. If the polling takes more than 3 milliseconds, 
-		 *  (normalky at 0.5-1.5ms) the "drag-time" is deducted from the 
+		 *  (normally at 0.5-1.5ms) the poll-time is deducted from the 
 		 *  next delta time.
 		 */
 
@@ -578,28 +578,22 @@ namespace Pim {
 					break;
 
 				case SDL_MOUSEBUTTONDOWN:
-				{
-					printf("MOUSE: %i\n", event.button.button);
-
-					char mIdx = event.button.button;
-					if (mIdx == 1 || mIdx == 3) {
-						mIdx = (mIdx == 1) ? (0) : (1);
-						Input::GetSingleton()->MousePressed(
-							mIdx
-						);
+				{	
+					if (event.button.button >= 7) {
+						break;
 					}
+
+					Input::GetSingleton()->MousePressed(
+						event.button.button-1
+					);
 					break;
 				}
 
 				case SDL_MOUSEBUTTONUP:
 				{
-					char mIdx = event.button.button;
-					if (mIdx == 1 || mIdx == 3) {
-						mIdx = (mIdx == 1) ? (0) : (1);
-						Input::GetSingleton()->MouseReleased(
-							mIdx
-						);
-					}
+					Input::GetSingleton()->MouseReleased(
+						event.button.button-1
+					);
 					break;
 				}
 
@@ -608,9 +602,8 @@ namespace Pim {
 						event.resize.w,
 						event.resize.h
 					);
-#ifndef WIN32
+
 					ReloadTextures();
-#endif
 					break;
 
 				case SDL_JOYAXISMOTION:
@@ -640,7 +633,7 @@ namespace Pim {
 					 */
 					short val = event.jhat.value << 11;
 					for (int i=11; i<=14; i++) {
-						if ((val & 1 << i) != 0) {
+						if ((val & (1 << i)) != 0) {
 							Input::GetSingleton()->ControllerButtonPressed(
 								val
 							);
@@ -715,6 +708,10 @@ namespace Pim {
 	/*
 	=====================
 	GameControl::DispatchPreRender_r
+
+	Pre-render update calls are dispatched recursively. This dispatch
+	method is only used when the game is paused. All nodes in the 
+	"Paused node-tree" (children of 'pauseLayer') receives this update.
 	=====================
 	*/
 	void GameControl::DispatchPreRender_r(GameNode *n, float dt) {
@@ -747,8 +744,10 @@ namespace Pim {
 	==================
 	*/
 	void GameControl::ReloadTextures() {
-		printf("\nReloading all textures...\n");
-		
+#ifdef _DEBUG
+		printf("Reloading all textures... ");
+#endif
+
 		if (scene) {
 			scene->ReloadTextures();
 		}
@@ -757,6 +756,8 @@ namespace Pim {
 			pauseLayer->ReloadTextures();
 		}
 
-		printf("Done!\n\n");
+#ifdef _DEBUG
+		printf("Done!\n");
+#endif
 	}
 }
