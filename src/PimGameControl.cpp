@@ -39,10 +39,10 @@ namespace Pim {
 		paused			= false;
 		pauseLayer		= NULL;
 
-		// Limit initially to 200 fps
-		maxDelta		= 1.f / 200.f;
+		maxDelta		= 0.f;
 		sleepNextFrame	= false;
 		sleepTime		= 0.f;
+		ticks 			= 0;
 
 #ifdef WIN32
 		// Get the module path
@@ -472,13 +472,15 @@ namespace Pim {
 	void GameControl::GameLoop() {
 		bool appRunning = true;
 		ticks = clock();
+		
+		float accu = 0.f;
 
 		while (appRunning) {
 			appRunning = HandleEvents();
 
 			// Get the DT
 			float dt = CalculateDeltaTime();
-			if (dt < maxDelta) {
+			if (false && dt < maxDelta) {
 #ifdef WIN32
 				Sleep(DWORD(ceil((maxDelta-dt)*1000.f)));
 				dt += CalculateDeltaTime();
@@ -487,6 +489,9 @@ namespace Pim {
 				dt += CalculateDeltaTime();
 #endif
 			}
+			
+			accu += dt;
+			printf("t: %0.1f\n", accu);
 
 			if (!paused) {
 #if defined(_DEBUG) && defined(WIN32)
@@ -731,9 +736,9 @@ namespace Pim {
 		clock_t  newTick = clock();
 		
 		float dt = ((float)(newTick - ticks)) / CLOCKS_PER_SEC;
-		ticks = newTick;
+//		printf("%f  (%llu)\n", dt, (newTick-ticks));
 		
-		printf("%0.1f\n", 1.f/dt);
+		ticks = newTick;
 		
 		return dt;
 	}
