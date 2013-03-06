@@ -6,7 +6,13 @@
 namespace Pim {
 	class GameControl;
 	class ShaderManager;
-
+	
+	/**
+	 @class 		Shader
+	 @brief 		Wrapper around an OpenGL-shader.
+	 @details 		This class provides an interface for quick modification
+	 				of uniforms and binding of the shader.
+	 */
 	class Shader {
 	private:
 		friend class ShaderManager;
@@ -14,6 +20,8 @@ namespace Pim {
 	public:
 								Shader();
 								~Shader();
+		void 					EnableShader() const;
+		void 					DisableShader() const;
 		GLint					GetProgram() const;
 		GLint					GetUniformLocation(const string name);
 		void					SetUniform1i(string n, GLint a);
@@ -34,7 +42,21 @@ namespace Pim {
 		void					SetUniformXi(string, GLint, GLint[]);
 		void					SetUniformXf(string, GLint, GLfloat[]);
 	};
+	
+	
+	/**
+	 @class 		ShaderManager
+	 @brief 		Manager of the shaders.
+	 @details 		All shaders must be created via the ShaderManager singleton.
+	 				You can provide either two files, or two strings. 
 
+	 				When adding a shader you must also provide a unique name,
+	 				which allows you to retreive the shader easily by name
+					from anywhere in your game.
+	 
+	 				See the description of HandleCommand for how to modify
+	 				uniforms in a shader at run-time.
+	 */
 	class ShaderManager : public ConsoleListener {
 	private:
 		friend class GameControl;
@@ -56,4 +78,26 @@ namespace Pim {
 		static void				InstantiateSingleton();
 		static void				ClearSingleton();
 	};
+	
+	/**
+	 @fn 			ShaderManager::HandleCommand
+	 @availability 	Windows
+	 @brief 		Overriden ConsoleListener method. Modifies uniforms from CLI.
+	 @details 		The ShaderManager singleton listens to the command @e shadermgr.
+	 				In order to modify a uniform 'uni' in a shader named 'myshader', 
+	 				enter the following command into the command window:
+	 					shadermgr myshader uniform1i uni 1
+	 				
+	 				Note that the @e uniformXT statement can be replaced by:
+	 					uniform(1-2-3-4)(i-f)
+	 
+	 				Note that the amount of parameters provided must match the
+	 				X-term in @e uniformXT. This is an invalid command:
+	 					shadermgr myshader uniform4i uni 1
+	 */
+	
+	/**
+	 @fn 			ShaderManager::ClearShaders
+	 @brief 		All shaders are deleted. Use with moderately extreme caution.
+	 */
 }
