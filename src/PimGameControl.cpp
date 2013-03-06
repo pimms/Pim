@@ -26,7 +26,7 @@ namespace Pim {
 
 	/*
 	=====================
-	GameControl::GameControl
+	 GameControl::GameControl
 	=====================
 	*/
 	GameControl::GameControl() {
