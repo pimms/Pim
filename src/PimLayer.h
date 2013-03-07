@@ -1,29 +1,4 @@
 #pragma once
-/*
-	The Layer is the "top level" controller of your game, which is customizeable
-	by you. It acts like a regular GameNode in terms of children and parent relationship,
-	and multiple Layers can be added to your screen at any given time. For instance,
-	the most sensible thing to do is attach all user interface objects on one layer,
-	and have the game visuals on another.
-
-	IMPORTANT NOTICE ABOUT LAYER RELATIONSHIPS AND UI!
-	A Layer containing game objects is movable. I.e., you can move the layer opposite of
-	the direction the player is moving, thus "scrolling the world". In order for any UI-layers
-	to stand completely still, you NEED to flag the Layer as an 'immovableLayer'. This will cause
-	the "getWorldPosition()" method to return (0,0)+(position) no matter what.
-	Failure to flag immovable will cause the same method to return
-	(parent->worldPosition())+(position) - which effectively would scroll the UI along with the
-	world. Any sub-layers to the UI layer can be treated however you'd like, as the UI layer
-	will return a constant value regardless of it's parent.
-
-	As the top level Layer will not have a parent, it is flagged as "topLayer", and a
-	static pointer is set to point to this layer. It can be accessed through the static method
-	Layer::getTopLayer().
-
-	There must always be a top layer. Even if you were to strike down the top layer, a new
-	top layer must take it's place. This is handled automatically by the GameController
-	when you attach a new Layer to it.
-*/
 
 #include "PimVec2.h"
 #include "PimGameNode.h"
@@ -136,7 +111,7 @@ namespace Pim {
 	 */
 	
 	/**
-	 @fn 			CreateLightingSystem
+	 @fn 			Layer::CreateLightingSystem
 	 @brief 		Instantiate the LightingSystem in this Layer.
 	 @details 		There is only one LightingSystem available to each layer.
 	 @param 		resolution
@@ -148,12 +123,12 @@ namespace Pim {
 	 */
 	
 	/**
-	 @fn 			DestroyLightingSystem
+	 @fn 			Layer::DestroyLightingSystem
 	 @brief 		Destroys the currently active LightingSystem (if there is one).
 	 */
 	
 	/**
-	 @fn 			AddLight
+	 @fn 			Layer::AddLight
 	 @brief 		Makes a GameNode act as a light in the Layer's LightingSystem.
 	 @param 		node
 	 				A node which need not be a child of the Layer.
@@ -163,7 +138,7 @@ namespace Pim {
 	 */
 	
 	/**
-	 @fn 			AddLight
+	 @fn 			Layer::AddLight
 	 @brief 		Makes a GameNode act as a light in the Layer's LightingSystem.
 	 				The light will use a pre-loaded light texture, as defined by
 	 				@e pld and @e id. The preloaded LightDef @b must have been 
@@ -177,13 +152,13 @@ namespace Pim {
 	 */
 	
 	/**
-	 @fn 			RemoveLight
+	 @fn 			Layer::RemoveLight
 	 @brief 		Remove the light functionality of a GameNode. The object is 
 	 				@e not deleted.
 	 */
 	
 	/**
-	 @fn 			PreloadLightTexture
+	 @fn 			Layer::PreloadLightTexture
 	 @brief 		Preload a light texture for future use. Useful when using
 	 				multiple lights using @e roughly the same texture.
 	 @param 		ld
@@ -195,7 +170,7 @@ namespace Pim {
 	 */
 	
 	/**
-	 @fn 			AddShadowCaster
+	 @fn 			Layer::AddShadowCaster
 	 @brief 		Add a shadow caster to the LightingSystem.
 	 @details 		The GameNode supplied @b absolutely @b must have created a
 	 				shadow shape prior to being added. This is done by calling
@@ -203,34 +178,34 @@ namespace Pim {
 	 */
 	
 	/**
-	 @fn 			RemoveShadowCaster
+	 @fn 			Layer::RemoveShadowCaster
 	 @brief 		Remove the shadow casting functionality of a GameNode. The 
 	 				shadow shape of the GameNode is @e not deleted.
 	 */
 	
 	/**
-	 @fn			SetCastShadows
+	 @fn			Layer::SetCastShadows
 	 @brief 		Enable or disable shadow casting.
 	 */
 	
 	/**
-	 @fn 			SetLightingUnlitColor
+	 @fn 			Layer::SetLightingUnlitColor
 	 @brief 		Set the default "ambient" lighting - the color drawn as filler
 	 				where no lights are present.
 	 */
 	
 	/**
-	 @fn 			SetLightAlpha
-	 @brief 		Range: 0-1. Toggle the visibility and brightness of the lights.
+	 @fn 			Layer::SetLightAlpha
+	 @brief 		Range: 0-1. Sets the visibility and brightness of the lights.
 	 */
 	
 	/**
-	 @fn 			SetSmoothShadows
+	 @fn 			Layer::SetSmoothShadows
 	 @brief 		Enable or disable gaussian blur on the LightingSystem texture.
 	 */
 	
 	/**
-	 @fn 			SetShadowCasterDebugDraw
+	 @fn 			Layer::SetShadowCasterDebugDraw
 	 @brief 		Debug draw shadow casters. This is NOT related to the shadow-shape
 	 				debug drawing of the GameNode-class.
 	 */

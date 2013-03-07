@@ -22,23 +22,19 @@ namespace Pim {
 	};
 
 	/**
-	 @class 		LeverParser
+	 @class 		LevelParser
 	 @brief 		Parse an XML-file defining a layer-tree hierarchy.
 	 @details 		This class is not complete, and should not at all be used yet.
 	 				Do not rely on this class staying the same.
 	 
 	 				The LevelParser object parses an XML-file, and returns a LevelData object containing
 		 			all data defined within the file. It is designed to quickly parse a level by default
-	 				layout, but in most cases you will require some level of customization.
-		 			The virtual method "parseCustom(TiXmlElement*,GameNode*)" will hopefully provide
-	 				the level of customization you need. parseCustom() is called once for every node
-	 				being parsed - in other words, it must be a child of an XML-element.
+	 				layout.
 
 					Documentation on how the XML-file should be written can be
 	 				exctracted yourself from studying the code, or waiting for 
-	 				the class to be completed and someone (me) to write toe doc.
+	 				the class to be completed and someone (me) to document it.
 	 */
-	
 	class LevelParser {
 	public:
 		LevelData						data;

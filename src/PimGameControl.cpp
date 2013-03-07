@@ -472,8 +472,6 @@ namespace Pim {
 	void GameControl::GameLoop() {
 		bool appRunning = true;
 		ticks = clock();
-		
-		float accu = 0.f;
 
 		while (appRunning) {
 			appRunning = HandleEvents();
@@ -489,9 +487,6 @@ namespace Pim {
 				dt += CalculateDeltaTime();
 #endif
 			}
-			
-			accu += dt;
-			printf("t: %0.1f\n", accu);
 
 			if (!paused) {
 #if defined(_DEBUG) && defined(WIN32)

@@ -40,7 +40,7 @@ namespace Pim {
 		Vec2			position;		// Relative to the parent's position
 
 						LightDef();
-						~LightDef();
+		virtual 		~LightDef();
 		GLuint			GetTexID() const;
 
 	protected:
