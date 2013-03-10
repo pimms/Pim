@@ -3,3 +3,9 @@
 
 src/.DS_Store
 templates/osx/Pim_osxtemplate/Build/*
+
+visualstudio2012/Debug
+visualstudio2012/Debug/*
+
+visualstudio2012/Release
+visualstudio2012/Release/*

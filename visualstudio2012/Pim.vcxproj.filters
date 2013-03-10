@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Pim.cpp" />
+    <ClCompile Include="..\src\PimButton.cpp">
+      <Filter>HUD Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimFont.cpp">
+      <Filter>HUD Elements\Label</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimGameNode.cpp">
+      <Filter>Base Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimLabel.cpp">
+      <Filter>HUD Elements\Label</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimConsoleReader.cpp">
+      <Filter>Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimGameControl.cpp">
+      <Filter>Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimAudioManager.cpp">
+      <Filter>Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimInput.cpp">
+      <Filter>Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimSound.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimLightingSystem.cpp">
+      <Filter>Base Nodes\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimLightDef.cpp">
+      <Filter>Base Nodes\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimShaderManager.cpp">
+      <Filter>Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimSprite.cpp">
+      <Filter>Base Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimScene.cpp">
+      <Filter>Base Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimSpriteBatchNode.cpp">
+      <Filter>Base Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimLayer.cpp">
+      <Filter>Base Nodes\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimWinStyle.cpp">
+      <Filter>Window Management</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimSlider.cpp">
+      <Filter>HUD Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimRenderTexture.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimParticleSystem.cpp">
+      <Filter>Base Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimVec2.cpp">
+      <Filter>Other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimPolygonShape.cpp">
+      <Filter>Other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimLevelParser.cpp">
+      <Filter>Other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimAction.cpp">
+      <Filter>Other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimRenderWindow.cpp">
+      <Filter>Window Management</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Pim.h" />
+    <ClInclude Include="..\src\PimInternal.h" />
+    <ClInclude Include="..\src\PimButton.h">
+      <Filter>HUD Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimFont.h">
+      <Filter>HUD Elements\Label</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimGameNode.h">
+      <Filter>Base Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimLabel.h">
+      <Filter>HUD Elements\Label</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimConsoleReader.h">
+      <Filter>Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimGameControl.h">
+      <Filter>Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimAudioManager.h">
+      <Filter>Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimInput.h">
+      <Filter>Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimSound.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimLightingSystem.h">
+      <Filter>Base Nodes\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimLightingSystemShaders.h">
+      <Filter>Base Nodes\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimLightDef.h">
+      <Filter>Base Nodes\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimShaderManager.h">
+      <Filter>Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimSprite.h">
+      <Filter>Base Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimScene.h">
+      <Filter>Base Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimSpriteBatchNode.h">
+      <Filter>Base Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimLayer.h">
+      <Filter>Base Nodes\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimWinStyle.h">
+      <Filter>Window Management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimSlider.h">
+      <Filter>HUD Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimRenderTexture.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimParticleSystem.h">
+      <Filter>Base Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimVec2.h">
+      <Filter>Other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimPolygonShape.h">
+      <Filter>Other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimLevelParser.h">
+      <Filter>Other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimAction.h">
+      <Filter>Other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimAssert.h">
+      <Filter>Other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimRenderWindow.h">
+      <Filter>Window Management</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="HUD Elements">
+      <UniqueIdentifier>{e3dc667c-2c42-4770-8209-bd600f97ec6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base Nodes">
+      <UniqueIdentifier>{eb0dd827-9014-4754-b1d0-f7c9eb1d31cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HUD Elements\Label">
+      <UniqueIdentifier>{8c74eb8c-de08-4226-b03d-e6e7298f07d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Singletons">
+      <UniqueIdentifier>{009e8e42-48eb-4dcf-9996-30a654b4a6ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base Nodes\Layer">
+      <UniqueIdentifier>{d258c42c-b082-44fb-bb64-d6215915fca6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{d6d2de99-595d-4887-983d-14022c1bef24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{a514ba30-e4f2-4547-96ed-8c959a5ee801}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window Management">
+      <UniqueIdentifier>{aee5f3c0-a6eb-4d43-b6ac-56de92615a2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Other">
+      <UniqueIdentifier>{3af15862-5a4c-4524-bf28-d474adadf9b1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
