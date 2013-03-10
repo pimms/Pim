@@ -31,6 +31,24 @@ namespace Pim {
 			glDeleteProgram(program);
 		}
 	}
+	
+	/*
+	=====================
+	Shader::EnableShader
+	=====================
+	*/
+	void Shader::EnableShader() const {
+		glUseProgram(program);
+	}
+	
+	/*
+	=====================
+	Shader::DisableShader
+	=====================
+	*/
+	void Shader::DisableShader() const {
+		glUseProgram(0);
+	}
 
 	/*
 	=====================
@@ -425,6 +443,8 @@ namespace Pim {
 	/*
 	=====================
 	ShaderManager::ShaderManager
+	 
+	Todo: Comment this unholy spawn.
 	=====================
 	*/
 	void ShaderManager::HandleCommand(ConsoleCommand cmd) {

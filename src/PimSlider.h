@@ -2,51 +2,41 @@
 #include "pimgamenode.h"
 #include "PimButton.h"
 
-/*
-	The Slider object is a UI-element class intended for creating a slider
-	capable of sliding in any direction.
-
-	Once instantiated, none of the values can be changed. The exception to this
-	is the minimum and maximum return value. For instance, you cannot first create
-	a slider sliding in the X axis, and later modify that object to slide in the
-	Y axis.
-*/
 
 namespace Pim {
 	class Sprite;
-
+	
+	/**
+	 @class 		SliderCallback
+	 @brief 		Inheriting from this class allows you to receive Slider 
+	 				callback values.
+	 */
 	class SliderCallback {
 	public:
-		virtual void					SliderValueChanged(Slider *slider, float val) {}
+		virtual void			SliderValueChanged(Slider *slider, float val) {}
 	};
-
+	
+	
+	/**
+	 @class 		Slider
+	 @brief   		The Slider object is a UI-element class intended for creating 
+	 				a slider capable of sliding in any direction.
+	 
+	 				Once instantiated, none of the values can be changed. The 
+	 				exception to this is the minimum and maximum return value. 
+	 			
+					You @b cannot create a slider sliding in the X axis and
+	 				later modify that object to slide in the Y axis. 
+	 */
 	class Slider : public Pim::GameNode, public Pim::ButtonCallback {
 	public:
-		/*
-    		The slider constructor takes in total seven parameters,
-    		3 of which are optional.
-
-    		pointZero:
-    			Relative to the background's anchor. Is not axis bound. This is the position
-    			which will yield the lowest value set.
-    		pointMax:
-    			Relative to the background's anchor. Is not axis bound. This is the position
-    			which will yield the highest value.
-    		background:
-    			The background sprite of the slider.
-    		handleXXXX:
-    			Four different sprites illustrating the different states the slider can
-    			have. Only "handleNormal" is required. These four sprites are used to
-    			create a Pim::Button which will behave like a handle.
-		*/
-
 								Slider(Vec2 pointZero,			Vec2 pointMax,
 									   Sprite *background,		Sprite *handleNormal,
 									   Sprite *handleHovered,	Sprite *handlePressed,
 									   Sprite *handleDeactivated);
 		void					SetCallback(Pim::SliderCallback *cb);
-		void					SetMinMaxValues(float min, float max); // Set slider return values
-		void					SetHandlePosition(float val); // Based on the minmax value
+		void					SetMinMaxValues(float min, float max);
+		void					SetHandlePosition(float val);
 		void					SetActive(bool flag);
 		float					GetValue() const;
 
@@ -65,4 +55,42 @@ namespace Pim {
 		void					ButtonPressed(Button *button);
 		void					ButtonReleased(Button *button);
 	};
+	
+	/**
+	 @fn 			Slider::Slider
+	 @brief			The longest constructor I've ever written. I'm sorry.
+	 @param			pointZero
+	 				Relative to the background's anchor. Is not axis bound. 
+	 				This is the position which will yield the lowest value set.
+	 @param  		pointMax
+	 				Relative to the background's anchor. Is not axis bound. This 
+	 				is the position which will yield the highest value.
+	 @param 		background
+	 				The background sprite of the slider.
+	 @param 		handle@e[xxxx]
+	 				Four different sprites illustrating the different states the slider can
+	 				have. Only "handleNormal" is required. These four sprites are used to
+	 				create a Pim::Button which will behave like a handle.
+	 */
+
+	/**
+	 @fn 			SetMinMaxValues
+	 @brief 		Set the minimum and maximum return values for the Slider.
+	 @param 		min
+	 				The value returned when the slider handle is at the pointZero
+	 				position passed in the constructor.
+	 @param 		max
+	 				The value returned when the slider handle is at the pointMax
+	 				position passed in the constructor.
+	 */
+	
+	/**
+	 @fn 			SetHandlePosition
+	 @brief 		Set the handle at position @e val relative to the return range.
+	 @details 		Example:
+	 	
+	 				If @e minPt = [0,0] and @e maxPt = [10,0] and the return 
+					ranges from 0 to 1, a @e val value of 0.5 will put the slider
+	 				at position [5,0].
+	 */
 }

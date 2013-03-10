@@ -3,26 +3,19 @@
 #include <map>
 #include <vector>
 
-/*
-	Console commands in Pim are issued to listeners of a specific command.
-	For instance, a Player-object can listen to the "player" command.
-	Any arguments following "player" in the command line will be issued to
-	the listeners, which must handle these messages individually.
-
-	All ConsoleListener subclasses may listen for commands. GameNode (and all
-	it's subclasses) already inherit this class.
-
-	Example of listening:
-
-	Listen for "player" commands:
-		player->listenCommand("player");
-
-	Any message beginning with "player" is issued to the player-object in it's
-	entirety. Note that it's stupidly important that the command BEGINS with the
-	listened keyword.
-*/
 
 namespace Pim {
+	/**
+	 @class 	ConsoleReader
+	 @availability Windows
+	 
+	 @brief		Reads the command line for input.
+	 @details 	When the user inputs text to the command line window, the message
+	 			is parsed by the ConsoleReader. If the @b first word is a match
+	 			with any of the ConsoleListeners, those listeners are sent the
+	 			full command.
+	 */
+	
 	class ConsoleListener;
 	class GameControl;
 
@@ -58,6 +51,22 @@ namespace Pim {
 		static void								ShutDown();
 	};
 
+	
+	/**
+	 @class 	ConsoleListener
+	 @availability Windows. Non-functional on OSX.
+	 @brief 	Inheritance from this class will alow CLI commands to be issued to you.
+	 @details 	Console commands in Pim are issued to listeners of a specific command.
+				 For instance, a Player-object can listen to the "player" command.
+				 Any arguments following "player" in the command line will be issued to
+				 the listeners, which must handle these messages individually.
+	 
+				 All ConsoleListener subclasses may listen for commands. GameNode (and all
+				 it's subclasses) already inherit from this class.
+	 
+				 Any message beginning with "player" is issued to the player-object in it's
+				 entirety.
+	 */
 	class ConsoleListener {
 	public:
 		virtual ~ConsoleListener() {

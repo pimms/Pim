@@ -4,6 +4,22 @@
 #include "PimVec2.h"
 
 namespace Pim {
+	/**
+	 @class 		LightDef
+	 @brief 		Defines parameters for how LightingSystem renders a light
+	 				texture.
+	
+	 @var 			innerColor
+	 				The innermost color of the light.
+	 @var 			outerColor
+	 				The outermost color of the light.
+	 @var 			radius
+	 				The radius of the light (in LightingSystem-resolution pixel space).
+	 @var 			falloff
+	 				Linear falloff factor for how quickly the innerColor transitions
+	 				to outerColor. <NOT YET FULLY IMPLEMENTED>
+	 */
+	
 	#define ABSTRACT_SUPERCLASS private: virtual void ____abstract____() = 0; public:
 	#define NONABSTRACT_SUBCLASS private: void ____abstract____(){} public:
 
@@ -24,7 +40,7 @@ namespace Pim {
 		Vec2			position;		// Relative to the parent's position
 
 						LightDef();
-						~LightDef();
+		virtual 		~LightDef();
 		GLuint			GetTexID() const;
 
 	protected:
