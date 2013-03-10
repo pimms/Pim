@@ -15,7 +15,7 @@ namespace Pim {
 		friend class LightingSystem;
 
 	public:
-									RenderWindow(WinStyle::CreationData &data);
+									RenderWindow();
 									~RenderWindow();
 		Vec2						GetOrtho() const;
 		Vec2						GetOrthoOffset() const;

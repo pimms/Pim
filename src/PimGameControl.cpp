@@ -173,7 +173,7 @@ namespace Pim {
 			winData = data;
 			winData.Prepare();
 
-			renderWindow = new RenderWindow(data);
+			renderWindow = new RenderWindow();
 			renderWindow->SetupWindow(data);
 
 #if defined(_DEBUG) && defined(WIN32)

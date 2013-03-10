@@ -15,7 +15,7 @@ namespace Pim {
 	RenderWindow::RenderWindow
 	=====================
 	*/
-	RenderWindow::RenderWindow(WinStyle::CreationData &data) {
+	RenderWindow::RenderWindow() {
 		surface		= NULL;
 	}
 
@@ -149,6 +149,7 @@ namespace Pim {
 	void RenderWindow::KillWindow() {
 		surface = NULL;
 		SDL_Quit();
+
 	}
 
 	/*
