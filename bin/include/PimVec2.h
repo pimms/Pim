@@ -3,6 +3,11 @@
 #include "PimInternal.h"
 
 namespace Pim {
+	/**
+	 @class 		Vec2
+	 @brief 		A 2-dimensional vector. Used for positioning.
+	 */
+	
 	class Vec2 {
 	public:
 		float				x;
@@ -38,7 +43,11 @@ namespace Pim {
 		void				operator/=(float den);
 	};
 
-
+	
+	/**
+	 @struct 		Color
+	 @brief 		Defines a 4f color.
+	 */
 	struct Color {
 		float				r;
 		float				g;
@@ -52,15 +61,14 @@ namespace Pim {
 	};
 
 
-	/*
-	===============================
-	Class Rect_t
-
-	The class is defined in the header for the sake of templating.
-	By default, all rects used internally is <int>.
-	===============================
-	*/
-	template <typename T>
+	/**
+	 @struct 		Rect_t
+	 @brief 		A rectangle template. The default type for @e T is @b int. See
+	 				"typename Rect_t<int>  Rect". @e Rect is used internally.
+	 @details 		The class is defined in the header for the sake of templating.
+			 		By default, all rects used internally is <int>.
+	 */
+	template <typename T=int>
 	struct Rect_t {
 		T 			x;
 		T			y;
@@ -134,48 +142,4 @@ namespace Pim {
 
 	typedef Rect_t<int>		Rect;		// Rect_t<int> is used internally by default
 	typedef Rect_t<float>	Rectf;
-
-	/*
-	struct Rect {
-		int			x;
-		int			y;
-		int			width;
-		int			height;
-
-		Rect(int xx, int yy, int ww, int hh) {
-			x		= xx;
-			y		= yy;
-			width	= ww;
-			height	= hh;
-		}
-
-		Rect() {
-			x		= 0;
-			y		= 0;
-			width	= 0;
-			height	= 0;
-		}
-
-		bool Contains(const Vec2 &vec) {
-			return		vec.x > float(x) 
-				&&		vec.x < float(x + width)
-				&&		vec.y > float(y) 
-				&&		vec.y < float(y + height);
-		}
-
-		bool operator==(const Rect &o) {
-			return	x == o.x 
-				&&  y == o.y
-				&&  width == o.width 
-				&& height == o.height;
-		}
-
-		bool operator!=(const Rect &o) {
-			return	x != o.x
-				&&  y != o.y
-				&& width != o.width
-				&& height != o.height;
-		}
-	};
-	*/
 }

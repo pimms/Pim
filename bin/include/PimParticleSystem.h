@@ -3,11 +3,24 @@
 #include "PimSprite.h"
 
 namespace Pim {
+	/**
+	 @class 		ParticleSystem
+	 @brief 		Particle emitting class.
+	 @details 		A single particle system can only emit particles according
+	 				to a single configuration. If you want advanced effects, you
+	 				should use multiple ParticleSystems and add them to the same
+	 				GameNode.
+	 
+	 				Most attributes in the particle system has a default and a
+	 				@e variance variable. The actual value of the particles will
+	 				be in the range [base, base+variance].
+	 
+	 				A visual particle editor is a goal, but at the time not a 
+	 				priority.
+	 */
 
-	class ParticleSystem : public Sprite
-	{
+	class ParticleSystem : public Sprite {
 	protected:
-		/* Forward declarations */
 		struct Particle;
 		struct Vertex;
 
@@ -36,14 +49,12 @@ namespace Pim {
 		virtual void			BatchDraw();
 
 	protected:
-		/*
-		==================
-		ParticleSystem::Particle
-
-		Represents a particle somewhere along the 2D plane. The structure is 
-		unaware of it's texture and state-to-be.
-		==================
-		*/
+		/**
+		 @struct 		Particle
+		 @brief 		Particle used by ParticleSystem
+		 @details 		Only used for storing the result of the particle simulation,
+		 				the struct does nothing on it's own.
+		 */
 		struct Particle {
 			Vec2				position;
 			Vec2				velocity;
@@ -58,14 +69,10 @@ namespace Pim {
 								Particle();
 		};
 
-		/*
-		==================
-		ParticleSystem::Vertex
-
-		One Vertex is stored for each particle. It contains the position, tex coord
-		and color of each particle, neatly stacked into a single buffer.
-		==================
-		*/
+		/**
+		 @struct 		Vertex
+		 @brief 		Describes how and where a particle will be drawn.
+		 */
 		struct Vertex {
 			Vec2				position;
 			Vec2				texCoord;

@@ -470,11 +470,11 @@ namespace Pim {
 	=====================
 	*/
 	void GameControl::GameLoop() {
-		bool appRunning = true;
+		quit = false;
 		ticks = clock();
 
-		while (appRunning) {
-			appRunning = HandleEvents();
+		while (!quit) {
+			HandleEvents();
 
 			// Get the DT
 			float dt = CalculateDeltaTime();
@@ -530,11 +530,9 @@ namespace Pim {
 	GameControl::HandleEvents
 
 	Reads and dispatches SDL events.
-	If the event SDL_QUIT is raised, 'false' is returned - otherwise, 
-	true is returned.
 	=====================
 	*/
-	bool GameControl::HandleEvents() {
+	void GameControl::HandleEvents() {
 
 		/*	Window movement-events are NOT dispatched in SDL 1.2.15.
 		 *  When the window is moved, the app freezes and is unresponsive
@@ -550,13 +548,12 @@ namespace Pim {
 		clock_t prepoll = clock();
 
 		SDL_Event event;
-		bool keepRunning = true;
 
 		while (SDL_PollEvent(&event)) {
 
 			switch (event.type) {
 				case SDL_QUIT:
-					keepRunning = false;
+					Exit();
 					break;
 
 				case SDL_KEYDOWN:
@@ -651,8 +648,6 @@ namespace Pim {
 		if (postpoll - prepoll > 3) {
 			ticks += (postpoll - prepoll);
 		}
-
-		return keepRunning;
 	}
 
 	/*

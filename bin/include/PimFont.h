@@ -4,11 +4,33 @@
 #include "PimGameNode.h"
 
 namespace Pim {
-// Forward declarations
-class GameControl;
-class Label;
 
-class Font {
+	/**
+	 @class 	Font
+	 @brief 	Holds information on a font of a specific size.
+	 @details 	The Font object is instantiated with a size and a font.
+	 			A Label-object (or any other class) may use this object
+	 			to render text to the screen.
+	 
+	 			@b IMPORTANT @b NOTE:
+				
+	 			Any Font object @b must be deleted manually, @b unless a Label
+	 			has been given ownership of the Font - in which case, the Font
+	 			is deleted along with the Label.
+	 
+	 			Example usage:
+	 @code
+				Pim::Font *arial20 = new Pim::Font("arial.ttf", 20);
+	 			Pim::Label *helloWorld = new Pim::Label(arial20);
+	 			helloWorld->SetText("Hello, world!");
+	 			helloWorld->GiveOwnershipOfFont();
+	 @endcode
+	 */
+	
+	class GameControl;
+	class Label;
+
+	class Font {
 	private:
 		friend class Label;
 

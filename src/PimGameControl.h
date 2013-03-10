@@ -86,7 +86,7 @@ namespace Pim {
 		int						actualWinHeight;	// the window style is BFS. Hence, these two.
 
 		void					GameLoop();
-		bool					HandleEvents();
+		void					HandleEvents();
 		void					DispatchPrerender(float dt);
 		void					DispatchPausedPreRender(float dt);
 		void					DispatchPreRender_r(GameNode *n, float dt);
