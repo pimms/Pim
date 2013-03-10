@@ -4,6 +4,8 @@
 src/.DS_Store
 templates/osx/Pim_osxtemplate/Build/*
 
+visualstudio2012/Pim.sdf
+
 visualstudio2012/Debug
 visualstudio2012/Debug/*
 
