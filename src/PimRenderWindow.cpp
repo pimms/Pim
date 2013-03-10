@@ -16,7 +16,8 @@ namespace Pim {
 	=====================
 	*/
 	RenderWindow::RenderWindow() {
-		surface		= NULL;
+		window = NULL;
+		renderer = NULL;
 	}
 
 	/*
@@ -25,7 +26,7 @@ namespace Pim {
 	=====================
 	*/
 	RenderWindow::~RenderWindow() {
-		
+		KillWindow();
 	}
 
 	/*
@@ -90,20 +91,42 @@ namespace Pim {
 	*/
 	bool RenderWindow::SetupWindow(WinStyle::CreationData &data) {
 		winData = data;
-		const SDL_VideoInfo *video;
 		
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) {
 			PimWarning("Failed to initialize SDL", "SDL Error");
 			return false;
 		}
 
-		SDL_JoystickEventState(SDL_ENABLE);
-
-		video = SDL_GetVideoInfo();
-		if (!video) {
-			PimWarning("Failed to retreive video info!", "SDL Error");
+		window = SDL_CreateWindow(	data.winTitle.c_str(),
+									200, 200,
+									data.resolution.x, data.resolution.y, 
+									SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+		if (!window) {
+			PimWarning("Failed to create a window", "SDL Error");
+			KillWindow();
 			return false;
 		}
+
+		SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+
+		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+		if (!renderer) {
+			PimWarning("Failed to create a renderer", "SDL Error");
+			KillWindow();
+			return false;
+		}
+
+		/* Get the renderer information */
+		SDL_RendererInfo info;
+		SDL_GetRendererInfo(renderer, &info);
+		if (strcmp("direct3d", info.name) == 0) {
+			SDL_Quit();
+			printf("ERROR: SDL uses D3D!\n\nQUITTING!!!\n\n");
+			system("pause");
+			exit(1);
+		}
+
+		SDL_JoystickEventState(SDL_ENABLE);
 
 		SDL_GL_SetAttribute(SDL_GL_RED_SIZE,            8);
 		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,          8);
@@ -131,12 +154,11 @@ namespace Pim {
 	    // Initate GLEW
 		GLenum res = glewInit();
 		if (res != GLEW_OK) {
+			printf("Glew error message: %i\n", res);
 			PimWarning("Failed to initiate GLEW!", "GLEW Error");
 			return false;
 		}
 #endif
-
-		SDL_WM_SetCaption(data.winTitle.c_str(), NULL);
 
 	    return InitOpenGL();
 	}
@@ -147,9 +169,17 @@ namespace Pim {
 	=====================
 	*/
 	void RenderWindow::KillWindow() {
-		surface = NULL;
-		SDL_Quit();
+		if (window) {
+			SDL_DestroyWindow(window);
+			window = NULL;
+		}
+		
+		if (renderer) {
+			SDL_DestroyRenderer(renderer);
+			renderer = NULL;
+		}
 
+		SDL_Quit();
 	}
 
 	/*
@@ -170,14 +200,17 @@ namespace Pim {
 		if (nh == 0) {
 			nh = 1;
 		}
+		printf("Resize: %i %i\n", nw, nh);
 		
+		/*
 		surface = SDL_SetVideoMode(nw, nh, winData.bits, 
-			SDL_OPENGL | SDL_SWSURFACE | SDL_RESIZABLE
+			SDL_OPENGL | SDL_SWSURFACE | SDL_NOFRAME
 		);
 		if (!surface) {
 			PimWarning("Failed to set Video Mode","SDL Error");
 			return;
 		}
+		*/
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -337,7 +370,7 @@ namespace Pim {
 			glEnable(GL_TEXTURE_2D);
 		}
 
-		SDL_GL_SwapBuffers();
+		SDL_GL_SwapWindow(window);
 		
 		#ifdef _DEBUG
 		PrintOpenGLErrors("POSTRENDER FRAME");

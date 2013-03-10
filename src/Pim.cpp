@@ -1,4 +1,3 @@
-// This is the main LIB file.
 #include "PimInternal.h"
 #include "pim.h"
 #include "PimAssert.h"
@@ -42,5 +41,4 @@ void WindCCW(Polygons *polygons) {
 
 float RandF(float min, float max) {
 	return ((float)rand()/(float)RAND_MAX) * (max-min) + min;
-
 }

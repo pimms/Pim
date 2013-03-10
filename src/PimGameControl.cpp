@@ -594,13 +594,16 @@ namespace Pim {
 					break;
 				}
 
-				case SDL_VIDEORESIZE:
-					renderWindow->ResizeWindow(
-						event.resize.w,
-						event.resize.h
-					);
-
-					ReloadTextures();
+				/* Subswitch */
+				case SDL_WINDOWEVENT:
+					switch (event.window.event) {
+						case SDL_WINDOWEVENT_RESIZED:
+							renderWindow->ResizeWindow(
+								event.window.data1,
+								event.window.data2
+							);
+							break;	
+					}
 					break;
 
 				case SDL_JOYAXISMOTION:
