@@ -27,7 +27,7 @@ void main()												\n\
 uniform float sigma;																	\n\
 uniform float blurSize; 																\n\
 uniform float lalpha;																	\n\
-uniform float pixels = 10.0;															\n\
+uniform float pixels;																	\n\
 uniform vec4 ulcolor;																	\n\
 uniform vec2 direction;																	\n\
 uniform sampler2D blurSampler; 															\n\
@@ -64,6 +64,6 @@ void main() {																			\n\
 
 #define PIM_LS_HIGHQ_VERT "\
 void main() {																			\n\
-	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;								\n\
+	gl_Position = ftransform();															\n\
 	gl_TexCoord[0] = gl_MultiTexCoord0;													\n\
 }"

@@ -1,23 +1,5 @@
 #pragma once
 
-/*
-	Input is a singleton object.
-
-	In order to optimize rebinding of keys, there are two different ways
-	of checking wether or not a key is pressed.
-
-	1. Querying for the key directly (K_W)
-	2. Querying for the string associated with the button ("jump").
-
-	In order to accomodate method #2, you are able to pass a string and a key-code to
-	the bindKey(string,Pim::Key). Binding "jump" to K_SPACE, will result in the query
-	keyStatus("jump") to return the equivalent value of keyStatus(K_SPACE).
-
-	Whenever an input action occurs, the singleton is flagged as dirty. In the game loop,
-	the Input object is queried for dirtyness - a "true" will dispatch a notification to all
-	GameNodes scheduled for listening.
-*/
-
 #include <string>
 #include <map>
 
@@ -25,15 +7,23 @@ namespace Pim {
 	class Input;
 	class Vec2;
 	class GameControl;
-
+	
+	
+	/**
+	 @class 		KeyEvent
+	 @brief 		Passed on key presses / releases to Key-listeners.
+	 @details 		The KeyEvent class supports storing data about up to 512
+	 				unique keys, as defined by the SDL key-event values. The state
+	 				of the buttons are stored in two 512-bit bitfields - one for
+	 				the absolute status of the keys (on or off), and one for tracking
+	 				the 'freshness' of the keys. Fresh is defined as a button that
+					was pressed down @e this frame.
+	 */
 	class KeyEvent {
 	private:
 		friend class Input;
 
 	public:
-		/* SDL uses 
-		 *
-		 */
 		enum KeyCode {
 			K_BACKSPACE = 8, K_ENTER = 13, K_SHIFT = 16, K_CTRL = 17, K_ESC = 27, K_SPACE = 32,
 			K_LEFT = 37,K_UP,K_RIGHT,K_DOWN,
@@ -64,7 +54,18 @@ namespace Pim {
 		void							BindKey(const string &str, const KeyCode k);
 		void							UnbindKey(const string &str);
 	};
-
+	
+	
+	/**
+	 @class 		MouseEvent
+	 @brief 		Passed on mouse movement to Mouse-Listeners.
+	 @details 		Contains data on the mouse position (in the screen, based on
+	 				the coordinate values you initiated your CreationData-object
+	 				with) and the status of the mouse buttons. 
+	 
+	 				Currently, only 7 unique buttons are supported. See MouseEvent::MouseButton
+	 				for more details.
+	 */
 	class MouseEvent {
 	private:
 		friend class Input;
@@ -100,7 +101,12 @@ namespace Pim {
 		void							Unfresh();
 		void							MouseMoved(Vec2 pos);
 	};
-
+	
+	/**
+	 @class 		ControllerEvent
+	 @brief 		Passed to Controller-Listeners.
+	 @details 		Contains data on buttons and analog sticks. 
+	 */
 	class ControllerEvent {
 	private:
 		friend class Input;
@@ -152,7 +158,27 @@ namespace Pim {
 		bool							IsConnected();
 		void							Vibrate(float l, float r);
 	};
-
+	
+	
+	/**
+	 @class 		Input
+	 @brief 		The singleton managing user input (keyboard, mouse, controller)
+	 @details 		Input is a singleton object.
+	 
+					In order to optimize rebinding of keys, there are two different ways
+					of checking wether or not a key is pressed.
+					1. Querying for the key directly (K_W)
+					2. Querying for the string associated with the button ("jump").
+	 
+					In order to accomodate method #2, you are able to pass a string and a key-code to
+					the bindKey(string,Pim::Key). Binding "jump" to K_SPACE, will result in the query
+					keyStatus("jump") to return the equivalent value of keyStatus(K_SPACE).
+	 				This functionality is currently @e only supported for keyboard input.
+	 
+					Whenever an input action occurs, the singleton is flagged as dirty. In the game loop,
+					the Input object is queried for dirtyness - a "true" will dispatch a notification to all
+					GameNodes scheduled for listening.
+		 */
 	class Input {
 	private:
 		friend class GameControl;
@@ -196,4 +222,13 @@ namespace Pim {
 		void							Dispatch();
 		void							Dispatch_r(GameNode *n, bool controller);
 	};
+	
+	/**
+	 @fn			Input::Dispatch_r
+	 @brief 		Recursive dispatch of input. Used when the game is paused.
+	 @param 		n 
+	 				The node on which to dispatch
+	 @param 		controller
+	 				Flag indicating whether a controller is connected or not.
+	 */
 }

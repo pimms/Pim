@@ -32,7 +32,7 @@ namespace Pim {
 		friend class LightingSystem;
 
 	public:
-									RenderWindow(WinStyle::CreationData &data);
+									RenderWindow();
 									~RenderWindow();
 		Vec2						GetOrtho() const;
 		Vec2						GetOrthoOffset() const;
@@ -45,7 +45,8 @@ namespace Pim {
 			HOR,
 		};
 
-		SDL_Surface					*surface;	// The screen-surface
+		SDL_Window					*window;  
+		SDL_Renderer				*renderer;
 		WinStyle::CreationData		winData;
 		Vec2						scale;
 		Vec2						ortho;		// Screen pixel dimension

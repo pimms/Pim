@@ -2,24 +2,33 @@
 #include "pimsprite.h"
 #include "PimInternal.h"
 
-/*
-	SpriteBatchNode is the best way to go if you're using a huge sprite sheet.
-	The batch node loads the sprite sheet into memory once, and all (sprite) children
-	attached to it will only be able to use cutouts / all of the batch node texture.
-
-	Note that granchildren of a batch node also are required to use the batch node
-	texture. They cannot load a texture of their own. Use a separate batch node
-	for this.
-
-	The batch node itself does not care what position it is drawn in. It uses it's
-	parent's position as a null point, and children of the batch node will be drawn
-	relative to their grandparent's position.
-
-	Note that layer's should never be added as child to a batch node. It may work, but
-	it's not officially supported. At all.
-*/
-
 namespace Pim {
+	/**
+	 @class 		SpriteBatchNode
+	 @brief 		Loads a texture into memory once, and it is used by all
+					Sprite children of this node.
+	 @details 		You need not add Sprites to a batch node for the Sprites
+	 				to use the batch node texture. You may create the 
+	 				batch node once in your layer (and add it to the layer so
+	 				you don't have to delete it yourself), and simply tell 
+	 				your Sprites to use the batch node's texture as such:
+	 
+	 				Note that in option 2, the performance gained from not having
+	 				to rebind the texture for each draw call is lost.
+	 
+	 @code
+	 				SpriteBatchNode *bn = new SpriteBatchNode("a.png");
+					AddChild(bn);
+	 
+	 				// Option1:
+	 				bn->AddChild(playerSprite);
+	 
+	 				// Option2:
+	 				AddChild(playerSprite);
+	 				playerSprite->UseBatchNode(bn);
+	 @endcode
+	 */
+	
 	class SpriteBatchNode : public Sprite {
 	public:
 					SpriteBatchNode(string file);

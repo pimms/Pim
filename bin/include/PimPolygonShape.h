@@ -10,6 +10,13 @@ namespace Pim {
 	class LightingSystem;
 	class CollisionManager;
 
+	
+	/**
+	 @class 		Line
+	 @brief 		Defines a line between two points.
+	 @details 		Used in PolygonShape to get detailed information about
+	 				each individual line in the shape.
+	 */
 	class Line {
 	private:
 		friend class PolygonShape;
@@ -35,7 +42,11 @@ namespace Pim {
 							Line(const Line&) { shape=NULL; }
 	};
 
-
+	/**
+	 @class 		PolygonShape
+	 @brief 		A convex polygon wound counter-clockwise. Used for shadow
+	 				casting.
+	 */
 	class PolygonShape {
 	private:
 		friend class Line;
@@ -62,4 +73,11 @@ namespace Pim {
 											const Vec2 offset=Vec2(0.f,0.f));
 		void				DebugDraw();
 	};
+	
+	/**
+	 @fn 			PolygonShape::ProjectPolygon
+	 @brief 		Projects the line along an axis.
+	 @details 		Not used internally (in 0.9), but this method may be used
+	 				in order to check for collision between two PolygonShapes.
+	 */
 }

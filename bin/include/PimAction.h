@@ -7,16 +7,17 @@ namespace Pim {
 	class ActionQueue;
 	class ActionQueueRepeat;
 
-	/* The VIRTUAL BaseAction class */
-	/* All derivatives of BaseAction works as such:
-	   The action must be passed to the "runAction(..)" method on a
-	   GameNode (or any subclass). The node then calls "action->activate()",
-	   which initializes the action. The action receives update(float) calls
-	   until it's criteria of completion is met, at which point it is removed
-	   from the parent and deleted.
-
-	   ActionQueueRepeat does not delete the actions until it's own deletion, as
-	   the actions are needed several times.									*/
+	
+	/**
+	 @class 	BaseAction
+	 @brief		Virtual base class for all Action-classes.
+	 @details 	All derivatives of BaseAction works as such:
+	 			The action must be passed to the @e RunAction(..)  method on a
+				GameNode (or any subclass). The node then calls @e action->Activate(),
+				which initializes the action. The action receives @e Update(float) calls
+	 			until it's criteria of completion is met, at which point it is removed
+	 			from the parent and deleted.
+	 */
 	class BaseAction : public GameNode {
 	protected:
 		friend class ActionQueueInfinite;
@@ -26,7 +27,7 @@ namespace Pim {
 
 	public:
 		// If true, the node running the action will be notified via the
-		// GameNode::actionCompleted(BaseAction*) overrideable method.
+		// virtual GameNode::ActionCompleted(BaseAction*) method.
 		bool					notifyOnCompletion;
 
 		// By default, the parent of the action is notified.
@@ -49,14 +50,20 @@ namespace Pim {
 		void					Cleanup();
 	};
 
-
-	/* Action class */
-	/* Can be run on any GameNode */
-	/* Implemented Actions:
-			- MoveToAction			Moves the node to a specific position
-			- MoveByAction			Moves the node relatively by a vector
-			- RotateByAction		Rotates the node a certain amount
-			- DelayAction			Wait for X seconds						*/
+	
+	/**
+	 @class 	Action
+	 @brief 	Can be run on any GameNode.
+	 @details	It is a criteria for all Action-derivatives that they do @b not
+	 			expect the parent (the node on which they're run) to have any 
+				attributes not listed in the GameNode class.
+	 
+	 			Implemented Actions:
+	 				- MoveToAction			Moves the node to a specific position
+					- MoveByAction			Moves the node relatively by a vector
+				 	- RotateByAction		Rotates the node a certain amount
+	 				- DelayAction			Wait for X seconds
+	 */
 	class Action : public BaseAction {
 	protected:
 		friend class GameNode;
@@ -66,13 +73,21 @@ namespace Pim {
 		virtual void			Update(float) {}
 		virtual void			Activate();
 	};
-
+	
+	
 	/*
 		###########################################
 		#####          NODE ACTIONS		      #####
 		###########################################
 	*/
-	/* Move To Action */
+	
+	/**
+	 @class 	MoveToAction
+	 @brief 	Moves a node to a specific position over a certain amount of time.
+	 @details 	The position to which the object is moved is @e absolute, and
+	 			modifying the node's position while this action is running will
+	 			cause some nasty behaviour.
+	 */
 	class MoveToAction : public Action {
 	public:
 								MoveToAction(Vec2 destination, float duration);
@@ -85,7 +100,13 @@ namespace Pim {
 		void					Activate();
 	};
 
-	/* Move By Action */
+	
+	/**
+	 @class 	MoveByAction
+	 @brief 	Moves a node relatively over a certain amount of time.
+	 @details 	The node's position is linearly incremented over a certain amount
+	 			of time until the MoveByAction has moved the object far enough.
+	 */
 	class MoveByAction : public Action {
 	public:
 								MoveByAction(Vec2 relative, float duration);
@@ -97,7 +118,12 @@ namespace Pim {
 		void					Activate();
 	};
 
-	/* Rotate By Action */
+	
+	/**
+	 @class 	RotateByAction
+	 @brief 	The object is rotated a certain amount of degrees in a certain 
+	 			amount of time.
+	 */
 	class RotateByAction : public Action {
 	public:
 								RotateByAction(float angle, float duration);
@@ -111,7 +137,11 @@ namespace Pim {
 		void					Activate();
 	};
 
-	/* Delay Action */
+	
+	/**
+	 @class 	DelayAction
+	 @brief 	Litteraly does nothing. Best used in ActionQueue's as a filler.
+	 */
 	class DelayAction : public Action {
 	public:
 								DelayAction(float duration);
@@ -126,12 +156,14 @@ namespace Pim {
 		#####         SPRITE ACTIONS		  #####
 		###########################################
 	*/
-	/* Sprite Action class */
-	/* Can only be run on Sprites */
-	/* Implemented SpriteActions:
-			- TintAction			Tints the sprite to a certain color over time
-			- ScaleToAction			Scales the sprite to a provided value
-			- ScaleByAction			Scales the sprite relatively to the provided factors  */
+	/**
+	 @class 	SpriteAction
+	 @brief 	Defines the base for actions that may be run on Sprites.
+	@details 	Implemented SpriteActions:
+	 				- TintAction			Tints the sprite to a certain color over time
+	 				- ScaleToAction			Scales the sprite to a provided value
+	 				- ScaleByAction			Scales the sprite relatively to the provided factors
+	 */
 	class SpriteAction : public BaseAction {
 	protected:
 		friend class Sprite;
@@ -144,7 +176,11 @@ namespace Pim {
 		virtual void			Activate();
 	};
 
-	/* Tint Action */
+	
+	/**
+	 @class 	TintAction
+	 @brief		Tints the Sprite to a certain color value.
+	 */
 	class TintAction : public SpriteAction {
 	public:
 								TintAction(Color fadeTo, float duration);
@@ -157,7 +193,11 @@ namespace Pim {
 		void					Activate();
 	};
 
-	/* Scale To Action */
+	
+	/**
+	 @class 	ScaleToAction
+	 @brief 	Scales the Sprite to a certain size.
+	 */
 	class ScaleToAction : public SpriteAction {
 	public:
 								ScaleToAction(Vec2 factor, float duration);
@@ -170,7 +210,10 @@ namespace Pim {
 		void					Activate();
 	};
 
-	/* Scale By Action */
+	/**
+	 @class 	ScaleByAction
+	 @brief 	Scales the Sprite relatively.
+	 */
 	class ScaleByAction : public SpriteAction {
 	public:
 								ScaleByAction(Vec2 factor, float duration);
@@ -188,8 +231,18 @@ namespace Pim {
 		#####          ACTION QUEUES	 	  #####
 		###########################################
 	*/
-	/* Run several actions in succession
-	   There's a limit of 32 actions.	*/
+	
+	/**
+	 @class 	ActionQueue
+	 @brief 	Runs up to 32 actions in succession.
+	 @details	Example usage:
+	 @code
+	 			Action *a1 = ...;
+	 			Action *a2 = ...;
+	 			ActionQueue *aq = new ActionQueue(2, a1, a2);
+	 			RunActionQueue(aq);
+	 @endcode
+	 */
 	class ActionQueue : public Action {
 	protected:
 		friend class BaseAction;
@@ -215,10 +268,16 @@ namespace Pim {
 
 	/* ActionQueueRepeat */
 	/* Run several actions in succession, repeated N times.
-	   The bool 'infinite' can be flagged to true to repeat the action
-	   sequence indefinitely. Also note that the uint 'remaindingLoops' is public,
-	   so the amount of loops to run can be altered. As with all actions, the
-	   ActionQueueRepeat and all it's actions are deleted upon completion.		*/
+	   		*/
+	
+	/**
+	 @class 	ActionQueueRepeat
+	 @brief 	Runs several actions in succession, repeated N times. 
+	 @details 	The attribute @e infinite can be flagged to true to repeat the action
+	 			sequence indefinitely. Also note that the attribute @e remaindingLoops 
+	 			is public, so the amount of loops to run can be altered. As with all 
+	 			actions, the ActionQueueRepeat and all it's actions are deleted upon completion.
+	 */
 	class ActionQueueRepeat : public ActionQueue {
 	public:
 		unsigned int			remaindingLoops; // Initialized at n, decremented for each loop
