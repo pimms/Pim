@@ -68,7 +68,7 @@
 		1948AE9716D18A2000FC93A2 /* PimVec2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1948AE7B16D18A2000FC93A2 /* PimVec2.cpp */; };
 		1948AE9816D18A2000FC93A2 /* PimWinStyle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1948AE7D16D18A2000FC93A2 /* PimWinStyle.cpp */; };
 		196BF36716D305D50089D2A2 /* libBox2D.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 196BF36616D305D50089D2A2 /* libBox2D.a */; };
-		19E401DD16EFCD3000FB8B2D /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19E401DC16EFCD3000FB8B2D /* libSDL2.a */; };
+		19E401EB16EFD3DE00FB8B2D /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C416D12385008F6C4F /* SDL2.framework */; };
 		19EB2D6016D12FCC0088B6B8 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5A16D12FCC0088B6B8 /* tinystr.cpp */; };
 		19EB2D6116D12FCC0088B6B8 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5C16D12FCC0088B6B8 /* tinyxml.cpp */; };
 		19EB2D6216D12FCC0088B6B8 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5E16D12FCC0088B6B8 /* tinyxmlerror.cpp */; };
@@ -141,7 +141,7 @@
 		193B45C116D12385008F6C4F /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfreetype.a; sourceTree = "<group>"; };
 		193B45C216D12385008F6C4F /* libpng15.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libpng15.framework; sourceTree = "<group>"; };
 		193B45C316D12385008F6C4F /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Ogg.framework; sourceTree = "<group>"; };
-		193B45C416D12385008F6C4F /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SDL.framework; sourceTree = "<group>"; };
+		193B45C416D12385008F6C4F /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SDL2.framework; sourceTree = "<group>"; };
 		193B45C516D12385008F6C4F /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Vorbis.framework; sourceTree = "<group>"; };
 		193B45D816D12487008F6C4F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		193B45DA16D1248B008F6C4F /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
@@ -207,7 +207,6 @@
 		1948AE7D16D18A2000FC93A2 /* PimWinStyle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimWinStyle.cpp; path = ../../../src/PimWinStyle.cpp; sourceTree = "<group>"; };
 		1948AE7E16D18A2000FC93A2 /* PimWinStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimWinStyle.h; path = ../../../src/PimWinStyle.h; sourceTree = "<group>"; };
 		196BF36616D305D50089D2A2 /* libBox2D.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBox2D.a; path = ../../../../../../Downloads/Box2D_v2.2.1/Build/Box2D/libBox2D.a; sourceTree = "<group>"; };
-		19E401DC16EFCD3000FB8B2D /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSDL2.a; sourceTree = "<group>"; };
 		19EB2D5916D12FCC0088B6B8 /* ft2build.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ft2build.h; sourceTree = "<group>"; };
 		19EB2D5A16D12FCC0088B6B8 /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinystr.cpp; sourceTree = "<group>"; };
 		19EB2D5B16D12FCC0088B6B8 /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinystr.h; sourceTree = "<group>"; };
@@ -224,6 +223,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19E401EB16EFD3DE00FB8B2D /* SDL2.framework in Frameworks */,
 				193B45E116D126F0008F6C4F /* Cocoa.framework in Frameworks */,
 				193B45DF16D12492008F6C4F /* libbz2.1.0.5.dylib in Frameworks */,
 				193B45DD16D1248E008F6C4F /* libz.1.1.3.dylib in Frameworks */,
@@ -234,7 +234,6 @@
 				193B45C816D12385008F6C4F /* Ogg.framework in Frameworks */,
 				193B45CA16D12385008F6C4F /* Vorbis.framework in Frameworks */,
 				196BF36716D305D50089D2A2 /* libBox2D.a in Frameworks */,
-				19E401DD16EFCD3000FB8B2D /* libSDL2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,7 +344,6 @@
 		193B456D16D1233C008F6C4F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				19E401DC16EFCD3000FB8B2D /* libSDL2.a */,
 				193B45E016D126F0008F6C4F /* Cocoa.framework */,
 				193B45DE16D12492008F6C4F /* libbz2.1.0.5.dylib */,
 				193B45DC16D1248E008F6C4F /* libz.1.1.3.dylib */,
@@ -354,7 +352,7 @@
 				193B45C116D12385008F6C4F /* libfreetype.a */,
 				193B45C216D12385008F6C4F /* libpng15.framework */,
 				193B45C316D12385008F6C4F /* Ogg.framework */,
-				193B45C416D12385008F6C4F /* SDL.framework */,
+				193B45C416D12385008F6C4F /* SDL2.framework */,
 				193B45C516D12385008F6C4F /* Vorbis.framework */,
 			);
 			name = Frameworks;
@@ -624,7 +622,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks/,
+					"\"$(SRCROOT)\"",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -633,6 +634,7 @@
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/freetype2\"",
 					/Users/pimms/Downloads/Box2D_v2.2.1,
+					"\"$(SRCROOT)/../../../src/dep/include/SDL-2.0.0-6940/\"",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -648,10 +650,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks/,
+					"\"$(SRCROOT)\"",
+				);
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/freetype2\"",
 					/Users/pimms/Downloads/Box2D_v2.2.1,
+					"\"$(SRCROOT)/../../../src/dep/include/SDL-2.0.0-6940/\"",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
