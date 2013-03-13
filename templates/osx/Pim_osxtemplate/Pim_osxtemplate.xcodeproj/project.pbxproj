@@ -29,7 +29,6 @@
 		192D132D16D2FA8900AE197E /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D131116D2FA8900AE197E /* Player.cpp */; };
 		192D132E16D2FA8900AE197E /* Plunder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D131316D2FA8900AE197E /* Plunder.cpp */; };
 		192D132F16D2FA8900AE197E /* Underground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D131816D2FA8900AE197E /* Underground.cpp */; };
-		193B456416D1232B008F6C4F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193B456316D1232B008F6C4F /* main.cpp */; };
 		193B456616D1232B008F6C4F /* Pim_osxtemplate.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 193B456516D1232B008F6C4F /* Pim_osxtemplate.1 */; };
 		193B45C616D12385008F6C4F /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C116D12385008F6C4F /* libfreetype.a */; };
 		193B45C716D12385008F6C4F /* libpng15.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C216D12385008F6C4F /* libpng15.framework */; };
@@ -136,7 +135,6 @@
 		192D131816D2FA8900AE197E /* Underground.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Underground.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Underground.cpp; sourceTree = "<group>"; };
 		192D131916D2FA8900AE197E /* Underground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Underground.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Underground.h; sourceTree = "<group>"; };
 		193B456016D1232B008F6C4F /* Pim_osxtemplate */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Pim_osxtemplate; sourceTree = BUILT_PRODUCTS_DIR; };
-		193B456316D1232B008F6C4F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		193B456516D1232B008F6C4F /* Pim_osxtemplate.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Pim_osxtemplate.1; sourceTree = "<group>"; };
 		193B45C116D12385008F6C4F /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfreetype.a; sourceTree = "<group>"; };
 		193B45C216D12385008F6C4F /* libpng15.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libpng15.framework; sourceTree = "<group>"; };
@@ -324,7 +322,6 @@
 				192D133116D2FE0200AE197E /* Box2D */,
 				192D133016D2FDF300AE197E /* Source */,
 				19EB2DB816D133A20088B6B8 /* Resources */,
-				193B456316D1232B008F6C4F /* main.cpp */,
 				193B456516D1232B008F6C4F /* Pim_osxtemplate.1 */,
 			);
 			name = PLUNDER;
@@ -497,7 +494,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				193B456416D1232B008F6C4F /* main.cpp in Sources */,
 				193B45E416D1276C008F6C4F /* SDLMain.m in Sources */,
 				19EB2D6016D12FCC0088B6B8 /* tinystr.cpp in Sources */,
 				19EB2D6116D12FCC0088B6B8 /* tinyxml.cpp in Sources */,
