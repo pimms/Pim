@@ -44,17 +44,17 @@ If you have your new PIM-project open, close Visual Studio 2012 and try again,
 Open your project properties. In the top-left corner, set the 'Configuration'-tab to "All".
 
 Create a new empty Win32 project. Add to 'Linker -> General -> Additional Library Directories':
-	$(PIM_HOME)\lib\$(Configuration);
+		$(PIM_HOME)\lib\$(Configuration);
 
 Add to 'Linker -> Input -> Additional Dependencies':
-	PIM.lib;OpenGL32.lib;
+		PIM.lib;OpenGL32.lib;
 
 Add to 'C/C++ -> General -> Additional Include Directories':
-	$(PIM_HOME)\include;
+		$(PIM_HOME)\include;
 
 Set 'C/C++ -> Code Generation -> Runtime Library' to:
-	'Multithreaded Debug (MTd)'       for debug builds
-	'Multithreaded (MT)'              for release builds
+		'Multithreaded Debug (MTd)'       for debug builds
+		'Multithreaded (MT)'              for release builds
 
 You should be set.
 
