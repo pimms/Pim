@@ -50,6 +50,8 @@
 	#include "vorbis\codec.h"
 	#include "vorbis\vorbisfile.h"
 #elif defined __APPLE__
+	#include <sys/time.h>
+
 	// OpenGL
 	#include <OpenGL/OpenGL.h>
 	#include <OpenGL/gl3.h>

@@ -27,6 +27,12 @@ namespace Pim {
 	class GameNode;
 	class Layer;
 	class Scene;
+	
+#ifdef WIN32
+	typedef long long unsigned int 		Tick;
+#elif defined(__APPLE__)
+	typedef long double 				Tick;
+#endif
 
 	class GameControl {
 	private:
@@ -80,7 +86,7 @@ namespace Pim {
 		float					maxDelta;
 		bool					sleepNextFrame;
 		float					sleepTime;
-		long long unsigned int	ticks;
+		Tick 					ticks;
 		WinStyle::CreationData	winData;
 		int						actualWinWidth;		// The values in winData does NOT apply if
 		int						actualWinHeight;	// the window style is BFS. Hence, these two.
