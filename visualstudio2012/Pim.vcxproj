@@ -61,7 +61,7 @@
       <AdditionalIncludeDirectories>..\src\dep\include\SDL-2.0.0-6940;..\src\dep\include\OpenAL-1.1;..\src\dep\include\libogg-1.3.0;..\src\dep\include\tinyxml\;..\src\dep\include\libvorbis-1.3.3;..\src\dep\include\freetype-2.1.10;..\src\dep\include\glew-1.9.0;..\src\dep\include\lpng1512</AdditionalIncludeDirectories>
       <CompileAsManaged>false</CompileAsManaged>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <TreatWarningAsError>false</TreatWarningAsError>
       <OpenMPSupport>true</OpenMPSupport>
@@ -96,7 +96,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>..\src\dep\include\SDL-2.0.0-6940;..\src\dep\include\OpenAL-1.1;..\src\dep\include\libogg-1.3.0;..\src\dep\include\tinyxml\;..\src\dep\include\libvorbis-1.3.3;..\src\dep\include\freetype-2.1.10;..\src\dep\include\glew-1.9.0;..\src\dep\include\lpng1512</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
