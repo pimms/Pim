@@ -1,4 +1,4 @@
-PIM Alpha 0.9
+PIM Alpha v0.9
 =============
 
 Pim is a 2D engine for Windows, with OSX and Linux support tagging along at some point in the future.
@@ -25,21 +25,21 @@ If you wish to contribute and develop for PIM, fork the repo and check out the i
 to do.
 
 
-Your first project
-==================
+---
 
-### Windows
+# Windows Setup
 
 For the time being, Visual Studio 2012 is required to link / build PIM.
 
 Download PIM into any folder. Open up a command prompt, and run the following command. Notice the
 "/bin" at the end.
+
 	setx PIM_HOME dir/to/PIM/bin
 
 If you have your new PIM-project open, close Visual Studio 2012 and try again,
 
 
-# Create and configure new project
+## Create and configure new project
 
 Open your project properties. In the top-left corner, set the 'Configuration'-tab to "All".
 
@@ -63,7 +63,7 @@ Set 'C/C++ -> Code Generation -> Runtime Library' to:
 You should be set.
 
 
-# Slap in some code
+## Slap in some code
 
 If you created an empty project, add a new cpp-file. Add the following code to it. If you get
 any errors, go over the previous steps and ensure you've followed them correctly.
@@ -101,9 +101,9 @@ any errors, go over the previous steps and ensure you've followed them correctly
 		return 0;
 	}
 
+---
 
-
-### OSX
+# OSX Setup
 
 The OSX-version of PIM is currently too early in development for anyone to bother. Alpha version 1.0
 will have full OSX support and premade templates for Win and OSX.
@@ -111,6 +111,7 @@ will have full OSX support and premade templates for Win and OSX.
 Should you absolutely insist, remove all files in the "PLUNDER"-directory and add the code from the 
 last step of the Windows-setup tutorial. 
 
+---
 
 Credits
 =======
