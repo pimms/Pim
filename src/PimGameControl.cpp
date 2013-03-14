@@ -15,8 +15,9 @@
 #include <iostream>
 #include <ctime>
 
-#ifndef WIN32
+#ifdef __APPLE__
 	#include <unistd.h>
+	#include <pthread.h>
 #endif
 
 namespace Pim {
@@ -42,9 +43,10 @@ namespace Pim {
 		maxDelta		= 0.f;
 		sleepNextFrame	= false;
 		sleepTime		= 0.f;
-		ticks 			= 0;
 
-#ifdef WIN32
+#ifdef WIN32 /* Windows specific initialization */
+		ticks 			= clock();
+		
 		// Get the module path
 		char path[260] = { '\0' };
 		GetModuleFileName(NULL, path, 260);
@@ -62,8 +64,14 @@ namespace Pim {
 		
 		modulePath = path;
 		
-#elif defined __APPLE__
-		modulePath = "/";
+#elif defined __APPLE__ /* OSX specific initialization */
+		struct timeval time;
+		gettimeofday(&time, NULL);
+		ticks = Tick(time.tv_sec) + Tick(time.tv_usec / 1000000.0);
+		
+		modulePath = ".";
+		
+		
 #endif
 		
 		printf("Working directory:\n%s\n\n", modulePath.c_str());
@@ -471,7 +479,6 @@ namespace Pim {
 	*/
 	void GameControl::GameLoop() {
 		quit = false;
-		ticks = clock();
 
 		while (!quit) {
 			HandleEvents();
@@ -545,8 +552,10 @@ namespace Pim {
 		 *  next delta time.
 		 */
 
+#ifdef WIN32
 		clock_t prepoll = clock();
-
+#endif
+		
 		SDL_Event event;
 
 		while (SDL_PollEvent(&event)) {
@@ -647,10 +656,12 @@ namespace Pim {
 			}
 		}
 
+#ifdef WIN32
 		clock_t postpoll = clock();
 		if (postpoll - prepoll > 3) {
 			ticks += (postpoll - prepoll);
 		}
+#endif
 	}
 
 	/*
@@ -723,18 +734,51 @@ namespace Pim {
 	/*
 	=====================
 	GameControl::CalculateDeltaTime
+	 
+	WINDOWS IMPLEMENTATION
+	 
+	The Windows implementation uses the clock()-function to
+	calculate seconds since the application's launch.
 	=====================
 	*/
+#ifdef WIN32
 	float GameControl::CalculateDeltaTime() {
 		clock_t  newTick = clock();
 		
-		float dt = ((float)(newTick - ticks)) / CLOCKS_PER_SEC;
-//		printf("%f  (%llu)\n", dt, (newTick-ticks));
+		float dt = float(newTick - ticks) / CLOCKS_PER_SEC;
 		
 		ticks = newTick;
 		
 		return dt;
 	}
+#endif
+	
+	/*
+	=====================
+	GameControl::CalculateDeltaTime
+	
+	OS X IMPLEMENTATION    (UNDER CONSTRUCTION)
+	 
+	The OSX implementation uses the <sys/time> library to calculate
+	the delta time using the UNIX timestamp.
+	 
+	The delta time calculated from clock() by some fault wrong on OSX.
+	This method is less efficient, but more precise.
+	=====================
+	*/
+#ifdef __APPLE__	
+	float GameControl::CalculateDeltaTime() {
+		struct timeval time;
+		gettimeofday(&time, NULL);
+		
+		Tick newTick = Tick(time.tv_sec) + Tick(time.tv_usec / 1000000.0);
+		float dt = newTick - ticks;
+		
+		ticks = Tick(time.tv_sec) + Tick(time.tv_usec / 1000000.0);
+		
+		return dt;
+	}
+#endif
 
 	/*
 	==================
