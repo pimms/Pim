@@ -1,185 +1,111 @@
-0.5 changelog
-==============
+PIM Alpha 0.9
+=============
 
-The following enum's accessibility has been altered:
->		Text::TextAlignment  has been changed to  Label::TextAlignment
->
->		Key::KeyCode  has been changed to  KeyEvent::KeyCode
->
->		Mouse::MouseButton  has been changed to  MouseEvent::MouseButton
->
->		Layer::loadResources() is now called 100% automatically 
->		when adding a layer to a scene.
+Pim is a 2D engine for Windows, with OSX and Linux support tagging along at some point in the future.
+This engine is as much a learning project as a work in progress, and should be treated as such. If
+you're looking for a game engine for a professional game, you should look elsewhere.
 
-The following classes have been added:
-	
->		Pim::Button
->			A button class. It requires sprites for the different states it
->			can have (normal, hovered, pressed, deactivated), and is quite
->			versatile.
-
->		Pim::Slider
->			The Slider class utilizes a Pim::Button as the slider handle, and
->			as such it requires the same state-sprites as the Button-class. In
->			addition to this, it requires a background sprite and two vectors.
-
->		Pim::Scene
->			The new top-level node. Scene-objects are primarily layer-handlers,
->			and it is aimed to provide a more intuitive interface for dynamic
->			layer changing and hierarchy logic. The Scene objects in themselves
->			does absolutely nothing. The Scene class has a "loadResources()" method
->			you should utilize to load your resources. It is called automatically 
->			by the game controller when the Scene is set as the main scene. 
-
-The engine hierarchy has been altered slightly. GameControl can no longer
-work when only passed a layer - it must now be passed an instance of the
-new class "Pim::Scene". This should make the engine more flexible and 
-intuitive when it comes to game logic, layer hierarchy and HUD / UI.
-Note that only one scene can be active at any given time.
-
-The setup tutorial in the bottom section of this document has been altered
-to reflect all new changes.
+The structure of PIM is very similar to that of Cocos2D, wherein all game objects are nodes in a tree
+with a Scene-object at the top of the hierarchy. See the documentation for more details.
 
 
-Pim setup tutorial
+Documentation
+=============
+
+Doxygen generated documents can be found at http://jstien.com/pimdoc. Tutorials and examples are few
+and rare, but if you read about GameControl, Scene, Layer and Sprite you should know enough to get 
+started. Any inquiries regarding poor documentation and/or questions regarding the engine may be 
+directed to joakim.stien@gmail.com. I will happily aid you as best I can.
+
+
+Contributions
+=============
+
+If you wish to contribute and develop for PIM, fork the repo and check out the issue-list for stuff
+to do.
+
+
+Your first project
 ==================
 
-Getting, preparing and setting up Pim is quite painless if you got some clue of what you're doing.
+### Windows
+
+For the time being, Visual Studio 2012 is required to link / build PIM.
+
+Download PIM into any folder. Open up a command prompt, and run the following command. Notice the
+"/bin" at the end.
+	setx PIM_HOME dir/to/PIM/bin
+
+If you have your new PIM-project open, close Visual Studio 2012 and try again,
 
 
-## Important notice ##
- 
-Currently, you are only able to link to the Pim binaries if you're using Visual
-Studio 2012. If you wish to use Pim with a previous version of Pim, you have to
-build Pim yourself from source. All the dependencies are included in the "src"
-directory, and it shouldn't be too painful. The instructions for building Pim
-from source is lower in this document.
+# Create and configure new project
+
+Open your project properties. In the top-left corner, set the 'Configuration'-tab to "All".
+
+Create a new empty Win32 project. Add to 'Linker -> General -> Additional Library Directories':
+	$(PIM_HOME)\lib\$(Configuration);
+
+Add to 'Linker -> Input -> Additional Dependencies':
+	PIM.lib;OpenGL32.lib;
+
+Add to 'C/C++ -> General -> Additional Include Directories':
+	$(PIM_HOME)\include;
+
+Set 'C/C++ -> Code Generation -> Runtime Library' to:
+	'Multithreaded Debug (MTd)'       for debug builds
+	'Multithreaded (MT)'              for release builds
+
+You should be set.
 
 
-## 1. Downloading Pim ##
+# Slap in some code
 
-Click the "ZIP" button located somewhere above - or clone the repository via git. 
-Put the entire folder somewhere easily locatable. If you're cloning from github, 
-the default github-path will ensure that when you clone future updates, all your
-project use the updated header files and binaries.
+If you created an empty project, add a new cpp-file. Add the following code to it. If you get
+any errors, go over the previous steps and ensure you've followed them correctly.
 
+	#include "Pim.h"
 
-## 2. Setting the PIM_HOME variable ##
+	using namespace Pim;
 
-Start off by opening the command line (open cmd.exe), and type the following command:
->setx PIM_HOME  [somedirectory]\Pim\bin
+	class TestLayer : public Layer {
+	public:
+		void LoadResources() {
+			// Load sprites etc. here
 
-The path must be the parent folder of the "include" and the "lib" folders, which by default
-is located in the "bin" directory. $(PIM_HOME)\include should be the folder of the header files.
-
-
-## 3. Creating a new Pim project ##
-
-You could either use the provided "pim_template.zip" file to use a project template, or you
-could create a project from existing files. If you're using the template, you can stop reading.
-Otherwise, stay a while and listen.
-
-Create a new Win32 console application. That's it for now. Let's get linkin'.
-
-
-## 4. Linking to Pim ##
-
-Open up the project property-page by right clicking on the project name and select "properties".
-
-In the top left corner, select "All Configurations" from the Configuration selection menu.
-
-Open the project properties. Under the "C/C++"->"General" tab, add the following path
-to the "Additional include directories"-field:
-
->$(PIM_HOME)\include;
-
-Great. Now head to the "Linker"->"General" tab, and add the following path to the
-"Additional library directories"-field:
-
->$(PIM_HOME)\lib;
-
-Fantastic! Now set the Configuration selection menu to "Debug". 
-
-Under the "Linker"->"Input" tab, add the following to the "Additional
-dependencies":
-
->OpenGL32.lib;Pim_d.lib;
-
-Change the Configuration selection to "Release", and add the following under the 
-"Linekr"->"Input" tab:
-
->OpenGL32.lib;Pim.lib;
-
-And you're ALMOST good to go!
-
-Finally under the project properties, navigate yourself to "C/C++"->"Code Generation".
-Under the "Runtime Library" pane, set the value to be "/MTd" for the Debug Configuration,
-and "/MT" for the Release Configuration. If you're getting spammed with error messages,
-that is probably the reason.
-
-
-## 5. Your first project ##
-
-The following snippet will quickly throw an image up to the screen:
-
-		#include "Pim.h"            // Include the Pim library  
-		#include <math.h>           // need cosf and sinf
-
-		class MyPimLayer : public Pim::Layer                    // Our Layer-class
-		{
-			void update(float dt)                               // Called every frame if you listen to the frame
-			{
-				time += dt;
-
-				mySprite->scale = Pim::Vec2(
-					1.f + cosf(time),
-					1.f + sinf(time)
-				);
-			}
-			void loadResources()                                // Use this method to instantiate your objects
-			{
-				time = 0.f;
-
-				mySprite = new Pim::Sprite("image.png");        // Only PNG's are supported
-				mySprite->position = Pim::Vec2(300.f, 200.f);
-				addChild(mySprite);
-
-				listenFrame();                                  // Schedule self for updates (each frame)
-			}
-
-			float time;
-			Pim::Sprite *mySprite;
-		};
-
-		class MyScene : public Pim::Scene                       // Our Scene-class
-		{
-			void loadResources()                                // Called by the GameControl-object
-			{
-				MyPimLayer *layer = new MyPimLayer;             // Instantiate a layer
-				addLayer(layer);                                // Add it to the scene. This calls "loadResources()" on the layer.
-			}
-		};
-
-		int main()
-		{
-			// The game controller is the main object of the Pim library
-			Pim::GameControl *gc = new Pim::GameControl;    
-
-			Pim::WinStyle::CreationData cd(     // The window describer
-				"Pim Application",              // Window title
-				600, 400,                       // Window resolution
-				Pim::WinStyle::WINDOWED         // Window style
-				);
-
-			cd.forcedAspectRatio = true;        // Force AR. Does not stretch image, creates black borders
-			cd.aspectRatio = 3.f / 2.f;         // 4:3 aspect ratio
-
-			gc->go(new MyScene, cd);            // Hand control over to Pim. Send it the CreationData and an instance of MyScene.
-			delete gc;                          // Delete the game controller when the game quits.
-
-			return 0;
+			/*
+			Sprite *sprite = new Sprite("image.png");
+			AddChild(sprite);			// Layers need sprites
+			*/
 		}
+	};
 
+	class TestScene : public Scene {
+		void LoadResources() {
+			AddLayer(new TestLayer);	// Scenes need layers
+		}
+	};
+
+	// As PIM uses SDL, it's crucial that you include both
+	// parameters in main.
+	int main(int argc, char *argv[]) {
+		WinStyle::CreationData cd("PIM!", 800, 600, WinStyle::WINDOWED);
+		
+		GameControl gameControl;
+		gameControl.Go(new TestScene, cd);
+
+		return 0;
+	}
+
+
+
+### OSX
+
+The OSX-version of PIM is currently too early in development for anyone to bother. Alpha version 1.0
+will have full OSX support and premade templates for Win and OSX.
+
+Should you absolutely insist, remove all files in the "PLUNDER"-directory and add the code from the 
+last step of the Windows-setup tutorial. 
 
 
 Credits
@@ -195,6 +121,14 @@ http://www.opengl.org/
 
 License:
 http://www.sgi.com/products/software/opengl/license.html
+
+
+### SDL2.0 (6940)
+
+http://www.libsdl.org
+
+Liscense: 
+http://www.libsdl.org/license.php
 
 
 ### FreeType 2.1.10
@@ -254,7 +188,7 @@ License
 Pim is distributed freely under the BSD license. 
 
 
-Copyright (c) 2012, Joakim Nordstrand Stien
+Copyright (c) 2012-2013, Joakim Nordstrand Stien
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -266,7 +200,7 @@ modification, are permitted provided that the following conditions are met:
    documentation and/or other materials provided with the distribution.
 3. All advertising materials mentioning features or use of this software
    must display the following acknowledgement:
-   This product includes software developed by Joakim Stien.
+   Powered by PIM
 4. Neither the name of the copyright holder nor the
    names of its contributors may be used to endorse or promote products
    derived from this software without specific prior written permission.

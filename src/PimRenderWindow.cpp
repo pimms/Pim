@@ -116,6 +116,7 @@ namespace Pim {
 			return false;
 		}
 
+#ifdef _DEBUG
 		/* Get the renderer information */
 		SDL_RendererInfo info;
 		SDL_GetRendererInfo(renderer, &info);
@@ -125,6 +126,7 @@ namespace Pim {
 			system("pause");
 			exit(1);
 		}
+#endif
 
 		SDL_JoystickEventState(SDL_ENABLE);
 
