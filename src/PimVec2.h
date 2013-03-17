@@ -5,8 +5,10 @@
 namespace Pim {
 	/**
 	 @class 		Vec2
-	 @brief 		A 2-dimensional vector. Used for positioning.
+	 @brief 		A 2-dimensional vector.
 	 */
+
+	struct Color;
 	
 	class Vec2 {
 	public:
@@ -20,8 +22,9 @@ namespace Pim {
 		static Vec2			Interpolate(Vec2 source, Vec2 dest, float factor);
 		Vec2				RotateAroundPoint(const Vec2 &pt, const float a) const;
 		Vec2				RotateDegrees(const float a) const;
-		float				AngleBetween360(const Vec2 &other) const;	// Return range [0-360]
-		float				AngleBetween(const Vec2 &other) const;		// Return range [-180-180]
+		float				AngleBetween360(const Vec2 &other) const;
+		float				AngleBetween(const Vec2 &other) const;
+		float				Angle() const;
 		float				Dot(const Vec2 &other) const;
 		float				Cross(const Vec2 &other) const;
 		Vec2				Normalize() const;
@@ -43,7 +46,7 @@ namespace Pim {
 		void				operator/=(float den);
 	};
 
-	
+
 	/**
 	 @struct 		Color
 	 @brief 		Defines a 4f color.
@@ -142,4 +145,21 @@ namespace Pim {
 
 	typedef Rect_t<int>		Rect;		// Rect_t<int> is used internally by default
 	typedef Rect_t<float>	Rectf;
+
+
+
+	/**
+	@fn				Vec2::AngleBetween360
+	@brief			Returns the angle between @e this and @e other. The return range is [0, 360].
+	*/
+
+	/**
+	@fn				Vec2::AngleBetween
+	@brief			Returns the angle between @e this and @e other. The return range is [-180, 180].
+	*/
+
+	/**
+	@fn				Vec2::Angle
+	@brief			Returns the angle between @e this and [1.0, 0.0]. The return range is [-180, 180].
+	*/
 }

@@ -152,9 +152,9 @@ namespace Pim {
 	=====================
 	*/
 	void MouseEvent::Reset() {
-		position	= Vec2(0.f,0.f);
-		relPosition = Vec2(0.f,0.f);
-		dirty		= false;
+		position		= Vec2(0.f,0.f);
+		lastPosition	= Vec2(0.f,0.f);
+		dirty			= false;
 		
 		for (int i=0; i<7; i++) {
 			keys[i]		= false;
@@ -176,6 +176,9 @@ namespace Pim {
 				dirty = true;
 			}
 		}
+
+		lastPosition = position;
+
 	}
 
 	/*
@@ -184,7 +187,6 @@ namespace Pim {
 	=====================
 	*/
 	void MouseEvent::MouseMoved(Vec2 pos) {
-		relPosition = pos;
 		position = pos;
 	}
 
@@ -223,7 +225,9 @@ namespace Pim {
 	=====================
 	*/
 	Vec2 MouseEvent::GetRelative() const {
-		return relPosition;
+		return (position - lastPosition) 
+				* GameControl::GetSingleton()->GetCoordinateFactor()
+				* Vec2(1.f, -1.f);
 	}
 
 
@@ -613,9 +617,6 @@ namespace Pim {
 
 		// dispatch mouse..
 		if (mouseEvent.dirty) {
-			mouseEvent.relPosition = mouseEvent.position - mouseEvent.lastPosition;
-			mouseEvent.lastPosition = mouseEvent.position;
-
 			for (unsigned int i=0; i<ml.size(); i++) {
 				ml[i]->OnMouseEvent(mouseEvent);
 			}
@@ -637,9 +638,6 @@ namespace Pim {
 	=====================
 	*/
 	void Input::DispatchPaused(GameNode *n) {
-		mouseEvent.relPosition = mouseEvent.position - mouseEvent.lastPosition;
-		mouseEvent.lastPosition = mouseEvent.position;
-
 		bool controller = contEvent.IsConnected();
 
 		// Dispatch to the pause-layer regardless of what has occured

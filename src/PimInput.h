@@ -92,7 +92,6 @@ namespace Pim {
 		bool							keys[7];
 		bool							fresh[7];
 		Vec2							position;
-		Vec2							relPosition;
 		Vec2							lastPosition;
 
 										MouseEvent();

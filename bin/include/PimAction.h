@@ -1,7 +1,8 @@
 #pragma once
 
-#include "PimGameNode.h"
 #include <queue>
+
+#include "PimGameNode.h"
 
 namespace Pim {
 	class ActionQueue;

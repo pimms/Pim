@@ -2,56 +2,6 @@
 #include "PimVec2.h"
 
 namespace Pim {
-
-	/*
-	=====================
-	Color::Interpolate
-
-	Given two colors A and B and a factor F, the returned color is:
-	A - ((A-B) * F)
-
-	Color source and Color dest should be valid colors, and factor should be between 0 and 1.
-	=====================
-	*/
-	Color Color::Interpolate(const Color &source, const Color &dest, float factor) {
-		return Color(
-			source.r - (source.r-dest.r) * factor,
-			source.g - (source.g-dest.g) * factor,
-			source.b - (source.b-dest.b) * factor,
-			source.a - (source.a-dest.a) * factor
-			);
-	}
-
-	/*
-	=====================
-	Color::Color
-	=====================
-	*/
-	Color::Color(const float rr, const float gg, const float bb, const float aa) {
-		r	= rr;
-		g	= gg;
-		b	= bb;
-		a	= aa;
-	}
-	
-	/*
-	=====================
-	Color::Color
-	=====================
-	*/
-	Color::Color() {
-		r	= 0.f;
-		g	= 0.f;
-		b	= 0.f;
-		a	= 0.f;
-	}
-
-
-
-
-
-
-
 	/*
 	=====================
 	Vec2::Vec2
@@ -133,7 +83,7 @@ namespace Pim {
 	=====================
 	*/
 	float Vec2::AngleBetween360(const Vec2 &other) const {
-		float a = (atan2f(other.y, other.x) - atan2f(y, x)) * (180.f / M_PI);
+		float a = (atan2f(y, x) - atan2f(other.y, other.x)) * (180.f / M_PI);
 
 		if (a < 0.f) {
 			a += 360.f;
@@ -157,6 +107,15 @@ namespace Pim {
 		}
 
 		return angle;
+	}
+
+	/*
+	=====================
+	Vec2::Angle
+	=====================
+	*/
+	float Vec2::Angle() const {
+		return atan2f(y, x) * (180.f / M_PI);
 	}
 
 	/*
@@ -340,5 +299,49 @@ namespace Pim {
 		if (den == 0.f) den = 0.000001f;
 		x /= den;
 		y /= den;
+	}
+
+
+	/*
+	=====================
+	Color::Interpolate
+
+	Given two colors A and B and a factor F, the returned color is:
+	A - ((A-B) * F)
+
+	Color source and Color dest should be valid colors, and factor should be between 0 and 1.
+	=====================
+	*/
+	Color Color::Interpolate(const Color &source, const Color &dest, float factor) {
+		return Color(
+			source.r - (source.r-dest.r) * factor,
+			source.g - (source.g-dest.g) * factor,
+			source.b - (source.b-dest.b) * factor,
+			source.a - (source.a-dest.a) * factor
+			);
+	}
+
+	/*
+	=====================
+	Color::Color
+	=====================
+	*/
+	Color::Color(const float rr, const float gg, const float bb, const float aa) {
+		r	= rr;
+		g	= gg;
+		b	= bb;
+		a	= aa;
+	}
+	
+	/*
+	=====================
+	Color::Color
+	=====================
+	*/
+	Color::Color() {
+		r	= 0.f;
+		g	= 0.f;
+		b	= 0.f;
+		a	= 0.f;
 	}
 }

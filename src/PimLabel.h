@@ -1,7 +1,6 @@
 #pragma once
 #include "PimGameNode.h"
 
-
 namespace Pim {
 	/**
 	 @class 		Label
