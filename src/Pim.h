@@ -30,3 +30,4 @@
 #include "PimRenderTexture.h"
 #include "PimLevelParser.h"
 #include "PimAction.h"
+#include "PimParticleSystem.h"
