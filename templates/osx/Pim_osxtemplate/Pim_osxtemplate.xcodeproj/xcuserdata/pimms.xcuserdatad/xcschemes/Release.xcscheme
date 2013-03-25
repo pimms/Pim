@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "193B455F16D1232B008F6C4F"
-               BuildableName = "Pim_osxtemplate"
+               BuildableName = "pim_demo"
                BlueprintName = "Pim_osxtemplate"
                ReferencedContainer = "container:Pim_osxtemplate.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "193B455F16D1232B008F6C4F"
-            BuildableName = "Pim_osxtemplate"
+            BuildableName = "pim_demo"
             BlueprintName = "Pim_osxtemplate"
             ReferencedContainer = "container:Pim_osxtemplate.xcodeproj">
          </BuildableReference>
@@ -52,7 +52,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "193B455F16D1232B008F6C4F"
-            BuildableName = "Pim_osxtemplate"
+            BuildableName = "pim_demo"
             BlueprintName = "Pim_osxtemplate"
             ReferencedContainer = "container:Pim_osxtemplate.xcodeproj">
          </BuildableReference>
@@ -70,7 +70,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "193B455F16D1232B008F6C4F"
-            BuildableName = "Pim_osxtemplate"
+            BuildableName = "pim_demo"
             BlueprintName = "Pim_osxtemplate"
             ReferencedContainer = "container:Pim_osxtemplate.xcodeproj">
          </BuildableReference>

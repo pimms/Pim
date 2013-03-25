@@ -7,29 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		192D131A16D2FA8900AE197E /* Actor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D12EA16D2FA8900AE197E /* Actor.cpp */; };
-		192D131B16D2FA8900AE197E /* BanditChest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D12EC16D2FA8900AE197E /* BanditChest.cpp */; };
-		192D131C16D2FA8900AE197E /* Chest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D12EE16D2FA8900AE197E /* Chest.cpp */; };
-		192D131D16D2FA8900AE197E /* Door.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D12F016D2FA8900AE197E /* Door.cpp */; };
-		192D131E16D2FA8900AE197E /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D12F216D2FA8900AE197E /* Entity.cpp */; };
-		192D131F16D2FA8900AE197E /* GameLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D12F416D2FA8900AE197E /* GameLayer.cpp */; };
-		192D132016D2FA8900AE197E /* GameOverLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D12F616D2FA8900AE197E /* GameOverLayer.cpp */; };
-		192D132116D2FA8900AE197E /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D12F816D2FA8900AE197E /* GameScene.cpp */; };
-		192D132216D2FA8900AE197E /* Guard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D12FA16D2FA8900AE197E /* Guard.cpp */; };
-		192D132316D2FA8900AE197E /* GuardHelperObjects.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D12FC16D2FA8900AE197E /* GuardHelperObjects.cpp */; };
-		192D132416D2FA8900AE197E /* HighScoreLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D12FE16D2FA8900AE197E /* HighScoreLayer.cpp */; };
-		192D132516D2FA8900AE197E /* HUDLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D130016D2FA8900AE197E /* HUDLayer.cpp */; };
-		192D132616D2FA8900AE197E /* Lever.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D130216D2FA8900AE197E /* Lever.cpp */; };
-		192D132716D2FA8900AE197E /* LootBag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D130516D2FA8900AE197E /* LootBag.cpp */; };
-		192D132816D2FA8900AE197E /* MainMenuLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D130716D2FA8900AE197E /* MainMenuLayer.cpp */; };
-		192D132916D2FA8900AE197E /* MainMenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D130916D2FA8900AE197E /* MainMenuScene.cpp */; };
-		192D132A16D2FA8900AE197E /* MenuButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D130B16D2FA8900AE197E /* MenuButton.cpp */; };
-		192D132B16D2FA8900AE197E /* NameInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D130D16D2FA8900AE197E /* NameInput.cpp */; };
-		192D132C16D2FA8900AE197E /* PathNodeManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D130F16D2FA8900AE197E /* PathNodeManager.cpp */; };
-		192D132D16D2FA8900AE197E /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D131116D2FA8900AE197E /* Player.cpp */; };
-		192D132E16D2FA8900AE197E /* Plunder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D131316D2FA8900AE197E /* Plunder.cpp */; };
-		192D132F16D2FA8900AE197E /* Underground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 192D131816D2FA8900AE197E /* Underground.cpp */; };
-		193B456616D1232B008F6C4F /* Pim_osxtemplate.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 193B456516D1232B008F6C4F /* Pim_osxtemplate.1 */; };
 		193B45C616D12385008F6C4F /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C116D12385008F6C4F /* libfreetype.a */; };
 		193B45C716D12385008F6C4F /* libpng15.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C216D12385008F6C4F /* libpng15.framework */; };
 		193B45C816D12385008F6C4F /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C316D12385008F6C4F /* Ogg.framework */; };
@@ -66,7 +43,14 @@
 		1948AE9616D18A2000FC93A2 /* PimSpriteBatchNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1948AE7916D18A2000FC93A2 /* PimSpriteBatchNode.cpp */; };
 		1948AE9716D18A2000FC93A2 /* PimVec2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1948AE7B16D18A2000FC93A2 /* PimVec2.cpp */; };
 		1948AE9816D18A2000FC93A2 /* PimWinStyle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1948AE7D16D18A2000FC93A2 /* PimWinStyle.cpp */; };
-		196BF36716D305D50089D2A2 /* libBox2D.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 196BF36616D305D50089D2A2 /* libBox2D.a */; };
+		197FD03F16F5E69100C17503 /* ActionLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197FD02E16F5E69100C17503 /* ActionLayer.cpp */; };
+		197FD04016F5E69100C17503 /* DemoScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197FD03016F5E69100C17503 /* DemoScene.cpp */; };
+		197FD04116F5E69100C17503 /* HUDLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197FD03216F5E69100C17503 /* HUDLayer.cpp */; };
+		197FD04216F5E69100C17503 /* LightLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197FD03416F5E69100C17503 /* LightLayer.cpp */; };
+		197FD04316F5E69100C17503 /* ParticleLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197FD03616F5E69100C17503 /* ParticleLayer.cpp */; };
+		197FD04416F5E69100C17503 /* Pim_demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197FD03816F5E69100C17503 /* Pim_demo.cpp */; };
+		197FD04516F5E69100C17503 /* SoundLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197FD03916F5E69100C17503 /* SoundLayer.cpp */; };
+		197FD04716F5E69100C17503 /* WelcomeLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197FD03D16F5E69100C17503 /* WelcomeLayer.cpp */; };
 		19E401EB16EFD3DE00FB8B2D /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C416D12385008F6C4F /* SDL2.framework */; };
 		19EB2D6016D12FCC0088B6B8 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5A16D12FCC0088B6B8 /* tinystr.cpp */; };
 		19EB2D6116D12FCC0088B6B8 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5C16D12FCC0088B6B8 /* tinyxml.cpp */; };
@@ -81,61 +65,13 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				193B456616D1232B008F6C4F /* Pim_osxtemplate.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		192D12EA16D2FA8900AE197E /* Actor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Actor.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Actor.cpp; sourceTree = "<group>"; };
-		192D12EB16D2FA8900AE197E /* Actor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Actor.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Actor.h; sourceTree = "<group>"; };
-		192D12EC16D2FA8900AE197E /* BanditChest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BanditChest.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/BanditChest.cpp; sourceTree = "<group>"; };
-		192D12ED16D2FA8900AE197E /* BanditChest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BanditChest.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/BanditChest.h; sourceTree = "<group>"; };
-		192D12EE16D2FA8900AE197E /* Chest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Chest.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Chest.cpp; sourceTree = "<group>"; };
-		192D12EF16D2FA8900AE197E /* Chest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Chest.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Chest.h; sourceTree = "<group>"; };
-		192D12F016D2FA8900AE197E /* Door.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Door.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Door.cpp; sourceTree = "<group>"; };
-		192D12F116D2FA8900AE197E /* Door.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Door.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Door.h; sourceTree = "<group>"; };
-		192D12F216D2FA8900AE197E /* Entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Entity.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Entity.cpp; sourceTree = "<group>"; };
-		192D12F316D2FA8900AE197E /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Entity.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Entity.h; sourceTree = "<group>"; };
-		192D12F416D2FA8900AE197E /* GameLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameLayer.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/GameLayer.cpp; sourceTree = "<group>"; };
-		192D12F516D2FA8900AE197E /* GameLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameLayer.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/GameLayer.h; sourceTree = "<group>"; };
-		192D12F616D2FA8900AE197E /* GameOverLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameOverLayer.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/GameOverLayer.cpp; sourceTree = "<group>"; };
-		192D12F716D2FA8900AE197E /* GameOverLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameOverLayer.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/GameOverLayer.h; sourceTree = "<group>"; };
-		192D12F816D2FA8900AE197E /* GameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameScene.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/GameScene.cpp; sourceTree = "<group>"; };
-		192D12F916D2FA8900AE197E /* GameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameScene.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/GameScene.h; sourceTree = "<group>"; };
-		192D12FA16D2FA8900AE197E /* Guard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Guard.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Guard.cpp; sourceTree = "<group>"; };
-		192D12FB16D2FA8900AE197E /* Guard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Guard.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Guard.h; sourceTree = "<group>"; };
-		192D12FC16D2FA8900AE197E /* GuardHelperObjects.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GuardHelperObjects.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/GuardHelperObjects.cpp; sourceTree = "<group>"; };
-		192D12FD16D2FA8900AE197E /* GuardHelperObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GuardHelperObjects.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/GuardHelperObjects.h; sourceTree = "<group>"; };
-		192D12FE16D2FA8900AE197E /* HighScoreLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HighScoreLayer.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/HighScoreLayer.cpp; sourceTree = "<group>"; };
-		192D12FF16D2FA8900AE197E /* HighScoreLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HighScoreLayer.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/HighScoreLayer.h; sourceTree = "<group>"; };
-		192D130016D2FA8900AE197E /* HUDLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HUDLayer.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/HUDLayer.cpp; sourceTree = "<group>"; };
-		192D130116D2FA8900AE197E /* HUDLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HUDLayer.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/HUDLayer.h; sourceTree = "<group>"; };
-		192D130216D2FA8900AE197E /* Lever.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Lever.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Lever.cpp; sourceTree = "<group>"; };
-		192D130316D2FA8900AE197E /* Lever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Lever.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Lever.h; sourceTree = "<group>"; };
-		192D130416D2FA8900AE197E /* Loot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Loot.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Loot.h; sourceTree = "<group>"; };
-		192D130516D2FA8900AE197E /* LootBag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LootBag.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/LootBag.cpp; sourceTree = "<group>"; };
-		192D130616D2FA8900AE197E /* LootBag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LootBag.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/LootBag.h; sourceTree = "<group>"; };
-		192D130716D2FA8900AE197E /* MainMenuLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MainMenuLayer.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/MainMenuLayer.cpp; sourceTree = "<group>"; };
-		192D130816D2FA8900AE197E /* MainMenuLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainMenuLayer.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/MainMenuLayer.h; sourceTree = "<group>"; };
-		192D130916D2FA8900AE197E /* MainMenuScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MainMenuScene.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/MainMenuScene.cpp; sourceTree = "<group>"; };
-		192D130A16D2FA8900AE197E /* MainMenuScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainMenuScene.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/MainMenuScene.h; sourceTree = "<group>"; };
-		192D130B16D2FA8900AE197E /* MenuButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MenuButton.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/MenuButton.cpp; sourceTree = "<group>"; };
-		192D130C16D2FA8900AE197E /* MenuButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuButton.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/MenuButton.h; sourceTree = "<group>"; };
-		192D130D16D2FA8900AE197E /* NameInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NameInput.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/NameInput.cpp; sourceTree = "<group>"; };
-		192D130E16D2FA8900AE197E /* NameInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NameInput.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/NameInput.h; sourceTree = "<group>"; };
-		192D130F16D2FA8900AE197E /* PathNodeManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PathNodeManager.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/PathNodeManager.cpp; sourceTree = "<group>"; };
-		192D131016D2FA8900AE197E /* PathNodeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PathNodeManager.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/PathNodeManager.h; sourceTree = "<group>"; };
-		192D131116D2FA8900AE197E /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Player.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Player.cpp; sourceTree = "<group>"; };
-		192D131216D2FA8900AE197E /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Player.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Player.h; sourceTree = "<group>"; };
-		192D131316D2FA8900AE197E /* Plunder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plunder.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Plunder.cpp; sourceTree = "<group>"; };
-		192D131416D2FA8900AE197E /* Plunder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Plunder.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Plunder.h; sourceTree = "<group>"; };
-		192D131716D2FA8900AE197E /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Settings.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Settings.h; sourceTree = "<group>"; };
-		192D131816D2FA8900AE197E /* Underground.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Underground.cpp; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Underground.cpp; sourceTree = "<group>"; };
-		192D131916D2FA8900AE197E /* Underground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Underground.h; path = ../../../../../../Dropbox/PLUNDER_SRC/src/Underground.h; sourceTree = "<group>"; };
-		193B456016D1232B008F6C4F /* Pim_osxtemplate */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Pim_osxtemplate; sourceTree = BUILT_PRODUCTS_DIR; };
-		193B456516D1232B008F6C4F /* Pim_osxtemplate.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Pim_osxtemplate.1; sourceTree = "<group>"; };
+		193B456016D1232B008F6C4F /* pim_demo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pim_demo; sourceTree = BUILT_PRODUCTS_DIR; };
 		193B45C116D12385008F6C4F /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfreetype.a; sourceTree = "<group>"; };
 		193B45C216D12385008F6C4F /* libpng15.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libpng15.framework; sourceTree = "<group>"; };
 		193B45C316D12385008F6C4F /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Ogg.framework; sourceTree = "<group>"; };
@@ -204,7 +140,21 @@
 		1948AE7C16D18A2000FC93A2 /* PimVec2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimVec2.h; path = ../../../src/PimVec2.h; sourceTree = "<group>"; };
 		1948AE7D16D18A2000FC93A2 /* PimWinStyle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimWinStyle.cpp; path = ../../../src/PimWinStyle.cpp; sourceTree = "<group>"; };
 		1948AE7E16D18A2000FC93A2 /* PimWinStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimWinStyle.h; path = ../../../src/PimWinStyle.h; sourceTree = "<group>"; };
-		196BF36616D305D50089D2A2 /* libBox2D.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBox2D.a; path = ../../../../../../Downloads/Box2D_v2.2.1/Build/Box2D/libBox2D.a; sourceTree = "<group>"; };
+		197FD02E16F5E69100C17503 /* ActionLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActionLayer.cpp; sourceTree = "<group>"; };
+		197FD02F16F5E69100C17503 /* ActionLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionLayer.h; sourceTree = "<group>"; };
+		197FD03016F5E69100C17503 /* DemoScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DemoScene.cpp; sourceTree = "<group>"; };
+		197FD03116F5E69100C17503 /* DemoScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoScene.h; sourceTree = "<group>"; };
+		197FD03216F5E69100C17503 /* HUDLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HUDLayer.cpp; sourceTree = "<group>"; };
+		197FD03316F5E69100C17503 /* HUDLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUDLayer.h; sourceTree = "<group>"; };
+		197FD03416F5E69100C17503 /* LightLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LightLayer.cpp; sourceTree = "<group>"; };
+		197FD03516F5E69100C17503 /* LightLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LightLayer.h; sourceTree = "<group>"; };
+		197FD03616F5E69100C17503 /* ParticleLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleLayer.cpp; sourceTree = "<group>"; };
+		197FD03716F5E69100C17503 /* ParticleLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleLayer.h; sourceTree = "<group>"; };
+		197FD03816F5E69100C17503 /* Pim_demo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pim_demo.cpp; sourceTree = "<group>"; };
+		197FD03916F5E69100C17503 /* SoundLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundLayer.cpp; sourceTree = "<group>"; };
+		197FD03A16F5E69100C17503 /* SoundLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundLayer.h; sourceTree = "<group>"; };
+		197FD03D16F5E69100C17503 /* WelcomeLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WelcomeLayer.cpp; sourceTree = "<group>"; };
+		197FD03E16F5E69100C17503 /* WelcomeLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeLayer.h; sourceTree = "<group>"; };
 		19EB2D5916D12FCC0088B6B8 /* ft2build.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ft2build.h; sourceTree = "<group>"; };
 		19EB2D5A16D12FCC0088B6B8 /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinystr.cpp; sourceTree = "<group>"; };
 		19EB2D5B16D12FCC0088B6B8 /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinystr.h; sourceTree = "<group>"; };
@@ -213,7 +163,6 @@
 		19EB2D5E16D12FCC0088B6B8 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
 		19EB2D5F16D12FCC0088B6B8 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		19EB2D6416D12FFD0088B6B8 /* freetype2 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = freetype2; sourceTree = "<group>"; };
-		19EB2DB716D133940088B6B8 /* pimms.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pimms.png; path = ../pimms.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -231,79 +180,16 @@
 				193B45C716D12385008F6C4F /* libpng15.framework in Frameworks */,
 				193B45C816D12385008F6C4F /* Ogg.framework in Frameworks */,
 				193B45CA16D12385008F6C4F /* Vorbis.framework in Frameworks */,
-				196BF36716D305D50089D2A2 /* libBox2D.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		192D133016D2FDF300AE197E /* Source */ = {
-			isa = PBXGroup;
-			children = (
-				192D12EA16D2FA8900AE197E /* Actor.cpp */,
-				192D12EB16D2FA8900AE197E /* Actor.h */,
-				192D12EC16D2FA8900AE197E /* BanditChest.cpp */,
-				192D12ED16D2FA8900AE197E /* BanditChest.h */,
-				192D12EE16D2FA8900AE197E /* Chest.cpp */,
-				192D12EF16D2FA8900AE197E /* Chest.h */,
-				192D12F016D2FA8900AE197E /* Door.cpp */,
-				192D12F116D2FA8900AE197E /* Door.h */,
-				192D12F216D2FA8900AE197E /* Entity.cpp */,
-				192D12F316D2FA8900AE197E /* Entity.h */,
-				192D12F416D2FA8900AE197E /* GameLayer.cpp */,
-				192D12F516D2FA8900AE197E /* GameLayer.h */,
-				192D12F616D2FA8900AE197E /* GameOverLayer.cpp */,
-				192D12F716D2FA8900AE197E /* GameOverLayer.h */,
-				192D12F816D2FA8900AE197E /* GameScene.cpp */,
-				192D12F916D2FA8900AE197E /* GameScene.h */,
-				192D12FA16D2FA8900AE197E /* Guard.cpp */,
-				192D12FB16D2FA8900AE197E /* Guard.h */,
-				192D12FC16D2FA8900AE197E /* GuardHelperObjects.cpp */,
-				192D12FD16D2FA8900AE197E /* GuardHelperObjects.h */,
-				192D12FE16D2FA8900AE197E /* HighScoreLayer.cpp */,
-				192D12FF16D2FA8900AE197E /* HighScoreLayer.h */,
-				192D130016D2FA8900AE197E /* HUDLayer.cpp */,
-				192D130116D2FA8900AE197E /* HUDLayer.h */,
-				192D130216D2FA8900AE197E /* Lever.cpp */,
-				192D130316D2FA8900AE197E /* Lever.h */,
-				192D130416D2FA8900AE197E /* Loot.h */,
-				192D130516D2FA8900AE197E /* LootBag.cpp */,
-				192D130616D2FA8900AE197E /* LootBag.h */,
-				192D130716D2FA8900AE197E /* MainMenuLayer.cpp */,
-				192D130816D2FA8900AE197E /* MainMenuLayer.h */,
-				192D130916D2FA8900AE197E /* MainMenuScene.cpp */,
-				192D130A16D2FA8900AE197E /* MainMenuScene.h */,
-				192D130B16D2FA8900AE197E /* MenuButton.cpp */,
-				192D130C16D2FA8900AE197E /* MenuButton.h */,
-				192D130D16D2FA8900AE197E /* NameInput.cpp */,
-				192D130E16D2FA8900AE197E /* NameInput.h */,
-				192D130F16D2FA8900AE197E /* PathNodeManager.cpp */,
-				192D131016D2FA8900AE197E /* PathNodeManager.h */,
-				192D131116D2FA8900AE197E /* Player.cpp */,
-				192D131216D2FA8900AE197E /* Player.h */,
-				192D131316D2FA8900AE197E /* Plunder.cpp */,
-				192D131416D2FA8900AE197E /* Plunder.h */,
-				192D131716D2FA8900AE197E /* Settings.h */,
-				192D131816D2FA8900AE197E /* Underground.cpp */,
-				192D131916D2FA8900AE197E /* Underground.h */,
-			);
-			name = Source;
-			sourceTree = "<group>";
-		};
-		192D133116D2FE0200AE197E /* Box2D */ = {
-			isa = PBXGroup;
-			children = (
-				196BF36616D305D50089D2A2 /* libBox2D.a */,
-			);
-			name = Box2D;
-			sourceTree = "<group>";
-		};
 		193B455716D1232B008F6C4F = {
 			isa = PBXGroup;
 			children = (
 				193B456C16D12330008F6C4F /* Pim */,
-				193B456216D1232B008F6C4F /* PLUNDER */,
 				193B456116D1232B008F6C4F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -311,26 +197,29 @@
 		193B456116D1232B008F6C4F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				193B456016D1232B008F6C4F /* Pim_osxtemplate */,
+				193B456016D1232B008F6C4F /* pim_demo */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		193B456216D1232B008F6C4F /* PLUNDER */ = {
-			isa = PBXGroup;
-			children = (
-				192D133116D2FE0200AE197E /* Box2D */,
-				192D133016D2FDF300AE197E /* Source */,
-				19EB2DB816D133A20088B6B8 /* Resources */,
-				193B456516D1232B008F6C4F /* Pim_osxtemplate.1 */,
-			);
-			name = PLUNDER;
-			path = Pim_osxtemplate;
 			sourceTree = "<group>";
 		};
 		193B456C16D12330008F6C4F /* Pim */ = {
 			isa = PBXGroup;
 			children = (
+				197FD02E16F5E69100C17503 /* ActionLayer.cpp */,
+				197FD02F16F5E69100C17503 /* ActionLayer.h */,
+				197FD03016F5E69100C17503 /* DemoScene.cpp */,
+				197FD03116F5E69100C17503 /* DemoScene.h */,
+				197FD03216F5E69100C17503 /* HUDLayer.cpp */,
+				197FD03316F5E69100C17503 /* HUDLayer.h */,
+				197FD03416F5E69100C17503 /* LightLayer.cpp */,
+				197FD03516F5E69100C17503 /* LightLayer.h */,
+				197FD03616F5E69100C17503 /* ParticleLayer.cpp */,
+				197FD03716F5E69100C17503 /* ParticleLayer.h */,
+				197FD03816F5E69100C17503 /* Pim_demo.cpp */,
+				197FD03916F5E69100C17503 /* SoundLayer.cpp */,
+				197FD03A16F5E69100C17503 /* SoundLayer.h */,
+				197FD03D16F5E69100C17503 /* WelcomeLayer.cpp */,
+				197FD03E16F5E69100C17503 /* WelcomeLayer.h */,
 				19EB2D5816D12FB20088B6B8 /* Source */,
 				193B45CC16D123BA008F6C4F /* Other Dependencies */,
 				193B456D16D1233C008F6C4F /* Frameworks */,
@@ -435,14 +324,6 @@
 			name = Source;
 			sourceTree = "<group>";
 		};
-		19EB2DB816D133A20088B6B8 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				19EB2DB716D133940088B6B8 /* pimms.png */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -460,7 +341,7 @@
 			);
 			name = Pim_osxtemplate;
 			productName = Pim_osxtemplate;
-			productReference = 193B456016D1232B008F6C4F /* Pim_osxtemplate */;
+			productReference = 193B456016D1232B008F6C4F /* pim_demo */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -525,28 +406,14 @@
 				1948AE9616D18A2000FC93A2 /* PimSpriteBatchNode.cpp in Sources */,
 				1948AE9716D18A2000FC93A2 /* PimVec2.cpp in Sources */,
 				1948AE9816D18A2000FC93A2 /* PimWinStyle.cpp in Sources */,
-				192D131A16D2FA8900AE197E /* Actor.cpp in Sources */,
-				192D131B16D2FA8900AE197E /* BanditChest.cpp in Sources */,
-				192D131C16D2FA8900AE197E /* Chest.cpp in Sources */,
-				192D131D16D2FA8900AE197E /* Door.cpp in Sources */,
-				192D131E16D2FA8900AE197E /* Entity.cpp in Sources */,
-				192D131F16D2FA8900AE197E /* GameLayer.cpp in Sources */,
-				192D132016D2FA8900AE197E /* GameOverLayer.cpp in Sources */,
-				192D132116D2FA8900AE197E /* GameScene.cpp in Sources */,
-				192D132216D2FA8900AE197E /* Guard.cpp in Sources */,
-				192D132316D2FA8900AE197E /* GuardHelperObjects.cpp in Sources */,
-				192D132416D2FA8900AE197E /* HighScoreLayer.cpp in Sources */,
-				192D132516D2FA8900AE197E /* HUDLayer.cpp in Sources */,
-				192D132616D2FA8900AE197E /* Lever.cpp in Sources */,
-				192D132716D2FA8900AE197E /* LootBag.cpp in Sources */,
-				192D132816D2FA8900AE197E /* MainMenuLayer.cpp in Sources */,
-				192D132916D2FA8900AE197E /* MainMenuScene.cpp in Sources */,
-				192D132A16D2FA8900AE197E /* MenuButton.cpp in Sources */,
-				192D132B16D2FA8900AE197E /* NameInput.cpp in Sources */,
-				192D132C16D2FA8900AE197E /* PathNodeManager.cpp in Sources */,
-				192D132D16D2FA8900AE197E /* Player.cpp in Sources */,
-				192D132E16D2FA8900AE197E /* Plunder.cpp in Sources */,
-				192D132F16D2FA8900AE197E /* Underground.cpp in Sources */,
+				197FD03F16F5E69100C17503 /* ActionLayer.cpp in Sources */,
+				197FD04016F5E69100C17503 /* DemoScene.cpp in Sources */,
+				197FD04116F5E69100C17503 /* HUDLayer.cpp in Sources */,
+				197FD04216F5E69100C17503 /* LightLayer.cpp in Sources */,
+				197FD04316F5E69100C17503 /* ParticleLayer.cpp in Sources */,
+				197FD04416F5E69100C17503 /* Pim_demo.cpp in Sources */,
+				197FD04516F5E69100C17503 /* SoundLayer.cpp in Sources */,
+				197FD04716F5E69100C17503 /* WelcomeLayer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -618,6 +485,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CONFIGURATION_BUILD_DIR = ../../../demo/;
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks/,
 					"\"$(SRCROOT)\"",
@@ -638,7 +506,7 @@
 					"\"$(SRCROOT)/../../../../../Downloads/Box2D_v2.2.1/Build/Box2D\"",
 					"\"$(SRCROOT)/../../../../../Downloads/Box2D_v2.2.1/Build/Box2D\"",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = pim_demo;
 			};
 			name = Debug;
 		};
@@ -646,6 +514,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CONFIGURATION_BUILD_DIR = ../../../demo/;
 				FRAMEWORK_SEARCH_PATHS = (
 					/Library/Frameworks/,
 					"\"$(SRCROOT)\"",
@@ -661,7 +530,7 @@
 					"\"$(SRCROOT)/../../../../../Downloads/Box2D_v2.2.1/Build/Box2D\"",
 					"\"$(SRCROOT)/../../../../../Downloads/Box2D_v2.2.1/Build/Box2D\"",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = pim_demo;
 			};
 			name = Release;
 		};
