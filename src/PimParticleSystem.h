@@ -15,6 +15,9 @@ namespace Pim {
 	 				@e variance variable. The actual value of the particles will
 	 				be in the range [base, base+variance].
 	 
+	 				The ParticleSystem class is a Sprite derivative, and the 
+	 				texture loaded by Sprite is used as the particle texture.
+	 
 	 				A visual particle editor is a goal, but at the time not a 
 	 				priority.
 	 */
@@ -25,6 +28,13 @@ namespace Pim {
 		struct Vertex;
 
 	public:
+		enum PositionType {
+			RELATIVE,	// The particles will move WITH the system. Default.
+			ABSOLUTE	// The particles will move relatively to the point of
+						// their emission.
+		};
+		
+		PositionType 			positionType;
 		int						maxParticles;
 		float					emitRate;
 		float					emitAngle;
@@ -35,6 +45,8 @@ namespace Pim {
 		float					startSizeVariance;
 		float					endSize;
 		float					endSizeVariance;
+		float 					lifetime;
+		float 					lifetimeVariance;
 		Color					startColor;
 		Color					endColor;
 		Vec2					startPosition;
@@ -56,6 +68,7 @@ namespace Pim {
 		 				the struct does nothing on it's own.
 		 */
 		struct Particle {
+			Vec2 				spawnPos;	// Used with positionType ABSOLUTE
 			Vec2				position;
 			Vec2				velocity;
 			float				rotation;

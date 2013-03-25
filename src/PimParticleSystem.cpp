@@ -28,23 +28,25 @@ namespace Pim {
 	ParticleSystem::ParticleSystem(string texturePath)
 	: Sprite(texturePath) {
 		ListenFrame();
-
-		maxParticles			= 20000;
-		emitRate				= 100.f;
-		emitAngle				= 45.f;
-		emitAngleVariance		= 90.f;
-		speed					= 300.f;
+		
+		positionType 			= RELATIVE;
+		maxParticles			= 0;
+		emitRate				= 0.f;
+		emitAngle				= 0.f;
+		emitAngleVariance		= 0.f;
+		speed					= 0.f;
 		speedVariance			= 0.f;
-		startSize				= 90.f;
-		startSizeVariance		= 30.f;
-		endSize					= 10.f;
+		startSize				= 0.f;
+		startSizeVariance		= 0.f;
+		endSize					= 0.f;
 		endSizeVariance			= 0.f;
-		startColor				= Color(0.4f, 0.4f, 1.f, 1.f);
-		endColor				= Color(0.4f, 0.4f, 1.f, 0.f);
+		lifetime 				= 0.f;
+		lifetimeVariance		= 0.f;
+		startColor				= Color(0.f, 0.f, 0.f, 0.f);
+		endColor				= Color(0.f, 0.f, 0.f, 0.f);
 		startPosition			= Vec2(0.f, 0.f);
-		startPositionVariance	= Vec2(50.f, 0.f);
-		gravity					= Vec2(0.f, -1000.f);
-
+		startPositionVariance	= Vec2(0.f, 0.f);
+		gravity					= Vec2(0.f, 0.f);
 		timeSinceLastEmit		= 0.f;
 	}
 
@@ -55,23 +57,25 @@ namespace Pim {
 	*/
 	ParticleSystem::ParticleSystem() {
 		ListenFrame();
-
-		maxParticles			= 200;
-		emitRate				= 100.f;
-		emitAngle				= 90.f;
+		
+		positionType 			= RELATIVE;
+		maxParticles			= 0;
+		emitRate				= 0.f;
+		emitAngle				= 0.f;
 		emitAngleVariance		= 0.f;
-		speed					= 100.f;
-		speedVariance			= 100.f;
-		startSize				= 40.f;
-		startSizeVariance		= 30.f;
-		endSize					= 10.f;
+		speed					= 0.f;
+		speedVariance			= 0.f;
+		startSize				= 0.f;
+		startSizeVariance		= 0.f;
+		endSize					= 0.f;
 		endSizeVariance			= 0.f;
-		startColor				= Color(1.f, 0.f, 0.f, 1.f);
-		endColor				= Color(1.f, 0.f, 0.f, 1.f);
+		lifetime				= 0.f;
+		lifetimeVariance		= 0.f;
+		startColor				= Color(0.f, 0.f, 0.f, 0.f);
+		endColor				= Color(0.f, 0.f, 0.f, 0.f);
 		startPosition			= Vec2(0.f, 0.f);
-		startPositionVariance	= Vec2(50.f, 0.f);
+		startPositionVariance	= Vec2(0.f, 0.f);
 		gravity					= Vec2(0.f, 0.f);
-
 		timeSinceLastEmit		= 0.f;
 	}
 
@@ -91,13 +95,16 @@ namespace Pim {
 	void ParticleSystem::InitiateParticle(Particle &particle) {
 		particle.velocity = Vec2::UnitDegree(RandF(emitAngle, emitAngle+emitAngleVariance));
 		particle.velocity *= RandF(speed, speed+speedVariance);
-
+		
+		particle.spawnPos = GetLayerPosition();
 		particle.position = Vec2::Interpolate(
 			startPosition, 
 			startPosition + startPositionVariance,
 			(float)rand() / (float)RAND_MAX
 		);
-
+		
+		/* Initiate values */
+		particle.lifetime = RandF(lifetime, lifetime+lifetimeVariance);
 		particle.size = RandF(startSize, startSize+startSizeVariance);
 		particle.endSize = RandF(endSize, endSize+endSizeVariance);
 	}
@@ -114,13 +121,15 @@ namespace Pim {
 		particle.position += particle.velocity * dt;
 
 		particle.color = Color::Interpolate(
-			startColor, 
+			startColor,
 			endColor, 
 			particle.age / particle.lifetime
 		);
 
+		/* TODO: Include variance in the calculation */
 		// Interpolate the size based on age
-		particle.size = startSize - ((startSize-endSize) * (particle.age/particle.lifetime));
+		float f = particle.age / particle.lifetime;
+		particle.size = startSize * (1.f-f) + endSize * f;
 	}
 
 	/*
@@ -130,10 +139,15 @@ namespace Pim {
 	*/
 	void ParticleSystem::Update(float dt) {
 		timeSinceLastEmit += dt;
-		int diff = maxParticles - particles.size();
+		if (timeSinceLastEmit > emitRate) {
+			timeSinceLastEmit = emitRate;
+		}
+		
+		int diff = maxParticles - (int)particles.size();
 		
 		if (diff > 0) {
-			for (int i=0; i<diff && timeSinceLastEmit > (1.f/emitRate); i++) {
+			/* Create as many particles as we can this frame */
+			for (int i=0; i<diff && timeSinceLastEmit >= (1.f/emitRate); i++) {
 				Particle particle;
 				InitiateParticle(particle);
 
@@ -141,23 +155,30 @@ namespace Pim {
 				timeSinceLastEmit -= (1.f/emitRate);
 			}
 		} else if (diff < 0) {
+			/* We have too many particles */
 			if (-diff > particles.size()) {
+				/* Remove all */
 				particles.clear();
 			} else {
+				/* Remove the excess particles */
 				particles.erase(particles.end()+diff);
 			}
 		}
-
+	
 		for (unsigned i=0; i<particles.size(); i++) {
 			if (particles[i].age >= particles[i].lifetime) {
+				/* Erase 'dead' particles */
 				particles.erase(particles.begin() + i--);
 			} else {
+				/* Update 'living' particles */
 				UpdateParticle(particles[i], dt);
 			}
 		}
-
+		
+		/* Resize the vertices to match the new size */
 		vertices.resize(particles.size()*4, Vertex());
-
+		
+		/* Create vertex data for each particle */
 		for (unsigned i=0; i<particles.size(); i++) {
 			float vertCoordX = particles[i].size / 2.f;
 			float vertCoordY = particles[i].size / 2.f;
@@ -183,6 +204,14 @@ namespace Pim {
 			v3.position = particles[i].position + Vec2(-vertCoordX,  vertCoordY);
 			v3.color    = particles[i].color;
 			v3.texCoord = Vec2(0.f, 1.f);
+			
+			/* Add the spawn position if PositionType == ABSOLUTE */
+			if (positionType == ABSOLUTE) {
+				v0.position += particles[i].spawnPos;
+				v1.position += particles[i].spawnPos;
+				v2.position += particles[i].spawnPos;
+				v3.position += particles[i].spawnPos;
+			}
 		}
 	}
 
@@ -196,12 +225,15 @@ namespace Pim {
 
 		// Update view matrix
 		Vec2 fac = GameControl::GetSingleton()->GetCoordinateFactor();
-
 		glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
 		glRotatef(rotation, 0.f, 0.f, 1.f);
 
 		if (particles.size()) {
 			glPushMatrix();
+			
+			if (positionType == ABSOLUTE) {
+				glLoadIdentity();
+			}
 
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, texID);
@@ -218,13 +250,18 @@ namespace Pim {
 			glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &vertices[0].texCoord);
 			glColorPointer	 (4, GL_FLOAT, sizeof(Vertex), &vertices[0].color);
 
-			glDrawArrays(GL_QUADS, 0, vertices.size());
+			glDrawArrays(GL_QUADS, 0, (int)vertices.size());
 
 			glDisableClientState(GL_VERTEX_ARRAY);
 			glDisableClientState(GL_COLOR_ARRAY);
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 			glPopMatrix();
+		}
+		
+		OrderChildren();
+		for (unsigned int i=0; i<children.size(); i++) {
+			children[i]->Draw();
 		}
 
 		glPopMatrix();
