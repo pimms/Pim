@@ -130,6 +130,23 @@ namespace Pim {
 
 	/*
 	=====================
+	GameNode::ChildCount
+	
+	Sums up the child count and ChildCount() of all children.
+	=====================
+	*/
+	int GameNode::ChildCount() {
+		int count = (int)children.size();
+		
+		for (unsigned i=0; i<children.size(); i++) {
+			count += children[i]->ChildCount();
+		}
+		
+		return count;
+	}
+	
+	/*
+	=====================
 	GameNode::GetParent
 	===================== 
 	*/

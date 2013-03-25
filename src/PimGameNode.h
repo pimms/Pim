@@ -80,6 +80,7 @@ namespace Pim {
 		virtual void		AddChild(GameNode *ch);
 		virtual void		RemoveChild(GameNode *ch, const bool cleanup=true);
 		virtual void		RemoveAllChildren(const bool cleanup=true);
+		int 				ChildCount();
 		void				ListenInput();
 		void				UnlistenInput();
 		void				ListenKeys();

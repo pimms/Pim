@@ -60,7 +60,22 @@ namespace Pim {
 		// Return NULL by default. This will not pause the game.
 		return NULL;
 	}
-
+	
+	/*
+	=====================
+	Scene::ChildCount
+	=====================
+	*/
+	int Scene::ChildCount() {
+		int count = (int)layers.size();
+		
+		for (unsigned i=0; i<layers.size(); i++) {
+			count += layers[i]->ChildCount();
+		}
+		
+		return count;
+	}
+	
 	/*
 	=====================
 	Scene::DrawScene

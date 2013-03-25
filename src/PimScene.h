@@ -34,7 +34,8 @@ namespace Pim {
 		virtual					~Scene();
 		virtual void			Update(float dt){}	
 		virtual void			LoadResources() {}
-		virtual Layer*			PauseLayer();	
+		virtual Layer*			PauseLayer();
+		int 					ChildCount();
 		void					AddLayer(Layer *layer);
 		void					RemoveLayer(Layer *layer);
 		virtual void			ReloadTextures();
