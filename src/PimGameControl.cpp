@@ -485,7 +485,7 @@ namespace Pim {
 
 			// Get the DT
 			float dt = CalculateDeltaTime();
-			if (false && dt < maxDelta) {
+			if (dt < maxDelta) {
 #ifdef WIN32
 				Sleep(DWORD(ceil((maxDelta-dt)*1000.f)));
 				dt += CalculateDeltaTime();

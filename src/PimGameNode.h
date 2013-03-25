@@ -78,8 +78,9 @@ namespace Pim {
 		virtual Scene*		GetParentScene() const;
 		virtual Layer*		GetParentLayer();
 		virtual void		AddChild(GameNode *ch);
-		virtual void		RemoveChild(GameNode *ch, const bool cleanup=true);
-		virtual void		RemoveAllChildren(const bool cleanup=true);
+		virtual void		RemoveChild(GameNode *ch, bool cleanup=true);
+		virtual void		RemoveAllChildren(bool cleanup=true);
+		virtual void 		RemoveFromParent(bool cleanup=true);
 		int 				ChildCount();
 		void				ListenInput();
 		void				UnlistenInput();

@@ -95,7 +95,7 @@ namespace Pim {
 	GameNode::RemoveChild
 	=====================
 	*/
-	void GameNode::RemoveChild(GameNode *ch, const bool cleanup) {
+	void GameNode::RemoveChild(GameNode *ch, bool cleanup) {
 		for (unsigned int i=0; i<children.size(); i++) {
 			if (children[i] == ch) {
 				children.erase(children.begin() + i);
@@ -114,7 +114,7 @@ namespace Pim {
 	GameNode::RemoveAllChildren
 	=====================
 	*/
-	void GameNode::RemoveAllChildren(const bool cleanup) {
+	void GameNode::RemoveAllChildren(bool cleanup) {
 		// Delete all if required
 		for (unsigned i=0; i<children.size(); i++) {
 			if (cleanup) {
@@ -126,6 +126,19 @@ namespace Pim {
 
 		// THEN clear the array
 		children.clear();
+	}
+	
+	/*
+	=====================
+	GameNode::RemoveFromParent
+	=====================
+	*/
+	void GameNode::RemoveFromParent(bool cleanup) {
+		if (parent) {
+			parent->RemoveChild(this, cleanup);
+		} else {
+			PimWarning("Logical error", "Cannot remove orphan from parent.");
+		}
 	}
 
 	/*
