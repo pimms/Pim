@@ -45,15 +45,15 @@ namespace Pim {
 	STATIC Vec2::Interpolate
 
 	Given two vectors A and B, the method returns:
-		A - ((A-B) * factor)
+		A*factor + B*(1-factor)
 	The factor should be a value between 0 and 1
 	=====================
 	*/
 	Vec2 Vec2::Interpolate(Vec2 source, Vec2 dest, float factor) {
 		return Vec2( 
-			source.x - ((source.x-dest.x) * factor),
-			source.y - ((source.y-dest.y) * factor)
-			);
+			source.x * (1.f-factor) + dest.x * factor,
+			source.y * (1.f-factor) + dest.y * factor
+		);
 	}
 
 	/*
@@ -120,7 +120,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::Dot
 	=====================
 	*/
 	float Vec2::Dot(const Vec2 &other) const {
@@ -129,7 +129,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::Cross
 	=====================
 	*/
 	float Vec2::Cross(const Vec2 &other) const {
@@ -138,7 +138,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::Normalize
 	=====================
 	*/
 	Vec2 Vec2::Normalize() const {
@@ -147,7 +147,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::Length
 	=====================
 	*/
 	float Vec2::Length() const {
@@ -165,7 +165,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::operator==
 	=====================
 	*/
 	bool Vec2::operator==(const Vec2 &other) const  {
@@ -174,7 +174,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::operator!=
 	=====================
 	*/
 	bool Vec2::operator!=(const Vec2 &other) const  {
@@ -183,7 +183,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::operator+
 	=====================
 	*/
 	Vec2 Vec2::operator+(const Vec2 &other) const  {
@@ -192,7 +192,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::operator-
 	=====================
 	*/
 	Vec2 Vec2::operator-(const Vec2 &other) const  {
@@ -201,7 +201,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::operator*
 	=====================
 	*/
 	Vec2 Vec2::operator*(const Vec2 &other) const {
@@ -210,7 +210,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::operator/
 	=====================
 	*/
 	Vec2 Vec2::operator/(const Vec2 &other) const {
@@ -220,7 +220,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::operator+=
 	=====================
 	*/
 	void Vec2::operator+=(const Vec2 &other) {
@@ -230,7 +230,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::operator-=
 	=====================
 	*/
 	void Vec2::operator-=(const Vec2 &other) {
@@ -240,7 +240,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::operator*=
 	=====================
 	*/
 	void Vec2::operator*=(const Vec2 &other) {
@@ -250,7 +250,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::operator/=
 	=====================
 	*/
 	void Vec2::operator/=(const Vec2 &other) {
@@ -260,7 +260,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::operator*
 	=====================
 	*/
 	Vec2 Vec2::operator*(const float &fac) const {
@@ -269,7 +269,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::operator/
 	=====================
 	*/
 	Vec2 Vec2::operator/(float den) const {
@@ -282,7 +282,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::operator*=
 	=====================
 	*/
 	void Vec2::operator*=(const float &fac) {
@@ -292,7 +292,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::Vec2
+	Vec2::operator/=
 	=====================
 	*/
 	void Vec2::operator/=(float den) {
@@ -314,11 +314,11 @@ namespace Pim {
 	*/
 	Color Color::Interpolate(const Color &source, const Color &dest, float factor) {
 		return Color(
-			source.r - (source.r-dest.r) * factor,
-			source.g - (source.g-dest.g) * factor,
-			source.b - (source.b-dest.b) * factor,
-			source.a - (source.a-dest.a) * factor
-			);
+			source.r * (1.f-factor) + dest.r * factor,
+			source.g * (1.f-factor) + dest.g * factor,
+			source.b * (1.f-factor) + dest.b * factor,
+			source.a * (1.f-factor) + dest.a * factor
+		);
 	}
 
 	/*
