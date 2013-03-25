@@ -261,7 +261,8 @@ namespace Pim {
 	*/
 	Vec2 GameNode::GetWorldPosition() const {
 		if (parent) {
-			return position + parent->GetWorldPosition();
+			return position.RotateAroundPoint(Vec2(0.f, 0.f), parent->rotation) +
+					parent->GetWorldPosition();
 		}
 		return position;
 	}
@@ -285,7 +286,8 @@ namespace Pim {
 	*/
 	Vec2 GameNode::GetLayerPosition() const {
 		if (parent) {
-			return position + parent->GetLayerPosition();
+			return position.RotateAroundPoint(Vec2(0.f, 0.f), parent->rotation) +
+					parent->GetLayerPosition();
 		}
 
 		return position;
