@@ -2,7 +2,7 @@
 
 
 void NormalMapLayer::LoadResources() {
-	map = new NormalMap("chester.png", "normal3.png");
+	map = new NormalMap("chester.png", "chesternorm.png");
 	map->position = Vec2(400.f, 300.f);
 	AddChild(map);
 	

@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\src\DemoScene.h" />
+    <ClInclude Include="..\src\HUDLayer.h" />
+    <ClInclude Include="..\src\ActionLayer.h">
+      <Filter>ActionLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LightLayer.h">
+      <Filter>LightLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SoundLayer.h">
+      <Filter>SoundLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\WelcomeLayer.h">
+      <Filter>WelcomeLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NormalMapLayer.h">
+      <Filter>NormalMapLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NormalMap.h">
+      <Filter>NormalMapLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ParticleLayer.h">
+      <Filter>ParticleLayer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\DemoScene.cpp" />
+    <ClCompile Include="..\src\HUDLayer.cpp" />
+    <ClCompile Include="..\src\Pim_demo.cpp" />
+    <ClCompile Include="..\src\ActionLayer.cpp">
+      <Filter>ActionLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LightLayer.cpp">
+      <Filter>LightLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SoundLayer.cpp">
+      <Filter>SoundLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\WelcomeLayer.cpp">
+      <Filter>WelcomeLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\NormalMapLayer.cpp">
+      <Filter>NormalMapLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\NormalMap.cpp">
+      <Filter>NormalMapLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ParticleLayer.cpp">
+      <Filter>ParticleLayer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="WelcomeLayer">
+      <UniqueIdentifier>{9e2135a6-a848-45e5-8a0b-f08a59d82857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundLayer">
+      <UniqueIdentifier>{8fd5e8b9-32ba-443d-9487-5f3cb99c3107}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LightLayer">
+      <UniqueIdentifier>{01750b30-0539-4158-97a4-c9890169290d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ActionLayer">
+      <UniqueIdentifier>{ac6b82c3-ca0c-4c16-ab70-1458d432d7ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ParticleLayer">
+      <UniqueIdentifier>{43cbf5b5-ab48-4290-ab00-da6c5a42de55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NormalMapLayer">
+      <UniqueIdentifier>{9d2e0f15-1d8f-4bc8-b1cf-22ead691ca48}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
