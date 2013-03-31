@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		191F0E251706E29B0042EC56 /* NormalMapLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 191F0E231706E29B0042EC56 /* NormalMapLayer.cpp */; };
+		191F0E281706E2D80042EC56 /* NormalMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 191F0E261706E2D80042EC56 /* NormalMap.cpp */; };
 		193B45C616D12385008F6C4F /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C116D12385008F6C4F /* libfreetype.a */; };
 		193B45C716D12385008F6C4F /* libpng15.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C216D12385008F6C4F /* libpng15.framework */; };
 		193B45C816D12385008F6C4F /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C316D12385008F6C4F /* Ogg.framework */; };
@@ -71,6 +73,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		191F0E231706E29B0042EC56 /* NormalMapLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NormalMapLayer.cpp; sourceTree = "<group>"; };
+		191F0E241706E29B0042EC56 /* NormalMapLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NormalMapLayer.h; sourceTree = "<group>"; };
+		191F0E261706E2D80042EC56 /* NormalMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NormalMap.cpp; sourceTree = "<group>"; };
+		191F0E271706E2D80042EC56 /* NormalMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NormalMap.h; sourceTree = "<group>"; };
 		193B456016D1232B008F6C4F /* pim_demo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pim_demo; sourceTree = BUILT_PRODUCTS_DIR; };
 		193B45C116D12385008F6C4F /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfreetype.a; sourceTree = "<group>"; };
 		193B45C216D12385008F6C4F /* libpng15.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libpng15.framework; sourceTree = "<group>"; };
@@ -213,6 +219,10 @@
 				197FD03316F5E69100C17503 /* HUDLayer.h */,
 				197FD03416F5E69100C17503 /* LightLayer.cpp */,
 				197FD03516F5E69100C17503 /* LightLayer.h */,
+				191F0E231706E29B0042EC56 /* NormalMapLayer.cpp */,
+				191F0E241706E29B0042EC56 /* NormalMapLayer.h */,
+				191F0E261706E2D80042EC56 /* NormalMap.cpp */,
+				191F0E271706E2D80042EC56 /* NormalMap.h */,
 				197FD03616F5E69100C17503 /* ParticleLayer.cpp */,
 				197FD03716F5E69100C17503 /* ParticleLayer.h */,
 				197FD03816F5E69100C17503 /* Pim_demo.cpp */,
@@ -414,6 +424,8 @@
 				197FD04416F5E69100C17503 /* Pim_demo.cpp in Sources */,
 				197FD04516F5E69100C17503 /* SoundLayer.cpp in Sources */,
 				197FD04716F5E69100C17503 /* WelcomeLayer.cpp in Sources */,
+				191F0E251706E29B0042EC56 /* NormalMapLayer.cpp in Sources */,
+				191F0E281706E2D80042EC56 /* NormalMap.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

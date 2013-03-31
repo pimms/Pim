@@ -5,8 +5,9 @@
 #include "SoundLayer.h"
 #include "ActionLayer.h"
 #include "ParticleLayer.h"
+#include "NormalMapLayer.h"
 
-#define IDX_MAX 4
+#define IDX_MAX 5
 #define IDX_MIN 0
 
 
@@ -76,6 +77,10 @@ void DemoScene::ButtonReleased(Pim::Button *button)
 
 	case 4:
 		layer = new ParticleLayer;
+		break;
+			
+	case 5:
+		layer = new NormalMapLayer;
 		break;
 	}
 
