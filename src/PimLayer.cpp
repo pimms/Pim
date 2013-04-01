@@ -135,6 +135,10 @@ namespace Pim {
 
 		OrderChildren();
 
+		if (lightSys) {
+			lightSys->UpdateShaderUniforms();
+		}
+
 		for (unsigned int i=0; i<children.size(); i++) {
 			children[i]->Draw();
 		}
@@ -186,9 +190,8 @@ namespace Pim {
 		return color;
 	}
 
+
 	// ---------- LIGHTING SYSTEM METHODS ----------
-
-
 	/*
 	=====================
 	Layer::Layer
@@ -252,9 +255,8 @@ namespace Pim {
 	=====================
 	*/
 	void Layer::RemoveLight(GameNode *node) {
-		if (lightSys && lightSys->lights.count(node)) {
-			delete lightSys->lights[node];
-			lightSys->lights.erase(node);
+		if (lightSys) {
+			lightSys->RemoveLight(node);
 		}
 	}
 
@@ -297,11 +299,7 @@ namespace Pim {
 	*/
 	void Layer::RemoveShadowCaster(GameNode *caster) {
 		if (lightSys) {
-			for (unsigned int i=0; i<lightSys->casters.size(); i++) {
-				if (lightSys->casters[i] == caster) {
-					lightSys->casters.erase(lightSys->casters.begin() + i);
-				}
-			}
+			lightSys->RemoveShadowCaster(caster);
 		}
 	}
 

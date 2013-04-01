@@ -29,9 +29,9 @@ namespace Pim {
 
 	public:
 		enum PositionType {
-			RELATIVE,	// The particles will move WITH the system. Default.
-			ABSOLUTE	// The particles will move relatively to the point of
-						// their emission.
+			PART_RELATIVE,	// The particles will move WITH the system. Default.
+			PART_ABSOLUTE	// The particles will move relatively to the point of
+							// their emission.
 		};
 		
 		PositionType 			positionType;

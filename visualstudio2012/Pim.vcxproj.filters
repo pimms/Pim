@@ -80,6 +80,9 @@
     <ClCompile Include="..\src\PimRenderWindow.cpp">
       <Filter>Window Management</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\PimNormalMap.cpp">
+      <Filter>Base Nodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Pim.h" />
@@ -164,6 +167,9 @@
     </ClInclude>
     <ClInclude Include="..\src\PimRenderWindow.h">
       <Filter>Window Management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimNormalMap.h">
+      <Filter>Base Nodes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

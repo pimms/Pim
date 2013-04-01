@@ -29,7 +29,7 @@ namespace Pim {
 	: Sprite(texturePath) {
 		ListenFrame();
 		
-		positionType 			= RELATIVE;
+		positionType 			= PART_RELATIVE;
 		maxParticles			= 0;
 		emitRate				= 0.f;
 		emitAngle				= 0.f;
@@ -58,7 +58,7 @@ namespace Pim {
 	ParticleSystem::ParticleSystem() {
 		ListenFrame();
 		
-		positionType 			= RELATIVE;
+		positionType 			= PART_RELATIVE;
 		maxParticles			= 0;
 		emitRate				= 0.f;
 		emitAngle				= 0.f;
@@ -206,7 +206,7 @@ namespace Pim {
 			v3.texCoord = Vec2(0.f, 1.f);
 			
 			/* Add the spawn position if PositionType == ABSOLUTE */
-			if (positionType == ABSOLUTE) {
+			if (positionType == PART_ABSOLUTE) {
 				v0.position += particles[i].spawnPos;
 				v1.position += particles[i].spawnPos;
 				v2.position += particles[i].spawnPos;
@@ -231,7 +231,7 @@ namespace Pim {
 		if (particles.size()) {
 			glPushMatrix();
 			
-			if (positionType == ABSOLUTE) {
+			if (positionType == PART_ABSOLUTE) {
 				glLoadIdentity();
 			}
 

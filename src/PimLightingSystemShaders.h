@@ -1,3 +1,10 @@
+#define PIM_BAREBONES_VERT																 "\
+void main()																				\n\
+{																						\n\
+	gl_Position = ftransform();															\n\
+	gl_TexCoord[0] = gl_MultiTexCoord0;													\n\
+}"
+
 #define PIM_LS_LOWQ_FRAG																 "\
 uniform sampler2D tex;																	\n\
 uniform float lalpha;																	\n\
@@ -11,13 +18,6 @@ void main()																				\n\
 	vec4 src = texture2D(tex, gl_TexCoord[0].xy);										\n\
 	src.a -= (length(src)-length(ulcolor))*lalpha*3.0;									\n\
 	gl_FragColor = src;																	\n\
-}"
-
-#define PIM_LS_LOWQ_VERT																 "\
-void main()																				\n\
-{																						\n\
-	gl_Position = ftransform();															\n\
-	gl_TexCoord[0] = gl_MultiTexCoord0;													\n\
 }"
 
 
@@ -62,19 +62,13 @@ void main() {																			\n\
 	gl_FragColor = color;																\n\
 }"
 
-#define PIM_LS_HIGHQ_VERT																 "\
-void main() {																			\n\
-	gl_Position = ftransform();															\n\
-	gl_TexCoord[0] = gl_MultiTexCoord0;													\n\
-}"
-
 #define PIM_LS_NORMALMAP_FRAG															 "\
 uniform sampler2D 	tex0; 		// The sprite texture									\n\
 uniform sampler2D 	tex1;		// The normal texture									\n\
 uniform vec2 		dims;		// The dimension of the texture							\n\
 uniform vec2 		wpos;		// The world position of the sprite						\n\
 uniform vec2 		anchor;		// The anchor of the Sprite								\n\
-uniform int		numLights;		// The amount of lights									\n\
+uniform int			numLights;	// The amount of lights									\n\
 uniform vec2 		lpos[10];	// The light positions									\n\
 uniform float 		lrad[10];	// The light radius'									\n\
 																						\n\

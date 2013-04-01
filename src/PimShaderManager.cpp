@@ -17,7 +17,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Shader::Shader
+	Shader::~Shader
 	=====================
 	*/
 	Shader::~Shader() {
@@ -52,7 +52,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Shader::Shader
+	Shader::GetProgram
 	=====================
 	*/
 	GLint Shader::GetProgram() const {
@@ -61,7 +61,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Shader::Shader
+	Shader::GetUniformLocation
 	=====================
 	*/
 	GLint Shader::GetUniformLocation(const string name) {
@@ -78,7 +78,7 @@ namespace Pim {
 	
 	/*
 	=====================
-	Shader::Shader
+	Shader::SetUniform1i
 	=====================
 	*/
 	void Shader::SetUniform1i(string n, GLint a) {
@@ -88,7 +88,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Shader::Shader
+	Shader::SetUniform2i
 	=====================
 	*/
 	void Shader::SetUniform2i(string n, GLint a, GLint b) {
@@ -98,7 +98,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Shader::Shader
+	Shader::SetUniform3i
 	=====================
 	*/
 	void Shader::SetUniform3i(string n, GLint a, GLint b, GLint c) {
@@ -108,7 +108,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Shader::Shader
+	Shader::SetUniform4i
 	=====================
 	*/
 	void Shader::SetUniform4i(string n, GLint a, GLint b, GLint c, GLint d) {
@@ -118,7 +118,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Shader::Shader
+	Shader::SetUniform1f
 	=====================
 	*/
 	void Shader::SetUniform1f(string n, GLfloat a) {
@@ -128,7 +128,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Shader::Shader
+	Shader::SetUniform2f
 	=====================
 	*/
 	void Shader::SetUniform2f(string n, GLfloat a, GLfloat b) {
@@ -138,7 +138,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Shader::Shader
+	Shader::SetUniform3f
 	=====================
 	*/
 	void Shader::SetUniform3f(string n, GLfloat a, GLfloat b, GLfloat c) {
@@ -148,7 +148,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Shader::Shader
+	Shader::SetUniform4f
 	=====================
 	*/
 	void Shader::SetUniform4f(string n, GLfloat a, GLfloat b, GLfloat c, GLfloat d) {
@@ -158,7 +158,7 @@ namespace Pim {
 
 	/*
 	=====================
-	Shader::Shader
+	Shader::SetUniformXi
 	=====================
 	*/
 	void Shader::SetUniformXi(string name, GLint len, GLint arr[]) {
@@ -184,7 +184,7 @@ namespace Pim {
 	
 	/*
 	=====================
-	Shader::Shader
+	Shader::SetUniformXf
 	=====================
 	*/
 	void Shader::SetUniformXf(string name, GLint len, GLfloat arr[]) {
@@ -209,11 +209,12 @@ namespace Pim {
 	}
 
 
+	/* Static ShaderManager methods */
 	ShaderManager* ShaderManager::singleton = NULL;
 
 	/*
 	=====================
-	ShaderManager::ShaderManager
+	ShaderManager::GetSingleton
 	=====================
 	*/
 	ShaderManager* ShaderManager::GetSingleton() {
@@ -222,7 +223,7 @@ namespace Pim {
 
 	/*
 	=====================
-	ShaderManager::ShaderManager
+	ShaderManager::InstantiateSingleton
 	=====================
 	*/
 	void ShaderManager::InstantiateSingleton() {
@@ -232,7 +233,7 @@ namespace Pim {
 
 	/*
 	=====================
-	ShaderManager::ShaderManager
+	ShaderManager::ClearSingleton
 	=====================
 	*/
 	void ShaderManager::ClearSingleton() {
@@ -243,47 +244,7 @@ namespace Pim {
 
 	/*
 	=====================
-	ShaderManager::ShaderManager
-	=====================
-	*/
-	ShaderManager::ShaderManager() {
-		ListenCommand("shadermgr");
-
-		#ifdef _DEBUG
-		cout <<"\nInstructions for altering shader uniforms via command line:\n";
-		cout <<"\tThe following command will alter the 'factor' uniform in the\n";
-		cout <<"\tshader 'myShader' to the value '0.5':\n";
-		cout <<"\t\tshadermgr myShader uniform1f factor 0.5\n";
-		cout <<"\tExample of setting a vec2 in the same shader:\n";
-		cout <<"\t\tshadermgr myShader uniform2f position 13.2 10.0\n\n";
-		#endif /* _DEBUG */
-	}
-
-	/*
-	=====================
-	ShaderManager::ShaderManager
-	=====================
-	*/
-	ShaderManager::~ShaderManager() {
-		ClearShaders();
-	}
-
-	/*
-	=====================
-	ShaderManager::ShaderManager
-	=====================
-	*/
-	void ShaderManager::ClearShaders() {
-		for (auto o_it=shaders.begin(); o_it!=shaders.end(); o_it++) {
-			delete o_it->second;
-		}
-
-		shaders.clear();
-	}
-
-	/*
-	=====================
-	ShaderManager::ShaderManager
+	ShaderManager::AddShaderFromFile
 	=====================
 	*/
 	Shader* ShaderManager::AddShaderFromFile(string fragFile, string vertFile, string nm) {
@@ -321,7 +282,7 @@ namespace Pim {
 
 	/*
 	=====================
-	ShaderManager::ShaderManager
+	ShaderManager::AddShader
 	=====================
 	*/
 	Shader* ShaderManager::AddShader(string fragString, string vertString, string nm) {
@@ -429,7 +390,7 @@ namespace Pim {
 
 	/*
 	=====================
-	ShaderManager::ShaderManager
+	ShaderManager::GetShader
 	=====================
 	*/
 	Shader* ShaderManager::GetShader(string name) {
@@ -441,8 +402,83 @@ namespace Pim {
 	}
 
 	/*
+	==================
+	ShaderManager::RemoveShader
+	==================
+	*/
+	bool ShaderManager::RemoveShader(string name) {
+		if (singleton->shaders.count(name)) {
+			return RemoveShader(singleton->shaders[name]);
+		}
+
+		return false;
+	}
+
+	/*
+	==================
+	ShaderManager::RemoveShader
+	==================
+	*/
+	bool ShaderManager::RemoveShader(Shader *shader) {
+		map<string, Shader*> *shaders = &singleton->shaders;
+
+		map<string, Shader*>::iterator it = shaders->begin();
+		for (; it != shaders->end(); it++) {
+			if (it->second == shader) {
+				delete it->second;
+				shaders->erase(it);
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+	/*
 	=====================
 	ShaderManager::ShaderManager
+	=====================
+	*/
+	ShaderManager::ShaderManager() {
+		ListenCommand("shadermgr");
+
+		#ifdef _DEBUG
+		cout <<"\nInstructions for altering shader uniforms via command line:\n";
+		cout <<"\tThe following command will alter the 'factor' uniform in the\n";
+		cout <<"\tshader 'myShader' to the value '0.5':\n";
+		cout <<"\t\tshadermgr myShader uniform1f factor 0.5\n";
+		cout <<"\tExample of setting a vec2 in the same shader:\n";
+		cout <<"\t\tshadermgr myShader uniform2f position 13.2 10.0\n\n";
+		#endif /* _DEBUG */
+	}
+
+	/*
+	=====================
+	ShaderManager::~ShaderManager
+	=====================
+	*/
+	ShaderManager::~ShaderManager() {
+		ClearShaders();
+	}
+
+	/*
+	=====================
+	ShaderManager::ClearShaders
+	=====================
+	*/
+	void ShaderManager::ClearShaders() {
+		for (auto o_it=shaders.begin(); o_it!=shaders.end(); o_it++) {
+			delete o_it->second;
+		}
+
+		shaders.clear();
+	}
+
+	/*
+	=====================
+	ShaderManager::HandleCommand
 	 
 	Todo: Comment this unholy spawn.
 	=====================

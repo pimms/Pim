@@ -375,6 +375,7 @@ xcopy $(ProjectDir)..\bin\* C:\lib\Pim\ /S /I /Y</Command>
     <ClCompile Include="..\src\PimLevelParser.cpp" />
     <ClCompile Include="..\src\PimLightDef.cpp" />
     <ClCompile Include="..\src\PimLightingSystem.cpp" />
+    <ClCompile Include="..\src\PimNormalMap.cpp" />
     <ClCompile Include="..\src\PimParticleSystem.cpp" />
     <ClCompile Include="..\src\PimPolygonShape.cpp" />
     <ClCompile Include="..\src\PimRenderTexture.cpp" />
@@ -406,6 +407,7 @@ xcopy $(ProjectDir)..\bin\* C:\lib\Pim\ /S /I /Y</Command>
     <ClInclude Include="..\src\PimLightDef.h" />
     <ClInclude Include="..\src\PimLightingSystem.h" />
     <ClInclude Include="..\src\PimLightingSystemShaders.h" />
+    <ClInclude Include="..\src\PimNormalMap.h" />
     <ClInclude Include="..\src\PimParticleSystem.h" />
     <ClInclude Include="..\src\PimPolygonShape.h" />
     <ClInclude Include="..\src\PimRenderTexture.h" />

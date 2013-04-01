@@ -54,33 +54,11 @@ LightLayer::LoadSprites
 */
 void LightLayer::LoadSprites()
 {
-	// Create a background sprite
-	Pim::Sprite *bck = new Pim::Sprite("lightback.png");
-	bck->position = Pim::Vec2(400, 300);
-	AddChild(bck);
-
-	// Load the tilesheet
-	tiles = new Pim::SpriteBatchNode("lighttiles.png");
-	AddChild(tiles);
-
-	for (int i=0; i<0; i++)
-	{
-		Pim::Sprite *tile = new Pim::Sprite;
-		tile->rect = Pim::Rect(0.f, 0.f, 40.f, 40.f);
-		tile->position = Pim::Vec2(rand()%800, rand()%600);
-		tiles->AddChild(tile);
-
-		Pim::Vec2 vert[4] = {
-			Pim::Vec2(-20.f, -20.f),
-			Pim::Vec2( 20.f, -20.f),
-			Pim::Vec2( 20.f,  20.f),
-			Pim::Vec2(-20.f,  20.f),
-		};
-		tile->SetShadowShape(vert, 4);
-		
-		AddShadowCaster(tile);
-		casters.push_back(tile);
-	}
+	// Create the normal map
+	Pim::NormalMap *normal = new Pim::NormalMap("chester.png", "chesternorm.png");
+	normal->position = Pim::Vec2(400.f, 300.f);
+	normal->scale *= 0.7f;
+	AddChild(normal);
 }
 
 /*
@@ -110,6 +88,7 @@ void LightLayer::LoadLightingSystem()
 	light->position = Pim::Vec2(170.f, 150.f);
 	AddChild(light);
 	AddLight(light, pld, "preload");
+	lightSys->SetNormalLighting(light, true);
 }
 
 
@@ -179,9 +158,6 @@ void LightLayer::OnMouseEvent(Pim::MouseEvent &evt)
 {
 	mousePos = evt.GetPosition();
 
-	Pim::Vec2 rel = evt.GetRelative();
-	printf("Relative: %0.1f, %0.1f\n", rel.x, rel.y);
-
 	if (evt.IsKeyFresh(Pim::MouseEvent::MBTN_LEFT))
 	{
 		//removeChild(light, true);
@@ -192,6 +168,7 @@ void LightLayer::OnMouseEvent(Pim::MouseEvent &evt)
 		light = new Pim::GameNode;
 		AddChild(light);
 		AddLight(light, pld, "preload");
+		lightSys->SetNormalLighting(light, true);
 	}
 
 	if (evt.IsKeyFresh(Pim::MouseEvent::MBTN_RIGHT))

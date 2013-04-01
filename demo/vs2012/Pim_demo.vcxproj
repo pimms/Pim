@@ -15,8 +15,6 @@
     <ClInclude Include="..\src\DemoScene.h" />
     <ClInclude Include="..\src\HUDLayer.h" />
     <ClInclude Include="..\src\LightLayer.h" />
-    <ClInclude Include="..\src\NormalMap.h" />
-    <ClInclude Include="..\src\NormalMapLayer.h" />
     <ClInclude Include="..\src\ParticleLayer.h" />
     <ClInclude Include="..\src\SoundLayer.h" />
     <ClInclude Include="..\src\WelcomeLayer.h" />
@@ -26,8 +24,6 @@
     <ClCompile Include="..\src\DemoScene.cpp" />
     <ClCompile Include="..\src\HUDLayer.cpp" />
     <ClCompile Include="..\src\LightLayer.cpp" />
-    <ClCompile Include="..\src\NormalMap.cpp" />
-    <ClCompile Include="..\src\NormalMapLayer.cpp" />
     <ClCompile Include="..\src\ParticleLayer.cpp" />
     <ClCompile Include="..\src\Pim_demo.cpp" />
     <ClCompile Include="..\src\SoundLayer.cpp" />

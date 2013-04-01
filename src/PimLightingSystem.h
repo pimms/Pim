@@ -39,9 +39,18 @@ namespace Pim {
 	 				rest of the light is then rendered with (oc) in the center, 
 	 				and (oc+(0,0,0,0.2)) at the outer edge, where "oc" is the 
 	 				outerColor variable.
+
+					@b Normalmaps
+
+					Each lighting system may contain several normal-maps. However,
+					only 10 lights can @e affect the normal map may be used at 
+					any given time in a particular lighting system.
+
+					After adding a light to the lighting system, call 
+					'SetNormalLighting(GameNode *light, bool flag)' to enable or
+					disable normal map affection.
 	 */
-	
-	
+
 	
 	class Layer;
 	class GameNode;
@@ -53,29 +62,48 @@ namespace Pim {
 	class LightingSystem {
 	protected:
 		friend class Layer;
+	
+	public:
+
+		static void						CreateSmoothLightTexture(LightDef *lDef, bool preload=false);
+		static void						CreateFlatLightTexture(LightDef *lDef, bool preload=false);
 
 										LightingSystem(Layer*, Vec2 resolution);
-										LightingSystem(const LightingSystem &o) {}
 										~LightingSystem();
-		void							LoadShaders();
+
+		Shader*							GetNormalMapShader();
+
 		void							SetUnlitColor(const Color c);
 		void							SetLightAlpha(float a);
+		void							SetCastShadows(bool flag);
+		void							SetDebugDrawShadowShapes(bool flag);
+
 		void							AddLight(GameNode *node, LightDef *lDef);
+		void							AddShadowCaster(GameNode *caster);
+		void							RemoveLight(GameNode *light);
+		void							RemoveShadowCaster(GameNode *caster);
+		bool							SetNormalLighting(GameNode *light, bool flag);
+
 		void							PreloadTexture(LightDef *lDef, const string identifier);
 		bool							UsePreloadedTexture(LightDef *lDef, const string identifier);
 		void							DeletePreloadedTexture(const string identifier);
-		static void						CreateSmoothLightTexture(LightDef *lDef, 
-															bool preload=false);
-		static void						CreateFlatLightTexture(LightDef *lDef, 
-															bool preload=false);
+
+		void							LoadShaders();
+		virtual void					UpdateShaderUniforms();
 		virtual void					RenderLightTexture();
 		void							GaussPass();
 		virtual void					RenderLights();
 		virtual void					RenderShadows(LightDef *d,  GameNode *n, 
 														const Vec2 &p, const Vec2 &rResSc);
 
+	protected:
+
+		static int						numSystemsCreated;
+
+		int								number;			// This system's number
 		Layer							*parent;
-		map<GameNode*,LightDef*>		lights;
+		map<GameNode*,LightDef*>		lights;			// Normal lights 
+		vector<GameNode*>				normalLights;	// Lights affecting normal-maps
 		vector<GameNode*>				casters;
 		bool							hqShadow;
 		bool							castShadow;
@@ -86,6 +114,7 @@ namespace Pim {
 		RenderTexture					*gaussRT;
 		Shader							*shaderLightTex;
 		Shader							*shaderGauss;
+		Shader							*shaderNormalMap;
 		map<string, GLuint>				preloadTex;
 	};
 }

@@ -31,3 +31,4 @@
 #include "PimLevelParser.h"
 #include "PimAction.h"
 #include "PimParticleSystem.h"
+#include "PimNormalMap.h"

@@ -16,161 +16,7 @@
 
 
 namespace Pim {
-	/*
-	=====================
-	LightingSystem::LightingSystem
-	=====================
-	*/
-	LightingSystem::LightingSystem(Layer *par, Vec2 pResolution) {
-		parent			= par;
-		castShadow		= true;
-		dbgDrawNormal   = false;
-		hqShadow		= false;
-		resolution		= pResolution;
-
-		mainRT = new RenderTexture(resolution, true);
-		gaussRT = new RenderTexture(resolution);
-
-		LoadShaders();
-	}
-
-	/*
-	=====================
-	LightingSystem::~LightingSystem
-	=====================
-	*/
-	LightingSystem::~LightingSystem() {
-		for (auto it=lights.begin(); it!=lights.end(); it++) {
-			delete it->second;
-		}
-
-		for (auto it=preloadTex.begin(); it!=preloadTex.end(); it++) {
-			if (it->second) {
-				glDeleteTextures(1, &it->second);
-			}
-		}
-
-		delete mainRT;
-		delete gaussRT;
-	}
-
-	/*
-	=====================
-	LightingSystem::LoadShaders
-	=====================
-	*/
-	void LightingSystem::LoadShaders() {
-		// Low quality, default shader
-		shaderLightTex = ShaderManager::AddShader(
-				PIM_LS_LOWQ_FRAG, PIM_LS_LOWQ_VERT, "ltMgr");
-		shaderLightTex->SetUniform1i("texSrc", 0);
-		shaderLightTex->SetUniform1f("lalpha", 1.f);
-		shaderLightTex->SetUniform4f("ulcolor", 0.f, 0.f, 0.f, 1.f);
-
-		// High quality gauss shader
-		shaderGauss = ShaderManager::AddShader(
-				PIM_LS_HIGHQ_FRAG, PIM_LS_HIGHQ_VERT, "ltMgrGauss");
-		shaderGauss->SetUniform1i("blurSampler", 0);
-		shaderGauss->SetUniform1f("blurSize", 1.f/resolution.y);
-		shaderGauss->SetUniform1f("sigma", 5.f);
-		shaderGauss->SetUniform1f("lalpha", 1.f);
-		shaderGauss->SetUniform1f("pixels", 5.f);
-		shaderGauss->SetUniform4f("ulcolor", 0.f, 0.f, 0.f, 1.f);
-	}
-
-	/*
-	=====================
-	LightingSystem::SetUnlitColor
-	=====================
-	*/
-	void LightingSystem::SetUnlitColor(const Color c) {
-		color = c;
-		shaderLightTex->SetUniform4f("ulcolor", c.r, c.g, c.b, c.a);
-		shaderGauss->SetUniform4f("ulcolor", c.r, c.g, c.b, c.a);
-	}
-
-	/*
-	=====================
-	LightingSystem::SetLightAlpha
-	=====================
-	*/
-	void LightingSystem::SetLightAlpha(float a) {
-		if (a > 1.f ) a = 1.f;
-		if (a < 0.f) a = 0.f;
-
-		a = 1.f - a;
-		shaderLightTex->SetUniform1f("lalpha", a);
-		shaderGauss->SetUniform1f("lalpha", a);
-	}
-
-	/*
-	=====================
-	LightingSystem::AddLight
-	=====================
-	*/
-	void LightingSystem::AddLight(GameNode *node, LightDef *lDef) {
-		if (lights.count(node)) {
-			delete lights[node];
-		}
-
-		lights[node] = lDef;
-
-		if (lDef->lightType == 0) {
-			CreateFlatLightTexture(lDef);
-		} else if (lDef->lightType == 1) {
-			CreateSmoothLightTexture(lDef);
-		} else if (lDef->lightType != 2) {
-			PimAssert(0, "Error: invalid light type!");
-		}
-	}
-
-	/*
-	=====================
-	LightingSystem::PreloadTexture
-	=====================
-	*/
-	void LightingSystem::PreloadTexture(LightDef *ld, const string identifier) {
-		if (!identifier.length() || preloadTex.count(identifier)) {
-			PimAssert(0, "Error: invalid identifying string!");
-		}
-
-		if (ld->lightType == 0) {
-			CreateFlatLightTexture(ld, true);
-		} else if (ld->lightType == 1) {
-			CreateSmoothLightTexture(ld, true);
-		} else {
-			PimAssert(0, "Error: invalid light type!");
-		}
-
-		preloadTex[identifier] = ld->lTex;
-	}
-
-	/*
-	=====================
-	LightingSystem::UsePreloadedTexture
-	=====================
-	*/
-	bool LightingSystem::UsePreloadedTexture(LightDef *ld, const string identifier) {
-		if (preloadTex.count(identifier)) {
-			ld->lTex = preloadTex[identifier];
-			return true;
-		}
-		return false;
-	}
-
-	/*
-	=====================
-	LightingSystem::DeletePreloadedTexture
-	=====================
-	*/
-	void LightingSystem::DeletePreloadedTexture(const string identifier) {
-		if (preloadTex.count(identifier)) {
-			if (preloadTex[identifier]) {
-				glDeleteTextures(1, &preloadTex[identifier]);
-				preloadTex.erase(identifier);
-			}
-		}
-	}
+	int LightingSystem::numSystemsCreated = 0;
 
 	/*
 	=====================
@@ -290,6 +136,343 @@ namespace Pim {
 
 		rt->UnbindFBO();
 		delete rt;
+	}
+
+
+
+	/*
+	=====================
+	LightingSystem::LightingSystem
+	=====================
+	*/
+	LightingSystem::LightingSystem(Layer *par, Vec2 pResolution) {
+		number			= numSystemsCreated++;
+
+		parent			= par;
+		castShadow		= true;
+		dbgDrawNormal   = false;
+		hqShadow		= false;
+		resolution		= pResolution;
+		
+		shaderLightTex	= NULL;
+		shaderGauss		= NULL;
+		shaderNormalMap = NULL;
+
+		mainRT = new RenderTexture(resolution, true);
+		gaussRT = new RenderTexture(resolution);
+
+		LoadShaders();
+	}
+
+	/*
+	=====================
+	LightingSystem::~LightingSystem
+	=====================
+	*/
+	LightingSystem::~LightingSystem() {
+		for (auto it=lights.begin(); it!=lights.end(); it++) {
+			delete it->second;
+		}
+
+		for (auto it=preloadTex.begin(); it!=preloadTex.end(); it++) {
+			if (it->second) {
+				glDeleteTextures(1, &it->second);
+			}
+		}
+
+		if (shaderLightTex) {
+			ShaderManager::RemoveShader(shaderLightTex);
+		}
+
+		if (shaderGauss) {
+			ShaderManager::RemoveShader(shaderGauss);
+		}
+
+		if (shaderNormalMap) {
+			ShaderManager::RemoveShader(shaderNormalMap);
+		}
+
+		delete mainRT;
+		delete gaussRT;
+	}
+
+
+	/*
+	=====================
+	LightingSystem::GetNormalMapShader
+	=====================
+	*/
+	Shader* LightingSystem::GetNormalMapShader() {
+		return shaderNormalMap;
+	}
+
+
+	/*
+	=====================
+	LightingSystem::SetUnlitColor
+	=====================
+	*/
+	void LightingSystem::SetUnlitColor(const Color c) {
+		color = c;
+		shaderLightTex->SetUniform4f("ulcolor", c.r, c.g, c.b, c.a);
+		shaderGauss->SetUniform4f("ulcolor", c.r, c.g, c.b, c.a);
+	}
+
+	/*
+	=====================
+	LightingSystem::SetLightAlpha
+	=====================
+	*/
+	void LightingSystem::SetLightAlpha(float a) {
+		if (a > 1.f ) a = 1.f;
+		if (a < 0.f) a = 0.f;
+
+		a = 1.f - a;
+		shaderLightTex->SetUniform1f("lalpha", a);
+		shaderGauss->SetUniform1f("lalpha", a);
+	}
+
+	/*
+	=====================
+	LightingSystem::SetCastShadows
+	=====================
+	*/
+	void LightingSystem::SetCastShadows(bool flag) {
+		castShadow = flag;
+	}
+
+	/*
+	=====================
+	LightingSystem::SetDebugDrawShadowShapes
+	=====================
+	*/
+	void LightingSystem::SetDebugDrawShadowShapes(bool flag) {
+		dbgDrawNormal = flag;
+	}
+
+
+	/*
+	=====================
+	LightingSystem::AddLight
+	=====================
+	*/
+	void LightingSystem::AddLight(GameNode *node, LightDef *lDef) {
+		if (lights.count(node)) {
+			delete lights[node];
+		}
+
+		lights[node] = lDef;
+
+		if (lDef->lightType == 0) {
+			CreateFlatLightTexture(lDef);
+		} else if (lDef->lightType == 1) {
+			CreateSmoothLightTexture(lDef);
+		} else if (lDef->lightType != 2) {
+			PimAssert(0, "Error: invalid light type!");
+		}
+	}
+
+	/*
+	=====================
+	LightingSystem::AddShadowCaster
+	=====================
+	*/
+	void LightingSystem::AddShadowCaster(GameNode *caster) {
+		PimAssert(
+			caster->GetShadowShape() != NULL, 
+			"Error: Shadow Caster must have a defined shadow shape"
+		);
+
+		casters.push_back(caster);
+	}
+
+	/*
+	=====================
+	LightingSystem::RemoveLight
+	=====================
+	*/
+	void LightingSystem::RemoveLight(GameNode *light) {
+		if (lights.count(light)) {
+			delete lights[light];
+			lights.erase(light);
+
+			/* Remove it if it is a normalmap affecting light */
+			for (unsigned i=0; i<normalLights.size(); i++) {
+				if (normalLights[i] == light) {
+					normalLights.erase(normalLights.begin() + i);
+					i--;
+				}
+			}
+		}
+	}
+
+	/*
+	=====================
+	LightingSystem::RemoveShadowCaster
+	=====================
+	*/
+	void LightingSystem::RemoveShadowCaster(GameNode *caster) {
+		for (unsigned i=0; i<casters.size(); i++) {
+			if (casters[i] == caster) {
+				casters.erase(casters.begin() + i--);
+			}
+		}
+	}
+
+	/*
+	==================
+	LightingSystem::SetNormalLighting
+	==================
+	*/
+	bool LightingSystem::SetNormalLighting(GameNode *light, bool flag) {
+		/* No more room */
+		if (normalLights.size() >= 10 && flag) {
+			return false;
+		}
+
+		/* The light is already flagged for normal lighting */
+		for (unsigned i=0; i<normalLights.size(); i++) {
+			if (light == normalLights[i]) {
+				if (flag) {
+					return false;
+				} else {
+					normalLights.erase(normalLights.begin() + i);
+					return true;
+				}
+			}
+		}
+
+		/* If "flag", make sure that the passed light _really_ is a light */
+		if (flag && lights.count(light)) {
+			normalLights.push_back(light);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+	/*
+	=====================
+	LightingSystem::PreloadTexture
+	=====================
+	*/
+	void LightingSystem::PreloadTexture(LightDef *ld, const string identifier) {
+		if (!identifier.length() || preloadTex.count(identifier)) {
+			PimAssert(0, "Error: invalid identifying string!");
+		}
+
+		if (ld->lightType == 0) {
+			CreateFlatLightTexture(ld, true);
+		} else if (ld->lightType == 1) {
+			CreateSmoothLightTexture(ld, true);
+		} else {
+			PimAssert(0, "Error: invalid light type!");
+		}
+
+		preloadTex[identifier] = ld->lTex;
+	}
+
+	/*
+	=====================
+	LightingSystem::UsePreloadedTexture
+	=====================
+	*/
+	bool LightingSystem::UsePreloadedTexture(LightDef *ld, const string identifier) {
+		if (preloadTex.count(identifier)) {
+			ld->lTex = preloadTex[identifier];
+			return true;
+		}
+		return false;
+	}
+
+	/*
+	=====================
+	LightingSystem::DeletePreloadedTexture
+	=====================
+	*/
+	void LightingSystem::DeletePreloadedTexture(const string identifier) {
+		if (preloadTex.count(identifier)) {
+			if (preloadTex[identifier]) {
+				glDeleteTextures(1, &preloadTex[identifier]);
+				preloadTex.erase(identifier);
+			}
+		}
+	}
+
+
+	/*
+	=====================
+	LightingSystem::LoadShaders
+	=====================
+	*/
+	void LightingSystem::LoadShaders() {
+		stringstream name;
+		name << number;
+
+		/* Low quality, default shader */
+		if (!shaderLightTex) {
+			shaderLightTex = ShaderManager::AddShader(
+					PIM_LS_LOWQ_FRAG, PIM_BAREBONES_VERT, "ltMgr" + name.str()
+			);
+
+			shaderLightTex->SetUniform1i("texSrc", 0);
+			shaderLightTex->SetUniform1f("lalpha", 1.f);
+			shaderLightTex->SetUniform4f("ulcolor", 0.f, 0.f, 0.f, 1.f);
+		}
+
+		/* High quality gauss shader */
+		if (!shaderGauss) {
+			shaderGauss = ShaderManager::AddShader(
+					PIM_LS_HIGHQ_FRAG, PIM_BAREBONES_VERT, "ltMgrGauss" + name.str()
+			);
+
+			shaderGauss->SetUniform1i("blurSampler", 0);
+			shaderGauss->SetUniform1f("blurSize", 1.f/resolution.y);
+			shaderGauss->SetUniform1f("sigma", 5.f);
+			shaderGauss->SetUniform1f("lalpha", 1.f);
+			shaderGauss->SetUniform1f("pixels", 5.f);
+			shaderGauss->SetUniform4f("ulcolor", 0.f, 0.f, 0.f, 1.f);
+		}
+
+		/* Normal map shader */
+		if (!shaderNormalMap) {
+			shaderNormalMap = ShaderManager::AddShader(
+				PIM_LS_NORMALMAP_FRAG, PIM_BAREBONES_VERT, "ltMgrNormal" + name.str()
+			);
+
+			shaderNormalMap->SetUniform1i("tex0", 0);
+			shaderNormalMap->SetUniform1i("tex1", 1);
+		}
+	}
+
+	/*
+	==================
+	LightingSystem::UpdateShaderUniforms
+	==================
+	*/
+	void LightingSystem::UpdateShaderUniforms() {
+		GLfloat pos[20] = { 0.f };
+		GLfloat rad[10] = { 0.f };
+
+		for (unsigned i=0; i<normalLights.size() && i<10; i++) {
+			GameNode *light = normalLights[i];
+
+			pos[i*2 + 0] = light->position.x;
+			pos[i*2 + 1] = light->position.y;
+
+			if (lights.count(light)) {
+				rad[i] = lights[light]->radius;
+			}
+		}
+
+		shaderNormalMap->EnableShader();
+
+		glUniform1i(shaderNormalMap->GetUniformLocation("numLights"), (int)normalLights.size());
+		glUniform2fv(shaderNormalMap->GetUniformLocation("lpos"), 10, pos);
+		glUniform1fv(shaderNormalMap->GetUniformLocation("lrad"), 10, rad);
+
+		shaderNormalMap->DisableShader();
 	}
 
 	/*

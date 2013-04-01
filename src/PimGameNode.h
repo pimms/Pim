@@ -74,6 +74,7 @@ namespace Pim {
 		virtual void		OnKeyEvent(KeyEvent &evt)					{}
 		virtual void		OnControllerEvent(ControllerEvent &evt)		{}
 		virtual void		OnActionCompleted(BaseAction *act)			{}
+		virtual void		OnParentChange(GameNode *newParent)			{}
 		GameNode*			GetParent() const;	
 		virtual Scene*		GetParentScene() const;
 		virtual Layer*		GetParentLayer();
@@ -178,6 +179,14 @@ namespace Pim {
 	 			}
 	 @endcode
 	 */
+
+	/**
+	 @fn		GameNode::OnParentChange
+	 @brief		Called on a node when it has been added or removed from another node.
+				The parameter 'newParent' CAN BE NULL!
+	 @details	This method is not responsible for anything. The 'parent' member
+				variable has already been set when this method is called.
+	*/
 	
 	/**
 	 @fn 		GameNode::GetParent

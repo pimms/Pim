@@ -66,6 +66,8 @@ namespace Pim {
 		static Shader			*AddShaderFromFile(string fragFile,string vertFile,string name);
 		static Shader			*AddShader(string fragString,string vertString,string name);
 		static Shader*			GetShader(string name);
+		static bool				RemoveShader(string name);
+		static bool				RemoveShader(Shader *shader);
 		void					HandleCommand(ConsoleCommand cmd);
 		void					ClearShaders();
 

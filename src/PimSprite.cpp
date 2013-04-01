@@ -172,7 +172,6 @@ namespace Pim {
 		glBindTexture(GL_TEXTURE_2D, texID);
 
 		if (shader) {
-			shader->SetUniform1i("texture", 0);
 			glUseProgram(shader->GetProgram());
 		}
 

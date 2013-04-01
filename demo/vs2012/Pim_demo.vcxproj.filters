@@ -15,12 +15,6 @@
     <ClInclude Include="..\src\WelcomeLayer.h">
       <Filter>WelcomeLayer</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\NormalMapLayer.h">
-      <Filter>NormalMapLayer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\NormalMap.h">
-      <Filter>NormalMapLayer</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\ParticleLayer.h">
       <Filter>ParticleLayer</Filter>
     </ClInclude>
@@ -41,12 +35,6 @@
     <ClCompile Include="..\src\WelcomeLayer.cpp">
       <Filter>WelcomeLayer</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\NormalMapLayer.cpp">
-      <Filter>NormalMapLayer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\NormalMap.cpp">
-      <Filter>NormalMapLayer</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\ParticleLayer.cpp">
       <Filter>ParticleLayer</Filter>
     </ClCompile>
@@ -66,9 +54,6 @@
     </Filter>
     <Filter Include="ParticleLayer">
       <UniqueIdentifier>{43cbf5b5-ab48-4290-ab00-da6c5a42de55}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="NormalMapLayer">
-      <UniqueIdentifier>{9d2e0f15-1d8f-4bc8-b1cf-22ead691ca48}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

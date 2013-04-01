@@ -87,6 +87,8 @@ namespace Pim {
 		ch->parent = this;
 		children.push_back(ch);
 
+		ch->OnParentChange(this);
+
 		dirtyZOrder = true;
 	}
 
@@ -101,9 +103,11 @@ namespace Pim {
 				children.erase(children.begin() + i);
 
 				if (cleanup) {
+					ch->OnParentChange(NULL);
 					GameControl::GetSingleton()->AddNodeToDelete(ch);
 				} else {
 					ch->parent = NULL;
+					ch->OnParentChange(NULL);
 				}
 			}
 		}
@@ -118,9 +122,11 @@ namespace Pim {
 		// Delete all if required
 		for (unsigned i=0; i<children.size(); i++) {
 			if (cleanup) {
+				children[i]->OnParentChange(NULL);
 				GameControl::GetSingleton()->AddNodeToDelete(children[i]);
 			} else {
 				children[i]->parent = NULL;
+				children[i]->OnParentChange(NULL);
 			}
 		}
 

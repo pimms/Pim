@@ -17,7 +17,6 @@ public:
 
 	bool						poly;
 	bool						norm;
-	Pim::SpriteBatchNode*		tiles;
 	Pim::GameNode*				light;
 	std::vector<Pim::Sprite*>	casters;
 	Pim::Vec2					mousePos;
