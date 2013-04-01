@@ -2,6 +2,8 @@
 #include "DemoScene.h"
 #include <iostream>
 
+#define main SDL_main
+
 
 int main(int argc, char *args[]) {
 	// Stack cheating - avoid reporting memory leaking from "cd".
@@ -17,7 +19,7 @@ int main(int argc, char *args[]) {
 		gc.Go(new DemoScene, cd);
 	}
 
-#ifdef _DEBUG
+#if defined(_DEBUG) && defined(WIN32)
 	_CrtDumpMemoryLeaks();
 #endif
 

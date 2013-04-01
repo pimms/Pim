@@ -137,13 +137,13 @@ void ActionLayer::LoadResources()
 		uniform float time;													\
 		void main(void)														\
 		{																	\
-			vec2 c = gl_TexCoord[0];										\
+			vec2 c = gl_TexCoord[0].xy;										\
 			float m = (sin(c.x*100.0)+1.0)/100.0;							\
 			c.x += m;														\
 			gl_FragColor = texture2D(tex, c);								\
 		}",
 		"void main(){														\
-			gl_Position=gl_ModelViewProjectionMatrix*gl_Vertex;				\
+			gl_Position=ftransform();										\
 			gl_TexCoord[0] = gl_MultiTexCoord0;								\
 		}",
 		"myshad");

@@ -117,8 +117,8 @@ void LightLayer::OnKeyEvent(Pim::KeyEvent &evt)
 	// Debug drawing
 	if (evt.IsKeyFresh("poly")) {
 		poly = !poly;
-		for each (Pim::Sprite *spr in casters) {
-			spr->SetShadowShapeDebugDraw(poly);
+		for (unsigned i=0; i<casters.size(); i++) {
+			casters[i]->SetShadowShapeDebugDraw(poly);
 		}
 	}	
 	if (evt.IsKeyFresh("norm")) {
