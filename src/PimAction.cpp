@@ -101,7 +101,9 @@ namespace Pim {
 
 			queue->ActivateNext();
 		} else {
-			GetParent()->RemoveChild(this);
+			if (GetParent()) {
+				GetParent()->RemoveChild(this);
+			}
 		}
 	}
 
