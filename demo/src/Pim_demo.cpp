@@ -4,7 +4,6 @@
 
 #define main SDL_main
 
-
 int main(int argc, char *args[]) {
 	// Stack cheating - avoid reporting memory leaking from "cd".
 	{

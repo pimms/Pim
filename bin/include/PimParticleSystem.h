@@ -13,7 +13,7 @@ namespace Pim {
 	 
 	 				Most attributes in the particle system has a default and a
 	 				@e variance variable. The actual value of the particles will
-	 				be in the range [base, base+variance].
+	 				be in the range [base, base ± variance].
 	 
 	 				The ParticleSystem class is a Sprite derivative, and the 
 	 				texture loaded by Sprite is used as the particle texture.
@@ -45,13 +45,22 @@ namespace Pim {
 		float					startSizeVariance;
 		float					endSize;
 		float					endSizeVariance;
+		float					startRotation;
+		float					startRotationVariance;
+		float					endRotation;
+		float					endRotationVariance;
 		float 					lifetime;
 		float 					lifetimeVariance;
 		Color					startColor;
+		Color					startColorVariance;
 		Color					endColor;
+		Color					endColorVariance;
 		Vec2					startPosition;
 		Vec2					startPositionVariance;
 		Vec2					gravity;
+
+		static float			RanBaseVar(float base, float variance, bool neg=true);
+		static float			Interpolate(float start, float end, float fac);
 
 								ParticleSystem(string texturePath);
 								ParticleSystem();
@@ -59,6 +68,8 @@ namespace Pim {
 		virtual void			Update(float dt);
 		virtual void			Draw();
 		virtual void			BatchDraw();
+		int						GetParticleCount();
+		void					RemoveAllParticles();
 
 	protected:
 		/**
@@ -71,8 +82,12 @@ namespace Pim {
 			Vec2 				spawnPos;	// Used with positionType ABSOLUTE
 			Vec2				position;
 			Vec2				velocity;
+			float				startRotation;
+			float				endRotation;
 			float				rotation;
 			Color				color;
+			Color				startColor;
+			Color				endColor;
 			float				size;
 			float				startSize;
 			float				endSize;
