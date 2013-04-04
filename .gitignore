@@ -5,6 +5,7 @@ src/.DS_Store
 templates/osx/Pim_osxtemplate/Build/*
 
 visualstudio2012/Pim.sdf
+visualstudio2012/*.sdf
 visualstudio2012/Pim.v11.suo
 visualstudio2012/*.suo
 visualstudio2012/*.opensdf
@@ -14,3 +15,9 @@ visualstudio2012/Debug/*
 
 visualstudio2012/Release
 visualstudio2012/Release/*
+
+demo/vs2012/*.suo
+demo/vs2012/Release/*
+demo/vs2012/Debug/*
+demo/*.pdb
+demo/*.exe
