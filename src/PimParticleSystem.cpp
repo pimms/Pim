@@ -20,6 +20,37 @@ namespace Pim {
 	}
 
 
+
+	/*
+	==================
+	ParticleSystem::RandomValue
+	
+	Return a number in the range (base ± variance).
+	If "neg" is true, the return value CAN be negative.
+	==================
+	*/
+	inline float ParticleSystem::RanBaseVar(float base, float variance, bool neg) {
+		float ret = base;
+		ret += (variance * 2.f * ((float)rand() / (float)RAND_MAX));
+		ret -= variance;
+		
+		if (ret < 0.f && !neg) {
+			return 0.f;
+		}
+
+		return ret;
+	}
+
+	/*
+	==================
+	ParticleSystem::Interpolate
+	==================
+	*/
+	inline float ParticleSystem::Interpolate(float start, float end, float fac) {
+		return start * (1.f-fac) + end * fac;
+	}
+
+
 	/*
 	==================
 	ParticleSystem::ParticleSystem
@@ -89,24 +120,62 @@ namespace Pim {
 
 	/*
 	==================
+	ParticleSystem::GetParticleCount
+	==================
+	*/
+	int ParticleSystem::GetParticleCount() {
+		return particles.size();
+	}
+
+	/*
+	==================
+	ParticleSystem::RemoveAllParticles
+	==================
+	*/
+	void ParticleSystem::RemoveAllParticles() {
+		for (unsigned i=0; i<particles.size(); i++) {
+			particles[i].lifetime = -1.f;
+		}
+
+		Update(0.f);
+	}
+
+	/*
+	==================
 	ParticleSystem::InitiateParticle
 	==================
 	*/
 	void ParticleSystem::InitiateParticle(Particle &particle) {
 		particle.velocity = Vec2::UnitDegree(RandF(emitAngle, emitAngle+emitAngleVariance));
-		particle.velocity *= RandF(speed, speed+speedVariance);
+		particle.velocity *= RanBaseVar(speed, speedVariance);
 		
+		/* Randomize the start and end colors */
+		particle.startColor.r = RanBaseVar(startColor.r, startColorVariance.r);
+		particle.startColor.g = RanBaseVar(startColor.g, startColorVariance.g);
+		particle.startColor.b = RanBaseVar(startColor.b, startColorVariance.b);
+		particle.startColor.a = RanBaseVar(startColor.a, startColorVariance.a);
+
+		particle.endColor.r = RanBaseVar(endColor.r, endColorVariance.r);
+		particle.endColor.g = RanBaseVar(endColor.g, endColorVariance.g);
+		particle.endColor.b = RanBaseVar(endColor.b, endColorVariance.b);
+		particle.endColor.a = RanBaseVar(endColor.a, endColorVariance.a);
+
+		/* Randomize the position (Interpolate does not work correctly,
+		 * as it uses the same random factor for X and Y, thus creating
+		 * all new particles along a straight line.
+		 */
 		particle.spawnPos = GetLayerPosition();
-		particle.position = Vec2::Interpolate(
-			startPosition, 
-			startPosition + startPositionVariance,
-			(float)rand() / (float)RAND_MAX
-		);
-		
-		/* Initiate values */
-		particle.lifetime = RandF(lifetime, lifetime+lifetimeVariance);
-		particle.size = RandF(startSize, startSize+startSizeVariance);
-		particle.endSize = RandF(endSize, endSize+endSizeVariance);
+		particle.position.x = RanBaseVar(startPosition.x, startPositionVariance.x);
+		particle.position.y = RanBaseVar(startPosition.y, startPositionVariance.y);
+
+		/* Initiate other values */
+		particle.lifetime = RanBaseVar(lifetime, lifetimeVariance, false);
+
+		particle.startSize = RanBaseVar(startSize, startSizeVariance, false);
+		particle.endSize = RanBaseVar(endSize, endSizeVariance, false);
+
+		particle.startRotation = RanBaseVar(startRotation, startRotationVariance);
+		particle.endRotation = RanBaseVar(endRotation, endRotationVariance);
 	}
 
 	/*
@@ -120,16 +189,12 @@ namespace Pim {
 		particle.velocity += gravity * dt;
 		particle.position += particle.velocity * dt;
 
-		particle.color = Color::Interpolate(
-			startColor,
-			endColor, 
-			particle.age / particle.lifetime
-		);
+		float fac = particle.age / particle.lifetime;
 
-		/* TODO: Include variance in the calculation */
-		// Interpolate the size based on age
-		float f = particle.age / particle.lifetime;
-		particle.size = startSize * (1.f-f) + endSize * f;
+		particle.color = Color::Interpolate(particle.startColor,particle.endColor, fac);
+
+		particle.size = Interpolate(particle.startSize, particle.endSize, fac);
+		particle.rotation = Interpolate(particle.startRotation, particle.endRotation, fac);
 	}
 
 	/*
@@ -179,11 +244,13 @@ namespace Pim {
 		vertices.resize(particles.size()*4, Vertex());
 		
 		/* Create vertex data for each particle */
-		for (unsigned i=0; i<particles.size(); i++) {
+		for (unsigned j=0; j<particles.size(); j++) {
+			unsigned i = (particles.size()-1) - j;
+
 			float vertCoordX = particles[i].size / 2.f;
 			float vertCoordY = particles[i].size / 2.f;
 
-			unsigned vertexIdx = i*4;
+			unsigned vertexIdx = j*4;
 			Vertex &v0	= vertices[vertexIdx + 0];
 			Vertex &v1	= vertices[vertexIdx + 1];
 			Vertex &v2	= vertices[vertexIdx + 2];
