@@ -55,7 +55,7 @@ LightLayer::LoadSprites
 void LightLayer::LoadSprites()
 {
 	// Create the normal map
-	Pim::NormalMap *normal = new Pim::NormalMap("chester.png", "chesternorm.png");
+	Pim::NormalMap *normal = new Pim::NormalMap("white.png", "normal.png");
 	normal->position = Pim::Vec2(400.f, 300.f);
 	normal->scale *= 0.7f;
 	AddChild(normal);
@@ -72,7 +72,7 @@ void LightLayer::LoadLightingSystem()
 	SetLightingUnlitColor(Pim::Color(0.f, 0.f, 0.f, 1.f));
 	SetLightAlpha(0.1f);
 	SetShadowcasterDebugDraw(norm);
-	SetSmoothShadows(true);
+	SetSmoothShadows(false);
 
 	Pim::LightDef *ld1 = new Pim::FlatLightDef;
 	ld1->innerColor = Pim::Color(1.f, 0.f, 0.f, 1.f);
