@@ -31,6 +31,11 @@ to do.
 
 For the time being, Visual Studio 2012 is required to link / build PIM.
 
+OpenAL is required for Pim to work, so download the runtime libraries from
+
+	http://connect.creativelabs.com/openal/Downloads/oalinst.zip
+	
+
 Download PIM into any folder. Open up a command prompt, and run the following command. Notice the
 "/bin" at the end.
 
