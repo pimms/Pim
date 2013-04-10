@@ -74,7 +74,7 @@ namespace Pim {
 		float r = a * (float(M_PI) / 180.f);
 		return Vec2( x*cosf(r) - y*sinf(r),
 					 y*cosf(r) + x*sinf(r)
-				   );
+		);
 	}
 
 	/*
@@ -82,6 +82,7 @@ namespace Pim {
 	Vec2::AngleBetween360
 	=====================
 	*/
+	/*
 	float Vec2::AngleBetween360(const Vec2 &other) const {
 		float a = (atan2f(y, x) - atan2f(other.y, other.x)) * (180.f / M_PI);
 
@@ -91,6 +92,7 @@ namespace Pim {
 
 		return a;
 	}
+	*/
 
 	/*
 	=====================
@@ -98,10 +100,15 @@ namespace Pim {
 	=====================
 	*/
 	float Vec2::AngleBetween(const Vec2 &other) const {
-		float dot = Normalize().Dot(other.Normalize());
-		float angle = acosf(dot) * (180.f / M_PI);
+		float dot = Dot(other);
 
-		Vec2 diff = Vec2(x,y) - other;
+		float len = Length() * other.Length();
+		if (len == 0.f) len = 0.000001f;
+
+		float angle = acosf(dot / len) * (180.f / M_PI);
+
+		return angle;
+		Vec2 diff = (*this) - other;
 		if (diff.Dot(Vec2(0.f,1.f)) < 0.f) {
 			angle = -angle;
 		}
@@ -115,7 +122,15 @@ namespace Pim {
 	=====================
 	*/
 	float Vec2::Angle() const {
-		return atan2f(y, x) * (180.f / M_PI);
+		//return atan2f(y, x) * (180.f / M_PI);
+		float a = AngleBetween(Vec2(1.f, 0.f));
+		
+		if (Dot(Vec2(0.f, 1.f)) < 0.f) {
+			a = (180.f - a);
+			a += 180.f;
+		}
+
+		return a;
 	}
 
 	/*
