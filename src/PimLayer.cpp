@@ -73,7 +73,7 @@ namespace Pim {
 		}
 
 		if (parent) {
-			return position + parent->GetWorldPosition();
+			return GameNode::GetWorldPosition();
 		}
 
 		return position;

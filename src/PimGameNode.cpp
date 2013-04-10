@@ -197,7 +197,6 @@ namespace Pim {
 		return NULL;
 	}
 
-
 	/*
 	=====================
 	GameNode::ListenInput
@@ -297,7 +296,7 @@ namespace Pim {
 	*/
 	Vec2 GameNode::GetWorldPosition() const {
 		if (parent) {
-			return position.RotateAroundPoint(Vec2(0.f, 0.f), parent->rotation) +
+			return position.RotateAroundPoint(Vec2(0.f, 0.f), parent->GetWorldRotation()) +
 					parent->GetWorldPosition();
 		}
 		return position;
@@ -310,10 +309,9 @@ namespace Pim {
 	*/
 	Vec2 GameNode::GetLayerPosition() const {
 		if (parent) {
-			return position.RotateAroundPoint(Vec2(0.f, 0.f), parent->rotation) +
+			return position.RotateAroundPoint(Vec2(0.f, 0.f), parent->GetLayerRotation()) +
 					parent->GetLayerPosition();
 		}
-
 		return position;
 	}
 
