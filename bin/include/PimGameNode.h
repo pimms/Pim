@@ -94,8 +94,9 @@ namespace Pim {
 		void				ListenFrame();
 		void				UnlistenFrame();
 		virtual Vec2		GetWorldPosition() const;
-		virtual float		GetWorldRotation() const;
 		virtual Vec2		GetLayerPosition() const;
+		virtual float		GetWorldRotation() const;
+		virtual float		GetLayerRotation() const;
 		virtual void		Draw();
 		virtual void		BatchDraw();
 		virtual void		SetZOrder(const int z);

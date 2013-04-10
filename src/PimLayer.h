@@ -54,8 +54,9 @@ namespace Pim {
 		Scene*					GetParentScene() const;
 		Layer*					GetParentLayer();	// Returns this
 		Vec2					GetWorldPosition() const;
-		float					GetWorldRotation() const;
 		Vec2					GetLayerPosition() const;
+		float					GetWorldRotation() const;
+		float					GetLayerRotation() const;
 		void					SetImmovableLayer(bool immov);
 		virtual void			Draw();
 		virtual void			LoadResources() {}

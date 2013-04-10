@@ -305,6 +305,20 @@ namespace Pim {
 
 	/*
 	=====================
+	GameNode::GetLayerPosition
+	=====================
+	*/
+	Vec2 GameNode::GetLayerPosition() const {
+		if (parent) {
+			return position.RotateAroundPoint(Vec2(0.f, 0.f), parent->rotation) +
+					parent->GetLayerPosition();
+		}
+
+		return position;
+	}
+
+	/*
+	=====================
 	GameNode::GetWorldRotation
 	=====================
 	*/
@@ -316,17 +330,15 @@ namespace Pim {
 	}
 
 	/*
-	=====================
-	GameNode::GetLayerPosition
-	=====================
+	==================
+	GameNode::GetLayerRotation
+	==================
 	*/
-	Vec2 GameNode::GetLayerPosition() const {
+	float GameNode::GetLayerRotation() const {
 		if (parent) {
-			return position.RotateAroundPoint(Vec2(0.f, 0.f), parent->rotation) +
-					parent->GetLayerPosition();
+			return rotation + parent->GetLayerRotation();
 		}
-
-		return position;
+		return rotation;
 	}
 
 	/*
