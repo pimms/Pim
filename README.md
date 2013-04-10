@@ -43,7 +43,13 @@ If you have your new PIM-project open, close Visual Studio 2012 and try again,
 
 Open your project properties. In the top-left corner, set the 'Configuration'-tab to "All".
 
-Create a new empty Win32 project. Add to 'Linker -> General -> Additional Library Directories':
+Create a new "Win32 CONSOLE Project", or new "Empty Project".
+If you created a new "Empty Project", you _must_ add to 'C/C++ -> Preprocessor':
+
+	WIN32;_DEBUG;		For the debug configuration
+	WIN32; 			For the release configuration
+
+Add to 'Linker -> General -> Additional Library Directories':
 
 	$(PIM_HOME)\lib\$(Configuration);
 
@@ -57,8 +63,8 @@ Add to 'C/C++ -> General -> Additional Include Directories':
 
 Set 'C/C++ -> Code Generation -> Runtime Library' to:
 
-	'Multithreaded Debug (MTd)'       for debug builds
-	'Multithreaded (MT)'              for release builds
+	'Multithreaded Debug (MTd)'       For the debug configuration
+	'Multithreaded (MT)'              For the release configuration
 
 You should be set.
 
@@ -132,7 +138,7 @@ http://www.sgi.com/products/software/opengl/license.html
 
 http://www.libsdl.org
 
-Liscense: 
+License: 
 http://www.libsdl.org/license.php
 
 
