@@ -1,4 +1,5 @@
 #include "PimWinStyle.h"
+#include "PimAssert.h"
 
 namespace Pim {
 	namespace WinStyle {
@@ -19,6 +20,12 @@ namespace Pim {
 			renderResolution			= Vec2(wf, hf);
 			resolution					= Vec2(wf, hf);
 			defaultWindowedResolution	= Vec2(wf, hf);
+			createSDLWindow				= true;
+
+#ifdef WIN32
+			devCtx = NULL;
+			hWnd = NULL;
+#endif
 		}
 
 		/*
@@ -38,6 +45,12 @@ namespace Pim {
 			renderResolution			= Vec2(640.f, 480.f);
 			resolution					= Vec2(640.f, 480.f);
 			defaultWindowedResolution	= Vec2(640.f, 480.f);
+			createSDLWindow				= true;
+
+#ifdef WIN32
+			devCtx = NULL;
+			hWnd = NULL;
+#endif
 		}
 
 		/*
@@ -49,6 +62,12 @@ namespace Pim {
 			if (forcedAspectRatio && aspectRatio == 0.f) {
 					aspectRatio = resolution.x / resolution.y;
 			}
+
+#ifdef WIN32
+			PimAssert(createSDLWindow || (devCtx && hWnd),
+				"'CreateSDLWindow' is false, but the device context (HDC) "
+				"or window handle (HWND) is missing!");
+#endif
 		}
 	}
 }

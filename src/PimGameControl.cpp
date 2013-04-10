@@ -154,6 +154,15 @@ namespace Pim {
 	}
 
 	/*
+	==================
+	GameControl::GetMouseOffset
+	==================
+	*/
+	Vec2 GameControl::GetMouseOffset() {
+		return singleton->mouseOff;
+	}
+
+	/*
 	=====================
 	GameControl::GetScene
 	=====================
@@ -366,7 +375,9 @@ namespace Pim {
 		winData = data;
 		winData.Prepare();
 
-		renderWindow->SetCreationData(winData);
+		if (renderWindow) {
+			renderWindow->SetCreationData(winData);
+		}
 	}
 
 	/*
@@ -470,6 +481,16 @@ namespace Pim {
 			// Discard the new (and too high) delta time
 			CalculateDeltaTime();
 		}
+	}
+
+	/*
+	=====================
+	GameControl::SetMouseOffset
+	=====================
+	*/
+	void GameControl::SetMouseOffset(float offX, float offY) {
+		mouseOff.x = offX;
+		mouseOff.y = offY;
 	}
 
 	/*
@@ -579,7 +600,8 @@ namespace Pim {
 
 				case SDL_MOUSEMOTION:
 					Input::GetSingleton()->MouseMoved(
-						event.motion.x, event.motion.y
+						event.motion.x - mouseOff.x, 
+						event.motion.y /* mouseOff.y is used in MouseEvent::GetPosition() */
 					);
 					break;
 
@@ -607,10 +629,12 @@ namespace Pim {
 				case SDL_WINDOWEVENT:
 					switch (event.window.event) {
 						case SDL_WINDOWEVENT_RESIZED:
-							renderWindow->ResizeWindow(
-								event.window.data1,
-								event.window.data2
-							);
+							if (winData.createSDLWindow) {
+								renderWindow->ResizeWindow(
+									event.window.data1,
+									event.window.data2
+								);
+							}
 							break;	
 					}
 					break;

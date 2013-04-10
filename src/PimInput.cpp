@@ -214,9 +214,15 @@ namespace Pim {
 	=====================
 	*/
 	Vec2 MouseEvent::GetPosition() const {
-		return (Vec2(position.x, GameControl::GetWindowHeight()-position.y)
-				- GameControl::GetSingleton()->LowerLeftCorner())
-			    * GameControl::GetSingleton()->GetCoordinateFactor();
+		Vec2 v(
+			position.x,
+			GameControl::GetWindowHeight() + GameControl::GetMouseOffset().y - position.y
+		);
+
+		v -= GameControl::GetSingleton()->LowerLeftCorner();
+		v *= GameControl::GetSingleton()->GetCoordinateFactor();
+
+		return v;
 	}
 
 	/*

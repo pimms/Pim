@@ -48,6 +48,7 @@ namespace Pim {
 		static int				GetWindowWidth();
 		static int				GetWindowHeight();
 		static Vec2				GetWindowSize();
+		static Vec2				GetMouseOffset();
 		static Scene*			GetScene();
 		WinStyle::CreationData	GetCreationData() const;
 		void					Go(Scene *s, WinStyle::CreationData data, bool commandline=true);
@@ -72,6 +73,8 @@ namespace Pim {
 		void					SetScene(Scene *newScene);
 		void					AddNodeToDelete(GameNode *node);
 
+		void					SetMouseOffset(float offX, float offY);
+
 	private:
 		static GameControl		*singleton;
 		RenderWindow			*renderWindow;
@@ -90,6 +93,7 @@ namespace Pim {
 		WinStyle::CreationData	winData;
 		int						actualWinWidth;		// The values in winData does NOT apply if
 		int						actualWinHeight;	// the window style is BFS. Hence, these two.
+		Vec2					mouseOff;
 
 		void					GameLoop();
 		void					HandleEvents();
@@ -254,5 +258,17 @@ namespace Pim {
 	/**
 	 @fn 		void GameControl::Exit()
 	 @brief		Quit the game after the @e next game-loop iteration
+	 */
+
+	 /**
+	 @fn		void GameControl::SetMouseOffset(float offX, float offy)
+	 @brief		Set an origio offset. Should not be used unless you're using
+				an external OpenGL context.
+	 @details	When using an external OpenGL context, chances are your context won't
+				fill up the entire screen of be placed at position (0,0). Pass the
+				position of the context to this method in order for Pim to adjust
+				to your position.
+
+				Note that the position passed uses TOP LEFT ORIGO!
 	 */
 }

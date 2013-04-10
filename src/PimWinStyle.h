@@ -22,6 +22,11 @@ namespace Pim {
 		 
 		 @var 			CreationData::winStyle
 		 @brief 		WINDOWED or BORDERLESS_WINDOWED (unimplemented, 0.9).
+
+		 @var			Creationdata::createSDLWindow
+		 @brief			[WIN ONLY] If false, you must provide an external OpenGL context
+						which MUST BE INSTANTIATED before calling GameControl::Go! Also
+						note that devCtx and renCtx must be set to appropriate values!
 		 
 		 @var 			CreationData::forcedAspectRatio
 		 @brief 		If you wish to enforce the aspect ratio by adding black
@@ -53,11 +58,19 @@ namespace Pim {
 		 @brief 		The initial resolution of the window, given that the 
 		 				winStyle is WINDOWED.
 		 
+		 @var			CreationData::devCtx
+		 @brief			[WIN] Must be set to the appropriate device context when
+						using an external OpenGL context.
+
+		@var			CreationData::hWnd
+		@brief			The Window handle containing the external OpenGL context.
 		 */
 		struct CreationData {
 			string			winTitle;
 			int				bits;
 			WinStyle		winStyle;
+
+			bool			createSDLWindow;
 
 			bool			forcedAspectRatio;
 			float			aspectRatio;
@@ -67,6 +80,11 @@ namespace Pim {
 			
 			Vec2			defaultWindowedResolution;
 			Vec2			resolution;
+
+#ifdef WIN32
+			HDC				devCtx;
+			HWND			hWnd;
+#endif
 			
 							CreationData(const string title, int w, int h, 
 										 WinStyle style, int bit = 32);

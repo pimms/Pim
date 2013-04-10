@@ -53,6 +53,7 @@ namespace Pim {
 		Vec2						orthoOff;	// Border offset
 		BORDERPOS					bpos;		// Border position
 		int							bdim;		// Border dimensions
+		bool						sdlWindow;	// Was an SDL window created?
 
 		virtual bool				SetupWindow(WinStyle::CreationData &data);
 		virtual void				KillWindow();

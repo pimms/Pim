@@ -27,8 +27,14 @@
 	#include <process.h>	// To be removed in the future
 	//#include <omp.h>
 
-	// windows and OpenGL (glew)
-	#include <Windows.h>
+	// MFC apps cannot include Windows.h. If you're using Pim in an
+	// MFC project, define WIN_MFC in your project properties.
+	#ifndef WIN_MFC
+		#include <Windows.h>
+	#else
+		#include <afxwin.h>
+#	endif
+
 	#include <GL\glew.h>
 
 	// SDL

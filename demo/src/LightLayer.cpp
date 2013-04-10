@@ -55,7 +55,7 @@ LightLayer::LoadSprites
 void LightLayer::LoadSprites()
 {
 	// Create the normal map
-	Pim::NormalMap *normal = new Pim::NormalMap("white.png", "normal.png");
+	Pim::NormalMap *normal = new Pim::NormalMap("chester.png", "chesternorm.png");
 	normal->position = Pim::Vec2(400.f, 300.f);
 	normal->scale *= 0.7f;
 	AddChild(normal);

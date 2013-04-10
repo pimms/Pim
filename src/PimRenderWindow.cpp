@@ -18,6 +18,7 @@ namespace Pim {
 	RenderWindow::RenderWindow() {
 		window = NULL;
 		renderer = NULL;
+		sdlWindow = true;
 	}
 
 	/*
@@ -91,66 +92,75 @@ namespace Pim {
 	*/
 	bool RenderWindow::SetupWindow(WinStyle::CreationData &data) {
 		winData = data;
-		
+		sdlWindow = winData.createSDLWindow;
+
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) {
 			PimWarning("Failed to initialize SDL", "SDL Error");
 			return false;
 		}
 
-		window = SDL_CreateWindow(	data.winTitle.c_str(),
-									200, 200,
-									data.resolution.x, data.resolution.y, 
-									SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
-		if (!window) {
-			PimWarning("Failed to create a window", "SDL Error");
-			KillWindow();
-			return false;
-		}
+		if (winData.createSDLWindow) {
+			window = SDL_CreateWindow(	data.winTitle.c_str(),
+										200, 200,
+										data.resolution.x, data.resolution.y, 
+										SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+			if (!window) {
+				PimWarning("Failed to create a window", "SDL Error");
+				KillWindow();
+				return false;
+			}
 
-		SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+			SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
-		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-		if (!renderer) {
-			PimWarning("Failed to create a renderer", "SDL Error");
-			KillWindow();
-			return false;
-		}
+			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+			if (!renderer) {
+				PimWarning("Failed to create a renderer", "SDL Error");
+				KillWindow();
+				return false;
+			}
 
 #ifdef _DEBUG
-		/* Get the renderer information */
-		SDL_RendererInfo info;
-		SDL_GetRendererInfo(renderer, &info);
-		if (strcmp("direct3d", info.name) == 0) {
-			SDL_Quit();
-			printf("ERROR: SDL uses D3D!\n\nQUITTING!!!\n\n");
-			system("pause");
-			exit(1);
-		}
+			/* Get the renderer information */
+			SDL_RendererInfo info;
+			SDL_GetRendererInfo(renderer, &info);
+			if (strcmp("direct3d", info.name) == 0) {
+				SDL_Quit();
+				printf("ERROR: SDL uses D3D!\n\nQUITTING!!!\n\n");
+				system("pause");
+				exit(1);
+			}
 #endif
 
-		SDL_JoystickEventState(SDL_ENABLE);
+			SDL_JoystickEventState(SDL_ENABLE);
 
-		SDL_GL_SetAttribute(SDL_GL_RED_SIZE,            8);
-		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,          8);
-		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,           8);
-		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,          8);
+			SDL_GL_SetAttribute(SDL_GL_RED_SIZE,            8);
+			SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,          8);
+			SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,           8);
+			SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,          8);
  
-		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,          16);
-		SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,         32);
+			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,          16);
+			SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,         32);
  
-		SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,      8);
-		SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,    8);
-		SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,     8);
-		SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,    8);
+			SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,      8);
+			SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,    8);
+			SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,     8);
+			SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,    8);
  
-		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,  1);
-		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  2);
+			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,  1);
+			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  2);
 		
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 		1);
-		
+			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 		1);
+		} else {
+#ifdef WIN32
+			window = SDL_CreateWindowFrom(winData.hWnd);
+			SDL_SetWindowGrab(window, SDL_TRUE);
+#endif
+		}
+
 		// Create the window and set up the viewport to
 		// match the resolution defined.
 		ResizeWindow((int)winData.resolution.x, (int)winData.resolution.y);
+
 
 #ifdef WIN32
 	    // Initate GLEW
@@ -202,17 +212,6 @@ namespace Pim {
 		if (nh == 0) {
 			nh = 1;
 		}
-		printf("Resize: %i %i\n", nw, nh);
-		
-		/*
-		surface = SDL_SetVideoMode(nw, nh, winData.bits, 
-			SDL_OPENGL | SDL_SWSURFACE | SDL_NOFRAME
-		);
-		if (!surface) {
-			PimWarning("Failed to set Video Mode","SDL Error");
-			return;
-		}
-		*/
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -242,7 +241,6 @@ namespace Pim {
 				orthoOff = Vec2(0.f, (float)bdim);
 			}
 
-			// TODO: Include black borders in the orthographic projection
 			glOrtho((nw-rw)/-2.f, rw+(nw-rw)/2.f, (nh-rh)/-2.f, rh+(nh-rh)/2.f, 0, 1);
 			ortho = Vec2(rw,rh);
 
@@ -289,18 +287,17 @@ namespace Pim {
 	*/
 	void RenderWindow::SetCreationData(WinStyle::CreationData &data) {
 		if (data.winStyle != winData.winStyle) {
-			winData = data;
 			SetWindowStyle(data.winStyle);
 		}
 
-		if (data.forcedAspectRatio != winData.forcedAspectRatio
-		||	data.aspectRatio != winData.aspectRatio 
-		||	data.renderResolution != winData.renderResolution) {
+		if (data.forcedAspectRatio	!= winData.forcedAspectRatio
+		||	data.aspectRatio		!= winData.aspectRatio 
+		||	data.renderResolution	!= winData.renderResolution
+		||  data.resolution			!= winData.resolution) {
 			ResizeWindow((int)data.resolution.x, (int)data.resolution.y);
-			winData = data;
 		}
 
-		//winData = data;
+		winData = data;
 	}
 
 	/*
@@ -372,7 +369,14 @@ namespace Pim {
 			glEnable(GL_TEXTURE_2D);
 		}
 
-		SDL_GL_SwapWindow(window);
+		if (sdlWindow) {
+			SDL_GL_SwapWindow(window);
+		} else {
+#ifdef WIN32
+			//SwapBuffers(winData.devCtx);
+			wglSwapLayerBuffers(winData.devCtx, WGL_SWAP_MAIN_PLANE);
+#endif
+		}
 		
 		#ifdef _DEBUG
 		PrintOpenGLErrors("POSTRENDER FRAME");
