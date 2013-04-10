@@ -107,7 +107,7 @@ namespace Pim {
 	==================
 	*/
 	float Layer::GetLayerRotation() const {
-		return rotation;
+		return 0.f;
 	}
 
 	/*
