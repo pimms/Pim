@@ -55,7 +55,7 @@ LightLayer::LoadSprites
 void LightLayer::LoadSprites()
 {
 	// Create the normal map
-	Pim::NormalMap *normal = new Pim::NormalMap("chester.png", "chesternorm.png");
+	Pim::NormalMap *normal = new Pim::NormalMap("brown.png", "normalmap.png");
 	normal->position = Pim::Vec2(400.f, 300.f);
 	normal->scale *= 0.7f;
 	AddChild(normal);
@@ -68,21 +68,21 @@ LightLayer::LoadLightingSystem
 */
 void LightLayer::LoadLightingSystem()
 {
-	CreateLightingSystem(Pim::Vec2(1600.f, 1200.f));
+	CreateLightingSystem(Pim::Vec2(800.f, 600.f));
 	SetLightingUnlitColor(Pim::Color(0.f, 0.f, 0.f, 1.f));
-	SetLightAlpha(0.1f);
+	SetLightAlpha(0.f);
 	SetShadowcasterDebugDraw(norm);
 	SetSmoothShadows(false);
 
 	Pim::LightDef *ld1 = new Pim::FlatLightDef;
-	ld1->innerColor = Pim::Color(1.f, 0.f, 0.f, 1.f);
-	ld1->outerColor = Pim::Color(1.f, 0.f, 0.f, 0.f);
+	ld1->innerColor = Pim::Color(1.f, 1.f, 1.f, 1.f);
+	ld1->outerColor = Pim::Color(1.f, 1.f, 1.f, 0.f);
 	ld1->falloff = 1.f;
-	ld1->radius = 800.f;
+	ld1->radius = 400.f;
 	PreloadLightTexture(ld1, "preload");
 
 	Pim::PreloadLightDef *pld = new Pim::PreloadLightDef;
-	pld->radius = 800;
+	pld->radius = 400.f;
 
 	light = new Pim::GameNode;
 	light->position = Pim::Vec2(170.f, 150.f);
@@ -163,7 +163,7 @@ void LightLayer::OnMouseEvent(Pim::MouseEvent &evt)
 		//removeChild(light, true);
 
 		Pim::PreloadLightDef *pld = new Pim::PreloadLightDef;
-		pld->radius = 400 + rand()%201;
+		pld->radius = 400.f;
 
 		light = new Pim::GameNode;
 		AddChild(light);

@@ -44,14 +44,14 @@
 		19B0453C1716E71D00E2A32E /* PimSpriteBatchNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0451E1716E71D00E2A32E /* PimSpriteBatchNode.cpp */; };
 		19B0453D1716E71D00E2A32E /* PimVec2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045201716E71D00E2A32E /* PimVec2.cpp */; };
 		19B0453E1716E71D00E2A32E /* PimWinStyle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045221716E71D00E2A32E /* PimWinStyle.cpp */; };
-		19B0454E1716E72D00E2A32E /* ActionLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0453F1716E72D00E2A32E /* ActionLayer.cpp */; };
-		19B0454F1716E72D00E2A32E /* DemoScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045411716E72D00E2A32E /* DemoScene.cpp */; };
-		19B045501716E72D00E2A32E /* HUDLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045431716E72D00E2A32E /* HUDLayer.cpp */; };
-		19B045511716E72D00E2A32E /* LightLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045451716E72D00E2A32E /* LightLayer.cpp */; };
-		19B045521716E72D00E2A32E /* ParticleLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045471716E72D00E2A32E /* ParticleLayer.cpp */; };
-		19B045531716E72D00E2A32E /* Pim_demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045491716E72D00E2A32E /* Pim_demo.cpp */; };
-		19B045541716E72D00E2A32E /* SoundLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0454A1716E72D00E2A32E /* SoundLayer.cpp */; };
-		19B045551716E72D00E2A32E /* WelcomeLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0454C1716E72D00E2A32E /* WelcomeLayer.cpp */; };
+		19B045651716F76D00E2A32E /* ActionLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045561716F76C00E2A32E /* ActionLayer.cpp */; };
+		19B045661716F76D00E2A32E /* DemoScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045581716F76C00E2A32E /* DemoScene.cpp */; };
+		19B045671716F76D00E2A32E /* HUDLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0455A1716F76C00E2A32E /* HUDLayer.cpp */; };
+		19B045681716F76D00E2A32E /* LightLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0455C1716F76C00E2A32E /* LightLayer.cpp */; };
+		19B045691716F76D00E2A32E /* ParticleLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0455E1716F76C00E2A32E /* ParticleLayer.cpp */; };
+		19B0456A1716F76D00E2A32E /* Pim_demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045601716F76D00E2A32E /* Pim_demo.cpp */; };
+		19B0456B1716F76D00E2A32E /* SoundLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045611716F76D00E2A32E /* SoundLayer.cpp */; };
+		19B0456C1716F76D00E2A32E /* WelcomeLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045631716F76D00E2A32E /* WelcomeLayer.cpp */; };
 		19E401EB16EFD3DE00FB8B2D /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C416D12385008F6C4F /* SDL2.framework */; };
 		19EB2D6016D12FCC0088B6B8 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5A16D12FCC0088B6B8 /* tinystr.cpp */; };
 		19EB2D6116D12FCC0088B6B8 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5C16D12FCC0088B6B8 /* tinyxml.cpp */; };
@@ -143,21 +143,21 @@
 		19B045211716E71D00E2A32E /* PimVec2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimVec2.h; path = ../src/PimVec2.h; sourceTree = "<group>"; };
 		19B045221716E71D00E2A32E /* PimWinStyle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimWinStyle.cpp; path = ../src/PimWinStyle.cpp; sourceTree = "<group>"; };
 		19B045231716E71D00E2A32E /* PimWinStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimWinStyle.h; path = ../src/PimWinStyle.h; sourceTree = "<group>"; };
-		19B0453F1716E72D00E2A32E /* ActionLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ActionLayer.cpp; path = ../demo/src/ActionLayer.cpp; sourceTree = "<group>"; };
-		19B045401716E72D00E2A32E /* ActionLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActionLayer.h; path = ../demo/src/ActionLayer.h; sourceTree = "<group>"; };
-		19B045411716E72D00E2A32E /* DemoScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DemoScene.cpp; path = ../demo/src/DemoScene.cpp; sourceTree = "<group>"; };
-		19B045421716E72D00E2A32E /* DemoScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DemoScene.h; path = ../demo/src/DemoScene.h; sourceTree = "<group>"; };
-		19B045431716E72D00E2A32E /* HUDLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HUDLayer.cpp; path = ../demo/src/HUDLayer.cpp; sourceTree = "<group>"; };
-		19B045441716E72D00E2A32E /* HUDLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HUDLayer.h; path = ../demo/src/HUDLayer.h; sourceTree = "<group>"; };
-		19B045451716E72D00E2A32E /* LightLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LightLayer.cpp; path = ../demo/src/LightLayer.cpp; sourceTree = "<group>"; };
-		19B045461716E72D00E2A32E /* LightLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LightLayer.h; path = ../demo/src/LightLayer.h; sourceTree = "<group>"; };
-		19B045471716E72D00E2A32E /* ParticleLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticleLayer.cpp; path = ../demo/src/ParticleLayer.cpp; sourceTree = "<group>"; };
-		19B045481716E72D00E2A32E /* ParticleLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParticleLayer.h; path = ../demo/src/ParticleLayer.h; sourceTree = "<group>"; };
-		19B045491716E72D00E2A32E /* Pim_demo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pim_demo.cpp; path = ../demo/src/Pim_demo.cpp; sourceTree = "<group>"; };
-		19B0454A1716E72D00E2A32E /* SoundLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SoundLayer.cpp; path = ../demo/src/SoundLayer.cpp; sourceTree = "<group>"; };
-		19B0454B1716E72D00E2A32E /* SoundLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SoundLayer.h; path = ../demo/src/SoundLayer.h; sourceTree = "<group>"; };
-		19B0454C1716E72D00E2A32E /* WelcomeLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WelcomeLayer.cpp; path = ../demo/src/WelcomeLayer.cpp; sourceTree = "<group>"; };
-		19B0454D1716E72D00E2A32E /* WelcomeLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WelcomeLayer.h; path = ../demo/src/WelcomeLayer.h; sourceTree = "<group>"; };
+		19B045561716F76C00E2A32E /* ActionLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ActionLayer.cpp; path = ../demo/src/ActionLayer.cpp; sourceTree = "<group>"; };
+		19B045571716F76C00E2A32E /* ActionLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActionLayer.h; path = ../demo/src/ActionLayer.h; sourceTree = "<group>"; };
+		19B045581716F76C00E2A32E /* DemoScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DemoScene.cpp; path = ../demo/src/DemoScene.cpp; sourceTree = "<group>"; };
+		19B045591716F76C00E2A32E /* DemoScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DemoScene.h; path = ../demo/src/DemoScene.h; sourceTree = "<group>"; };
+		19B0455A1716F76C00E2A32E /* HUDLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HUDLayer.cpp; path = ../demo/src/HUDLayer.cpp; sourceTree = "<group>"; };
+		19B0455B1716F76C00E2A32E /* HUDLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HUDLayer.h; path = ../demo/src/HUDLayer.h; sourceTree = "<group>"; };
+		19B0455C1716F76C00E2A32E /* LightLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LightLayer.cpp; path = ../demo/src/LightLayer.cpp; sourceTree = "<group>"; };
+		19B0455D1716F76C00E2A32E /* LightLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LightLayer.h; path = ../demo/src/LightLayer.h; sourceTree = "<group>"; };
+		19B0455E1716F76C00E2A32E /* ParticleLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticleLayer.cpp; path = ../demo/src/ParticleLayer.cpp; sourceTree = "<group>"; };
+		19B0455F1716F76C00E2A32E /* ParticleLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParticleLayer.h; path = ../demo/src/ParticleLayer.h; sourceTree = "<group>"; };
+		19B045601716F76D00E2A32E /* Pim_demo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pim_demo.cpp; path = ../demo/src/Pim_demo.cpp; sourceTree = "<group>"; };
+		19B045611716F76D00E2A32E /* SoundLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SoundLayer.cpp; path = ../demo/src/SoundLayer.cpp; sourceTree = "<group>"; };
+		19B045621716F76D00E2A32E /* SoundLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SoundLayer.h; path = ../demo/src/SoundLayer.h; sourceTree = "<group>"; };
+		19B045631716F76D00E2A32E /* WelcomeLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WelcomeLayer.cpp; path = ../demo/src/WelcomeLayer.cpp; sourceTree = "<group>"; };
+		19B045641716F76D00E2A32E /* WelcomeLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WelcomeLayer.h; path = ../demo/src/WelcomeLayer.h; sourceTree = "<group>"; };
 		19EB2D5916D12FCC0088B6B8 /* ft2build.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ft2build.h; sourceTree = "<group>"; };
 		19EB2D5A16D12FCC0088B6B8 /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinystr.cpp; sourceTree = "<group>"; };
 		19EB2D5B16D12FCC0088B6B8 /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinystr.h; sourceTree = "<group>"; };
@@ -208,21 +208,21 @@
 		193B456C16D12330008F6C4F /* Pim */ = {
 			isa = PBXGroup;
 			children = (
-				19B0453F1716E72D00E2A32E /* ActionLayer.cpp */,
-				19B045401716E72D00E2A32E /* ActionLayer.h */,
-				19B045411716E72D00E2A32E /* DemoScene.cpp */,
-				19B045421716E72D00E2A32E /* DemoScene.h */,
-				19B045431716E72D00E2A32E /* HUDLayer.cpp */,
-				19B045441716E72D00E2A32E /* HUDLayer.h */,
-				19B045451716E72D00E2A32E /* LightLayer.cpp */,
-				19B045461716E72D00E2A32E /* LightLayer.h */,
-				19B045471716E72D00E2A32E /* ParticleLayer.cpp */,
-				19B045481716E72D00E2A32E /* ParticleLayer.h */,
-				19B045491716E72D00E2A32E /* Pim_demo.cpp */,
-				19B0454A1716E72D00E2A32E /* SoundLayer.cpp */,
-				19B0454B1716E72D00E2A32E /* SoundLayer.h */,
-				19B0454C1716E72D00E2A32E /* WelcomeLayer.cpp */,
-				19B0454D1716E72D00E2A32E /* WelcomeLayer.h */,
+				19B045561716F76C00E2A32E /* ActionLayer.cpp */,
+				19B045571716F76C00E2A32E /* ActionLayer.h */,
+				19B045581716F76C00E2A32E /* DemoScene.cpp */,
+				19B045591716F76C00E2A32E /* DemoScene.h */,
+				19B0455A1716F76C00E2A32E /* HUDLayer.cpp */,
+				19B0455B1716F76C00E2A32E /* HUDLayer.h */,
+				19B0455C1716F76C00E2A32E /* LightLayer.cpp */,
+				19B0455D1716F76C00E2A32E /* LightLayer.h */,
+				19B0455E1716F76C00E2A32E /* ParticleLayer.cpp */,
+				19B0455F1716F76C00E2A32E /* ParticleLayer.h */,
+				19B045601716F76D00E2A32E /* Pim_demo.cpp */,
+				19B045611716F76D00E2A32E /* SoundLayer.cpp */,
+				19B045621716F76D00E2A32E /* SoundLayer.h */,
+				19B045631716F76D00E2A32E /* WelcomeLayer.cpp */,
+				19B045641716F76D00E2A32E /* WelcomeLayer.h */,
 				19EB2D5816D12FB20088B6B8 /* Source */,
 				193B45CC16D123BA008F6C4F /* Other Dependencies */,
 				193B456D16D1233C008F6C4F /* Frameworks */,
@@ -412,14 +412,14 @@
 				19B0453C1716E71D00E2A32E /* PimSpriteBatchNode.cpp in Sources */,
 				19B0453D1716E71D00E2A32E /* PimVec2.cpp in Sources */,
 				19B0453E1716E71D00E2A32E /* PimWinStyle.cpp in Sources */,
-				19B0454E1716E72D00E2A32E /* ActionLayer.cpp in Sources */,
-				19B0454F1716E72D00E2A32E /* DemoScene.cpp in Sources */,
-				19B045501716E72D00E2A32E /* HUDLayer.cpp in Sources */,
-				19B045511716E72D00E2A32E /* LightLayer.cpp in Sources */,
-				19B045521716E72D00E2A32E /* ParticleLayer.cpp in Sources */,
-				19B045531716E72D00E2A32E /* Pim_demo.cpp in Sources */,
-				19B045541716E72D00E2A32E /* SoundLayer.cpp in Sources */,
-				19B045551716E72D00E2A32E /* WelcomeLayer.cpp in Sources */,
+				19B045651716F76D00E2A32E /* ActionLayer.cpp in Sources */,
+				19B045661716F76D00E2A32E /* DemoScene.cpp in Sources */,
+				19B045671716F76D00E2A32E /* HUDLayer.cpp in Sources */,
+				19B045681716F76D00E2A32E /* LightLayer.cpp in Sources */,
+				19B045691716F76D00E2A32E /* ParticleLayer.cpp in Sources */,
+				19B0456A1716F76D00E2A32E /* Pim_demo.cpp in Sources */,
+				19B0456B1716F76D00E2A32E /* SoundLayer.cpp in Sources */,
+				19B0456C1716F76D00E2A32E /* WelcomeLayer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
