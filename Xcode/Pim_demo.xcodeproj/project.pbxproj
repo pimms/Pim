@@ -1,0 +1,561 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		193B45C616D12385008F6C4F /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C116D12385008F6C4F /* libfreetype.a */; };
+		193B45C716D12385008F6C4F /* libpng15.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C216D12385008F6C4F /* libpng15.framework */; };
+		193B45C816D12385008F6C4F /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C316D12385008F6C4F /* Ogg.framework */; };
+		193B45CA16D12385008F6C4F /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C516D12385008F6C4F /* Vorbis.framework */; };
+		193B45D916D12487008F6C4F /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45D816D12487008F6C4F /* OpenGL.framework */; };
+		193B45DB16D1248B008F6C4F /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45DA16D1248B008F6C4F /* OpenAL.framework */; };
+		193B45DD16D1248E008F6C4F /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45DC16D1248E008F6C4F /* libz.1.1.3.dylib */; };
+		193B45DF16D12492008F6C4F /* libbz2.1.0.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45DE16D12492008F6C4F /* libbz2.1.0.5.dylib */; };
+		193B45E116D126F0008F6C4F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45E016D126F0008F6C4F /* Cocoa.framework */; };
+		193B45E416D1276C008F6C4F /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 193B45E316D1276C008F6C4F /* SDLMain.m */; settings = {COMPILER_FLAGS = "-fno-obj-arc"; }; };
+		19B045241716E71D00E2A32E /* Pim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B044EA1716E71D00E2A32E /* Pim.cpp */; };
+		19B045251716E71D00E2A32E /* PimAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B044EC1716E71D00E2A32E /* PimAction.cpp */; };
+		19B045261716E71D00E2A32E /* PimAudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B044EF1716E71D00E2A32E /* PimAudioManager.cpp */; };
+		19B045271716E71D00E2A32E /* PimButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B044F11716E71D00E2A32E /* PimButton.cpp */; };
+		19B045281716E71D00E2A32E /* PimConsoleReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B044F31716E71D00E2A32E /* PimConsoleReader.cpp */; };
+		19B045291716E71D00E2A32E /* PimFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B044F51716E71D00E2A32E /* PimFont.cpp */; };
+		19B0452A1716E71D00E2A32E /* PimGameControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B044F71716E71D00E2A32E /* PimGameControl.cpp */; };
+		19B0452B1716E71D00E2A32E /* PimGameNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B044F91716E71D00E2A32E /* PimGameNode.cpp */; };
+		19B0452C1716E71D00E2A32E /* PimInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B044FC1716E71D00E2A32E /* PimInput.cpp */; };
+		19B0452D1716E71D00E2A32E /* PimLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B044FF1716E71D00E2A32E /* PimLabel.cpp */; };
+		19B0452E1716E71D00E2A32E /* PimLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045011716E71D00E2A32E /* PimLayer.cpp */; };
+		19B0452F1716E71D00E2A32E /* PimLevelParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045031716E71D00E2A32E /* PimLevelParser.cpp */; };
+		19B045301716E71D00E2A32E /* PimLightDef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045051716E71D00E2A32E /* PimLightDef.cpp */; };
+		19B045311716E71D00E2A32E /* PimLightingSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045071716E71D00E2A32E /* PimLightingSystem.cpp */; };
+		19B045321716E71D00E2A32E /* PimNormalMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0450A1716E71D00E2A32E /* PimNormalMap.cpp */; };
+		19B045331716E71D00E2A32E /* PimParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0450C1716E71D00E2A32E /* PimParticleSystem.cpp */; };
+		19B045341716E71D00E2A32E /* PimPolygonShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0450E1716E71D00E2A32E /* PimPolygonShape.cpp */; };
+		19B045351716E71D00E2A32E /* PimRenderTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045101716E71D00E2A32E /* PimRenderTexture.cpp */; };
+		19B045361716E71D00E2A32E /* PimRenderWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045121716E71D00E2A32E /* PimRenderWindow.cpp */; };
+		19B045371716E71D00E2A32E /* PimScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045141716E71D00E2A32E /* PimScene.cpp */; };
+		19B045381716E71D00E2A32E /* PimShaderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045161716E71D00E2A32E /* PimShaderManager.cpp */; };
+		19B045391716E71D00E2A32E /* PimSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045181716E71D00E2A32E /* PimSlider.cpp */; };
+		19B0453A1716E71D00E2A32E /* PimSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0451A1716E71D00E2A32E /* PimSound.cpp */; };
+		19B0453B1716E71D00E2A32E /* PimSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0451C1716E71D00E2A32E /* PimSprite.cpp */; };
+		19B0453C1716E71D00E2A32E /* PimSpriteBatchNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0451E1716E71D00E2A32E /* PimSpriteBatchNode.cpp */; };
+		19B0453D1716E71D00E2A32E /* PimVec2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045201716E71D00E2A32E /* PimVec2.cpp */; };
+		19B0453E1716E71D00E2A32E /* PimWinStyle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045221716E71D00E2A32E /* PimWinStyle.cpp */; };
+		19B0454E1716E72D00E2A32E /* ActionLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0453F1716E72D00E2A32E /* ActionLayer.cpp */; };
+		19B0454F1716E72D00E2A32E /* DemoScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045411716E72D00E2A32E /* DemoScene.cpp */; };
+		19B045501716E72D00E2A32E /* HUDLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045431716E72D00E2A32E /* HUDLayer.cpp */; };
+		19B045511716E72D00E2A32E /* LightLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045451716E72D00E2A32E /* LightLayer.cpp */; };
+		19B045521716E72D00E2A32E /* ParticleLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045471716E72D00E2A32E /* ParticleLayer.cpp */; };
+		19B045531716E72D00E2A32E /* Pim_demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B045491716E72D00E2A32E /* Pim_demo.cpp */; };
+		19B045541716E72D00E2A32E /* SoundLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0454A1716E72D00E2A32E /* SoundLayer.cpp */; };
+		19B045551716E72D00E2A32E /* WelcomeLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B0454C1716E72D00E2A32E /* WelcomeLayer.cpp */; };
+		19E401EB16EFD3DE00FB8B2D /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193B45C416D12385008F6C4F /* SDL2.framework */; };
+		19EB2D6016D12FCC0088B6B8 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5A16D12FCC0088B6B8 /* tinystr.cpp */; };
+		19EB2D6116D12FCC0088B6B8 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5C16D12FCC0088B6B8 /* tinyxml.cpp */; };
+		19EB2D6216D12FCC0088B6B8 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5E16D12FCC0088B6B8 /* tinyxmlerror.cpp */; };
+		19EB2D6316D12FCC0088B6B8 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EB2D5F16D12FCC0088B6B8 /* tinyxmlparser.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		193B455E16D1232B008F6C4F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		193B456016D1232B008F6C4F /* pim_demo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pim_demo; sourceTree = BUILT_PRODUCTS_DIR; };
+		193B45C116D12385008F6C4F /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfreetype.a; sourceTree = "<group>"; };
+		193B45C216D12385008F6C4F /* libpng15.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libpng15.framework; sourceTree = "<group>"; };
+		193B45C316D12385008F6C4F /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Ogg.framework; sourceTree = "<group>"; };
+		193B45C416D12385008F6C4F /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SDL2.framework; sourceTree = "<group>"; };
+		193B45C516D12385008F6C4F /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Vorbis.framework; sourceTree = "<group>"; };
+		193B45D816D12487008F6C4F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		193B45DA16D1248B008F6C4F /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		193B45DC16D1248E008F6C4F /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
+		193B45DE16D12492008F6C4F /* libbz2.1.0.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.1.0.5.dylib; path = usr/lib/libbz2.1.0.5.dylib; sourceTree = SDKROOT; };
+		193B45E016D126F0008F6C4F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		193B45E216D1276C008F6C4F /* SDLMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLMain.h; sourceTree = "<group>"; };
+		193B45E316D1276C008F6C4F /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = "<group>"; };
+		19B044EA1716E71D00E2A32E /* Pim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pim.cpp; path = ../src/Pim.cpp; sourceTree = "<group>"; };
+		19B044EB1716E71D00E2A32E /* Pim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pim.h; path = ../src/Pim.h; sourceTree = "<group>"; };
+		19B044EC1716E71D00E2A32E /* PimAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimAction.cpp; path = ../src/PimAction.cpp; sourceTree = "<group>"; };
+		19B044ED1716E71D00E2A32E /* PimAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimAction.h; path = ../src/PimAction.h; sourceTree = "<group>"; };
+		19B044EE1716E71D00E2A32E /* PimAssert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimAssert.h; path = ../src/PimAssert.h; sourceTree = "<group>"; };
+		19B044EF1716E71D00E2A32E /* PimAudioManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimAudioManager.cpp; path = ../src/PimAudioManager.cpp; sourceTree = "<group>"; };
+		19B044F01716E71D00E2A32E /* PimAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimAudioManager.h; path = ../src/PimAudioManager.h; sourceTree = "<group>"; };
+		19B044F11716E71D00E2A32E /* PimButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimButton.cpp; path = ../src/PimButton.cpp; sourceTree = "<group>"; };
+		19B044F21716E71D00E2A32E /* PimButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimButton.h; path = ../src/PimButton.h; sourceTree = "<group>"; };
+		19B044F31716E71D00E2A32E /* PimConsoleReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimConsoleReader.cpp; path = ../src/PimConsoleReader.cpp; sourceTree = "<group>"; };
+		19B044F41716E71D00E2A32E /* PimConsoleReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimConsoleReader.h; path = ../src/PimConsoleReader.h; sourceTree = "<group>"; };
+		19B044F51716E71D00E2A32E /* PimFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimFont.cpp; path = ../src/PimFont.cpp; sourceTree = "<group>"; };
+		19B044F61716E71D00E2A32E /* PimFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimFont.h; path = ../src/PimFont.h; sourceTree = "<group>"; };
+		19B044F71716E71D00E2A32E /* PimGameControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimGameControl.cpp; path = ../src/PimGameControl.cpp; sourceTree = "<group>"; };
+		19B044F81716E71D00E2A32E /* PimGameControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimGameControl.h; path = ../src/PimGameControl.h; sourceTree = "<group>"; };
+		19B044F91716E71D00E2A32E /* PimGameNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimGameNode.cpp; path = ../src/PimGameNode.cpp; sourceTree = "<group>"; };
+		19B044FA1716E71D00E2A32E /* PimGameNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimGameNode.h; path = ../src/PimGameNode.h; sourceTree = "<group>"; };
+		19B044FB1716E71D00E2A32E /* PimHelperFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimHelperFunctions.h; path = ../src/PimHelperFunctions.h; sourceTree = "<group>"; };
+		19B044FC1716E71D00E2A32E /* PimInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimInput.cpp; path = ../src/PimInput.cpp; sourceTree = "<group>"; };
+		19B044FD1716E71D00E2A32E /* PimInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimInput.h; path = ../src/PimInput.h; sourceTree = "<group>"; };
+		19B044FE1716E71D00E2A32E /* PimInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimInternal.h; path = ../src/PimInternal.h; sourceTree = "<group>"; };
+		19B044FF1716E71D00E2A32E /* PimLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimLabel.cpp; path = ../src/PimLabel.cpp; sourceTree = "<group>"; };
+		19B045001716E71D00E2A32E /* PimLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimLabel.h; path = ../src/PimLabel.h; sourceTree = "<group>"; };
+		19B045011716E71D00E2A32E /* PimLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimLayer.cpp; path = ../src/PimLayer.cpp; sourceTree = "<group>"; };
+		19B045021716E71D00E2A32E /* PimLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimLayer.h; path = ../src/PimLayer.h; sourceTree = "<group>"; };
+		19B045031716E71D00E2A32E /* PimLevelParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimLevelParser.cpp; path = ../src/PimLevelParser.cpp; sourceTree = "<group>"; };
+		19B045041716E71D00E2A32E /* PimLevelParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimLevelParser.h; path = ../src/PimLevelParser.h; sourceTree = "<group>"; };
+		19B045051716E71D00E2A32E /* PimLightDef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimLightDef.cpp; path = ../src/PimLightDef.cpp; sourceTree = "<group>"; };
+		19B045061716E71D00E2A32E /* PimLightDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimLightDef.h; path = ../src/PimLightDef.h; sourceTree = "<group>"; };
+		19B045071716E71D00E2A32E /* PimLightingSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimLightingSystem.cpp; path = ../src/PimLightingSystem.cpp; sourceTree = "<group>"; };
+		19B045081716E71D00E2A32E /* PimLightingSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimLightingSystem.h; path = ../src/PimLightingSystem.h; sourceTree = "<group>"; };
+		19B045091716E71D00E2A32E /* PimLightingSystemShaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimLightingSystemShaders.h; path = ../src/PimLightingSystemShaders.h; sourceTree = "<group>"; };
+		19B0450A1716E71D00E2A32E /* PimNormalMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimNormalMap.cpp; path = ../src/PimNormalMap.cpp; sourceTree = "<group>"; };
+		19B0450B1716E71D00E2A32E /* PimNormalMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimNormalMap.h; path = ../src/PimNormalMap.h; sourceTree = "<group>"; };
+		19B0450C1716E71D00E2A32E /* PimParticleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimParticleSystem.cpp; path = ../src/PimParticleSystem.cpp; sourceTree = "<group>"; };
+		19B0450D1716E71D00E2A32E /* PimParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimParticleSystem.h; path = ../src/PimParticleSystem.h; sourceTree = "<group>"; };
+		19B0450E1716E71D00E2A32E /* PimPolygonShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimPolygonShape.cpp; path = ../src/PimPolygonShape.cpp; sourceTree = "<group>"; };
+		19B0450F1716E71D00E2A32E /* PimPolygonShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimPolygonShape.h; path = ../src/PimPolygonShape.h; sourceTree = "<group>"; };
+		19B045101716E71D00E2A32E /* PimRenderTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimRenderTexture.cpp; path = ../src/PimRenderTexture.cpp; sourceTree = "<group>"; };
+		19B045111716E71D00E2A32E /* PimRenderTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimRenderTexture.h; path = ../src/PimRenderTexture.h; sourceTree = "<group>"; };
+		19B045121716E71D00E2A32E /* PimRenderWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimRenderWindow.cpp; path = ../src/PimRenderWindow.cpp; sourceTree = "<group>"; };
+		19B045131716E71D00E2A32E /* PimRenderWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimRenderWindow.h; path = ../src/PimRenderWindow.h; sourceTree = "<group>"; };
+		19B045141716E71D00E2A32E /* PimScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimScene.cpp; path = ../src/PimScene.cpp; sourceTree = "<group>"; };
+		19B045151716E71D00E2A32E /* PimScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimScene.h; path = ../src/PimScene.h; sourceTree = "<group>"; };
+		19B045161716E71D00E2A32E /* PimShaderManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimShaderManager.cpp; path = ../src/PimShaderManager.cpp; sourceTree = "<group>"; };
+		19B045171716E71D00E2A32E /* PimShaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimShaderManager.h; path = ../src/PimShaderManager.h; sourceTree = "<group>"; };
+		19B045181716E71D00E2A32E /* PimSlider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimSlider.cpp; path = ../src/PimSlider.cpp; sourceTree = "<group>"; };
+		19B045191716E71D00E2A32E /* PimSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimSlider.h; path = ../src/PimSlider.h; sourceTree = "<group>"; };
+		19B0451A1716E71D00E2A32E /* PimSound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimSound.cpp; path = ../src/PimSound.cpp; sourceTree = "<group>"; };
+		19B0451B1716E71D00E2A32E /* PimSound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimSound.h; path = ../src/PimSound.h; sourceTree = "<group>"; };
+		19B0451C1716E71D00E2A32E /* PimSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimSprite.cpp; path = ../src/PimSprite.cpp; sourceTree = "<group>"; };
+		19B0451D1716E71D00E2A32E /* PimSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimSprite.h; path = ../src/PimSprite.h; sourceTree = "<group>"; };
+		19B0451E1716E71D00E2A32E /* PimSpriteBatchNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimSpriteBatchNode.cpp; path = ../src/PimSpriteBatchNode.cpp; sourceTree = "<group>"; };
+		19B0451F1716E71D00E2A32E /* PimSpriteBatchNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimSpriteBatchNode.h; path = ../src/PimSpriteBatchNode.h; sourceTree = "<group>"; };
+		19B045201716E71D00E2A32E /* PimVec2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimVec2.cpp; path = ../src/PimVec2.cpp; sourceTree = "<group>"; };
+		19B045211716E71D00E2A32E /* PimVec2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimVec2.h; path = ../src/PimVec2.h; sourceTree = "<group>"; };
+		19B045221716E71D00E2A32E /* PimWinStyle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PimWinStyle.cpp; path = ../src/PimWinStyle.cpp; sourceTree = "<group>"; };
+		19B045231716E71D00E2A32E /* PimWinStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PimWinStyle.h; path = ../src/PimWinStyle.h; sourceTree = "<group>"; };
+		19B0453F1716E72D00E2A32E /* ActionLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ActionLayer.cpp; path = ../demo/src/ActionLayer.cpp; sourceTree = "<group>"; };
+		19B045401716E72D00E2A32E /* ActionLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActionLayer.h; path = ../demo/src/ActionLayer.h; sourceTree = "<group>"; };
+		19B045411716E72D00E2A32E /* DemoScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DemoScene.cpp; path = ../demo/src/DemoScene.cpp; sourceTree = "<group>"; };
+		19B045421716E72D00E2A32E /* DemoScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DemoScene.h; path = ../demo/src/DemoScene.h; sourceTree = "<group>"; };
+		19B045431716E72D00E2A32E /* HUDLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HUDLayer.cpp; path = ../demo/src/HUDLayer.cpp; sourceTree = "<group>"; };
+		19B045441716E72D00E2A32E /* HUDLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HUDLayer.h; path = ../demo/src/HUDLayer.h; sourceTree = "<group>"; };
+		19B045451716E72D00E2A32E /* LightLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LightLayer.cpp; path = ../demo/src/LightLayer.cpp; sourceTree = "<group>"; };
+		19B045461716E72D00E2A32E /* LightLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LightLayer.h; path = ../demo/src/LightLayer.h; sourceTree = "<group>"; };
+		19B045471716E72D00E2A32E /* ParticleLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticleLayer.cpp; path = ../demo/src/ParticleLayer.cpp; sourceTree = "<group>"; };
+		19B045481716E72D00E2A32E /* ParticleLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParticleLayer.h; path = ../demo/src/ParticleLayer.h; sourceTree = "<group>"; };
+		19B045491716E72D00E2A32E /* Pim_demo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pim_demo.cpp; path = ../demo/src/Pim_demo.cpp; sourceTree = "<group>"; };
+		19B0454A1716E72D00E2A32E /* SoundLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SoundLayer.cpp; path = ../demo/src/SoundLayer.cpp; sourceTree = "<group>"; };
+		19B0454B1716E72D00E2A32E /* SoundLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SoundLayer.h; path = ../demo/src/SoundLayer.h; sourceTree = "<group>"; };
+		19B0454C1716E72D00E2A32E /* WelcomeLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WelcomeLayer.cpp; path = ../demo/src/WelcomeLayer.cpp; sourceTree = "<group>"; };
+		19B0454D1716E72D00E2A32E /* WelcomeLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WelcomeLayer.h; path = ../demo/src/WelcomeLayer.h; sourceTree = "<group>"; };
+		19EB2D5916D12FCC0088B6B8 /* ft2build.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ft2build.h; sourceTree = "<group>"; };
+		19EB2D5A16D12FCC0088B6B8 /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinystr.cpp; sourceTree = "<group>"; };
+		19EB2D5B16D12FCC0088B6B8 /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinystr.h; sourceTree = "<group>"; };
+		19EB2D5C16D12FCC0088B6B8 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
+		19EB2D5D16D12FCC0088B6B8 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
+		19EB2D5E16D12FCC0088B6B8 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
+		19EB2D5F16D12FCC0088B6B8 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		19EB2D6416D12FFD0088B6B8 /* freetype2 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = freetype2; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		193B455D16D1232B008F6C4F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19E401EB16EFD3DE00FB8B2D /* SDL2.framework in Frameworks */,
+				193B45E116D126F0008F6C4F /* Cocoa.framework in Frameworks */,
+				193B45DF16D12492008F6C4F /* libbz2.1.0.5.dylib in Frameworks */,
+				193B45DD16D1248E008F6C4F /* libz.1.1.3.dylib in Frameworks */,
+				193B45DB16D1248B008F6C4F /* OpenAL.framework in Frameworks */,
+				193B45D916D12487008F6C4F /* OpenGL.framework in Frameworks */,
+				193B45C616D12385008F6C4F /* libfreetype.a in Frameworks */,
+				193B45C716D12385008F6C4F /* libpng15.framework in Frameworks */,
+				193B45C816D12385008F6C4F /* Ogg.framework in Frameworks */,
+				193B45CA16D12385008F6C4F /* Vorbis.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		193B455716D1232B008F6C4F = {
+			isa = PBXGroup;
+			children = (
+				193B456C16D12330008F6C4F /* Pim */,
+				193B456116D1232B008F6C4F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		193B456116D1232B008F6C4F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				193B456016D1232B008F6C4F /* pim_demo */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		193B456C16D12330008F6C4F /* Pim */ = {
+			isa = PBXGroup;
+			children = (
+				19B0453F1716E72D00E2A32E /* ActionLayer.cpp */,
+				19B045401716E72D00E2A32E /* ActionLayer.h */,
+				19B045411716E72D00E2A32E /* DemoScene.cpp */,
+				19B045421716E72D00E2A32E /* DemoScene.h */,
+				19B045431716E72D00E2A32E /* HUDLayer.cpp */,
+				19B045441716E72D00E2A32E /* HUDLayer.h */,
+				19B045451716E72D00E2A32E /* LightLayer.cpp */,
+				19B045461716E72D00E2A32E /* LightLayer.h */,
+				19B045471716E72D00E2A32E /* ParticleLayer.cpp */,
+				19B045481716E72D00E2A32E /* ParticleLayer.h */,
+				19B045491716E72D00E2A32E /* Pim_demo.cpp */,
+				19B0454A1716E72D00E2A32E /* SoundLayer.cpp */,
+				19B0454B1716E72D00E2A32E /* SoundLayer.h */,
+				19B0454C1716E72D00E2A32E /* WelcomeLayer.cpp */,
+				19B0454D1716E72D00E2A32E /* WelcomeLayer.h */,
+				19EB2D5816D12FB20088B6B8 /* Source */,
+				193B45CC16D123BA008F6C4F /* Other Dependencies */,
+				193B456D16D1233C008F6C4F /* Frameworks */,
+			);
+			name = Pim;
+			sourceTree = "<group>";
+		};
+		193B456D16D1233C008F6C4F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				193B45E016D126F0008F6C4F /* Cocoa.framework */,
+				193B45DE16D12492008F6C4F /* libbz2.1.0.5.dylib */,
+				193B45DC16D1248E008F6C4F /* libz.1.1.3.dylib */,
+				193B45DA16D1248B008F6C4F /* OpenAL.framework */,
+				193B45D816D12487008F6C4F /* OpenGL.framework */,
+				193B45C116D12385008F6C4F /* libfreetype.a */,
+				193B45C216D12385008F6C4F /* libpng15.framework */,
+				193B45C316D12385008F6C4F /* Ogg.framework */,
+				193B45C416D12385008F6C4F /* SDL2.framework */,
+				193B45C516D12385008F6C4F /* Vorbis.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		193B45CC16D123BA008F6C4F /* Other Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				19EB2D6416D12FFD0088B6B8 /* freetype2 */,
+				19EB2D5916D12FCC0088B6B8 /* ft2build.h */,
+				19EB2D5A16D12FCC0088B6B8 /* tinystr.cpp */,
+				19EB2D5B16D12FCC0088B6B8 /* tinystr.h */,
+				19EB2D5C16D12FCC0088B6B8 /* tinyxml.cpp */,
+				19EB2D5D16D12FCC0088B6B8 /* tinyxml.h */,
+				19EB2D5E16D12FCC0088B6B8 /* tinyxmlerror.cpp */,
+				19EB2D5F16D12FCC0088B6B8 /* tinyxmlparser.cpp */,
+				193B45E216D1276C008F6C4F /* SDLMain.h */,
+				193B45E316D1276C008F6C4F /* SDLMain.m */,
+			);
+			name = "Other Dependencies";
+			sourceTree = "<group>";
+		};
+		19EB2D5816D12FB20088B6B8 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				19B044EA1716E71D00E2A32E /* Pim.cpp */,
+				19B044EB1716E71D00E2A32E /* Pim.h */,
+				19B044EC1716E71D00E2A32E /* PimAction.cpp */,
+				19B044ED1716E71D00E2A32E /* PimAction.h */,
+				19B044EE1716E71D00E2A32E /* PimAssert.h */,
+				19B044EF1716E71D00E2A32E /* PimAudioManager.cpp */,
+				19B044F01716E71D00E2A32E /* PimAudioManager.h */,
+				19B044F11716E71D00E2A32E /* PimButton.cpp */,
+				19B044F21716E71D00E2A32E /* PimButton.h */,
+				19B044F31716E71D00E2A32E /* PimConsoleReader.cpp */,
+				19B044F41716E71D00E2A32E /* PimConsoleReader.h */,
+				19B044F51716E71D00E2A32E /* PimFont.cpp */,
+				19B044F61716E71D00E2A32E /* PimFont.h */,
+				19B044F71716E71D00E2A32E /* PimGameControl.cpp */,
+				19B044F81716E71D00E2A32E /* PimGameControl.h */,
+				19B044F91716E71D00E2A32E /* PimGameNode.cpp */,
+				19B044FA1716E71D00E2A32E /* PimGameNode.h */,
+				19B044FB1716E71D00E2A32E /* PimHelperFunctions.h */,
+				19B044FC1716E71D00E2A32E /* PimInput.cpp */,
+				19B044FD1716E71D00E2A32E /* PimInput.h */,
+				19B044FE1716E71D00E2A32E /* PimInternal.h */,
+				19B044FF1716E71D00E2A32E /* PimLabel.cpp */,
+				19B045001716E71D00E2A32E /* PimLabel.h */,
+				19B045011716E71D00E2A32E /* PimLayer.cpp */,
+				19B045021716E71D00E2A32E /* PimLayer.h */,
+				19B045031716E71D00E2A32E /* PimLevelParser.cpp */,
+				19B045041716E71D00E2A32E /* PimLevelParser.h */,
+				19B045051716E71D00E2A32E /* PimLightDef.cpp */,
+				19B045061716E71D00E2A32E /* PimLightDef.h */,
+				19B045071716E71D00E2A32E /* PimLightingSystem.cpp */,
+				19B045081716E71D00E2A32E /* PimLightingSystem.h */,
+				19B045091716E71D00E2A32E /* PimLightingSystemShaders.h */,
+				19B0450A1716E71D00E2A32E /* PimNormalMap.cpp */,
+				19B0450B1716E71D00E2A32E /* PimNormalMap.h */,
+				19B0450C1716E71D00E2A32E /* PimParticleSystem.cpp */,
+				19B0450D1716E71D00E2A32E /* PimParticleSystem.h */,
+				19B0450E1716E71D00E2A32E /* PimPolygonShape.cpp */,
+				19B0450F1716E71D00E2A32E /* PimPolygonShape.h */,
+				19B045101716E71D00E2A32E /* PimRenderTexture.cpp */,
+				19B045111716E71D00E2A32E /* PimRenderTexture.h */,
+				19B045121716E71D00E2A32E /* PimRenderWindow.cpp */,
+				19B045131716E71D00E2A32E /* PimRenderWindow.h */,
+				19B045141716E71D00E2A32E /* PimScene.cpp */,
+				19B045151716E71D00E2A32E /* PimScene.h */,
+				19B045161716E71D00E2A32E /* PimShaderManager.cpp */,
+				19B045171716E71D00E2A32E /* PimShaderManager.h */,
+				19B045181716E71D00E2A32E /* PimSlider.cpp */,
+				19B045191716E71D00E2A32E /* PimSlider.h */,
+				19B0451A1716E71D00E2A32E /* PimSound.cpp */,
+				19B0451B1716E71D00E2A32E /* PimSound.h */,
+				19B0451C1716E71D00E2A32E /* PimSprite.cpp */,
+				19B0451D1716E71D00E2A32E /* PimSprite.h */,
+				19B0451E1716E71D00E2A32E /* PimSpriteBatchNode.cpp */,
+				19B0451F1716E71D00E2A32E /* PimSpriteBatchNode.h */,
+				19B045201716E71D00E2A32E /* PimVec2.cpp */,
+				19B045211716E71D00E2A32E /* PimVec2.h */,
+				19B045221716E71D00E2A32E /* PimWinStyle.cpp */,
+				19B045231716E71D00E2A32E /* PimWinStyle.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		193B455F16D1232B008F6C4F /* Pim_demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 193B456916D1232B008F6C4F /* Build configuration list for PBXNativeTarget "Pim_demo" */;
+			buildPhases = (
+				193B455C16D1232B008F6C4F /* Sources */,
+				193B455D16D1232B008F6C4F /* Frameworks */,
+				193B455E16D1232B008F6C4F /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Pim_demo;
+			productName = Pim_osxtemplate;
+			productReference = 193B456016D1232B008F6C4F /* pim_demo */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		193B455816D1232B008F6C4F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Joakim Stien";
+			};
+			buildConfigurationList = 193B455B16D1232B008F6C4F /* Build configuration list for PBXProject "Pim_demo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 193B455716D1232B008F6C4F;
+			productRefGroup = 193B456116D1232B008F6C4F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				193B455F16D1232B008F6C4F /* Pim_demo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		193B455C16D1232B008F6C4F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				193B45E416D1276C008F6C4F /* SDLMain.m in Sources */,
+				19EB2D6016D12FCC0088B6B8 /* tinystr.cpp in Sources */,
+				19EB2D6116D12FCC0088B6B8 /* tinyxml.cpp in Sources */,
+				19EB2D6216D12FCC0088B6B8 /* tinyxmlerror.cpp in Sources */,
+				19EB2D6316D12FCC0088B6B8 /* tinyxmlparser.cpp in Sources */,
+				19B045241716E71D00E2A32E /* Pim.cpp in Sources */,
+				19B045251716E71D00E2A32E /* PimAction.cpp in Sources */,
+				19B045261716E71D00E2A32E /* PimAudioManager.cpp in Sources */,
+				19B045271716E71D00E2A32E /* PimButton.cpp in Sources */,
+				19B045281716E71D00E2A32E /* PimConsoleReader.cpp in Sources */,
+				19B045291716E71D00E2A32E /* PimFont.cpp in Sources */,
+				19B0452A1716E71D00E2A32E /* PimGameControl.cpp in Sources */,
+				19B0452B1716E71D00E2A32E /* PimGameNode.cpp in Sources */,
+				19B0452C1716E71D00E2A32E /* PimInput.cpp in Sources */,
+				19B0452D1716E71D00E2A32E /* PimLabel.cpp in Sources */,
+				19B0452E1716E71D00E2A32E /* PimLayer.cpp in Sources */,
+				19B0452F1716E71D00E2A32E /* PimLevelParser.cpp in Sources */,
+				19B045301716E71D00E2A32E /* PimLightDef.cpp in Sources */,
+				19B045311716E71D00E2A32E /* PimLightingSystem.cpp in Sources */,
+				19B045321716E71D00E2A32E /* PimNormalMap.cpp in Sources */,
+				19B045331716E71D00E2A32E /* PimParticleSystem.cpp in Sources */,
+				19B045341716E71D00E2A32E /* PimPolygonShape.cpp in Sources */,
+				19B045351716E71D00E2A32E /* PimRenderTexture.cpp in Sources */,
+				19B045361716E71D00E2A32E /* PimRenderWindow.cpp in Sources */,
+				19B045371716E71D00E2A32E /* PimScene.cpp in Sources */,
+				19B045381716E71D00E2A32E /* PimShaderManager.cpp in Sources */,
+				19B045391716E71D00E2A32E /* PimSlider.cpp in Sources */,
+				19B0453A1716E71D00E2A32E /* PimSound.cpp in Sources */,
+				19B0453B1716E71D00E2A32E /* PimSprite.cpp in Sources */,
+				19B0453C1716E71D00E2A32E /* PimSpriteBatchNode.cpp in Sources */,
+				19B0453D1716E71D00E2A32E /* PimVec2.cpp in Sources */,
+				19B0453E1716E71D00E2A32E /* PimWinStyle.cpp in Sources */,
+				19B0454E1716E72D00E2A32E /* ActionLayer.cpp in Sources */,
+				19B0454F1716E72D00E2A32E /* DemoScene.cpp in Sources */,
+				19B045501716E72D00E2A32E /* HUDLayer.cpp in Sources */,
+				19B045511716E72D00E2A32E /* LightLayer.cpp in Sources */,
+				19B045521716E72D00E2A32E /* ParticleLayer.cpp in Sources */,
+				19B045531716E72D00E2A32E /* Pim_demo.cpp in Sources */,
+				19B045541716E72D00E2A32E /* SoundLayer.cpp in Sources */,
+				19B045551716E72D00E2A32E /* WelcomeLayer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		193B456716D1232B008F6C4F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /Users/Pimms/Downloads/Box2D_v2.2.1;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.7;
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		193B456816D1232B008F6C4F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /Users/Pimms/Downloads/Box2D_v2.2.1;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx10.7;
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+		193B456A16D1232B008F6C4F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CONFIGURATION_BUILD_DIR = ../demo/;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks/,
+					"\"$(SRCROOT)\"",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"_DEBUG=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/freetype2\"",
+					"\"$(SRCROOT)/../src/dep/include/SDL-2.0.0-6940/\"",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				PRODUCT_NAME = pim_demo;
+			};
+			name = Debug;
+		};
+		193B456B16D1232B008F6C4F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CONFIGURATION_BUILD_DIR = ../demo/;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks/,
+					"\"$(SRCROOT)\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/freetype2\"",
+					"\"$(SRCROOT)/../src/dep/include/SDL-2.0.0-6940/\"",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				PRODUCT_NAME = pim_demo;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		193B455B16D1232B008F6C4F /* Build configuration list for PBXProject "Pim_demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				193B456716D1232B008F6C4F /* Debug */,
+				193B456816D1232B008F6C4F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		193B456916D1232B008F6C4F /* Build configuration list for PBXNativeTarget "Pim_demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				193B456A16D1232B008F6C4F /* Debug */,
+				193B456B16D1232B008F6C4F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 193B455816D1232B008F6C4F /* Project object */;
+}
