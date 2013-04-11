@@ -38,5 +38,9 @@ void ParticleLayer::LoadResources() {
 
 	particleSystem->startSize = 30;
 	particleSystem->endSize = 20;
+	
+	particleSystem->lifetime = 2.f;
+	particleSystem->maxParticles = 1000;
+	particleSystem->emitRate = 450;
 }
 
