@@ -33,7 +33,7 @@
 		#include <Windows.h>
 	#else
 		#include <afxwin.h>
-#	endif
+	#endif
 
 	#include <GL\glew.h>
 
