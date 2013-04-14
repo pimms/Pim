@@ -26,19 +26,13 @@ demo/*.pdb
 demo/*.exe
 
 *.hmap
-
 *.d
-
 *.dia
-
 *.o
-
 *.LinkFileList
-
 *.dep
-
 *.dat
-
 demo/pim_demo
-
 *.plist
+*.xcuserstate
+
