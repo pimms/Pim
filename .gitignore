@@ -33,6 +33,4 @@ demo/*.exe
 *.dep
 *.dat
 demo/pim_demo
-*.plist
-*.xcuserstate
 
