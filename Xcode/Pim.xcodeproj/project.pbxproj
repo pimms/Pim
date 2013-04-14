@@ -630,6 +630,10 @@
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pim/Pim-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"_DEBUG=1",
+					"$(inherited)",
+				);
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/**";
 				INFOPLIST_FILE = "Pim/Pim-Info.plist";
 				LIBRARY_SEARCH_PATHS = (

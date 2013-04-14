@@ -471,7 +471,8 @@ namespace Pim {
 			PimAssert(cacheBuffer != NULL, "Failed to retrieve cache buffer");
 			
 			audioData = AudioManager::GetSingleton()->GetCacheData(file);
-			PimAssert(format != 0, "Failed to retrieve cache format");
+			PimAssert(audioData.format != 0, "Failed to retrieve cache format");
+			PimAssert(audioData.frequency != 0, "Failed to retrieve cache frequency");
 		} else {
 			PimAssert(0, "Init called on PLAYBACK_UNDEFINED Sound object");
 			return false;
