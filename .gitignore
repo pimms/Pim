@@ -2,7 +2,8 @@
 .DS_Store
 
 src/.DS_Store
-templates/osx/Pim_osxtemplate/Build/*
+Xcode/Build/
+Xcode/bin/
 
 visualstudio2012/Pim.sdf
 visualstudio2012/*.sdf

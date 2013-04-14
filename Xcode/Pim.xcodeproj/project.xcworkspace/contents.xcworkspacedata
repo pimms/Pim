@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:Pim_demo.xcodeproj">
+      location = "self:Pim.xcodeproj">
    </FileRef>
 </Workspace>

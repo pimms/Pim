@@ -1,0 +1,11 @@
+//
+// Prefix header for all source files of the 'Pim' target in the 'Pim' project
+//
+
+#ifdef __OBJC__
+	#import <Cocoa/Cocoa.h>
+#endif
+
+#include <Pim/ft2build.h>
+#include "freetype/freetype.h"
+
