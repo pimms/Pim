@@ -252,6 +252,104 @@
 			name = "Other Dependencies";
 			sourceTree = "<group>";
 		};
+		197619EA171AC38800846515 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				19B044EE1716E71D00E2A32E /* PimAssert.h */,
+				19B044F31716E71D00E2A32E /* PimConsoleReader.cpp */,
+				19B044F41716E71D00E2A32E /* PimConsoleReader.h */,
+				19B044FB1716E71D00E2A32E /* PimHelperFunctions.h */,
+				19B045031716E71D00E2A32E /* PimLevelParser.cpp */,
+				19B045041716E71D00E2A32E /* PimLevelParser.h */,
+				19B0450E1716E71D00E2A32E /* PimPolygonShape.cpp */,
+				19B0450F1716E71D00E2A32E /* PimPolygonShape.h */,
+				19B045201716E71D00E2A32E /* PimVec2.cpp */,
+				19B045211716E71D00E2A32E /* PimVec2.h */,
+				19B045221716E71D00E2A32E /* PimWinStyle.cpp */,
+				19B045231716E71D00E2A32E /* PimWinStyle.h */,
+			);
+			name = Other;
+			sourceTree = "<group>";
+		};
+		197619EB171AC38A00846515 /* Singletons */ = {
+			isa = PBXGroup;
+			children = (
+				19B044EF1716E71D00E2A32E /* PimAudioManager.cpp */,
+				19B044F01716E71D00E2A32E /* PimAudioManager.h */,
+				19B044F71716E71D00E2A32E /* PimGameControl.cpp */,
+				19B044F81716E71D00E2A32E /* PimGameControl.h */,
+				19B044FC1716E71D00E2A32E /* PimInput.cpp */,
+				19B044FD1716E71D00E2A32E /* PimInput.h */,
+				19B045121716E71D00E2A32E /* PimRenderWindow.cpp */,
+				19B045131716E71D00E2A32E /* PimRenderWindow.h */,
+				19B045161716E71D00E2A32E /* PimShaderManager.cpp */,
+				19B045171716E71D00E2A32E /* PimShaderManager.h */,
+			);
+			name = Singletons;
+			sourceTree = "<group>";
+		};
+		197619EC171AC38D00846515 /* GUI */ = {
+			isa = PBXGroup;
+			children = (
+				19B044F51716E71D00E2A32E /* PimFont.cpp */,
+				19B044F61716E71D00E2A32E /* PimFont.h */,
+				19B044FF1716E71D00E2A32E /* PimLabel.cpp */,
+				19B045001716E71D00E2A32E /* PimLabel.h */,
+				19B044F11716E71D00E2A32E /* PimButton.cpp */,
+				19B044F21716E71D00E2A32E /* PimButton.h */,
+				19B045181716E71D00E2A32E /* PimSlider.cpp */,
+				19B045191716E71D00E2A32E /* PimSlider.h */,
+			);
+			name = GUI;
+			sourceTree = "<group>";
+		};
+		197619ED171AC39000846515 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				19B0451A1716E71D00E2A32E /* PimSound.cpp */,
+				19B0451B1716E71D00E2A32E /* PimSound.h */,
+			);
+			name = Audio;
+			sourceTree = "<group>";
+		};
+		197619EE171AC39200846515 /* Base Nodes */ = {
+			isa = PBXGroup;
+			children = (
+				19B0451E1716E71D00E2A32E /* PimSpriteBatchNode.cpp */,
+				19B0451F1716E71D00E2A32E /* PimSpriteBatchNode.h */,
+				197619EF171AC3BD00846515 /* Lighing System */,
+				19B044EC1716E71D00E2A32E /* PimAction.cpp */,
+				19B044ED1716E71D00E2A32E /* PimAction.h */,
+				19B044F91716E71D00E2A32E /* PimGameNode.cpp */,
+				19B044FA1716E71D00E2A32E /* PimGameNode.h */,
+				19B045011716E71D00E2A32E /* PimLayer.cpp */,
+				19B045021716E71D00E2A32E /* PimLayer.h */,
+				19B0450A1716E71D00E2A32E /* PimNormalMap.cpp */,
+				19B0450B1716E71D00E2A32E /* PimNormalMap.h */,
+				19B0450C1716E71D00E2A32E /* PimParticleSystem.cpp */,
+				19B0450D1716E71D00E2A32E /* PimParticleSystem.h */,
+				19B045101716E71D00E2A32E /* PimRenderTexture.cpp */,
+				19B045111716E71D00E2A32E /* PimRenderTexture.h */,
+				19B045141716E71D00E2A32E /* PimScene.cpp */,
+				19B045151716E71D00E2A32E /* PimScene.h */,
+				19B0451C1716E71D00E2A32E /* PimSprite.cpp */,
+				19B0451D1716E71D00E2A32E /* PimSprite.h */,
+			);
+			name = "Base Nodes";
+			sourceTree = "<group>";
+		};
+		197619EF171AC3BD00846515 /* Lighing System */ = {
+			isa = PBXGroup;
+			children = (
+				19B045051716E71D00E2A32E /* PimLightDef.cpp */,
+				19B045061716E71D00E2A32E /* PimLightDef.h */,
+				19B045071716E71D00E2A32E /* PimLightingSystem.cpp */,
+				19B045081716E71D00E2A32E /* PimLightingSystem.h */,
+				19B045091716E71D00E2A32E /* PimLightingSystemShaders.h */,
+			);
+			name = "Lighing System";
+			sourceTree = "<group>";
+		};
 		19D2CA46171A98FF00FA10C7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -266,64 +364,14 @@
 		19EB2D5816D12FB20088B6B8 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				197619EE171AC39200846515 /* Base Nodes */,
+				197619ED171AC39000846515 /* Audio */,
+				197619EC171AC38D00846515 /* GUI */,
+				197619EB171AC38A00846515 /* Singletons */,
+				197619EA171AC38800846515 /* Other */,
 				19B044EA1716E71D00E2A32E /* Pim.cpp */,
 				19B044EB1716E71D00E2A32E /* Pim.h */,
-				19B044EC1716E71D00E2A32E /* PimAction.cpp */,
-				19B044ED1716E71D00E2A32E /* PimAction.h */,
-				19B044EE1716E71D00E2A32E /* PimAssert.h */,
-				19B044EF1716E71D00E2A32E /* PimAudioManager.cpp */,
-				19B044F01716E71D00E2A32E /* PimAudioManager.h */,
-				19B044F11716E71D00E2A32E /* PimButton.cpp */,
-				19B044F21716E71D00E2A32E /* PimButton.h */,
-				19B044F31716E71D00E2A32E /* PimConsoleReader.cpp */,
-				19B044F41716E71D00E2A32E /* PimConsoleReader.h */,
-				19B044F51716E71D00E2A32E /* PimFont.cpp */,
-				19B044F61716E71D00E2A32E /* PimFont.h */,
-				19B044F71716E71D00E2A32E /* PimGameControl.cpp */,
-				19B044F81716E71D00E2A32E /* PimGameControl.h */,
-				19B044F91716E71D00E2A32E /* PimGameNode.cpp */,
-				19B044FA1716E71D00E2A32E /* PimGameNode.h */,
-				19B044FB1716E71D00E2A32E /* PimHelperFunctions.h */,
-				19B044FC1716E71D00E2A32E /* PimInput.cpp */,
-				19B044FD1716E71D00E2A32E /* PimInput.h */,
 				19B044FE1716E71D00E2A32E /* PimInternal.h */,
-				19B044FF1716E71D00E2A32E /* PimLabel.cpp */,
-				19B045001716E71D00E2A32E /* PimLabel.h */,
-				19B045011716E71D00E2A32E /* PimLayer.cpp */,
-				19B045021716E71D00E2A32E /* PimLayer.h */,
-				19B045031716E71D00E2A32E /* PimLevelParser.cpp */,
-				19B045041716E71D00E2A32E /* PimLevelParser.h */,
-				19B045051716E71D00E2A32E /* PimLightDef.cpp */,
-				19B045061716E71D00E2A32E /* PimLightDef.h */,
-				19B045071716E71D00E2A32E /* PimLightingSystem.cpp */,
-				19B045081716E71D00E2A32E /* PimLightingSystem.h */,
-				19B045091716E71D00E2A32E /* PimLightingSystemShaders.h */,
-				19B0450A1716E71D00E2A32E /* PimNormalMap.cpp */,
-				19B0450B1716E71D00E2A32E /* PimNormalMap.h */,
-				19B0450C1716E71D00E2A32E /* PimParticleSystem.cpp */,
-				19B0450D1716E71D00E2A32E /* PimParticleSystem.h */,
-				19B0450E1716E71D00E2A32E /* PimPolygonShape.cpp */,
-				19B0450F1716E71D00E2A32E /* PimPolygonShape.h */,
-				19B045101716E71D00E2A32E /* PimRenderTexture.cpp */,
-				19B045111716E71D00E2A32E /* PimRenderTexture.h */,
-				19B045121716E71D00E2A32E /* PimRenderWindow.cpp */,
-				19B045131716E71D00E2A32E /* PimRenderWindow.h */,
-				19B045141716E71D00E2A32E /* PimScene.cpp */,
-				19B045151716E71D00E2A32E /* PimScene.h */,
-				19B045161716E71D00E2A32E /* PimShaderManager.cpp */,
-				19B045171716E71D00E2A32E /* PimShaderManager.h */,
-				19B045181716E71D00E2A32E /* PimSlider.cpp */,
-				19B045191716E71D00E2A32E /* PimSlider.h */,
-				19B0451A1716E71D00E2A32E /* PimSound.cpp */,
-				19B0451B1716E71D00E2A32E /* PimSound.h */,
-				19B0451C1716E71D00E2A32E /* PimSprite.cpp */,
-				19B0451D1716E71D00E2A32E /* PimSprite.h */,
-				19B0451E1716E71D00E2A32E /* PimSpriteBatchNode.cpp */,
-				19B0451F1716E71D00E2A32E /* PimSpriteBatchNode.h */,
-				19B045201716E71D00E2A32E /* PimVec2.cpp */,
-				19B045211716E71D00E2A32E /* PimVec2.h */,
-				19B045221716E71D00E2A32E /* PimWinStyle.cpp */,
-				19B045231716E71D00E2A32E /* PimWinStyle.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";

@@ -52,19 +52,24 @@ namespace Pim {
 		PlaybackMethod			GetPlaybackMethod();
 
 	protected:
+		/* PLAYBACK_STREAM */
 		FILE					*oggFile;
 		OggVorbis_File			*oggStream;
 		vorbis_info				*vorbisInfo;
+		
+		/* PLAYBACK_CACHE */
+		vector<char> 			*cacheBuffer;
+		unsigned long			bytePos;
+
 		ALuint					buffers[2];
 		ALuint					source;
-		ALenum					format;
+		AudioData 				audioData;
 		PlaybackMethod			pbMethod;
 		bool					requiresInitialFill;	// The buffers must be filled at first Play()
-		unsigned long			bytePos;
 		bool					loop;
 
 		bool					Update();
-		bool					FillBuffer(ALuint buffer);
+		virtual bool			FillBuffer(ALuint buffer);
 		bool					Init(string file);
 		bool					InitialFill();
 		void					Clear();

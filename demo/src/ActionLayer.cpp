@@ -28,9 +28,8 @@ ActionLayer::LoadResources
 void ActionLayer::LoadResources()
 {
 	ListenFrame();
-	//Pim::GameControl::getSingleton()->limitFrame(5);
 
-	// Move To
+	/* Load MoveToActions */
 	for (int x = -1; x <= 1; x += 2)
 	{
 		for (int y = -1; y <= 1; y += 2)
@@ -44,7 +43,7 @@ void ActionLayer::LoadResources()
 		}
 	}
 
-	// Move By
+	/* Load MoveBy actions */
 	for (int i = 0; i < 2; i++)
 	{
 		Pim::Sprite *sprite = new Pim::Sprite("lighttiles.png");
@@ -56,7 +55,7 @@ void ActionLayer::LoadResources()
 		sprite->RunAction(action);
 	}
 
-	// Rotate By
+	/* Load RotateBy actions */
 	for (int i = 0; i < 2; i++)
 	{
 		Pim::Sprite *sprite = new Pim::Sprite("lighttiles.png");
@@ -67,7 +66,7 @@ void ActionLayer::LoadResources()
 		sprite->RunAction(action);
 	}
 
-	// Tint
+	/* Load TintActions */
 	for (int x = -1; x <= 1; x += 2)
 	{
 		for (int y = -1; y <= 1; y += 2)
@@ -88,7 +87,7 @@ void ActionLayer::LoadResources()
 		}
 	}
 
-	// Action Queue
+	/* Load ActionQueue */
 	for (int i = -1; i <= 1; i += 2)
 	{
 		Pim::DelayAction *delay = new Pim::DelayAction(0.5f);
@@ -111,8 +110,8 @@ void ActionLayer::LoadResources()
 
 		sprite->RunActionQueue(aq);
 	}
-
-	// ActionQueueRepeat
+	
+	/* Load ActionQueueRepeat */
 	for (int i = -1; i <= 1; i += 2)
 	{
 		Pim::TintAction		*a0 = new Pim::TintAction(Pim::Color(1.f, 0.f, 0.f, 1.f), 0.25f);
@@ -131,26 +130,28 @@ void ActionLayer::LoadResources()
 
 		sprite->RunActionQueue(aq);
 	}
-
+	
+	/* Load the shader */
 	shader = Pim::ShaderManager::AddShader(
-		"uniform sampler2D tex;												\
-		uniform float time;													\
-		void main(void)														\
-		{																	\
-			vec2 c = gl_TexCoord[0].xy;										\
-			float m = (sin(c.x*100.0)+1.0)/100.0;							\
-			c.x += m;														\
-			gl_FragColor = texture2D(tex, c);								\
-		}",
-		"void main(){														\
-			gl_Position=ftransform();										\
-			gl_TexCoord[0] = gl_MultiTexCoord0;								\
-		}",
-		"myshad");
-	if (shader)
-	{
+		"uniform sampler2D tex;\n"
+		"uniform float time;\n"
+		"void main(void)\n"
+		"{\n"
+		"	vec2 c = gl_TexCoord[0].xy;\n"
+		"	float m = (sin(c.x*100.0)+1.0)/100.0;\n"
+		"	c.x += m;\n"
+		"	gl_FragColor = texture2D(tex, c);\n"
+		"}\n",
+		"void main(void){\n"
+		"	gl_Position=ftransform();\n"
+		"	gl_TexCoord[0] = gl_MultiTexCoord0;\n"
+		"}\n",
+		"actionShader");
+	if (shader) {
 		shader->SetUniform1i("tex", 0);
 		SetShader(shader);
+	} else {
+		printf("Failed to compile ActionShader!!\n");
 	}
 }
 
@@ -162,7 +163,9 @@ ActionLayer::Update
 void ActionLayer::Update(float dt)
 {
 	time += dt;
-	shader->SetUniform1f("time", time);
+	if (shader) {
+		shader->SetUniform1f("time", time);
+	}
 }
 
 /*

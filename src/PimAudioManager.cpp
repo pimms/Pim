@@ -56,6 +56,102 @@ namespace Pim {
 
 	/*
 	=====================
+	AudioManager::CacheSound
+	=====================
+	*/
+	bool AudioManager::CacheSound(string file) {
+		/* Abort if the cache exists */
+		if (singleton->cache.count(file)) {
+			return true;
+		}
+		
+		/* Open the file in binary mode */
+		FILE *oggFile = NULL;
+		OggVorbis_File *oggStream = NULL;
+		if (!(oggFile = fopen(file.c_str(), "rb"))) {
+			return false;
+		}
+		
+		/* Attempt to open the file as Ogg */
+		oggStream = new OggVorbis_File;
+		
+		int result;
+		if ((result = ov_open(oggFile, oggStream, NULL, 0)) < 0) {
+			fclose(oggFile);
+			delete oggStream;
+			return false;
+		}
+		
+		/* Assign a new pair to the cache */
+		if (singleton->cache.count(file)) {
+			singleton->cache.erase(file);
+		}
+		singleton->cache[file] = pair<AudioData, vector<char>>();
+		
+		/* Point to the newly created pair<> */
+		pair<AudioData, vector<char>> *cachePtr = &singleton->cache[file];
+		
+		/* Read the file information */
+		vorbis_info *vorbisInfo;
+		vorbisInfo = ov_info(oggStream, -1);
+		
+		if (vorbisInfo->channels == 1) {
+			cachePtr->first.format = AL_FORMAT_MONO16;
+		} else {
+			cachePtr->first.format = AL_FORMAT_STEREO16;
+		}
+		
+		cachePtr->first.frequency = vorbisInfo->rate;
+		
+		/* Read data */
+		result = 1;
+		while (result) {
+			char buffer[1024];
+			int s = 0;
+			result = (int)ov_read(oggStream, buffer, 1024, 0, 2, 1, &s);
+			
+			cachePtr->second.insert(cachePtr->second.end(), buffer, buffer+result);
+		}
+		
+		return true;
+	}
+	
+	/*
+	=====================
+	AudioManager::RemoveCachedSound
+	=====================
+	*/
+	bool AudioManager::RemoveCachedSound(string file) {
+		if (singleton->cache.count(file)) {
+			singleton->cache.erase(file);
+			return true;
+		}
+		return false;
+	}
+	
+	/*
+	=====================
+	AudioManager::RemoveAllCachedSounds
+	=====================
+	*/
+	void AudioManager::RemoveAllCachedSounds() {
+		singleton->cache.clear();
+	}
+	
+	/*
+	=====================
+	AudioManager::GetCacheCount
+	=====================
+	*/
+	int AudioManager::GetCacheCount() {
+		return (int)singleton->cache.size();
+	}
+	
+	
+	
+	
+	/*
+	=====================
 	AudioManager::AudioManager
 	=====================
 	*/
@@ -112,13 +208,15 @@ namespace Pim {
 	=====================
 	*/
 	void AudioManager::UpdateSoundBuffers() {
+#ifdef _DEBUG
 		PrintOpenALErrors("pre update");
-
+#endif
 		for (unsigned i=0; i<sounds.size(); i++) {
 			sounds[i]->Update();
 		}
-
+#ifdef _DEBUG
 		PrintOpenALErrors("post update");
+#endif
 	}
 
 	/*
@@ -143,4 +241,62 @@ namespace Pim {
 			}
 		}
 	}
+	
+	/*
+	==================
+	AudioManager::GetCacheBytes
+	==================
+	*/
+	vector<char>* AudioManager::GetCacheBytes(string file) {
+		if (cache.count(file)) {
+			return &cache[file].second;
+		}
+		
+		PimWarning("This file was never cached!", file.c_str());
+		return NULL;
+	}
+	
+	/*
+	==================
+	AudioManager::GetCacheFormat
+	==================
+	*/
+	AudioData AudioManager::GetCacheData(string file) {
+		if (cache.count(file)) {
+			return cache[file].first;
+		}
+		
+		PimWarning("This file was never cached!", file.c_str());
+		AudioData dd;
+		dd.format = 0;
+		dd.frequency = 0;
+		return dd;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

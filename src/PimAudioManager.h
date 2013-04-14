@@ -17,8 +17,17 @@ namespace Pim {
 	 @todo 		Support sound caching.
 	 */
 	
+	
 	class GameControl;
 	class Sound;
+
+	
+	/* Data used by Sounds for playback */
+	struct AudioData {
+		ALenum 			format;
+		long			frequency;
+	};
+	
 
 	class AudioManager {
 	protected:
@@ -28,30 +37,47 @@ namespace Pim {
 		friend class Sound;
 
 	public:
-		ALCdevice					*device;
-		ALCcontext					*context;
+		ALCdevice				*device;
+		ALCcontext				*context;
 		
-		static AudioManager*		GetSingleton();
-		static void					PrintOpenALErrors(string preceeding);
+		static AudioManager*	GetSingleton();
+		static void				PrintOpenALErrors(string preceeding);
+		static bool 			CacheSound(string file);
+		static bool 			RemoveCachedSound(string file);
+		static void				RemoveAllCachedSounds();
+		static int 				GetCacheCount();
 
 	protected:
-									AudioManager();
-									~AudioManager();
-		static void					InstantiateSingleton();
-		static void					ClearSingleton();
-		void						UpdateSoundBuffers();
+								AudioManager();
+								~AudioManager();
+		static void				InstantiateSingleton();
+		static void				ClearSingleton();
+		void					UpdateSoundBuffers();
 
 	private:
-		static AudioManager			*singleton;
-		vector<Sound*>				sounds;
+		static AudioManager		*singleton;
+		vector<Sound*>			sounds;
+		
+		/* string: The file used in the buffer 
+		 * AudioData: The format of the audio
+		 * vector: The audio-bytes
+		 */
+		map<string, pair<AudioData,vector<char>>>	cache;
 
-		void						AddSound(Sound *sound);
-		void						RemoveSound(Sound *sound);
+		void					AddSound(Sound *sound);
+		void					RemoveSound(Sound *sound);
+		vector<char>*			GetCacheBytes(string file);
+		AudioData 				GetCacheData(string file);
 	};
 	
 	/**
 	 @fn		AudioManager::GetSingeton
 	 @brief		Returns the singleton object.
+	 */
+	
+	/**
+	 @fn		AudioManager::CacheSound
+	 @brief 	Load a short ogg-file into memory for future ease of play.
 	 */
 	
 	/**

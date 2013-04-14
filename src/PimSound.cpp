@@ -37,13 +37,17 @@ namespace Pim {
 		oggFile				= NULL;
 		oggStream			= NULL;
 		vorbisInfo			= NULL;
+		
+		bytePos				= 0;
+		cacheBuffer 		= NULL;
+		
 		buffers[0]			= 0;
 		buffers[1]			= 0;
 		source				= 0;
-		format				= 0;
+		audioData.format 	= 0;
+		audioData.frequency	= 0;
 		pbMethod			= PLAYBACK_UNDEFINED;
 		requiresInitialFill	= true;
-		bytePos				= 0;
 		loop				= false;
 
 		AudioManager::GetSingleton()->AddSound(this);
@@ -66,13 +70,17 @@ namespace Pim {
 		oggFile				= NULL;
 		oggStream			= NULL;
 		vorbisInfo			= NULL;
+		
+		bytePos				= 0;
+		cacheBuffer			= NULL;
+		
 		buffers[0]			= 0;
 		buffers[1]			= 0;
 		source				= 0;
-		format				= 0;
+		audioData.format	= 0;
+		audioData.frequency	= 0;
 		pbMethod			= PLAYBACK_UNDEFINED;
 		requiresInitialFill	= true;
-		bytePos				= 0;
 		loop				= false;
 
 		AudioManager::GetSingleton()->AddSound(this);
@@ -98,6 +106,7 @@ namespace Pim {
 	==================
 	*/
 	bool Sound::Stream(string file) {
+		/* Stream cannot be called twice on the same object */
 		if (pbMethod != PLAYBACK_UNDEFINED) {
 			return false;
 		}
@@ -119,11 +128,17 @@ namespace Pim {
 	==================
 	*/
 	bool Sound::Cache(string file) {
+		/* Cache cannot be called twice on the same object */
 		if (pbMethod != PLAYBACK_UNDEFINED) {
 			return false;
 		}
 
 		pbMethod = PLAYBACK_CACHE;
+		
+		/* Cache the sound */
+		if (!AudioManager::CacheSound(file)) {
+			return false;
+		}
 
 		if (!Init(file)) {
 			return false;
@@ -194,28 +209,28 @@ namespace Pim {
 	*/
 	bool Sound::Rewind() {
 		alSourceStop(source);
-
+	
 		if (pbMethod == PLAYBACK_STREAM) {
 			if (ov_pcm_seek(oggStream, 0) < 0) {
 				return false;
 			}
-
-			alSourceUnqueueBuffers(source, 2, buffers);
-
-			if (!FillBuffer(buffers[0])) {
-				return false;
-			}
-
-			if (!FillBuffer(buffers[1])) {
-				return false;
-			}
-
-			alSourceQueueBuffers(source, 2, buffers);
+		} else {
+			bytePos = 0;
 		}
 
-		alSourceRewind(source);
+		alSourceUnqueueBuffers(source, 2, buffers);
 
-		bytePos = 0;
+		if (!FillBuffer(buffers[0])) {
+			return false;
+		}
+
+		if (!FillBuffer(buffers[1])) {
+			return false;
+		}
+
+		alSourceQueueBuffers(source, 2, buffers);
+
+		alSourceRewind(source);
 
 		return true;
 	}
@@ -276,7 +291,7 @@ namespace Pim {
 
 		float pos = float(bytePos + curBytes) / float(vorbisInfo->rate) / 2.f;
 
-		if (format == AL_FORMAT_STEREO16) {
+		if (audioData.format == AL_FORMAT_STEREO16) {
 			pos /= 2.f;
 		}
 
@@ -303,23 +318,35 @@ namespace Pim {
 		}
 
 		int	processed = 0;
-
 		alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
 
 		while (processed--) {
-			bytePos += BUFFER_SIZE;
-
 			/*
 				There's no need to initialize the 'buffer' variable, as it
 				is set to the relevant buffer when calling alSourceUnqueueBuffers.
 			*/
 			ALuint buffer;
 			alSourceUnqueueBuffers(source, 1, &buffer);
-
-			if (!FillBuffer(buffer)) {
-				return false;	// There is nothing more to fill
+			
+			printf("Updating buffer ");
+			if (buffer == buffers[0]) {
+				printf("1... ");
+			} else if (buffer == buffers[1]) {
+				printf("2... ");
+			} else {
+				printf("???? ");
 			}
 
+			if (!FillBuffer(buffer)) {
+				/* Either something went wrong, or we've reached
+				 * the end of the sound-buffer. The O-So-Mighty-AudioManager will
+				 * delete this sound if required.
+				 */
+				printf("FAILED\n");
+				return false;
+			}
+			
+			printf("OK!\n");
 			alSourceQueueBuffers(source, 1, &buffer);
 		}
 
@@ -330,39 +357,73 @@ namespace Pim {
 	==================
 	Sound::FillBuffer
 
-	Fills the buffer by streaming from file
+	Fills the buffer by streaming from an appropriate buffer.
+	 
+	If PLAYBACK_CACHE:
+	 	The vector<char> *cacheBuffer is used to fill the buffer.
+	
+	if PLAYBACK_STREAM:
+	 	The OggVorbis_File *oggStream is used to fill the buffer.
 	==================
 	*/
 	bool Sound::FillBuffer(ALuint buffer) {
 		char	data[BUFFER_SIZE];
 		int		size	= 0;
 		int		section = 0;
-		int		result	= 0;
-
+		long	result	= 0;
+		
+		/* Read as much as possible from the Ogg-file */
 		while (size < BUFFER_SIZE) {
-			result = ov_read(oggStream, data+size, BUFFER_SIZE-size, 0, 2, 1, &section);
+			if (pbMethod == PLAYBACK_STREAM) {
+				result = ov_read(oggStream, data+size, BUFFER_SIZE-size, 0, 2, 1, &section);
+			} else if (pbMethod == PLAYBACK_CACHE) {
+				/* Calculate how much we can copy from the cache */
+				long remainding = cacheBuffer->size() - bytePos;
+				result = (remainding < BUFFER_SIZE) ? (remainding) : (BUFFER_SIZE);
+				
+				/* Perform the copy */
+				copy(cacheBuffer->begin()+bytePos,
+					 cacheBuffer->begin()+bytePos+result,
+					 data);
+				
+				bytePos += result;
+			} else {
+				PimAssert(false, "FillBuffer on PLAYBACK_UNDEFINED sound-object");
+			}
 
 			if (result > 0) {
 				size += result;
 			} else if (result < 0) {
-				#ifdef _DEBUG
-				printf("OggVorbis error: %s\n", OggErrorString(result).c_str());
-				#endif
+				/* An error occurred */
+				printf("OggVorbis error: %s\n", OggErrorString((int)result).c_str());
 				return false;
 			} else {
-				if (pbMethod == PLAYBACK_STREAM) {
-					if (loop) {
+				/* We've reached the end of the buffer */
+				if (loop) {
+					if (pbMethod == PLAYBACK_STREAM) {
 						ov_pcm_seek(oggStream, 0);
+					} else {
+						bytePos = 0;
+					}
+				} else {
+					/* We're not looping, and the end has beed reached */
+					if (!size) {
+						return false;
+					} else {
+						/* Fill the buffer with what we've got */
+						break;
 					}
 				}
 			}
 		}
-
+		
+		/* No data was available */
 		if (!size) {
 			return false;
 		}
-
-		alBufferData(buffer, format, data, size, vorbisInfo->rate);
+		
+		/* Fill the OpenAL buffer with the retrieved data */
+		alBufferData(buffer, audioData.format, data, size, (int)audioData.frequency);
 
 		return true;
 	}
@@ -377,25 +438,43 @@ namespace Pim {
 	bool Sound::Init(string file) {
 		Clear();
 
-		int result;
+		if (pbMethod == PLAYBACK_STREAM) {
+			if (!(oggFile = fopen(file.c_str(), "rb"))) {
+				return false;
+			}
+			
+			/* Attempt to read from the file as an Ogg-file */
+			oggStream = new OggVorbis_File;
+			
+			int result;
+			if ((result = ov_open(oggFile, oggStream, NULL, 0)) < 0) {
+				fclose(oggFile);
+				
+				delete oggStream;
+				oggStream = NULL;
+				
+				return false;
+			}
+			
+			/* Read format data from the file */
+			vorbisInfo = ov_info(oggStream, -1);
 
-		if (!(oggFile = fopen(file.c_str(), "rb"))) {
-			return false;
-		}
-
-		oggStream = new OggVorbis_File;
-
-		if ((result = ov_open(oggFile, oggStream, NULL, 0)) < 0) {
-			fclose(oggFile);
-			return false;
-		}
-
-		vorbisInfo = ov_info(oggStream, -1);
-
-		if (vorbisInfo->channels == 1) {
-			format = AL_FORMAT_MONO16;
+			if (vorbisInfo->channels == 1) {
+				audioData.format = AL_FORMAT_MONO16;
+			} else {
+				audioData.format = AL_FORMAT_STEREO16;
+			}
+			
+			audioData.frequency = vorbisInfo->rate;
+		} else if (pbMethod == PLAYBACK_CACHE) {
+			cacheBuffer = AudioManager::GetSingleton()->GetCacheBytes(file);
+			PimAssert(cacheBuffer != NULL, "Failed to retrieve cache buffer");
+			
+			audioData = AudioManager::GetSingleton()->GetCacheData(file);
+			PimAssert(format != 0, "Failed to retrieve cache format");
 		} else {
-			format = AL_FORMAT_STEREO16;
+			PimAssert(0, "Init called on PLAYBACK_UNDEFINED Sound object");
+			return false;
 		}
 
 		alGenBuffers(2, buffers);
@@ -406,7 +485,7 @@ namespace Pim {
 		alSource3f(source, AL_DIRECTION,		0.f, 0.f, 0.f);
 		alSourcef (source, AL_ROLLOFF_FACTOR,	0.f			 );
 		alSourcei (source, AL_SOURCE_RELATIVE,	AL_TRUE		 );
-
+		
 		return true;
 	}
 
@@ -419,11 +498,11 @@ namespace Pim {
 	*/
 	bool Sound::InitialFill() {
 		PimAssert(requiresInitialFill, "Internal sound error");
-
+		
 		if (!FillBuffer(buffers[0])) {
 			return false;
 		}
-
+		
 		if (!FillBuffer(buffers[1])) {
 			return false;
 		}
@@ -440,6 +519,9 @@ namespace Pim {
 	==================
 	*/
 	void Sound::Clear() {
+		cacheBuffer = NULL;
+		bytePos = 0;
+		
 		if (source) {
 			alSourceStop(source);
 		}

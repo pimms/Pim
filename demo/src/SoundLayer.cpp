@@ -81,7 +81,7 @@ SoundLayer::LoadMusic
 */
 void SoundLayer::LoadMusic() {
 	music = new Pim::Sound;
-	music->Stream("rh.ogg");
+	music->Cache("space.ogg");
 	music->SetLoop(true);
 	musicPlaying = false;
 }
