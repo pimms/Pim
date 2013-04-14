@@ -308,9 +308,9 @@ namespace Pim {
 		glShaderSource(shader->frag, 1, &fstr, &flen);
 		glShaderSource(shader->vert, 1, &vstr, &vlen);
 		
-		// Compile the shaders (lambda ftw)
+		// Compile the shaders using an inline lambda
 		auto Compile_l = [](GLuint shader, string str) -> bool {
-			GLint status;
+			GLint status = 0;
 
 #ifdef WIN32
 			glCompileShaderARB(shader);
@@ -331,8 +331,11 @@ namespace Pim {
 #elif defined __APPLE__
 					glGetInfoLogARB(&shader, blen, &slen, log);
 #endif
-					printf("Compile log:\n%s\n", log);
+					printf("Compilation of %s failed:\n%s\n", str.c_str(), log);
 					free(log);
+				} else {
+					printf("Compilation of %s failed, no details available.\n",
+						   	str.c_str());
 				}
 
 				return false;
@@ -345,17 +348,18 @@ namespace Pim {
 		delete[] ftmp;
 		delete[] vtmp;
 
-		if (!Compile_l(shader->frag, "Fragment shader")) {
+		if (!Compile_l(shader->frag, "fragment shader")) {
 			delete shader;
 			return NULL;
 		}
-		if (!Compile_l(shader->vert, "Vertex shader")) {
+		if (!Compile_l(shader->vert, "vertex shader")) {
 			delete shader;
 			return NULL;
 		}
 
 		// Create the program and link that fucka'
 		shader->program = glCreateProgram();
+		PimAssert(shader->program >= 1, "Failed to create program");
 
 		glAttachShader(shader->program, shader->frag);
 		glAttachShader(shader->program, shader->vert);

@@ -1,5 +1,6 @@
 #include "WelcomeLayer.h"
 
+#include <Pim/PimLightingSystemShaders.h>
 
 /*
 =====================
@@ -21,6 +22,11 @@ void WelcomeLayer::LoadResources()
 
 	ListenKeys();
 	ListenController();
+	
+	Pim::Shader *shader = Pim::ShaderManager::GetSingleton()->AddShader(PIM_LS_LOWQ_FRAG, PIM_BAREBONES_VERT, "lolshader");
+	if (!shader) {
+		printf("HEI DETTE FUNKER IKKE\n");
+	}
 }
 
 /*
