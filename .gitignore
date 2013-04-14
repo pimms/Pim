@@ -5,6 +5,8 @@ src/.DS_Store
 Xcode/Build/
 Xcode/bin/
 
+demo/Xcode/Build/
+
 visualstudio2012/Pim.sdf
 visualstudio2012/*.sdf
 visualstudio2012/Pim.v11.suo

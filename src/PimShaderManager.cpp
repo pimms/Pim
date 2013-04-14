@@ -319,22 +319,22 @@ namespace Pim {
 			glCompileShader(shader);
 			glGetObjectParameterivARB(&shader, GL_COMPILE_STATUS, &status);
 #endif
-			if (!status) {
-				GLint blen=0, slen=0;
+			if (status == GL_FALSE) {
+				GLint loglen=0, slen=0;
 
-				glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &blen);
-				if (blen > 0) {
-					GLchar *log = (GLchar*)malloc(blen);
+				glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &loglen);
+				if (loglen > 0) {
+					GLchar *log = new GLchar[loglen+1];
 					
 #ifdef WIN32
-					glGetInfoLogARB(shader, blen, &slen, log);
+					glGetInfoLogARB(shader, loglen, &slen, log);
 #elif defined __APPLE__
-					glGetInfoLogARB(&shader, blen, &slen, log);
+					glGetInfoLogARB(&shader, loglen, &slen, log);
 #endif
 					printf("Compilation of %s failed:\n%s\n", str.c_str(), log);
-					free(log);
+					delete[] log;
 				} else {
-					printf("Compilation of %s failed, no details available.\n",
+					printf("Compilation of %s failed: No details available.\n",
 						   	str.c_str());
 				}
 
@@ -347,12 +347,12 @@ namespace Pim {
 
 		delete[] ftmp;
 		delete[] vtmp;
-
-		if (!Compile_l(shader->frag, "fragment shader")) {
+	
+		if (!Compile_l(shader->vert, "vertex shader")) {
 			delete shader;
 			return NULL;
 		}
-		if (!Compile_l(shader->vert, "vertex shader")) {
+		if (!Compile_l(shader->frag, "fragment shader")) {
 			delete shader;
 			return NULL;
 		}
