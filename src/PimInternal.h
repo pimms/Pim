@@ -46,7 +46,7 @@
 	#include "alc.h"
 
 	// Freetype
-	#include <Pim/ft2build.h>
+	#include "ft2build.h"
 	#include FT_FREETYPE_H
 
 	// LibPNG
