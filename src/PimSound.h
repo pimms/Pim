@@ -45,6 +45,8 @@ namespace Pim {
 		bool					Rewind();
 		void					SetLoop(bool flag);
 		bool					GetLoop();
+		void 					SetDeleteWhenDone(bool flag);
+		bool 					GetDeleteWhenDone();
 		void					SetVolume(float volume);	// Range: [0.0 - 1.0]
 		void					SetSourcePosition(float x, float y, float z);
 		void					SetSourcePosition(Vec2 pos);
@@ -67,6 +69,7 @@ namespace Pim {
 		PlaybackMethod			pbMethod;
 		bool					requiresInitialFill;	// The buffers must be filled at first Play()
 		bool					loop;
+		bool 					deleteWhenDone;
 
 		bool					Update();
 		virtual bool			FillBuffer(ALuint buffer);

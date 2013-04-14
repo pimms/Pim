@@ -49,6 +49,7 @@ namespace Pim {
 		pbMethod			= PLAYBACK_UNDEFINED;
 		requiresInitialFill	= true;
 		loop				= false;
+		deleteWhenDone 		= true;
 
 		AudioManager::GetSingleton()->AddSound(this);
 
@@ -82,6 +83,7 @@ namespace Pim {
 		pbMethod			= PLAYBACK_UNDEFINED;
 		requiresInitialFill	= true;
 		loop				= false;
+		deleteWhenDone 		= true;
 
 		AudioManager::GetSingleton()->AddSound(this);
 	}
@@ -252,6 +254,24 @@ namespace Pim {
 	bool Sound::GetLoop() {
 		return loop;
 	}
+	
+	/*
+	==================
+	Sound::SetDeleteWhenDone
+	==================
+	*/
+	void Sound::SetDeleteWhenDone(bool flag) {
+		deleteWhenDone = flag;
+	}
+	
+	/*
+	==================
+	Sound::GetDeleteWhenDone
+	==================
+	*/
+	bool Sound::GetDeleteWhenDone() {
+		return deleteWhenDone;
+	}
 
 	/*
 	==================
@@ -314,7 +334,8 @@ namespace Pim {
 	*/
 	bool Sound::Update() {
 		if (!IsPlaying()) {
-			return false;
+			/* Nothing went wrong, so there's no need to alert AudioManager */
+			return true;
 		}
 
 		int	processed = 0;
@@ -327,26 +348,15 @@ namespace Pim {
 			*/
 			ALuint buffer;
 			alSourceUnqueueBuffers(source, 1, &buffer);
-			
-			printf("Updating buffer ");
-			if (buffer == buffers[0]) {
-				printf("1... ");
-			} else if (buffer == buffers[1]) {
-				printf("2... ");
-			} else {
-				printf("???? ");
-			}
 
 			if (!FillBuffer(buffer)) {
 				/* Either something went wrong, or we've reached
 				 * the end of the sound-buffer. The O-So-Mighty-AudioManager will
-				 * delete this sound if required.
+				 * delete this sound if (deleteWhenDone && !loop)
 				 */
-				printf("FAILED\n");
 				return false;
 			}
 			
-			printf("OK!\n");
 			alSourceQueueBuffers(source, 1, &buffer);
 		}
 
@@ -372,21 +382,21 @@ namespace Pim {
 		int		section = 0;
 		long	result	= 0;
 		
-		/* Read as much as possible from the Ogg-file */
 		while (size < BUFFER_SIZE) {
 			if (pbMethod == PLAYBACK_STREAM) {
 				result = ov_read(oggStream, data+size, BUFFER_SIZE-size, 0, 2, 1, &section);
 			} else if (pbMethod == PLAYBACK_CACHE) {
 				/* Calculate how much we can copy from the cache */
 				long remainding = cacheBuffer->size() - bytePos;
-				result = (remainding < BUFFER_SIZE) ? (remainding) : (BUFFER_SIZE);
+				result = min<long>(remainding, BUFFER_SIZE-size);
 				
 				/* Perform the copy */
-				copy(cacheBuffer->begin()+bytePos,
-					 cacheBuffer->begin()+bytePos+result,
-					 data);
-				
-				bytePos += result;
+				if (result > 0) {
+					copy(cacheBuffer->begin()+bytePos,
+						 cacheBuffer->begin()+bytePos+result,
+						 data+size);
+					bytePos += result;
+				}
 			} else {
 				PimAssert(false, "FillBuffer on PLAYBACK_UNDEFINED sound-object");
 			}
@@ -395,7 +405,9 @@ namespace Pim {
 				size += result;
 			} else if (result < 0) {
 				/* An error occurred */
-				printf("OggVorbis error: %s\n", OggErrorString((int)result).c_str());
+				if (pbMethod == PLAYBACK_STREAM) {
+					printf("OggVorbis error: %s\n", OggErrorString((int)result).c_str());
+				}
 				return false;
 			} else {
 				/* We've reached the end of the buffer */
@@ -415,11 +427,6 @@ namespace Pim {
 					}
 				}
 			}
-		}
-		
-		/* No data was available */
-		if (!size) {
-			return false;
 		}
 		
 		/* Fill the OpenAL buffer with the retrieved data */

@@ -212,7 +212,17 @@ namespace Pim {
 		PrintOpenALErrors("pre update");
 #endif
 		for (unsigned i=0; i<sounds.size(); i++) {
-			sounds[i]->Update();
+			if (!sounds[i]->Update()) {
+				if (sounds[i]->GetLoop()) {
+					printf("Error in updating looping sound\n");
+				} else {
+					if (sounds[i]->GetDeleteWhenDone()) {
+						printf("Deleting sound as I was told to..\n");
+						delete sounds[i];
+					}
+				}
+				RemoveSound(sounds[i--]);
+			}
 		}
 #ifdef _DEBUG
 		PrintOpenALErrors("post update");
