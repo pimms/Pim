@@ -1,0 +1,278 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		19AD10F8171AAC3900C17DFE /* ActionLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AD10E9171AAC3900C17DFE /* ActionLayer.cpp */; };
+		19AD10F9171AAC3900C17DFE /* DemoScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AD10EB171AAC3900C17DFE /* DemoScene.cpp */; };
+		19AD10FA171AAC3900C17DFE /* HUDLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AD10ED171AAC3900C17DFE /* HUDLayer.cpp */; };
+		19AD10FB171AAC3900C17DFE /* LightLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AD10EF171AAC3900C17DFE /* LightLayer.cpp */; };
+		19AD10FC171AAC3900C17DFE /* ParticleLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AD10F1171AAC3900C17DFE /* ParticleLayer.cpp */; };
+		19AD10FD171AAC3900C17DFE /* Pim_demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AD10F3171AAC3900C17DFE /* Pim_demo.cpp */; };
+		19AD10FE171AAC3900C17DFE /* SoundLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AD10F4171AAC3900C17DFE /* SoundLayer.cpp */; };
+		19AD10FF171AAC3900C17DFE /* WelcomeLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AD10F6171AAC3900C17DFE /* WelcomeLayer.cpp */; };
+		19AD1101171AAC6C00C17DFE /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19AD1100171AAC6C00C17DFE /* SDL2.framework */; };
+		19AD1103171AAC7800C17DFE /* Pim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19AD1102171AAC7800C17DFE /* Pim.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		19AD10DB171AABC100C17DFE /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		19AD10DD171AABC100C17DFE /* Pim_demo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Pim_demo; sourceTree = BUILT_PRODUCTS_DIR; };
+		19AD10E9171AAC3900C17DFE /* ActionLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ActionLayer.cpp; path = ../../src/ActionLayer.cpp; sourceTree = "<group>"; };
+		19AD10EA171AAC3900C17DFE /* ActionLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActionLayer.h; path = ../../src/ActionLayer.h; sourceTree = "<group>"; };
+		19AD10EB171AAC3900C17DFE /* DemoScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DemoScene.cpp; path = ../../src/DemoScene.cpp; sourceTree = "<group>"; };
+		19AD10EC171AAC3900C17DFE /* DemoScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DemoScene.h; path = ../../src/DemoScene.h; sourceTree = "<group>"; };
+		19AD10ED171AAC3900C17DFE /* HUDLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HUDLayer.cpp; path = ../../src/HUDLayer.cpp; sourceTree = "<group>"; };
+		19AD10EE171AAC3900C17DFE /* HUDLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HUDLayer.h; path = ../../src/HUDLayer.h; sourceTree = "<group>"; };
+		19AD10EF171AAC3900C17DFE /* LightLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LightLayer.cpp; path = ../../src/LightLayer.cpp; sourceTree = "<group>"; };
+		19AD10F0171AAC3900C17DFE /* LightLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LightLayer.h; path = ../../src/LightLayer.h; sourceTree = "<group>"; };
+		19AD10F1171AAC3900C17DFE /* ParticleLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticleLayer.cpp; path = ../../src/ParticleLayer.cpp; sourceTree = "<group>"; };
+		19AD10F2171AAC3900C17DFE /* ParticleLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParticleLayer.h; path = ../../src/ParticleLayer.h; sourceTree = "<group>"; };
+		19AD10F3171AAC3900C17DFE /* Pim_demo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pim_demo.cpp; path = ../../src/Pim_demo.cpp; sourceTree = "<group>"; };
+		19AD10F4171AAC3900C17DFE /* SoundLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SoundLayer.cpp; path = ../../src/SoundLayer.cpp; sourceTree = "<group>"; };
+		19AD10F5171AAC3900C17DFE /* SoundLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SoundLayer.h; path = ../../src/SoundLayer.h; sourceTree = "<group>"; };
+		19AD10F6171AAC3900C17DFE /* WelcomeLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WelcomeLayer.cpp; path = ../../src/WelcomeLayer.cpp; sourceTree = "<group>"; };
+		19AD10F7171AAC3900C17DFE /* WelcomeLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WelcomeLayer.h; path = ../../src/WelcomeLayer.h; sourceTree = "<group>"; };
+		19AD1100171AAC6C00C17DFE /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../Xcode/SDL2.framework; sourceTree = "<group>"; };
+		19AD1102171AAC7800C17DFE /* Pim.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pim.framework; path = ../../../../../../Library/Frameworks/Pim.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		19AD10DA171AABC100C17DFE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19AD1103171AAC7800C17DFE /* Pim.framework in Frameworks */,
+				19AD1101171AAC6C00C17DFE /* SDL2.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		19AD10D4171AABC100C17DFE = {
+			isa = PBXGroup;
+			children = (
+				19AD1102171AAC7800C17DFE /* Pim.framework */,
+				19AD1100171AAC6C00C17DFE /* SDL2.framework */,
+				19AD10DF171AABC100C17DFE /* Pim_demo */,
+				19AD10DE171AABC100C17DFE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		19AD10DE171AABC100C17DFE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				19AD10DD171AABC100C17DFE /* Pim_demo */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		19AD10DF171AABC100C17DFE /* Pim_demo */ = {
+			isa = PBXGroup;
+			children = (
+				19AD10E9171AAC3900C17DFE /* ActionLayer.cpp */,
+				19AD10EA171AAC3900C17DFE /* ActionLayer.h */,
+				19AD10EB171AAC3900C17DFE /* DemoScene.cpp */,
+				19AD10EC171AAC3900C17DFE /* DemoScene.h */,
+				19AD10ED171AAC3900C17DFE /* HUDLayer.cpp */,
+				19AD10EE171AAC3900C17DFE /* HUDLayer.h */,
+				19AD10EF171AAC3900C17DFE /* LightLayer.cpp */,
+				19AD10F0171AAC3900C17DFE /* LightLayer.h */,
+				19AD10F1171AAC3900C17DFE /* ParticleLayer.cpp */,
+				19AD10F2171AAC3900C17DFE /* ParticleLayer.h */,
+				19AD10F3171AAC3900C17DFE /* Pim_demo.cpp */,
+				19AD10F4171AAC3900C17DFE /* SoundLayer.cpp */,
+				19AD10F5171AAC3900C17DFE /* SoundLayer.h */,
+				19AD10F6171AAC3900C17DFE /* WelcomeLayer.cpp */,
+				19AD10F7171AAC3900C17DFE /* WelcomeLayer.h */,
+			);
+			path = Pim_demo;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		19AD10DC171AABC100C17DFE /* Pim_demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 19AD10E6171AABC100C17DFE /* Build configuration list for PBXNativeTarget "Pim_demo" */;
+			buildPhases = (
+				19AD10D9171AABC100C17DFE /* Sources */,
+				19AD10DA171AABC100C17DFE /* Frameworks */,
+				19AD10DB171AABC100C17DFE /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Pim_demo;
+			productName = Pim_demo;
+			productReference = 19AD10DD171AABC100C17DFE /* Pim_demo */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		19AD10D5171AABC100C17DFE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Joakim Stien";
+			};
+			buildConfigurationList = 19AD10D8171AABC100C17DFE /* Build configuration list for PBXProject "Pim_demo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 19AD10D4171AABC100C17DFE;
+			productRefGroup = 19AD10DE171AABC100C17DFE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				19AD10DC171AABC100C17DFE /* Pim_demo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		19AD10D9171AABC100C17DFE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19AD10F8171AAC3900C17DFE /* ActionLayer.cpp in Sources */,
+				19AD10F9171AAC3900C17DFE /* DemoScene.cpp in Sources */,
+				19AD10FA171AAC3900C17DFE /* HUDLayer.cpp in Sources */,
+				19AD10FB171AAC3900C17DFE /* LightLayer.cpp in Sources */,
+				19AD10FC171AAC3900C17DFE /* ParticleLayer.cpp in Sources */,
+				19AD10FD171AAC3900C17DFE /* Pim_demo.cpp in Sources */,
+				19AD10FE171AAC3900C17DFE /* SoundLayer.cpp in Sources */,
+				19AD10FF171AAC3900C17DFE /* WelcomeLayer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		19AD10E4171AABC100C17DFE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		19AD10E5171AABC100C17DFE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		19AD10E7171AABC100C17DFE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/../";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/../../Xcode/Build",
+					"$(SRCROOT)/../../Xcode/",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		19AD10E8171AABC100C17DFE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/../";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/../../Xcode/Build",
+					"$(SRCROOT)/../../Xcode/",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		19AD10D8171AABC100C17DFE /* Build configuration list for PBXProject "Pim_demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				19AD10E4171AABC100C17DFE /* Debug */,
+				19AD10E5171AABC100C17DFE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		19AD10E6171AABC100C17DFE /* Build configuration list for PBXNativeTarget "Pim_demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				19AD10E7171AABC100C17DFE /* Debug */,
+				19AD10E8171AABC100C17DFE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 19AD10D5171AABC100C17DFE /* Project object */;
+}

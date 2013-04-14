@@ -1,6 +1,11 @@
 #pragma once
-#include "PimLayer.h"
-#include "PimParticleSystem.h"
+
+#ifdef WIN32
+#include "Pim.h"
+#elif defined(__APPLE__)
+#include <Pim/Pim.h>
+#endif
+
 
 using namespace Pim;
 
