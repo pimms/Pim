@@ -291,6 +291,9 @@ namespace Pim {
 		Shader *shader = new Shader;
 		shader->frag = glCreateShader(GL_FRAGMENT_SHADER);
 		shader->vert = glCreateShader(GL_VERTEX_SHADER);
+		
+		PimAssert(shader->frag >= 1, "Failed to create fragment shader");
+		PimAssert(shader->vert >= 1, "Failed to create vertex shader");
 
 		// Prepare compilation
 		GLint flen = (GLint)fragString.size();
@@ -348,11 +351,8 @@ namespace Pim {
 		delete[] ftmp;
 		delete[] vtmp;
 	
-		if (!Compile_l(shader->vert, "vertex shader")) {
-			delete shader;
-			return NULL;
-		}
-		if (!Compile_l(shader->frag, "fragment shader")) {
+		if (!Compile_l(shader->vert, "vertex shader")
+		||  !Compile_l(shader->frag, "fragment shader")) {
 			delete shader;
 			return NULL;
 		}
