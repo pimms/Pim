@@ -78,6 +78,27 @@ namespace Pim {
 	/**
 	 @fn		AudioManager::CacheSound
 	 @brief 	Load a short ogg-file into memory for future ease of play.
+	 @details 	Caching uses a lot of processing power now to save you from
+	 			it in the future. The entirety of an Ogg-file is decoded and
+	 			stored in memory until you remove it yourself.
+	 
+	 			Note that caching usually takes too long to be performed at
+	 			run-time, so you should cache all required sounds in LoadResources()
+	 			of your Layer or Scene.
+	 
+				The audio data is retrieved automatically by Sound-objects
+	 			when you call Cache(..) or pass PLAYBACK_STREAM in the 
+	 			constructor.
+	 */
+	
+	/**
+	 @fn 		AudioManager::RemoveCachedSound
+	 @brief 	Removes a cached Ogg-file from memory.
+	 */
+	
+	/**
+	 @fn		AudioManager::RemoveAllCachedSounds
+	 @brief 	The entire cache is flushed. Should be called at the end of a level.
 	 */
 	
 	/**

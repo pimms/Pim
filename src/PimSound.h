@@ -97,13 +97,39 @@ namespace Pim {
 	
 	/**
 	 @fn 			Cache
-	 @brief 		Cache a sound file identified by a unique id string @e source.
+	 @brief 		Use the specified file from cache. If the file is not yet cached,
+	 				it will be after this method.
+	 */
+	
+	/**
+	 @fn 			Play
+	 @brief 		Play the current sound. You must have called Stream() or Cache()
+	 				prior to calling Play().
+	 */
+	
+	/**
+	 @fn 			Loop
+	 @brief 		Loop the current sound. You must have called Stream() or Cache()
+	 				prior to calling Loop().
+	 */
+	
+	/**
+	 @fn 			Rewind
+	 @brief			Stops the audio and rewind to the beginning of the file.
+	 				This method does @b NOT resume playing.
 	 */
 	
 	/**
 	 @fn 			SetLoop
 	 @brief			Enable or disable looping. Looping is idefinate, and must be
 	 				stopped manually.
+	 */
+	
+	/**
+	 @fn 			SetDeleteWhenDone
+	 @brief 		If "yes" is passed, the object is automatically deleted by
+	 				AudioManager when it is done playing. Does not apply to 
+	 				looping sounds.
 	 */
 	
 	/**
@@ -119,6 +145,7 @@ namespace Pim {
 	
 	/**
  	 @fn 			GetTime
- 	 @brief			The current position in the audio file in seconds.
+ 	 @brief			The current position in the audio file in seconds. Note that
+	 				looping sounds return the time of the @e current playback.
 	 */
 }
