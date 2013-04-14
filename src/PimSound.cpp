@@ -532,18 +532,15 @@ namespace Pim {
 		
 		if (source) {
 			alSourceStop(source);
+			alDeleteSources(1, &source);
 		}
 
 		if (buffers[0]) {
-			alDeleteBuffers(1, &buffers[0]);	
+			alDeleteBuffers(1, &buffers[0]);
 		}
 
 		if (buffers[1]) {
 			alDeleteBuffers(1, &buffers[1]);
-		}
-
-		if (source) {
-			alDeleteSources(1, &source);
 		}
 
 		if (oggFile) {

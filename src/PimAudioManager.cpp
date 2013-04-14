@@ -217,7 +217,6 @@ namespace Pim {
 					printf("Error in updating looping sound\n");
 				} else {
 					if (sounds[i]->GetDeleteWhenDone()) {
-						printf("Deleting sound as I was told to..\n");
 						delete sounds[i];
 					}
 				}
