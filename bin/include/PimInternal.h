@@ -33,7 +33,7 @@
 		#include <Windows.h>
 	#else
 		#include <afxwin.h>
-#	endif
+	#endif
 
 	#include <GL\glew.h>
 
@@ -73,8 +73,8 @@
 	#include <OpenAL/alc.h>
 
 	// Freetype
-	#include "ft2build.h"
-	#include "freetype/freetype.h"
+	#include <Pim/ft2build.h>
+	#include <Pim/freetype/freetype.h>
 
 	// LibPNG
 	#include <libpng15/png.h>

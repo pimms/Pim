@@ -15,8 +15,8 @@ namespace Pim {
 	 			the game-loop and is in general a friendly boss.
 	 			
 	 			The GameControl singleton should be created within the main()
-	 			function of your app, and @e must be passed a WinStyle::CreationData
-	 			object.
+	 			function of your app. The "Go()" method is never returned 
+	 			from until the Pim-window is closed, under any circumstances.
 	 
 	 			Direct interaction with the GameControl singleton is sometimes 
 	 			needed, but mostly for administrative purposes like limiting

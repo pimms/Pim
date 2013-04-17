@@ -395,6 +395,7 @@ namespace Pim {
 			rt->Clear();
 		} else if (rt) {
 			delete rt;
+			rt = NULL;
 		}
 	}
 

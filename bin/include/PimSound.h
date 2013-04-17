@@ -45,6 +45,8 @@ namespace Pim {
 		bool					Rewind();
 		void					SetLoop(bool flag);
 		bool					GetLoop();
+		void 					SetDeleteWhenDone(bool flag);
+		bool 					GetDeleteWhenDone();
 		void					SetVolume(float volume);	// Range: [0.0 - 1.0]
 		void					SetSourcePosition(float x, float y, float z);
 		void					SetSourcePosition(Vec2 pos);
@@ -52,19 +54,25 @@ namespace Pim {
 		PlaybackMethod			GetPlaybackMethod();
 
 	protected:
+		/* PLAYBACK_STREAM */
 		FILE					*oggFile;
 		OggVorbis_File			*oggStream;
 		vorbis_info				*vorbisInfo;
+		
+		/* PLAYBACK_CACHE */
+		vector<char> 			*cacheBuffer;
+		unsigned long			bytePos;
+
 		ALuint					buffers[2];
 		ALuint					source;
-		ALenum					format;
+		AudioData 				audioData;
 		PlaybackMethod			pbMethod;
 		bool					requiresInitialFill;	// The buffers must be filled at first Play()
-		unsigned long			bytePos;
 		bool					loop;
+		bool 					deleteWhenDone;
 
 		bool					Update();
-		bool					FillBuffer(ALuint buffer);
+		virtual bool			FillBuffer(ALuint buffer);
 		bool					Init(string file);
 		bool					InitialFill();
 		void					Clear();
@@ -89,13 +97,39 @@ namespace Pim {
 	
 	/**
 	 @fn 			Cache
-	 @brief 		Cache a sound file identified by a unique id string @e source.
+	 @brief 		Use the specified file from cache. If the file is not yet cached,
+	 				it will be after this method.
+	 */
+	
+	/**
+	 @fn 			Play
+	 @brief 		Play the current sound. You must have called Stream() or Cache()
+	 				prior to calling Play().
+	 */
+	
+	/**
+	 @fn 			Loop
+	 @brief 		Loop the current sound. You must have called Stream() or Cache()
+	 				prior to calling Loop().
+	 */
+	
+	/**
+	 @fn 			Rewind
+	 @brief			Stops the audio and rewind to the beginning of the file.
+	 				This method does @b NOT resume playing.
 	 */
 	
 	/**
 	 @fn 			SetLoop
 	 @brief			Enable or disable looping. Looping is idefinate, and must be
 	 				stopped manually.
+	 */
+	
+	/**
+	 @fn 			SetDeleteWhenDone
+	 @brief 		If "yes" is passed, the object is automatically deleted by
+	 				AudioManager when it is done playing. Does not apply to 
+	 				looping sounds.
 	 */
 	
 	/**
@@ -111,6 +145,7 @@ namespace Pim {
 	
 	/**
  	 @fn 			GetTime
- 	 @brief			The current position in the audio file in seconds.
+ 	 @brief			The current position in the audio file in seconds. Note that
+	 				looping sounds return the time of the @e current playback.
 	 */
 }
