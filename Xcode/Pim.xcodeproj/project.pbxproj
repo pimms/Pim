@@ -315,9 +315,9 @@
 		197619EE171AC39200846515 /* Base Nodes */ = {
 			isa = PBXGroup;
 			children = (
+				197619EF171AC3BD00846515 /* Lighing System */,
 				19B0451E1716E71D00E2A32E /* PimSpriteBatchNode.cpp */,
 				19B0451F1716E71D00E2A32E /* PimSpriteBatchNode.h */,
-				197619EF171AC3BD00846515 /* Lighing System */,
 				19B044EC1716E71D00E2A32E /* PimAction.cpp */,
 				19B044ED1716E71D00E2A32E /* PimAction.h */,
 				19B044F91716E71D00E2A32E /* PimGameNode.cpp */,

@@ -210,7 +210,7 @@ namespace Pim {
 			listY *= -1.0f;
 
 			glTranslatef(listX, listY, 0.f);
-			glCallLists(lines[i].length(), GL_UNSIGNED_BYTE, lines[i].c_str());
+			glCallLists((int)lines[i].length(), GL_UNSIGNED_BYTE, lines[i].c_str());
 			glPopMatrix();
 		}
 

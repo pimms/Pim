@@ -698,6 +698,13 @@ namespace Pim {
 				  v2 = (pos-castLines[i]->GetP2(sc));
 			float a1 = v1.AngleBetween(Vec2(1.f,0.f)),
 				  a2 = v2.AngleBetween(Vec2(1.f,0.f));
+			
+			if (atan2f(v1.y, v1.x) < 0.f) {
+				a1 *= -1.f;
+			}
+			if (atan2f(v2.y, v2.x) < 0.f) {
+				a2 *= -1.f;
+			}
 
 			glVertex2f(-v1.x, -v1.y);
 			glVertex2f(-v2.x, -v2.y);
