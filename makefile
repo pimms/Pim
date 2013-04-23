@@ -5,21 +5,26 @@ INCS=-Isrc/ -I/usr/local/include/freetype2/ -Isrc/dep/tinyxml/
 SRCS=$(shell ls src/*.cpp) $(shell ls src/dep/tinyxml/*.cpp)
 OBJS=$(subst .cpp,.o,$(SRCS))
 
-libpim.so: $(OBJS)
-	ar rvs libpim.so $(OBJS)
+libpim.a: $(OBJS)
+	@echo "Archiving libpim.a..."
+	ar rvs libpim.a $(OBJS)
+	@echo "Done!"
+
+	@echo "Copying headers..."
+	cp src/*.h bin/include/
+	@echo "Done!"
 
 %.o: %.cpp
 	$(CXX) -o $@ -c $< $(INCS) $(DEPS) $(FLGS) 
 
-install: libpim.so
-	rm -rf ../pimux
+install: libpim.a
 	mkdir ../pimux
 	mkdir ../pimux/include
-	cp libpim.so ../pimux
+	cp libpim.a ../pimux
 	cp -r bin/include/* ../pimux/include/
 
 clean:
 	@echo "Removing object files..."
 	@rm $(OBJS)
-	@rm pim.so
+	@rm libpim.a
 	@echo "Done!"

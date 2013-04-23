@@ -1,7 +1,7 @@
 #pragma once
 
 #include "PimInternal.h"
-#include "pimgamenode.h"
+#include "PimGameNode.h"
 
 namespace Pim {
 	/**

@@ -1,5 +1,5 @@
 #pragma once
-#include "pimsprite.h"
+#include "PimSprite.h"
 #include "PimInternal.h"
 
 namespace Pim {
