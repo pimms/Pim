@@ -62,7 +62,7 @@ namespace Pim {
 		 * AudioData: The format of the audio
 		 * vector: The audio-bytes
 		 */
-		map<string, pair<AudioData,vector<char>>>	cache;
+		map<string, pair<AudioData,vector<char> > >	cache;
 
 		void					AddSound(Sound *sound);
 		void					RemoveSound(Sound *sound);

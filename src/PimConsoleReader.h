@@ -79,7 +79,7 @@ namespace Pim {
 			ConsoleReader::AddListener(this, cmd);
 		}
 	};
-#elif defined __APPLE__
+#else
 	class ConsoleListener {
 	public:
 		virtual ~ConsoleListener() { }

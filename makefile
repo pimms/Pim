@@ -1,12 +1,25 @@
 CXX=g++
-FLGS=-g -D LINUX -D _DEBUG
-DEPS=-lGL -lGLU
-INCS=-Isrc/
-SRCS=$(shell ls src/*.cpp)
+FLGS=-g -std=c++0x -DLINUX -DUNIX -D_DEBUG -DGL_GLEXT_PROTOTYPES
+DEPS=-lGL -lGLU -lopenal -lSDL2 -lpng -lvorbis
+INCS=-Isrc/ -I/usr/local/include/freetype2/ -Isrc/dep/tinyxml/
+SRCS=$(shell ls src/*.cpp) $(shell ls src/dep/tinyxml/*.cpp)
 OBJS=$(subst .cpp,.o,$(SRCS))
 
-all: $(OBJS)
-	$(CXX) $(INCS) $(DEPS) -o pim.a $(OBJS) $(FLGS)
+libpim.so: $(OBJS)
+	ar rvs libpim.so $(OBJS)
 
 %.o: %.cpp
-	$(CXX) $(INCS) $(DEPS) -o $@ -c $< $(FLGS)
+	$(CXX) -o $@ -c $< $(INCS) $(DEPS) $(FLGS) 
+
+install: libpim.so
+	rm -rf ../pimux
+	mkdir ../pimux
+	mkdir ../pimux/include
+	cp libpim.so ../pimux
+	cp -r bin/include/* ../pimux/include/
+
+clean:
+	@echo "Removing object files..."
+	@rm $(OBJS)
+	@rm pim.so
+	@echo "Done!"

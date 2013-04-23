@@ -13,7 +13,7 @@ namespace Pim {
 	struct LightDef;
 	struct Color;
 
-	typedef vector<vector<Vec2>> Polygons;
+	typedef vector<vector<Vec2> > Polygons;
 
 	struct LevelData {
 		Layer*							layer;

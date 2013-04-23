@@ -82,6 +82,24 @@
 	// Ogg Vorbis
 	#include <Vorbis/codec.h>
 	#include <Vorbis/vorbisfile.h>
+#elif defined LINUX
+	#include <GL/gl.h>
+	#include <GL/glu.h>
+	#include <GL/glext.h>
+
+	#include <SDL2/SDL.h>
+	#include <SDL2/SDL_main.h>
+
+	#include <ft2build.h>
+	#include FT_FREETYPE_H
+
+	#include <png.h>
+
+	#include <AL/al.h>
+	#include <AL/alc.h>
+
+	#include <vorbis/codec.h>
+	#include <vorbis/vorbisfile.h>
 #endif
 
 using namespace std;

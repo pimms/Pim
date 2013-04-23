@@ -30,7 +30,7 @@ namespace Pim {
 	
 #ifdef WIN32
 	typedef long long unsigned int 		Tick;
-#elif defined(__APPLE__)
+#else
 	typedef long double 				Tick;
 #endif
 

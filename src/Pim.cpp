@@ -1,5 +1,5 @@
 #include "PimInternal.h"
-#include "pim.h"
+#include "Pim.h"
 #include "PimAssert.h"
 #include "PimVec2.h"
 

@@ -86,10 +86,10 @@ namespace Pim {
 		if (singleton->cache.count(file)) {
 			singleton->cache.erase(file);
 		}
-		singleton->cache[file] = pair<AudioData, vector<char>>();
+		singleton->cache[file] = pair<AudioData, vector<char> >();
 		
 		/* Point to the newly created pair<> */
-		pair<AudioData, vector<char>> *cachePtr = &singleton->cache[file];
+		pair<AudioData, vector<char> > *cachePtr = &singleton->cache[file];
 		
 		/* Read the file information */
 		vorbis_info *vorbisInfo;

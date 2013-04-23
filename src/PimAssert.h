@@ -25,7 +25,7 @@ with the provided description.
 			__desc__.append("\nLine: "); __desc__.append(ss.str());		\
 			throw exception(__desc__.c_str());							\
 		}
-#elif defined __APPLE__
+#else
 	#define PimAssert(_EXPR,_DESC)										\
 		if (!(_EXPR))													\
 		{																\
@@ -58,7 +58,7 @@ console window.
 	#define PimWarning(_DESC, _TITLE)									\
 		MessageBox(NULL, _DESC, _TITLE, MB_ICONEXCLAMATION | MB_OK);	\
 
-#elif defined __APPLE__
+#else
 
 	#define PimWarning(_DESC, _TITLE) 									\
 		printf("\n[WARNING]: %s\n%s\n\n", _TITLE, _DESC);				\

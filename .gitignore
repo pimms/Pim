@@ -34,3 +34,4 @@ demo/*.exe
 *.dat
 demo/pim_demo
 
+libpim.so

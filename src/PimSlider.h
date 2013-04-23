@@ -1,5 +1,5 @@
 #pragma once
-#include "pimgamenode.h"
+#include "PimGameNode.h"
 #include "PimButton.h"
 
 
