@@ -52,5 +52,7 @@ ParticleLayer::Update
 ==================
 */
 void ParticleLayer::Update(float dt) {
-	GameControl::GetSingleton()->LimitFrame(rand()%60);
+	// Uncomment this line to test stable particle
+	// emitting during unstable framerates.
+	//GameControl::GetSingleton()->LimitFrame(rand()%60);
 }

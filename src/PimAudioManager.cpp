@@ -204,14 +204,14 @@ namespace Pim {
 	=====================
 	AudioManager::UpdateSoundBuffers
 
-	Called every frame, calls Update on all 'sounds'.
+	Called every frame, calls Update on all sounds.
 	=====================
 	*/
 	void AudioManager::UpdateSoundBuffers() {
 #ifdef _DEBUG
 		PrintOpenALErrors("pre update");
 #endif
-		for (unsigned i=0; i<sounds.size(); i++) {
+		for (int i=0; i<sounds.size(); i++) {
 			if (!sounds[i]->Update()) {
 				if (sounds[i]->GetLoop()) {
 					printf("Error in updating looping sound\n");

@@ -79,20 +79,15 @@ namespace Pim {
 
 	/*
 	=====================
-	Vec2::AngleBetween360
+	Vec2::SingedAngleBetween
 	=====================
 	*/
-	/*
-	float Vec2::AngleBetween360(const Vec2 &other) const {
-		float a = (atan2f(y, x) - atan2f(other.y, other.x)) * (180.f / M_PI);
+	float Vec2::SignedAngleBetween(const Vec2 &other) const {
+		float perpDot = x*other.y - y*other.x;
+		float theta = atan2f(perpDot, Dot(other));
 
-		if (a < 0.f) {
-			a += 360.f;
-		}
-
-		return a;
+		return theta * RADTODEG;
 	}
-	*/
 
 	/*
 	=====================
@@ -106,12 +101,6 @@ namespace Pim {
 		if (len == 0.f) len = 0.000001f;
 
 		float angle = acosf(dot / len) * (180.f / M_PI);
-
-		return angle;
-		Vec2 diff = (*this) - other;
-		if (diff.Dot(Vec2(0.f,1.f)) < 0.f) {
-			angle = -angle;
-		}
 
 		return angle;
 	}

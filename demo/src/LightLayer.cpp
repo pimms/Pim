@@ -99,8 +99,8 @@ LightLayer::BindKeys
 */
 void LightLayer::BindKeys()
 {
-	Pim::Input::GetSingleton()->BindKey("poly", Pim::KeyEvent::K_F2);
-	Pim::Input::GetSingleton()->BindKey("norm", Pim::KeyEvent::K_F3);
+	Pim::Input::GetSingleton()->BindKey("poly", Pim::KeyEvent::K_Z);
+	Pim::Input::GetSingleton()->BindKey("norm", Pim::KeyEvent::K_X);
 
 	Pim::Input::GetSingleton()->BindKey("borderless", Pim::KeyEvent::K_F5);
 	Pim::Input::GetSingleton()->BindKey("windowed", Pim::KeyEvent::K_F6);

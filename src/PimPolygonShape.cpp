@@ -22,9 +22,10 @@ namespace Pim {
 		float a = (v2-v1).AngleBetween(Vec2(0.f,1.f));
 		normal = Vec2(cosf(a*DEGTORAD), sinf(a*DEGTORAD));
 
-		if ((v1.x > v2.x && v1.y > v2.y) ||
-			(v1.x < v2.x && v1.y < v2.y)) {
+		if ((v1.x < v2.x && v1.y < v2.y)) {
 			normal.x *= -1.f;
+		} else if (v1.x < v2.x && v1.y > v2.y) {
+			normal.y *= -1.f;
 		}
 	}
 

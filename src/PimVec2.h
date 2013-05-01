@@ -22,7 +22,7 @@ namespace Pim {
 		static Vec2			Interpolate(Vec2 source, Vec2 dest, float factor);
 		Vec2				RotateAroundPoint(const Vec2 &pt, const float a) const;
 		Vec2				RotateDegrees(const float a) const;
-		//float				AngleBetween360(const Vec2 &other) const;
+		float				SignedAngleBetween(const Vec2 &other) const;
 		float				AngleBetween(const Vec2 &other) const;
 		float				Angle() const;
 		float				Dot(const Vec2 &other) const;
@@ -149,8 +149,8 @@ namespace Pim {
 
 
 	/**
-	@fn				Vec2::AngleBetween360
-	@brief			REMOVED, EL DEPRECADO, COMPRENDE?
+	@fn				Vec2::SignedAngleBetween
+	@brief			Returns the angle between @e this and @e other. The return range is [-180,180].
 	*/
 
 	/**
