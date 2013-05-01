@@ -113,6 +113,9 @@ namespace Pim {
 	==================
 	*/
 	ParticleSystem::~ParticleSystem() {
+		for (int i=0; i<particles.size(); i++) {
+			delete particles[i];
+		}
 	}
 
 	/*

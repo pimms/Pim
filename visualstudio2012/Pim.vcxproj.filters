@@ -74,13 +74,13 @@
     <ClCompile Include="..\src\PimLevelParser.cpp">
       <Filter>Other</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\PimAction.cpp">
-      <Filter>Other</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\PimRenderWindow.cpp">
       <Filter>Window Management</Filter>
     </ClCompile>
     <ClCompile Include="..\src\PimNormalMap.cpp">
+      <Filter>Base Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PimAction.cpp">
       <Filter>Base Nodes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -159,9 +159,6 @@
     <ClInclude Include="..\src\PimLevelParser.h">
       <Filter>Other</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\PimAction.h">
-      <Filter>Other</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\PimAssert.h">
       <Filter>Other</Filter>
     </ClInclude>
@@ -169,6 +166,9 @@
       <Filter>Window Management</Filter>
     </ClInclude>
     <ClInclude Include="..\src\PimNormalMap.h">
+      <Filter>Base Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PimAction.h">
       <Filter>Base Nodes</Filter>
     </ClInclude>
   </ItemGroup>
