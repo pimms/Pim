@@ -25,6 +25,8 @@ ParticleLayer::LoadResources
 ==================
 */
 void ParticleLayer::LoadResources() {
+	ListenFrame();
+
 	particleSystem = new ParticleSystem("smoke_particle.png");
 	particleSystem->position = Vec2(400.f, 300.f);
 	AddChild(particleSystem);
@@ -44,3 +46,11 @@ void ParticleLayer::LoadResources() {
 	particleSystem->emitRate = 450;
 }
 
+/*
+==================
+ParticleLayer::Update
+==================
+*/
+void ParticleLayer::Update(float dt) {
+	GameControl::GetSingleton()->LimitFrame(rand()%60);
+}

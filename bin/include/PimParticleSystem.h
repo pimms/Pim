@@ -100,6 +100,7 @@ namespace Pim {
 		/**
 		 @struct 		Vertex
 		 @brief 		Describes how and where a particle will be drawn.
+		 @todo			Rotation
 		 */
 		struct Vertex {
 			Vec2				position;
@@ -107,11 +108,14 @@ namespace Pim {
 			Color				color;
 		};
 
-		vector<Particle>		particles;
+		vector<Particle*>		particles;
 		vector<Vertex>			vertices;
 		float					timeSinceLastEmit;
 
-		virtual void			InitiateParticle(Particle &particle);
-		virtual void			UpdateParticle(Particle &particle, float dt);
+		void					UpdateAllParticles(float dt);
+		void					CreateVertexData();
+
+		virtual void			InitiateParticle(Particle *particle);
+		virtual void			UpdateParticle(Particle *particle, float dt);
 	};
 }
