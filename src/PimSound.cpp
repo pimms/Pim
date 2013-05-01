@@ -163,6 +163,19 @@ namespace Pim {
 
 	/*
 	==================
+	Sound::IsDone
+	==================
+	*/
+	bool Sound::IsDone() {
+		ALenum state;
+
+		alGetSourcei(source, AL_SOURCE_STATE, &state);
+
+		return (state == AL_STOPPED);
+	}
+
+	/*
+	==================
 	Sound::Play
 	==================
 	*/
@@ -332,6 +345,10 @@ namespace Pim {
 	==================
 	*/
 	bool Sound::Update() {
+		if (GetDeleteWhenDone() && IsDone()) {
+			return false;
+		}
+
 		if (!IsPlaying()) {
 			/* Nothing went wrong, so there's no need to alert AudioManager */
 			return true;
