@@ -95,7 +95,6 @@ namespace Pim {
 	*/
 	Sound::~Sound() {
 		Clear();
-
 		AudioManager::GetSingleton()->RemoveSound(this);
 	}
 
@@ -351,7 +350,7 @@ namespace Pim {
 
 			if (!FillBuffer(buffer)) {
 				/* Either something went wrong, or we've reached
-				 * the end of the sound-buffer. The O-So-Mighty-AudioManager will
+				 * the end of the sound-buffer. The AudioManager will
 				 * delete this sound if (deleteWhenDone && !loop)
 				 */
 				return false;

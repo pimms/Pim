@@ -215,12 +215,12 @@ namespace Pim {
 			if (!sounds[i]->Update()) {
 				if (sounds[i]->GetLoop()) {
 					printf("Error in updating looping sound\n");
+					PrintOpenALErrors("Loop error");
 				} else {
 					if (sounds[i]->GetDeleteWhenDone()) {
-						delete sounds[i];
+						delete sounds[i];	// ~Sound calls "RemoveSound(this)"
 					}
 				}
-				RemoveSound(sounds[i--]);
 			}
 		}
 #ifdef _DEBUG

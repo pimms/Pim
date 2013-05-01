@@ -72,7 +72,7 @@ void LightLayer::LoadLightingSystem()
 	SetLightingUnlitColor(Pim::Color(0.f, 0.f, 0.f, 1.f));
 	SetLightAlpha(0.f);
 	SetShadowcasterDebugDraw(norm);
-	SetSmoothShadows(false);
+	SetSmoothShadows(true);
 
 	Pim::LightDef *ld1 = new Pim::FlatLightDef;
 	ld1->innerColor = Pim::Color(1.f, 1.f, 1.f, 1.f);

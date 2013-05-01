@@ -692,7 +692,6 @@ namespace Pim {
 
 		glBegin(GL_QUADS);
 
-		printf("%i\n", castLines.size());
 		for (unsigned int i=0; i<castLines.size(); i++) {
 			Vec2  v1 = (pos-castLines[i]->GetP1(sc)),
 				  v2 = (pos-castLines[i]->GetP2(sc));
