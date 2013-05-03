@@ -104,6 +104,7 @@ namespace Pim {
 		void				OrderChildren();
 		void				RunAction(Action *a);
 		void				RunActionQueue(ActionQueue *queue);
+		void				RemoveAllActions();
 		void				SetShadowShape(Vec2 vertices[], const int vertexCount);
 		void				SetShadowShapeDebugDraw(const bool flag);
 		PolygonShape*		GetShadowShape() const;
