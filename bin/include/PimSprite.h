@@ -38,6 +38,7 @@ namespace Pim {
 
 	public:
 		bool					hidden;			// Hidden?
+		bool					cascadeScale;	// Is the scale inherited by children?
 		Vec2					anchor;			// (0.5,0.5) puts the sprites anchor in the center
 		Vec2					scale;			// Scale in X and Y directions. 100% independent.
 		Color					color;			// Color overlay
