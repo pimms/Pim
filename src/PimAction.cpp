@@ -456,6 +456,21 @@ namespace Pim {
 
 	/*
 	=====================
+	ActionQueue::GetTotalTime
+	=====================
+	*/
+	float ActionQueue::GetTotalTime() {
+		float ret = 0.f;
+
+		for (int i=0; i<actions.size(); i++) {
+			ret += actions[i]->initialDur;
+		}
+
+		return ret;
+	}
+
+	/*
+	=====================
 	ActionQueue::ActivateNext
 	=====================
 	*/
@@ -567,6 +582,15 @@ namespace Pim {
 
 			if (curAct) {
 				excess = curAct->timer;
+				float total = GetTotalTime();
+
+				while (excess < total) {
+					excess += total;
+					if (!infinite) {
+						remaindingLoops--;
+					}
+				}
+				if (excess > 0.f) excess = 0.f;
 
 				// The action is not deleted.
 				if (parent) {
