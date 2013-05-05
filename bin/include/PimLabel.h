@@ -53,6 +53,8 @@ namespace Pim {
 		vector<string>					lines;
 		vector<int>						lineWidth;
 
+		void							SetTextWithFormat(const char *ptext, va_list args);
+
 	private:
 		unsigned int					linePadding;
 		Vec2							anchor;

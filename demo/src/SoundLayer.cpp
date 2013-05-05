@@ -11,7 +11,7 @@ PlayButton::PlayButton(Pim::Sprite *norm, Pim::Sprite *press, Pim::Font *font)
 	label = new Pim::Label(font);
 	label->color = Pim::Color(0.f, 0.f, 0.f, 1.f);
 	label->SetTextAlignment(Pim::Label::TEXT_CENTER);
-	label->SetZOrder(-10);
+	label->SetZOrder(10);
 	label->position = Pim::Vec2(0.f, 3.f);
 	AddChild(label);
 }
@@ -52,8 +52,7 @@ void PlayButton::MakePressedCurrent() {
 SoundLayer::~SoundLayer
 ==================
 */
-SoundLayer::~SoundLayer()
-{
+SoundLayer::~SoundLayer() {
 	delete music;
 	delete font;
 }

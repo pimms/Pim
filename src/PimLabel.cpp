@@ -84,22 +84,32 @@ namespace Pim {
 	=====================
 	*/
 	void Label::SetTextWithFormat(const char *ptext, ...) {
+		va_list args;
+
+		va_start(args, ptext);
+		SetTextWithFormat(ptext, args);
+		va_end(args);
+	}
+	
+	/*
+	=====================
+	Label::SetTextWithFormat
+	=====================
+	*/
+	void Label::SetTextWithFormat(const char *ptext, va_list args) {
 		lines.clear();
 
 		char text[256];
-		va_list ap;
 
 		if (!ptext) {
 			*text = NULL;
 		} else {
-			// Get the arguments, write to the text
-			va_start(ap,ptext);
-			vsprintf(text, ptext, ap);
-			va_end(ap);
+			vsprintf(text, ptext, args);
 		}
 
+		const int len = strlen(text);
 		const char *startLine = text;
-		for (const char *c = text; *c; c++) {
+		for (const char *c = text; c-text <=len; c++) {
 			if (*c == '\n' || *c == '\0') {
 				string line;
 				for (const char *n=startLine; n<c; n++)  {
