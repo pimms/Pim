@@ -38,8 +38,8 @@ namespace Pim {
 										Label(const Font *pfont, const string ptext);
 										~Label();
 		void							SetFont(const Font *pfont);
-		void							SetText(const string ptext);
-		void							SetTextWithFormat(const char *ptext, ...);
+		virtual void					SetText(const string ptext);
+		virtual void					SetTextWithFormat(const char *ptext, ...);
 		void							SetTextAlignment(const TextAlignment align);
 		void							SetLinePadding(const int pad); // Line distance
 		void							CalculateDimensions();
@@ -48,12 +48,14 @@ namespace Pim {
 		void							BatchDraw();
 		void							GiveOwnershipOfFont();
 
-	private:
-		unsigned int					linePadding;
-		Vec2							anchor;
+	protected:
 		Vec2							dim;
 		vector<string>					lines;
 		vector<int>						lineWidth;
+
+	private:
+		unsigned int					linePadding;
+		Vec2							anchor;
 		bool							fontOwner;
 	};
 	
