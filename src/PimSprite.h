@@ -48,14 +48,14 @@ namespace Pim {
 								Sprite(string file);
 								Sprite();
 		virtual					~Sprite();
-		void					LoadSprite(string file);
+		virtual void			LoadSprite(string file);
 		virtual void			Draw();
 		virtual void			BatchDraw();
 		void					RunAction(SpriteAction *action);
 		void					RunAction(Action *action);
 		void					SetShader(Shader *s);
 		Shader*					GetShader() const;
-		void					UseBatchNode(const SpriteBatchNode* batch);
+		virtual void			UseBatchNode(const SpriteBatchNode* batch);
 		virtual void			ReloadTextures();
 
 	protected:
