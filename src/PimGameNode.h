@@ -75,6 +75,7 @@ namespace Pim {
 		virtual void		OnControllerEvent(ControllerEvent &evt)		{}
 		virtual void		OnActionCompleted(BaseAction *act)			{}
 		virtual void		OnParentChange(GameNode *newParent)			{}
+		virtual void		OnChildRemove(GameNode *oldChild)			{}
 		GameNode*			GetParent() const;	
 		virtual Scene*		GetParentScene() const;
 		virtual Layer*		GetParentLayer();

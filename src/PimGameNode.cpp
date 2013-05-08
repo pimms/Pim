@@ -102,12 +102,12 @@ namespace Pim {
 			if (children[i] == ch) {
 				children.erase(children.begin() + i);
 
+				ch->parent = NULL;
+				ch->OnParentChange(NULL);
+				OnChildRemove(ch);
+
 				if (cleanup) {
-					ch->OnParentChange(NULL);
 					GameControl::GetSingleton()->AddNodeToDelete(ch);
-				} else {
-					ch->parent = NULL;
-					ch->OnParentChange(NULL);
 				}
 			}
 		}
@@ -121,12 +121,12 @@ namespace Pim {
 	void GameNode::RemoveAllChildren(bool cleanup) {
 		// Delete all if required
 		for (unsigned i=0; i<children.size(); i++) {
+			children[i]->parent = NULL;
+			children[i]->OnParentChange(NULL);
+			OnChildRemove(children[i]);
+
 			if (cleanup) {
-				children[i]->OnParentChange(NULL);
 				GameControl::GetSingleton()->AddNodeToDelete(children[i]);
-			} else {
-				children[i]->parent = NULL;
-				children[i]->OnParentChange(NULL);
 			}
 		}
 
