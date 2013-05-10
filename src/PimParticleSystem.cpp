@@ -19,17 +19,15 @@ namespace Pim {
 		lifetime		= 2.f;
 	}
 
-
-
 	/*
 	==================
-	ParticleSystem::RandomValue
+	static ParticleSystem::RandomValue
 	
 	Return a number in the range (base ± variance).
 	If "neg" is true, the return value CAN be negative.
 	==================
 	*/
-	inline float ParticleSystem::RanBaseVar(float base, float variance, bool neg) {
+	float ParticleSystem::RanBaseVar(float base, float variance, bool neg) {
 		float ret = base;
 		ret += (variance * 2.f * ((float)rand() / (float)RAND_MAX));
 		ret -= variance;
@@ -43,13 +41,12 @@ namespace Pim {
 
 	/*
 	==================
-	ParticleSystem::Interpolate
+	static ParticleSystem::Interpolate
 	==================
 	*/
-	inline float ParticleSystem::Interpolate(float start, float end, float fac) {
+	float ParticleSystem::Interpolate(float start, float end, float fac) {
 		return start * (1.f-fac) + end * fac;
 	}
-
 
 	/*
 	==================
@@ -116,85 +113,9 @@ namespace Pim {
 	==================
 	*/
 	ParticleSystem::~ParticleSystem() {
-	}
-
-	/*
-	==================
-	ParticleSystem::GetParticleCount
-	==================
-	*/
-	int ParticleSystem::GetParticleCount() {
-		return particles.size();
-	}
-
-	/*
-	==================
-	ParticleSystem::RemoveAllParticles
-	==================
-	*/
-	void ParticleSystem::RemoveAllParticles() {
-		for (unsigned i=0; i<particles.size(); i++) {
-			particles[i].lifetime = -1.f;
+		for (int i=0; i<particles.size(); i++) {
+			delete particles[i];
 		}
-
-		Update(0.f);
-	}
-
-	/*
-	==================
-	ParticleSystem::InitiateParticle
-	==================
-	*/
-	void ParticleSystem::InitiateParticle(Particle &particle) {
-		particle.velocity = Vec2::UnitDegree(RandF(emitAngle, emitAngle+emitAngleVariance));
-		particle.velocity *= RanBaseVar(speed, speedVariance);
-		
-		/* Randomize the start and end colors */
-		particle.startColor.r = RanBaseVar(startColor.r, startColorVariance.r);
-		particle.startColor.g = RanBaseVar(startColor.g, startColorVariance.g);
-		particle.startColor.b = RanBaseVar(startColor.b, startColorVariance.b);
-		particle.startColor.a = RanBaseVar(startColor.a, startColorVariance.a);
-
-		particle.endColor.r = RanBaseVar(endColor.r, endColorVariance.r);
-		particle.endColor.g = RanBaseVar(endColor.g, endColorVariance.g);
-		particle.endColor.b = RanBaseVar(endColor.b, endColorVariance.b);
-		particle.endColor.a = RanBaseVar(endColor.a, endColorVariance.a);
-
-		/* Randomize the position (Interpolate does not work correctly,
-		 * as it uses the same random factor for X and Y, thus creating
-		 * all new particles along a straight line.
-		 */
-		particle.spawnPos = GetLayerPosition();
-		particle.position.x = RanBaseVar(startPosition.x, startPositionVariance.x);
-		particle.position.y = RanBaseVar(startPosition.y, startPositionVariance.y);
-
-		/* Initiate other values */
-		particle.lifetime = RanBaseVar(lifetime, lifetimeVariance, false);
-
-		particle.startSize = RanBaseVar(startSize, startSizeVariance, false);
-		particle.endSize = RanBaseVar(endSize, endSizeVariance, false);
-
-		particle.startRotation = RanBaseVar(startRotation, startRotationVariance);
-		particle.endRotation = RanBaseVar(endRotation, endRotationVariance);
-	}
-
-	/*
-	==================
-	ParticleSystem::UpdateParticle
-	==================
-	*/
-	void ParticleSystem::UpdateParticle(Particle &particle, float dt) {
-		particle.age += dt;
-
-		particle.velocity += gravity * dt;
-		particle.position += particle.velocity * dt;
-
-		float fac = particle.age / particle.lifetime;
-
-		particle.color = Color::Interpolate(particle.startColor,particle.endColor, fac);
-
-		particle.size = Interpolate(particle.startSize, particle.endSize, fac);
-		particle.rotation = Interpolate(particle.startRotation, particle.endRotation, fac);
 	}
 
 	/*
@@ -204,82 +125,41 @@ namespace Pim {
 	*/
 	void ParticleSystem::Update(float dt) {
 		timeSinceLastEmit += dt;
-		if (timeSinceLastEmit > emitRate) {
-			timeSinceLastEmit = emitRate;
-		}
+
+		UpdateAllParticles(dt);
 		
 		int diff = maxParticles - (int)particles.size();
-		
+
 		if (diff > 0) {
 			/* Create as many particles as we can this frame */
-			for (int i=0; i<diff && timeSinceLastEmit >= (1.f/emitRate); i++) {
-				Particle particle;
+			for (int i=0; /*i<diff &&*/ timeSinceLastEmit >= (1.f/emitRate); i++) {
+				Particle *particle = new Particle;
 				InitiateParticle(particle);
 
-				particles.push_back(particle);
 				timeSinceLastEmit -= (1.f/emitRate);
+
+				/* Don't add "doomed" particles */
+				if (dt < particle->lifetime) {
+					particles.push_back(particle);
+
+					// The particle should have been alive for "timeSinceLastEmit" seconds,
+					// so we need to simulate that timeframe.
+					UpdateParticle(particle, timeSinceLastEmit);
+				} else {
+					delete particle;
+					i--;
+				}
 			}
 		} else if (diff < 0) {
-			/* We have too many particles */
-			if (-diff > particles.size()) {
-				/* Remove all */
-				particles.clear();
-			} else {
-				/* Remove the excess particles */
-				particles.erase(particles.end()+diff);
+			/* Remove the excess particles, we have too many */
+			for (int i=0; i<-diff; i++) {
+				delete particles[i];
 			}
-		}
-	
-		for (unsigned i=0; i<particles.size(); i++) {
-			if (particles[i].age >= particles[i].lifetime) {
-				/* Erase 'dead' particles */
-				particles.erase(particles.begin() + i--);
-			} else {
-				/* Update 'living' particles */
-				UpdateParticle(particles[i], dt);
-			}
+
+			particles.erase(particles.begin()-diff);
 		}
 		
-		/* Resize the vertices to match the new size */
-		vertices.resize(particles.size()*4, Vertex());
-		
-		/* Create vertex data for each particle */
-		for (unsigned j=0; j<particles.size(); j++) {
-			unsigned i = (particles.size()-1) - j;
-
-			float vertCoordX = particles[i].size / 2.f;
-			float vertCoordY = particles[i].size / 2.f;
-
-			unsigned vertexIdx = j*4;
-			Vertex &v0	= vertices[vertexIdx + 0];
-			Vertex &v1	= vertices[vertexIdx + 1];
-			Vertex &v2	= vertices[vertexIdx + 2];
-			Vertex &v3	= vertices[vertexIdx + 3];
-
-			v0.position = particles[i].position + Vec2(-vertCoordX, -vertCoordY);
-			v0.color    = particles[i].color;
-			v0.texCoord = Vec2(0.f, 0.f);
-
-			v1.position = particles[i].position + Vec2( vertCoordX, -vertCoordY);
-			v1.color    = particles[i].color;
-			v1.texCoord = Vec2(1.f, 0.f);
-
-			v2.position = particles[i].position + Vec2( vertCoordX,  vertCoordY);
-			v2.color    = particles[i].color;
-			v2.texCoord = Vec2(1.f, 1.f);
-
-			v3.position = particles[i].position + Vec2(-vertCoordX,  vertCoordY);
-			v3.color    = particles[i].color;
-			v3.texCoord = Vec2(0.f, 1.f);
-			
-			/* Add the spawn position if PositionType == ABSOLUTE */
-			if (positionType == PART_ABSOLUTE) {
-				v0.position += particles[i].spawnPos;
-				v1.position += particles[i].spawnPos;
-				v2.position += particles[i].spawnPos;
-				v3.position += particles[i].spawnPos;
-			}
-		}
+		CreateVertexData();
 	}
 
 	/*
@@ -341,5 +221,149 @@ namespace Pim {
 	*/
 	void ParticleSystem::BatchDraw() {
 		Draw();
+	}
+
+	/*
+	==================
+	ParticleSystem::GetParticleCount
+	==================
+	*/
+	int ParticleSystem::GetParticleCount() {
+		return particles.size();
+	}
+
+	/*
+	==================
+	ParticleSystem::RemoveAllParticles
+	==================
+	*/
+	void ParticleSystem::RemoveAllParticles() {
+		for (unsigned i=0; i<particles.size(); i++) {
+			particles[i]->lifetime = -1.f;
+		}
+
+		UpdateAllParticles(0.f);
+	}
+
+	/*
+	==================
+	ParticleSystem::UpdateAllParticles
+	==================
+	*/
+	void ParticleSystem::UpdateAllParticles(float dt) {
+		for (unsigned i=0; i<particles.size(); i++) {
+			if (particles[i]->age >= particles[i]->lifetime) {
+				/* Erase 'dead' particles */
+				delete particles[i];
+				particles.erase(particles.begin() + i--);
+			} else {
+				/* Update 'living' particles */
+				UpdateParticle(particles[i], dt);
+			}
+		}
+	}
+
+	/*
+	==================
+	ParticleSystem::CreateVertexData
+	==================
+	*/
+	void ParticleSystem::CreateVertexData() {
+		/* Resize the vertices to match the new size */
+		vertices.resize(particles.size()*4, Vertex());
+
+		for (unsigned j=0; j<particles.size(); j++) {
+			unsigned i = (particles.size()-1) - j;
+
+			float vertCoordX = particles[i]->size / 2.f;
+			float vertCoordY = particles[i]->size / 2.f;
+
+			unsigned vertexIdx = j*4;
+			Vertex *v0	= &vertices[vertexIdx + 0];
+			Vertex *v1	= &vertices[vertexIdx + 1];
+			Vertex *v2	= &vertices[vertexIdx + 2];
+			Vertex *v3	= &vertices[vertexIdx + 3];
+
+			v0->position = particles[i]->position + Vec2(-vertCoordX, -vertCoordY);
+			v0->color    = particles[i]->color;
+			v0->texCoord = Vec2(0.f, 0.f);
+
+			v1->position = particles[i]->position + Vec2( vertCoordX, -vertCoordY);
+			v1->color    = particles[i]->color;
+			v1->texCoord = Vec2(1.f, 0.f);
+
+			v2->position = particles[i]->position + Vec2( vertCoordX,  vertCoordY);
+			v2->color    = particles[i]->color;
+			v2->texCoord = Vec2(1.f, 1.f);
+
+			v3->position = particles[i]->position + Vec2(-vertCoordX,  vertCoordY);
+			v3->color    = particles[i]->color;
+			v3->texCoord = Vec2(0.f, 1.f);
+			
+			/* Add the spawn position if PositionType == ABSOLUTE */
+			if (positionType == PART_ABSOLUTE) {
+				v0->position += particles[i]->spawnPos;
+				v1->position += particles[i]->spawnPos;
+				v2->position += particles[i]->spawnPos;
+				v3->position += particles[i]->spawnPos;
+			}
+		}
+	}
+
+	/*
+	==================
+	ParticleSystem::InitiateParticle
+	==================
+	*/
+	void ParticleSystem::InitiateParticle(Particle *particle) {
+		particle->velocity = Vec2::UnitDegree(RandF(emitAngle, emitAngle+emitAngleVariance));
+		particle->velocity *= RanBaseVar(speed, speedVariance);
+		
+		/* Randomize the start and end colors */
+		particle->startColor.r = RanBaseVar(startColor.r, startColorVariance.r);
+		particle->startColor.g = RanBaseVar(startColor.g, startColorVariance.g);
+		particle->startColor.b = RanBaseVar(startColor.b, startColorVariance.b);
+		particle->startColor.a = RanBaseVar(startColor.a, startColorVariance.a);
+
+		particle->endColor.r = RanBaseVar(endColor.r, endColorVariance.r);
+		particle->endColor.g = RanBaseVar(endColor.g, endColorVariance.g);
+		particle->endColor.b = RanBaseVar(endColor.b, endColorVariance.b);
+		particle->endColor.a = RanBaseVar(endColor.a, endColorVariance.a);
+
+		/* Randomize the position (Interpolate does not work correctly,
+		 * as it uses the same random factor for X and Y, thus creating
+		 * all new particles along a straight line.
+		 */
+		particle->spawnPos = GetLayerPosition();
+		particle->position.x = RanBaseVar(startPosition.x, startPositionVariance.x);
+		particle->position.y = RanBaseVar(startPosition.y, startPositionVariance.y);
+
+		/* Initiate other values */
+		particle->lifetime = RanBaseVar(lifetime, lifetimeVariance, false);
+
+		particle->startSize = RanBaseVar(startSize, startSizeVariance, false);
+		particle->endSize = RanBaseVar(endSize, endSizeVariance, false);
+
+		particle->startRotation = RanBaseVar(startRotation, startRotationVariance);
+		particle->endRotation = RanBaseVar(endRotation, endRotationVariance);
+	}
+
+	/*
+	==================
+	ParticleSystem::UpdateParticle
+	==================
+	*/
+	void ParticleSystem::UpdateParticle(Particle *particle, float dt) {
+		particle->age += dt;
+
+		particle->velocity += gravity * dt;
+		particle->position += particle->velocity * dt;
+
+		float fac = particle->age / particle->lifetime;
+
+		particle->color = Color::Interpolate(particle->startColor,particle->endColor, fac);
+
+		particle->size = Interpolate(particle->startSize, particle->endSize, fac);
+		particle->rotation = Interpolate(particle->startRotation, particle->endRotation, fac);
 	}
 }

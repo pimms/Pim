@@ -254,6 +254,7 @@ namespace Pim {
 								ActionQueue(int numActions, BaseAction *action1, ...);
 								~ActionQueue();
 		void					Update(float);
+		float					GetTotalTime();
 		BaseAction*				GetCurrentAction() {
 			return curAct;
 		}

@@ -32,6 +32,9 @@ demo/*.exe
 *.LinkFileList
 *.dep
 *.dat
+*.lib
+*.opensdf
+*.sdf
 demo/pim_demo
 
 libpim.a

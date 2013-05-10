@@ -25,11 +25,15 @@ namespace Pim {
 
 	public:
 		enum KeyCode {
-			K_BACKSPACE = 8, K_ENTER = 13, K_SHIFT = 16, K_CTRL = 17, K_ESC = 27, K_SPACE = 32,
-			K_LEFT = 37,K_UP,K_RIGHT,K_DOWN,
+			K_BACKSPACE=8,	K_ENTER=13,	K_LSHIFT=225,	
+			K_RSHIFT=229,	K_LCTRL=224,	K_RCTRL=228,
+			K_ESC=27,		K_SPACE=32,		K_TAB=9,
+
+			K_NUMENTER=88, K_NUM0, K_NUM1, K_NUM2, K_NUM3, K_NUM4, K_NUM5, K_NUM6, K_NUM7, K_NUM8, K_NUM9,
+			K_RIGHT = 79, K_LEFT,K_DOWN,K_UP,
 			K_0 = 48,K_1,K_2,K_3,K_4,K_5,K_6,K_7,K_8,K_9,
 			K_A = 97,K_B,K_C,K_D,K_E,K_F,K_G,K_H,K_I,K_J,K_K,K_L,K_M,K_N,K_O,K_P,K_Q,K_R,K_S,K_T,K_U,K_V,K_W,K_X,K_Y,K_Z,
-			K_F1 = 112,K_F2,K_F3,K_F4,K_F5,	K_F6,K_F7,K_F8,K_F9,K_F10,K_F11,K_F12,
+			K_F1 = 58,K_F2,K_F3,K_F4,K_F5,	K_F6,K_F7,K_F8,K_F9,K_F10,K_F11,K_F12,
 		};
 
 		bool							IsKeyDown(const KeyCode k) const;

@@ -75,6 +75,7 @@ namespace Pim {
 		virtual void		OnControllerEvent(ControllerEvent &evt)		{}
 		virtual void		OnActionCompleted(BaseAction *act)			{}
 		virtual void		OnParentChange(GameNode *newParent)			{}
+		virtual void		OnChildRemove(GameNode *oldChild)			{}
 		GameNode*			GetParent() const;	
 		virtual Scene*		GetParentScene() const;
 		virtual Layer*		GetParentLayer();
@@ -104,6 +105,7 @@ namespace Pim {
 		void				OrderChildren();
 		void				RunAction(Action *a);
 		void				RunActionQueue(ActionQueue *queue);
+		void				RemoveAllActions();
 		void				SetShadowShape(Vec2 vertices[], const int vertexCount);
 		void				SetShadowShapeDebugDraw(const bool flag);
 		PolygonShape*		GetShadowShape() const;

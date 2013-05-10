@@ -39,6 +39,7 @@ namespace Pim {
 		bool					Stream(string file);
 		bool					Cache(string source);
 		bool					IsPlaying();
+		bool					IsDone();
 		bool					Play();
 		bool					Loop();
 		bool					Pause();

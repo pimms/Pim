@@ -15,7 +15,11 @@ void WelcomeLayer::LoadResources()
 	lab->SetLinePadding(5);
 	lab->GiveOwnershipOfFont();
 	lab->position = Pim::Vec2(400,300);
-	lab->SetText("Pim demo application\n\nScroll through the different demonstrations\nwith the buttons.");
+	lab->SetTextWithFormat("%s\n\n%s\n%s %s",
+						   "Pim demo application",
+						   "Scroll through the",
+						   "different demonstrations",
+						   "with the buttons.");
 	AddChild(lab);
 
 	ListenKeys();

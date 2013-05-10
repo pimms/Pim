@@ -102,12 +102,12 @@ namespace Pim {
 			if (children[i] == ch) {
 				children.erase(children.begin() + i);
 
+				ch->parent = NULL;
+				ch->OnParentChange(NULL);
+				OnChildRemove(ch);
+
 				if (cleanup) {
-					ch->OnParentChange(NULL);
 					GameControl::GetSingleton()->AddNodeToDelete(ch);
-				} else {
-					ch->parent = NULL;
-					ch->OnParentChange(NULL);
 				}
 			}
 		}
@@ -121,12 +121,12 @@ namespace Pim {
 	void GameNode::RemoveAllChildren(bool cleanup) {
 		// Delete all if required
 		for (unsigned i=0; i<children.size(); i++) {
+			children[i]->parent = NULL;
+			children[i]->OnParentChange(NULL);
+			OnChildRemove(children[i]);
+
 			if (cleanup) {
-				children[i]->OnParentChange(NULL);
 				GameControl::GetSingleton()->AddNodeToDelete(children[i]);
-			} else {
-				children[i]->parent = NULL;
-				children[i]->OnParentChange(NULL);
 			}
 		}
 
@@ -438,11 +438,11 @@ namespace Pim {
 		}
 
 		// Insertion sorting - the children should be somewhat sorted already.
-		for (unsigned int j=1; j<children.size(); j++) {
+		for (int j=1; j<children.size(); j++) {
 			GameNode *key = children[j];
 			int i = j - 1;
 
-			while (i >= 0 && children[i]->zOrder < key->zOrder) {
+			while (i >= 0 && children[i]->zOrder > key->zOrder) {
 				children[i+1] = children[i];
 				i--;
 			}
@@ -470,6 +470,23 @@ namespace Pim {
 	void GameNode::RunActionQueue(ActionQueue *aq) {
 		AddChild(aq);
 		aq->Activate();
+	}
+
+	/*
+	==================
+	GameNode::RemoveAllActions
+	==================
+	*/
+	void GameNode::RemoveAllActions() {
+		for (int i=0; i<children.size(); i++) {
+			BaseAction *act = NULL;
+
+			act = dynamic_cast<BaseAction*>(children[i]);
+			if (act) {
+				RemoveChild(act);
+				i--;
+			}
+		}
 	}
 
 	/*

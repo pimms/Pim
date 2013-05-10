@@ -15,6 +15,7 @@ public:
 								ParticleLayer(void);
 								~ParticleLayer(void);
 	void						LoadResources();
+	void						Update(float dt);
 
 	ParticleSystem				*particleSystem;
 };

@@ -38,6 +38,7 @@ namespace Pim {
 
 	public:
 		bool					hidden;			// Hidden?
+		bool					cascadeScale;	// Is the scale inherited by children?
 		Vec2					anchor;			// (0.5,0.5) puts the sprites anchor in the center
 		Vec2					scale;			// Scale in X and Y directions. 100% independent.
 		Color					color;			// Color overlay
@@ -47,14 +48,14 @@ namespace Pim {
 								Sprite(string file);
 								Sprite();
 		virtual					~Sprite();
-		void					LoadSprite(string file);
+		virtual void			LoadSprite(string file);
 		virtual void			Draw();
 		virtual void			BatchDraw();
 		void					RunAction(SpriteAction *action);
 		void					RunAction(Action *action);
 		void					SetShader(Shader *s);
 		Shader*					GetShader() const;
-		void					UseBatchNode(const SpriteBatchNode* batch);
+		virtual void			UseBatchNode(const SpriteBatchNode* batch);
 		virtual void			ReloadTextures();
 
 	protected:

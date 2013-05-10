@@ -587,8 +587,9 @@ namespace Pim {
 					break;
 
 				case SDL_KEYDOWN:
+					printf("Keydown: %i\n", event.key.keysym.sym & 1023);
 					Input::GetSingleton()->KeyPressed(
-						event.key.keysym.sym 
+						event.key.keysym.sym & 1023
 					);
 					break;
 

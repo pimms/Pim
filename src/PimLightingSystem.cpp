@@ -655,28 +655,27 @@ namespace Pim {
 
 		for (unsigned int i=0; i<casters.size(); i++) {
 			auto lines = casters[i]->shadowShape->lines;
-			{
-				for (unsigned int i=0; i<lines.size(); i++) {
-					if ((pos-lines[i]->GetMid(sc)).Length() <= r ||
-							(pos-lines[i]->GetP1(sc)).Length()  <= r ||
-							(pos-lines[i]->GetP2(sc)).Length()  <= r) {
-						if (lines[i]->IsFacing(pos, sc)) {
-							castLines.push_back(lines[i]);
+			for (unsigned int i=0; i<lines.size(); i++) {
+				/* TODO: Use AABB instead of length */
+				if ((pos-lines[i]->GetMid(sc)).Length() <= r ||
+					(pos-lines[i]->GetP1(sc)).Length()  <= r ||
+					(pos-lines[i]->GetP2(sc)).Length()  <= r) {
+					if (lines[i]->IsFacing(pos, sc)) {
+						castLines.push_back(lines[i]);
 
-							#ifdef _DEBUG
-							if (dbgDrawNormal) {
-								glVertex2f(lines[i]->GetP1(sc).x-pos.x, 
-											lines[i]->GetP1(sc).y-pos.y);
-								glVertex2f(lines[i]->GetP2(sc).x-pos.x, 
-											lines[i]->GetP2(sc).y-pos.y);
+						#ifdef _DEBUG
+						if (dbgDrawNormal) {
+							glVertex2f(lines[i]->GetP1(sc).x-pos.x, 
+										lines[i]->GetP1(sc).y-pos.y);
+							glVertex2f(lines[i]->GetP2(sc).x-pos.x, 
+										lines[i]->GetP2(sc).y-pos.y);
 
-								glVertex2f(lines[i]->GetMid(sc).x-pos.x, 
-											lines[i]->GetMid(sc).y-pos.y);
-								glVertex2f(lines[i]->GetNormalEnd(sc).x-pos.x,
-										   lines[i]->GetNormalEnd(sc).y-pos.y);
-							}
-							#endif /* _DEBUG */
+							glVertex2f(lines[i]->GetMid(sc).x-pos.x, 
+										lines[i]->GetMid(sc).y-pos.y);
+							glVertex2f(lines[i]->GetNormalEnd(sc).x-pos.x,
+										lines[i]->GetNormalEnd(sc).y-pos.y);
 						}
+						#endif /* _DEBUG */
 					}
 				}
 			}
@@ -696,23 +695,16 @@ namespace Pim {
 		for (unsigned int i=0; i<castLines.size(); i++) {
 			Vec2  v1 = (pos-castLines[i]->GetP1(sc)),
 				  v2 = (pos-castLines[i]->GetP2(sc));
-			float a1 = v1.AngleBetween(Vec2(1.f,0.f)),
-				  a2 = v2.AngleBetween(Vec2(1.f,0.f));
-			
-			if (atan2f(v1.y, v1.x) < 0.f) {
-				a1 *= -1.f;
-			}
-			if (atan2f(v2.y, v2.x) < 0.f) {
-				a2 *= -1.f;
-			}
+			float a1 = Vec2(1.f,0.f).SignedAngleBetween(v1),
+				  a2 = Vec2(1.f,0.f).SignedAngleBetween(v2);
 
 			glVertex2f(-v1.x, -v1.y);
 			glVertex2f(-v2.x, -v2.y);
 
-			v1 += Vec2( cosf(a1*((float)M_PI/180.f)),
-						sinf(a1*((float)M_PI/180.f))) * (float)r * 100.f;
-			v2 += Vec2( cosf(a2*((float)M_PI/180.f)),
-						sinf(a2*((float)M_PI/180.f))) * (float)r * 100.f;
+			v1 += Vec2( cosf(a1*DEGTORAD),
+						sinf(a1*DEGTORAD)) * (float)r * 100.f;
+			v2 += Vec2( cosf(a2*DEGTORAD),
+						sinf(a2*DEGTORAD)) * (float)r * 100.f;
 
 			glVertex2f(-v2.x, -v2.y);
 			glVertex2f(-v1.x, -v1.y);

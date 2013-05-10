@@ -23,6 +23,7 @@ namespace Pim {
 		shader			= NULL;
 		hidden			= false;
 		_usebatch		= false;
+		cascadeScale	= false;
 
 		LoadSprite(file);
 	}
@@ -40,6 +41,7 @@ namespace Pim {
 		shader			= NULL;
 		hidden			= false;
 		_usebatch		= false;
+		cascadeScale	= false;
 	}
 
 	/*
@@ -162,12 +164,12 @@ namespace Pim {
 
 		glTranslatef(position.x / fac.x, position.y / fac.y, 0.f);
 		glRotatef(rotation, 0.f, 0.f, 1.f);
-
+			
 		glPushMatrix();
 
 		fac = GameControl::GetSingleton()->GetWindowScale();
-		glScalef(scale.x * fac.x, scale.y * fac.y, 1.f);
 		glColor4f(color.r, color.g, color.b, color.a);
+		glScalef(scale.x * fac.x, scale.y * fac.y, 1.f);
 
 		glBindTexture(GL_TEXTURE_2D, texID);
 
@@ -208,8 +210,11 @@ namespace Pim {
 			shadowShape->DebugDraw();
 		}
 
-		// Children are unaffected by their parent's scale. Restore.
 		glPopMatrix();
+
+		if (cascadeScale) {
+			glScalef(scale.x, scale.y, 1.f);
+		}
 
 		OrderChildren();
 

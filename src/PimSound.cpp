@@ -95,7 +95,6 @@ namespace Pim {
 	*/
 	Sound::~Sound() {
 		Clear();
-
 		AudioManager::GetSingleton()->RemoveSound(this);
 	}
 
@@ -160,6 +159,19 @@ namespace Pim {
 		alGetSourcei(source, AL_SOURCE_STATE, &state);
 
 		return (state == AL_PLAYING);
+	}
+
+	/*
+	==================
+	Sound::IsDone
+	==================
+	*/
+	bool Sound::IsDone() {
+		ALenum state;
+
+		alGetSourcei(source, AL_SOURCE_STATE, &state);
+
+		return (state == AL_STOPPED);
 	}
 
 	/*
@@ -333,6 +345,10 @@ namespace Pim {
 	==================
 	*/
 	bool Sound::Update() {
+		if (GetDeleteWhenDone() && IsDone()) {
+			return false;
+		}
+
 		if (!IsPlaying()) {
 			/* Nothing went wrong, so there's no need to alert AudioManager */
 			return true;
@@ -351,7 +367,7 @@ namespace Pim {
 
 			if (!FillBuffer(buffer)) {
 				/* Either something went wrong, or we've reached
-				 * the end of the sound-buffer. The O-So-Mighty-AudioManager will
+				 * the end of the sound-buffer. The AudioManager will
 				 * delete this sound if (deleteWhenDone && !loop)
 				 */
 				return false;
