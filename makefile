@@ -1,6 +1,6 @@
 # Compiler Flags
 CXX=g++
-FLGS=-std=c++0x -fPIC
+FLGS=-g -std=c++0x -fPIC
 
 # Library Name
 LIBTARGET=libpim.a
@@ -12,7 +12,7 @@ SRCDIR=src/
 DSTDIR=bin/include/
 
 # Installation Root directory
-INSTALLDIR=../pimux/
+INSTALLDIR=/usr/
 
 # Preprocessor definitions
 DEFS=-DLINUX -DUNIX -D_DEBUG -DGL_GLEXT_PROTOTYPES
@@ -45,11 +45,10 @@ libpim.a: $(OBJS)
 	@echo "Compiling $<..."
 
 install: $(LIBTARGET)
-	mkdir -p $(INSTALLDIR)
-	mkdir -p $(INSTALLDIR)include
+	mkdir -p $(INSTALLDIR)include/Pim/
 
-	cp $(LIBTARGET) $(INSTALLDIR)
-	cp -r $(DSTDIR)*.h $(INSTALLDIR)include/
+	cp $(LIBTARGET) $(INSTALLDIR)lib/
+	cp -r $(DSTDIR)*.h $(INSTALLDIR)include/Pim/
 
 clean:
 	@echo "Removing object files..."
