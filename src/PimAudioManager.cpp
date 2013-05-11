@@ -156,8 +156,14 @@ namespace Pim {
 	=====================
 	*/
 	AudioManager::AudioManager() {
+		device = NULL;
+		context = NULL;
+
 		device = alcOpenDevice(NULL);
-		PimAssert(device != NULL, "Failed to find an audio device");
+		if (!device) {
+			PimWarning("Failed to open audio context", "Audio error");
+			return;
+		}
 
 		context = alcCreateContext(device, NULL);
 		PimAssert(context != NULL, "Failed to create an audio context");
@@ -208,6 +214,10 @@ namespace Pim {
 	=====================
 	*/
 	void AudioManager::UpdateSoundBuffers() {
+		if (!context || !device) {
+			return;
+		}
+
 #ifdef _DEBUG
 		PrintOpenALErrors("pre update");
 #endif

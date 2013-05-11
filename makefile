@@ -1,30 +1,56 @@
+# Compiler Flags
 CXX=g++
-FLGS=-g -std=c++0x -DLINUX -DUNIX -D_DEBUG -DGL_GLEXT_PROTOTYPES
-DEPS=-lGL -lGLU -lopenal -lSDL2 -lpng -lvorbis
+FLGS=-g -std=c++0x -fPIC
+
+# Library Name
+LIBTARGET=libpim.a
+
+# Source directory
+SRCDIR=src/
+
+# Desination Include directory
+DSTDIR=bin/include/
+
+# Installation Root directory
+INSTALLDIR=/usr/
+
+# Preprocessor definitions
+DEFS=-DLINUX -DUNIX -D_DEBUG -DGL_GLEXT_PROTOTYPES
+
+# Library Dependencies
+LIBS=-lopenal -lSDL2 -lpng -lvorbis -lvorbisfile -lfreetype -lGL -lGLU
+
+
+# Include Directories
 INCS=-Isrc/ -I/usr/local/include/freetype2/ -Isrc/dep/tinyxml/
-SRCS=$(shell ls src/*.cpp) $(shell ls src/dep/tinyxml/*.cpp)
+
+# Source and Object files
+SRCS=$(shell ls $(SRCDIR)*.cpp) $(shell ls $(SRCDIR)dep/tinyxml/*.cpp)
 OBJS=$(subst .cpp,.o,$(SRCS))
+
+# Old build:
+#ar rvs $(LIBTARGET) $(OBJS)
+#$(CXX) $(FLGS) -o $(LIBTARGET) $(OBJS) $(DEFS) $(LIBS)
 
 libpim.a: $(OBJS)
 	@echo "Archiving libpim.a..."
-	ar rvs libpim.a $(OBJS)
 	@echo "Done!"
-
+	ar rvs $(LIBTARGET) $(OBJS)
 	@echo "Copying headers..."
-	cp src/*.h bin/include/
+	cp $(SRCDIR)*.h $(DSTDIR)
 	@echo "Done!"
 
 %.o: %.cpp
-	$(CXX) -o $@ -c $< $(INCS) $(DEPS) $(FLGS) 
+	@$(CXX) $(FLGS)  -o $@ -c $<  $(DEFS) $(INCS) $(LIBS)
+	@echo "Compiling $<..."
 
-install: libpim.a
-	mkdir ../pimux
-	mkdir ../pimux/include
-	cp libpim.a ../pimux
-	cp -r bin/include/* ../pimux/include/
+install: $(LIBTARGET)
+	mkdir -p $(INSTALLDIR)include/Pim/
+
+	cp $(LIBTARGET) $(INSTALLDIR)lib/
+	cp -r $(DSTDIR)*.h $(INSTALLDIR)include/Pim/
 
 clean:
 	@echo "Removing object files..."
 	@rm $(OBJS)
-	@rm libpim.a
 	@echo "Done!"

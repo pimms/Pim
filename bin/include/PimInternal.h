@@ -83,6 +83,8 @@
 	#include <Vorbis/codec.h>
 	#include <Vorbis/vorbisfile.h>
 #elif defined LINUX
+	#include <sys/time.h>
+
 	#include <GL/gl.h>
 	#include <GL/glu.h>
 	#include <GL/glext.h>

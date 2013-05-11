@@ -791,7 +791,7 @@ namespace Pim {
 	This method is less efficient, but more precise.
 	=====================
 	*/
-#ifdef __APPLE__	
+#if defined(__APPLE__) || defined(LINUX) 
 	float GameControl::CalculateDeltaTime() {
 		struct timeval time;
 		gettimeofday(&time, NULL);
