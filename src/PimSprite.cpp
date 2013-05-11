@@ -347,6 +347,14 @@ namespace Pim {
 		_th	  = batch->_th;
 		texID = batch->texID;
 
+		if (rect.width == 0) {
+			rect.width = _tw;
+		}
+
+		if (rect.height == 0) {
+			rect.height = _th;
+		}
+
 		_usebatch = true;
 		_batchNode = batch;
 	}

@@ -25,7 +25,7 @@ namespace Pim {
 
 	public:
 		enum KeyCode {
-			K_BACKSPACE=8,	K_ENTER=13,	K_LSHIFT=225,	
+			K_BACKSPACE=8,	K_ENTER=13,		K_LSHIFT=225,	
 			K_RSHIFT=229,	K_LCTRL=224,	K_RCTRL=228,
 			K_ESC=27,		K_SPACE=32,		K_TAB=9,
 
