@@ -49,6 +49,8 @@ install: $(LIBTARGET)
 
 	@cp $(LIBTARGET) $(INSTALLDIR)lib/
 	@cp -r $(DSTDIR)*.h $(INSTALLDIR)include/Pim/
+	@echo "The headers can be found in: $(INSTALLDIR)include/Pim/."
+	@echo "The library can be found in: $(INSTALLDIR)lib/."
 
 clean:
 	@echo "Removing object files..."
