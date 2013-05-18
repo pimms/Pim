@@ -45,10 +45,12 @@ libpim.a: $(OBJS)
 	@echo "Compiling $<..."
 
 install: $(LIBTARGET)
-	mkdir -p $(INSTALLDIR)include/Pim/
+	@mkdir -p $(INSTALLDIR)include/Pim/
 
-	cp $(LIBTARGET) $(INSTALLDIR)lib/
-	cp -r $(DSTDIR)*.h $(INSTALLDIR)include/Pim/
+	@cp $(LIBTARGET) $(INSTALLDIR)lib/
+	@cp -r $(DSTDIR)*.h $(INSTALLDIR)include/Pim/
+	@echo "The headers can be found in: $(INSTALLDIR)include/Pim/."
+	@echo "The library can be found in: $(INSTALLDIR)lib/."
 
 clean:
 	@echo "Removing object files..."
