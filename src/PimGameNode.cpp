@@ -102,13 +102,13 @@ namespace Pim {
 			if (children[i] == ch) {
 				children.erase(children.begin() + i);
 
-				ch->parent = NULL;
-				ch->OnParentChange(NULL);
-				OnChildRemove(ch);
-
 				if (cleanup) {
 					GameControl::GetSingleton()->AddNodeToDelete(ch);
 				}
+				
+				ch->parent = NULL;
+				ch->OnParentChange(NULL);
+				OnChildRemove(ch);
 			}
 		}
 	}
@@ -121,13 +121,13 @@ namespace Pim {
 	void GameNode::RemoveAllChildren(bool cleanup) {
 		// Delete all if required
 		for (unsigned i=0; i<children.size(); i++) {
-			children[i]->parent = NULL;
-			children[i]->OnParentChange(NULL);
-			OnChildRemove(children[i]);
-
 			if (cleanup) {
 				GameControl::GetSingleton()->AddNodeToDelete(children[i]);
 			}
+
+			children[i]->parent = NULL;
+			children[i]->OnParentChange(NULL);
+			OnChildRemove(children[i]);
 		}
 
 		// THEN clear the array
@@ -143,7 +143,7 @@ namespace Pim {
 		if (parent) {
 			parent->RemoveChild(this, cleanup);
 		} else {
-			PimWarning("Logical error", "Cannot remove orphan from parent.");
+			PimWarning("Cannot remove orphan from parent.", "Logical error");
 		}
 	}
 

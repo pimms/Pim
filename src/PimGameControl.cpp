@@ -311,7 +311,7 @@ namespace Pim {
 	void GameControl::RemoveFrameListener(GameNode *node) {
 		for (unsigned int i=0; i<frameListeners.size(); i++) {
 			if (frameListeners[i] == node) {
-				frameListeners.erase(frameListeners.begin() + i);
+				frameListeners.erase(frameListeners.begin() + i--);
 			}
 		}
 	}
@@ -696,11 +696,18 @@ namespace Pim {
 	void GameControl::DispatchPrerender(float dt) {
 		scene->Update(dt);
 
-		vector<GameNode*> curFrameList = frameListeners;
+		int size = frameListeners.size();
+		
+		for (int i=0; i<size; i++) {
+			if (!frameListeners[i]->willDelete) {
+				frameListeners[i]->Update(dt);
 
-		for (unsigned int i=0; i<curFrameList.size(); i++) {
-			if (!curFrameList[i]->willDelete) {
-				curFrameList[i]->Update(dt);
+				// Account for nodes unlistening frame during
+				// Update-calls.
+				if (size > frameListeners.size()) {
+					i -= size - frameListeners.size();
+					size = frameListeners.size();
+				}
 			}
 		}
 	}
