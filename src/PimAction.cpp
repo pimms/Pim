@@ -36,9 +36,7 @@ namespace Pim {
 
 			queue->ActivateNext();
 		} else {
-			if (GetParent()) {
-				GetParent()->RemoveChild(this);
-			}
+			RemoveFromParent();
 		}
 	}
 
