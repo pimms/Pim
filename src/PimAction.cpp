@@ -44,6 +44,7 @@ namespace Pim {
 
 
 
+
 	/*
 	=====================
 	Action::Action
@@ -59,6 +60,7 @@ namespace Pim {
 	}
 
 	
+
 
 	/*
 	=====================
@@ -99,6 +101,7 @@ namespace Pim {
 
 	
 
+
 	/*
 	=====================
 	MoveByAction::MoveByAction
@@ -128,6 +131,7 @@ namespace Pim {
 	}
 
 	
+
 
 	/*
 	=====================
@@ -161,6 +165,7 @@ namespace Pim {
 
 	
 
+
 	/*
 	=====================
 	DelayAction::DelayAction
@@ -191,6 +196,7 @@ namespace Pim {
 			Cleanup();
 		}
 	}
+
 
 
 	
@@ -253,6 +259,7 @@ namespace Pim {
 	}
 
 	
+
 
 	/*
 	=====================
@@ -321,6 +328,7 @@ namespace Pim {
 	void ScaleByAction::Update(float dt) {
 		ACTION_UPDATE_RELATIVE(Sprite, scale, remainding);
 	}
+
 
 
 
@@ -436,6 +444,7 @@ namespace Pim {
 			done = true;
 		}
 	}
+
 
 
 
