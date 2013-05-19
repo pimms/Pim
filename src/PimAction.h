@@ -295,3 +295,65 @@ namespace Pim {
 		void					ActivateNext();
 	};
 }
+
+// Upon implementing the various Action subclasses, I noticed that most of the
+// code in the update-methods were structurally identical. The following macros
+// may seem large, inuntuitive and nasty (and frankly they are), but the amount
+// of duplicated code avoided by this method is in my opinion a worthy tradeoff.
+
+//
+//	ACTION_UPDATE_RELATIVE:
+//		Update macro for [verb]ToActions
+//
+//	PARAMETERS:
+//		_PARENT_TYPE:	The type of the parent; Sprite, GameNode, etc.
+//		_MEMBER:		The member variable to change; position, scale, etc
+//		_UPDATE_SET:	Must be of type _MEMBER. Look at any usage for reference.
+//		_FINAL_SET:		Must be of type _MEMBER. Set the final value of _MEMBER.
+#define ACTION_UPDATE_STATIC(_PARENT_TYPE,_MEMBER,_UPDATE_SET,_FINAL_SET)	\
+timer -= dt;																\
+if (timer > 0.f )													\
+{																			\
+	((_PARENT_TYPE*)GetParent())->_MEMBER = _UPDATE_SET;					\
+}																			\
+else																		\
+{																			\
+	((_PARENT_TYPE*)GetParent())->_MEMBER = _FINAL_SET;						\
+	Cleanup();																\
+}
+
+//
+//	ACTION_UPDATE_RELATIVE:
+//		Update macro for [verb]ByActions
+//
+//	PARAMETERS:
+//		_PARENT_TYPE:	The type of the parent; Sprite, GameNode, etc.
+//		_MEMBER:		The member variable to change; position, scale, color, etc.
+//						Note that the _MEMBER-type ABSOLUTELY MUST override the "+=" operator.
+//		_UPDATE_VAR:	Must be of type _MEMBER. Only pass the variable, it's multiplied by
+//						'dt' and '(1.f/dur)' in the macro.
+#define ACTION_UPDATE_RELATIVE(_PARENT_TYPE,_MEMBER,_UPDATE_VAR)			\
+bool ovride = false;														\
+if (timer > 0.f && timer - dt <= 0.f)										\
+{																			\
+	float tmp = timer;														\
+	timer -= dt;															\
+	dt = tmp;																\
+	ovride = true;															\
+}																			\
+else																		\
+{																			\
+	timer -= dt;															\
+}																			\
+if (timer > 0.f || ovride)													\
+{																			\
+	((_PARENT_TYPE*)GetParent())->_MEMBER += _UPDATE_VAR *dt*(1.f/dur);		\
+	if (ovride) /* override means we're done */								\
+	{																		\
+		Cleanup();															\
+	}																		\
+}																			\
+else																		\
+{																			\
+	Cleanup();																\
+}
