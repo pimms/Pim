@@ -15,7 +15,7 @@
 #include <iostream>
 #include <ctime>
 
-#ifdef __APPLE__
+#ifndef WIN32
 	#include <unistd.h>
 	#include <pthread.h>
 #endif
