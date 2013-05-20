@@ -35,7 +35,9 @@ namespace Pim {
 			UnlistenFrame();
 
 			queue->ActivateNext();
-		} else {
+		} else if (parent) {
+			// Check if the Action has a parent, it may have been
+			// removed in the completion callback.
 			RemoveFromParent();
 		}
 	}
