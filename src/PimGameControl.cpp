@@ -706,9 +706,9 @@ namespace Pim {
 				// Update-calls.
 				if (size > frameListeners.size()) {
 					i -= size - frameListeners.size();
-					size = frameListeners.size();
 				}
 			}
+			size = frameListeners.size();
 		}
 	}
 
