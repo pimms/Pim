@@ -22,6 +22,7 @@
 #include <cmath>
 
 
+
 #ifdef WIN32
 	// Threading
 	#include <process.h>	// To be removed in the future
@@ -30,9 +31,9 @@
 	// MFC apps cannot include Windows.h. If you're using Pim in an
 	// MFC project, define WIN_MFC in your project properties.
 	#ifndef WIN_MFC
-		#include <Windows.h>
+	#	include <Windows.h>
 	#else
-		#include <afxwin.h>
+	#	include <afxwin.h>
 	#endif
 
 	#include <GL\glew.h>
@@ -82,7 +83,7 @@
 	// Ogg Vorbis
 	#include <Vorbis/codec.h>
 	#include <Vorbis/vorbisfile.h>
-#elif defined LINUX
+#elif defined __gnu_linux__
 	#include <sys/time.h>
 
 	#include <GL/gl.h>
@@ -95,7 +96,13 @@
 	#include <ft2build.h>
 	#include FT_FREETYPE_H
 
-	#include <png.h>
+	// Fix for some compiler errors under
+	// version 1.2.49.
+	// Source: 
+	// https://bugs.launchpad.net/ubuntu/+source/libpng/+bug/218409
+	#define PNG_SKIP_SETJMP_CHECK
+	#	include <png.h>
+	#undef PNG_SKIP_SETJMP_CHECK
 
 	#include <AL/al.h>
 	#include <AL/alc.h>
@@ -106,12 +113,7 @@
 
 using namespace std;
 
-// Custom defines
+// Constants used for converting 
+// between degrees and radians.
 #define DEGTORAD ((float)M_PI/180.f)
 #define RADTODEG (180.f/(float)M_PI)
-
-// Redefine M_PI as float
-#ifdef M_PI
-	#undef M_PI
-	#define M_PI			3.14159265358979323846f
-#endif

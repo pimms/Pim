@@ -22,6 +22,7 @@
 #include <cmath>
 
 
+
 #ifdef WIN32
 	// Threading
 	#include <process.h>	// To be removed in the future
@@ -82,7 +83,7 @@
 	// Ogg Vorbis
 	#include <Vorbis/codec.h>
 	#include <Vorbis/vorbisfile.h>
-#elif defined LINUX
+#elif defined __gnu_linux__
 	#include <sys/time.h>
 
 	#include <GL/gl.h>
@@ -95,7 +96,13 @@
 	#include <ft2build.h>
 	#include FT_FREETYPE_H
 
-	#include <png.h>
+	// Fix for some compiler errors under
+	// version 1.2.49.
+	// Source: 
+	// https://bugs.launchpad.net/ubuntu/+source/libpng/+bug/218409
+	#define PNG_SKIP_SETJMP_CHECK
+	#	include <png.h>
+	#undef PNG_SKIP_SETJMP_CHECK
 
 	#include <AL/al.h>
 	#include <AL/alc.h>

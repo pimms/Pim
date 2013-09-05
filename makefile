@@ -54,5 +54,5 @@ install: $(LIBTARGET)
 
 clean:
 	@echo "Removing object files..."
-	@rm $(OBJS)
+	@rm -f $(OBJS) $(LIBTARGET)
 	@echo "Done!"
