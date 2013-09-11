@@ -31,9 +31,9 @@
 	// MFC apps cannot include Windows.h. If you're using Pim in an
 	// MFC project, define WIN_MFC in your project properties.
 	#ifndef WIN_MFC
-	#	include <Windows.h>
+		#include <Windows.h>
 	#else
-	#	include <afxwin.h>
+		#include <afxwin.h>
 	#endif
 
 	#include <GL\glew.h>
@@ -113,7 +113,12 @@
 
 using namespace std;
 
-// Constants used for converting 
-// between degrees and radians.
+// Custom defines
 #define DEGTORAD ((float)M_PI/180.f)
 #define RADTODEG (180.f/(float)M_PI)
+
+// Redefine M_PI as float
+#ifdef M_PI
+	#undef M_PI
+	#define M_PI			3.14159265358979323846f
+#endif
