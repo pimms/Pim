@@ -90,6 +90,7 @@ namespace Pim {
 										 WinStyle style, int bit = 32);
 							CreationData();
 			void			Prepare();
+			Uint32 			GetWindowCreationFlags();
 		};
 	}
 }

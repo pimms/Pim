@@ -46,7 +46,6 @@ namespace Pim {
 		};
 
 		SDL_Window					*window;  
-		SDL_Renderer				*renderer;
 		WinStyle::CreationData		winData;
 		Vec2						scale;
 		Vec2						ortho;		// Screen pixel dimension

@@ -17,7 +17,6 @@ namespace Pim {
 	*/
 	RenderWindow::RenderWindow() {
 		window = NULL;
-		renderer = NULL;
 		sdlWindow = true;
 	}
 
@@ -103,33 +102,30 @@ namespace Pim {
 			window = SDL_CreateWindow(	data.winTitle.c_str(),
 										200, 200,
 										data.resolution.x, data.resolution.y, 
-										SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+										winData.GetWindowCreationFlags());
 			if (!window) {
 				PimWarning("Failed to create a window", "SDL Error");
 				KillWindow();
 				return false;
 			}
 
+			SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
 			SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
-			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-			if (!renderer) {
-				PimWarning("Failed to create a renderer", "SDL Error");
-				KillWindow();
-				return false;
-			}
-
-#ifdef _DEBUG
-			/* Get the renderer information */
-			SDL_RendererInfo info;
-			SDL_GetRendererInfo(renderer, &info);
-			if (strcmp("direct3d", info.name) == 0) {
-				SDL_Quit();
-				printf("ERROR: SDL uses D3D!\n\nQUITTING!!!\n\n");
-				system("pause");
-				exit(1);
-			}
-#endif
+#			ifdef _DEBUG
+				/* Get the renderer information, ensure that
+				 * SDL is compiled to use OpenGL.
+				 */ 
+				SDL_RendererInfo info;
+				SDL_GetRendererInfo(renderer, &info);
+				if (strcmp("direct3d", info.name) == 0) {
+					SDL_Quit();
+					printf("ERROR: SDL uses D3D!\n\nQUITTING!!!\n\n");
+					system("pause");
+					exit(1);
+				}
+#			endif
 
 			SDL_JoystickEventState(SDL_ENABLE);
 
@@ -138,7 +134,6 @@ namespace Pim {
 			SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,           8);
 			SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,          8);
  
-			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,          16);
 			SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,         32);
  
 			SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,      8);
@@ -151,10 +146,12 @@ namespace Pim {
 		
 			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 		1);
 		} else {
-#ifdef WIN32
-			window = SDL_CreateWindowFrom(winData.hWnd);
-			SDL_SetWindowGrab(window, SDL_TRUE);
-#endif
+#			ifdef WIN32
+				window = SDL_CreateWindowFrom(winData.hWnd);
+				SDL_SetWindowGrab(window, SDL_TRUE);
+#			else 
+				PimAssert(false, "Error: Under UNIX, a window must be created");
+#			endif
 		}
 
 		// Create the window and set up the viewport to
@@ -185,11 +182,6 @@ namespace Pim {
 			SDL_DestroyWindow(window);
 			window = NULL;
 		}
-		
-		if (renderer) {
-			SDL_DestroyRenderer(renderer);
-			renderer = NULL;
-		}
 
 		SDL_Quit();
 	}
@@ -200,7 +192,12 @@ namespace Pim {
 	=====================
 	*/
 	void RenderWindow::SetWindowStyle(WinStyle::WinStyle style) {
-
+		if (style == WinStyle::WINDOWED) {
+			SDL_SetWindowBordered(window, SDL_TRUE);
+		} else {
+			SDL_SetWindowBordered(window, SDL_FALSE);
+			SDL_SetWindowFullscreen(window, 0);
+		}
 	}
 	
 	/*
@@ -306,9 +303,9 @@ namespace Pim {
 	=====================
 	*/
 	void RenderWindow::RenderFrame() {
-		#ifdef _DEBUG
-		PrintOpenGLErrors("PRERENDER FRAME (Should never occur)");
-		#endif /* _DEBUG */
+#		ifdef _DEBUG
+			PrintOpenGLErrors("PRERENDER FRAME (Should never occur)");
+#		endif /* _DEBUG */
 
 		// Clear screen with the top layer's color
 		Scene *s = GameControl::GetScene();

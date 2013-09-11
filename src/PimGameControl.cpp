@@ -193,11 +193,11 @@ namespace Pim {
 			renderWindow = new RenderWindow();
 			renderWindow->SetupWindow(data);
 
-#if defined(_DEBUG) && defined(WIN32)
-			if (commandline) {
-				ConsoleReader::Begin();
-			}
-#endif /* _DEBUG && WIN32 */
+#			if defined(_DEBUG) && defined(WIN32)
+				if (commandline) {
+					ConsoleReader::Begin();
+				}
+#			endif /* _DEBUG && WIN32 */
 			
 			printf("\n[PIM-version %s]\n", PIM_VERSION);
 			printf("[OpenGL-version %s]\n\n", glGetString(GL_VERSION));
@@ -231,11 +231,11 @@ namespace Pim {
 		ShaderManager::ClearSingleton();
 		AudioManager::ClearSingleton();
 
-#if defined(_DEBUG) && defined(WIN32)
-		if (commandline) {
-			ConsoleReader::ShutDown();
-		}
-#endif /* _DEBUG && WIN32 */
+#		if defined(_DEBUG) && defined(WIN32)
+			if (commandline) {
+				ConsoleReader::ShutDown();
+			}
+#		endif /* _DEBUG && WIN32 */
 
 		renderWindow->KillWindow();
 	}
@@ -413,13 +413,14 @@ namespace Pim {
 	*/
 	Vec2 GameControl::LowerLeftCorner() {
 		switch (renderWindow->bpos) {
-			case 1:	// VER
+			case 1:	// Vertical
 				return Vec2((float)renderWindow->bdim, 0.f);
 
-			case 2: // HOR
+			case 2: // Horizontal
 				return Vec2(0.f, (float)renderWindow->bdim);
 
-			case 0:
+			case 0: 
+				/* FALLTHROUGH */
 			default:
 				return Vec2(0.f, 0.f);
 		}
@@ -507,20 +508,21 @@ namespace Pim {
 			// Get the DT
 			float dt = CalculateDeltaTime();
 			if (dt < maxDelta) {
-#ifdef WIN32
-				Sleep(DWORD(ceil((maxDelta-dt)*1000.f)));
-				dt += CalculateDeltaTime();
-#else
-				usleep(ceil((maxDelta-dt)*1000000.f));
-				dt += CalculateDeltaTime();
-#endif
+
+#				ifdef WIN32
+					Sleep(DWORD(ceil((maxDelta-dt)*1000.f)));
+					dt += CalculateDeltaTime();
+#				else
+					usleep(ceil((maxDelta-dt)*1000000.f));
+					dt += CalculateDeltaTime();
+#				endif
 			}
 
 			if (!paused) {
-#if defined(_DEBUG) && defined(WIN32)
-				ConsoleReader::GetSingleton()->Dispatch();
-				ClearDeleteQueue();
-#endif /* _DEBUG && WIN32 */
+#				if defined(_DEBUG) && defined(WIN32)
+					ConsoleReader::GetSingleton()->Dispatch();
+					ClearDeleteQueue();
+#				endif /* _DEBUG && WIN32 */
 
 				Input::GetSingleton()->Dispatch();
 				ClearDeleteQueue();
@@ -573,9 +575,9 @@ namespace Pim {
 		 *  next delta time.
 		 */
 
-#ifdef WIN32
-		clock_t prepoll = clock();
-#endif
+#		ifdef WIN32
+			clock_t prepoll = clock();
+#		endif
 		
 		SDL_Event event;
 
@@ -680,12 +682,12 @@ namespace Pim {
 			}
 		}
 
-#ifdef WIN32
-		clock_t postpoll = clock();
-		if (postpoll - prepoll > 3) {
-			ticks += (postpoll - prepoll);
-		}
-#endif
+#		ifdef WIN32
+			clock_t postpoll = clock();
+			if (postpoll - prepoll > 3) {
+				ticks += (postpoll - prepoll);
+			}
+#		endif
 	}
 
 	/*
@@ -797,7 +799,7 @@ namespace Pim {
 	This method is less efficient, but more precise.
 	=====================
 	*/
-#if defined(__APPLE__) || defined(LINUX) 
+#if defined(__APPLE__) || defined(__gnu_linux__) 
 	float GameControl::CalculateDeltaTime() {
 		struct timeval time;
 		gettimeofday(&time, NULL);
@@ -817,9 +819,9 @@ namespace Pim {
 	==================
 	*/
 	void GameControl::ReloadTextures() {
-#ifdef _DEBUG
-		printf("Reloading all textures... ");
-#endif
+#		ifdef _DEBUG
+			printf("Reloading all textures... ");
+#		endif
 
 		if (scene) {
 			scene->ReloadTextures();
@@ -829,8 +831,8 @@ namespace Pim {
 			pauseLayer->ReloadTextures();
 		}
 
-#ifdef _DEBUG
-		printf("Done!\n");
-#endif
+#		ifdef _DEBUG
+			printf("Done!\n");
+#		endif
 	}
 }

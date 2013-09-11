@@ -69,5 +69,21 @@ namespace Pim {
 				"or window handle (HWND) is missing!");
 #endif
 		}
+
+		/*
+		==================
+		CreationData::GetWindowCreationFlags
+		==================
+		*/
+		Uint32 CreationData::GetWindowCreationFlags() {
+			if (winStyle == WINDOWED) {
+				return SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL;
+			} else if (winStyle == BORDERLESS_WINDOWED) {
+				return SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL;
+			} 
+
+			PimAssert(false, "Invalid window style value");
+			return 0;
+		}
 	}
 }

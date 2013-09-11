@@ -9,7 +9,7 @@ namespace Pim {
 	 */
 
 	struct Color;
-	
+
 	class Vec2 {
 	public:
 		float				x;
@@ -56,7 +56,7 @@ namespace Pim {
 		float				g;
 		float				b;
 		float				a;
-		
+
 		static Color		Interpolate(const Color &source, const Color &dest, float factor);
 							Color(const float rr, const float gg, 
 								  const float bb, const float aa);
@@ -78,7 +78,7 @@ namespace Pim {
 		T			width;
 		T			height;
 
-		
+
 		Rect_t(T xpos, T ypos, T w, T h) {
 			x		= xpos;
 			y		= ypos;
@@ -114,6 +114,18 @@ namespace Pim {
 				&&		vec.x < float(x + width)
 				&&		vec.y > float(y) 
 				&&		vec.y < float(y + height);
+		}
+
+		template <typename Y>
+		bool Contains(const Rect_t<Y> &other) {
+			if (x < other.x + other.width && 
+				x + width > other.x &&
+				y < other.y + other.height && 
+				y + height > other.y) {
+				return false;
+			}
+
+			return true;
 		}
 
 		template <typename Y>
